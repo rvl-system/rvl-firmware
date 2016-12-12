@@ -1,0 +1,24 @@
+{
+  "name": "coordinator",
+  "version": "1.0.0",
+  "description": "Coordinator software for raver hands",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "lint": "eslint ./src/**/*.js"
+  },
+  "author": "Bryan Hughes <bryan@nebri.us>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.1.4",
+    "johnny-five": "^0.10.6",
+    "raspi-io": "^7.0.0",
+    "oled-js": "^4.0.2",
+    "oled-font-5x7": "^1.0.0",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.11.1"
+  }
+}

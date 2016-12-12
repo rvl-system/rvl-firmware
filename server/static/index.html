@@ -1,0 +1,184 @@
+<!--
+Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Light Controller</title>
+<style>
+.container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+#fadeOptions, #pulseOptions {
+  margin-top: 20px;
+}
+
+#fadeOptions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  display: none;
+}
+
+#pulseOptions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  display: none;
+}
+
+#pulseOptions > div {
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div><h1>Light Controller</h1></div>
+  <div>
+    <span>Animation Type:</span>
+    <select id="presetSelect">
+      <option value="fade">Fade</option>
+      <option value="pulse">Pulse</option>
+    </select>
+  </div>
+  <div id="fadeOptions">
+    <div>
+      <span>Speed:</span>
+      <input id="fadeSpeed" type="range" min="0" max="255" value="64" />
+    </div>
+  </div>
+  <div id="pulseOptions">
+    <div>
+      <span>Speed:</span>
+      <input id="pulseSpeed" type="range" min="0" max="255" value="64" />
+    </div>
+    <div>
+      <span>Color:</span>
+      <input id="pulseColor" type="color" />
+    </div>
+  </div>
+</div>
+<script>
+
+document.getElementById('presetSelect').addEventListener('change', (e) => {
+  const newPreset = e.target.value;
+  switch(newPreset) {
+    case 'fade':
+      document.getElementById('fadeOptions').style.display = 'inherit';
+      document.getElementById('pulseOptions').style.display = 'none';
+      set('/api/preset', {
+        value: 'fade'
+      });
+      break;
+    case 'pulse':
+      document.getElementById('fadeOptions').style.display = 'none';
+      document.getElementById('pulseOptions').style.display = 'inherit';
+      set('/api/preset', {
+        value: 'pulse'
+      });
+      break;
+  }
+});
+
+function get(endpoint, cb) {
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener('load', () => {
+    cb(xhr.responseText);
+  });
+  xhr.open('GET', endpoint);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send();
+}
+
+function set(endpoint, message) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', endpoint);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify(message));
+}
+
+document.getElementById('fadeSpeed').addEventListener('change', (e) => {
+  set('/api/fade_speed', {
+    value: e.target.value
+  });
+});
+
+document.getElementById('pulseSpeed').addEventListener('change', (e) => {
+  set('/api/pulse_speed', {
+    value: e.target.value
+  });
+});
+
+document.getElementById('pulseColor').addEventListener('change', (e) => {
+  // Convert color here
+  set('/api/pulse_color', {
+    value: e.target.value
+  });
+});
+
+let preset;
+let values;
+
+function finalize() {
+  if (preset && values) {
+    document.querySelector('.container').style.display = 'flex';
+    switch(preset) {
+      case 'fade':
+        document.getElementById('fadeOptions').style.display = 'inherit';
+        document.getElementById('pulseOptions').style.display = 'none';
+        break;
+      case 'pulse':
+        document.getElementById('fadeOptions').style.display = 'none';
+        document.getElementById('pulseOptions').style.display = 'inherit';
+        break;
+    }
+    document.getElementById('fadeSpeed').value = values.fade.rate;
+    document.getElementById('pulseSpeed').value = values.pulse.rate;
+    document.getElementById('pulseColor').value = values.pulse.color;
+  }
+}
+
+get('/api/preset', (res) => {
+  document.getElementById('presetSelect').value = preset = res;
+  finalize();
+});
+
+get('/api/values', (res) => {
+  values = JSON.parse(res);
+  finalize();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Raver Hands Control</title>
+<style>
+.control {
+  margin: 10px;
+  padding: 10px;
+  width: 100px;
+}
+.value {
+  margin: 10px;
+  padding: 10px;
+  width: 60px;
+}
+</style>
+<script>
+function onControlClick() {
+  var req = new XMLHttpRequest();
+  req.open('POST', '/api/next-control');
+  req.send();
+}
+function onUpClick() {
+  var req = new XMLHttpRequest();
+  req.open('POST', '/api/control-up');
+  req.send();
+
+}
+function onDownClick() {
+  var req = new XMLHttpRequest();
+  req.open('POST', '/api/control-down');
+  req.send();
+
+}
+</script>
+</head>
+<body>
+
+<button class="control" onclick="onControlClick()">Control</button>
+<br />
+<button class="value" onclick="onUpClick()">Up</button>
+<button class="value" onclick="onDownClick()">Down</button>
+
+</body>
+</html>
