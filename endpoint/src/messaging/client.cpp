@@ -69,10 +69,10 @@ void client_messaging_setup() {
 }
 
 void client_messaging_loop() {
-  if (!client.connected()) {
+  if (!controller_client.connected()) {
     Serial.println();
     Serial.println("Disconnected from coordinator");
-    client.stop();
+    controller_client.stop();
     while (true) {}
   }
   if (controller_client.available() > 0) {
