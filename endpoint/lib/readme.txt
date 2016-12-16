@@ -36,3 +36,5 @@ See additional options for PlatformIO Library Dependency Finder `lib_*`:
 
 http://docs.platformio.org/en/latest/projectconf.html#lib-install
 
+The contents of this folder are copyright their respective authors
+

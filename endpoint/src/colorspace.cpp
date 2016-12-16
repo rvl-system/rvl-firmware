@@ -1,3 +1,6 @@
+// The contents of this file were borrowed from http://stackoverflow.com/a/6930407
+// The contents of this file are copyright the original owner
+
 #include <math.h>
 #include "colorspace.h"
 
