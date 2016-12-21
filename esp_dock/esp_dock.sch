@@ -138,7 +138,7 @@ U 1 1 5850C0A1
 P 7900 3700
 F 0 "P3" H 7900 3950 50  0000 C CNN
 F 1 "ESP" H 7900 3450 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_2x04" H 7900 2500 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x04" H 7500 3150 50  0000 C CNN
 F 3 "" H 7900 2500 50  0000 C CNN
 	1    7900 3700
 	-1   0    0    1   
