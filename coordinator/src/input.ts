@@ -19,13 +19,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-const state = require('./state');
-const codes = require('./codes');
-const five = require('johnny-five');
-
-module.exports = {
-  init
-};
+import { Control } from './codes';
+import state from './state';
+import { Button } from 'johnny-five';
 
 const HOLD_ENGAGE_TIME = 1500;
 const HOLD_RATE = 200;
@@ -35,17 +31,17 @@ const NEXT_BUTTON = 'GPIO13';
 const UP_BUTTON = 'GPIO5';
 const DOWN_BUTTON = 'GPIO6';
 
-function init(board, cb) {
+export default function init(cb: () => void) {
 
-  const nextControlButton = new five.Button(NEXT_BUTTON);
+  const nextControlButton = new Button(NEXT_BUTTON);
   nextControlButton.on('press', () => state.nextControl());
 
-  const controlUpButton = new five.Button(UP_BUTTON);
-  let controlUpTimeout;
-  let controlUpInterval;
+  const controlUpButton = new Button(UP_BUTTON);
+  let controlUpTimeout: NodeJS.Timer;
+  let controlUpInterval: NodeJS.Timer;
   controlUpButton.on('down', () => {
     state.controlUp(1);
-    if (state.getSettings().currentControl !== codes.control.PRESET) {
+    if (state.getSettings().currentControl !== Control.Preset) {
       controlUpTimeout = setTimeout(() => {
         controlUpInterval = setInterval(() => state.controlUp(STEP), HOLD_RATE);
       }, HOLD_ENGAGE_TIME);
@@ -56,12 +52,12 @@ function init(board, cb) {
     clearInterval(controlUpInterval);
   });
 
-  const controlDownButton = new five.Button(DOWN_BUTTON);
-  let controlDownTimeout;
-  let controlDownInterval;
+  const controlDownButton = new Button(DOWN_BUTTON);
+  let controlDownTimeout: NodeJS.Timer;
+  let controlDownInterval: NodeJS.Timer;
   controlDownButton.on('down', () => {
     state.controlDown(1);
-    if (state.getSettings().currentControl !== codes.control.PRESET) {
+    if (state.getSettings().currentControl !== Control.Preset) {
       controlDownTimeout = setTimeout(() => {
         controlDownInterval = setInterval(() => state.controlDown(STEP), HOLD_RATE);
       }, HOLD_ENGAGE_TIME);

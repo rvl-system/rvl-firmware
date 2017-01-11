@@ -19,19 +19,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-const net = require('net');
-const state = require('./state');
-const codes = require('./codes');
+import { createServer, Socket } from 'net';
+import state from './state';
+import { MessageType, FadeValue, PulseValue } from './codes';
+import { runOperationByPreset, runOperationForEachFadeValue, runOperationForEachPulseValue } from './util';
 
-module.exports = {
-  init
-};
+const connectedClients: Socket[] = [];
 
-const connectedClients = [];
+export default function init(cb: () => void) {
 
-function init(cb) {
-
-  const server = net.createServer((socket) => {
+  const server = createServer((socket) => {
     connectedClients.push(socket);
     socket.on('close', () => {
       const socketIndex = connectedClients.indexOf(socket);
@@ -52,6 +49,7 @@ function init(cb) {
     state.on('preset', updatePreset);
     state.on('value', updateValue);
     updateAll();
+    cb();
   });
 }
 
@@ -63,31 +61,35 @@ function updateAll() {
 
 function updateAllValues() {
   const settings = state.getSettings();
-  for (const value in settings.values[settings.preset]) {
-    updateValue({
-      code: codes.value[settings.preset][value],
-      value: settings.values[settings.preset][value]
-    });
-  }
+  runOperationByPreset(settings.preset, {
+    Fade: () => runOperationForEachFadeValue({
+      Rate: () => updateValue(FadeValue.Rate, settings.fadeValues.rate)
+    }),
+    Pulse: () => runOperationForEachPulseValue({
+      Rate: () => updateValue(PulseValue.Rate, settings.pulseValues.rate),
+      Hue: () => updateValue(PulseValue.Hue, settings.pulseValues.hue),
+      Saturation: () => updateValue(PulseValue.Saturation, settings.pulseValues.saturation)
+    })
+  });
 }
 
-function updateBrightness(brightness) {
+function updateBrightness(brightness: number) {
   console.log(`Setting brightness to ${brightness}`);
-  write(Buffer.from([ codes.messageTypes.SET_BRIGHTNESS, brightness ]));
+  write(Buffer.from([ MessageType.SetBrightness, brightness ]));
 }
 
-function updatePreset(preset) {
+function updatePreset(preset: number) {
   console.log(`Setting preset to ${preset}`);
-  write(Buffer.from([ codes.messageTypes.SET_PRESER, preset ]));
+  write(Buffer.from([ MessageType.SetPreset, preset ]));
   updateAllValues();
 }
 
-function updateValue({ code, value }) {
+function updateValue(code: number, value: number) {
   console.log(`Setting value ${code} to ${value}`);
-  write(Buffer.from([ codes.messageTypes.SET_VALUE, code, value ]));
+  write(Buffer.from([ MessageType.SetValue, code, value ]));
 }
 
-function write(buffer) {
+function write(buffer: Buffer) {
   for (const connectedClient of connectedClients) {
     connectedClient.write(buffer);
   }

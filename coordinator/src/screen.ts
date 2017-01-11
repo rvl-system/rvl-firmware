@@ -19,11 +19,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-const Oled = require('oled-js');
-const font = require('oled-font-5x7');
+import * as five from 'johnny-five';
+import { Control } from './codes';
+import { runOperationByControl, getValueByPreset, runOperationByPreset } from './util';
+import state from './state';
 
-const state = require('./state');
-const codes = require('./codes');
+// tslint:disable-next-line:no-require-imports
+import Oled = require('oled-js');
+// tslint:disable-next-line:no-require-imports
+import font = require('oled-font-5x7');
 
 const MAX_BRIGHTNESS = 255;
 const MAX_VALUE = 255;
@@ -82,14 +86,10 @@ const VALUE3_HIGHLIGHT_Y = VALUE3_Y - HIGHIGHT_PADDING;
 const COUNT_X = LCD_WIDTH - PADDING - TEXT_HEIGHT;
 const COUNT_Y = VALUE2_Y + 6;
 
-let oled;
-let previousControl;
+let oled: Oled;
+let previousControl: number = Control.None;
 
-module.exports = {
-  init
-};
-
-function init(board, five, cb) {
+export default function init(board: five.Board, cb: () => void) {
   oled = new Oled(board, five, {
     width: 128,
     height: 64,
@@ -124,27 +124,18 @@ function init(board, five, cb) {
   setImmediate(cb);
 }
 
-function drawControlOutline(control, color) {
-  switch (control) {
-    case codes.control.BRIGHTNESS:
-      oled.drawRect(BRIGHTNESS_HIGHLIGHT_X, BRIGHTNESS_HIGHLIGHT_Y, BRIGHTNESS_HIGHLIGHT_WIDTH - 1, BRIGHTNESS_HIGHLIGHT_HEIGHT, color, false);
-      break;
-    case codes.control.PRESET:
-      oled.drawRect(PRESET_HIGHLIGHT_X, PRESET_HIGHLIGHT_Y, PRESET_HIGHLIGHT_WIDTH - 1, PRESET_HIGHLIGHT_HEIGHT, color, false);
-      break;
-    case codes.control.VALUE1:
-      oled.drawRect(VALUE_HIGHLIGHT_X, VALUE1_HIGHLIGHT_Y, VALUE_HIGHLIGHT_WIDTH - 1, VALUE_HIGHLIGHT_HEIGHT, color, false);
-      break;
-    case codes.control.VALUE2:
-      oled.drawRect(VALUE_HIGHLIGHT_X, VALUE2_HIGHLIGHT_Y, VALUE_HIGHLIGHT_WIDTH - 1, VALUE_HIGHLIGHT_HEIGHT, color, false);
-      break;
-    case codes.control.VALUE3:
-      oled.drawRect(VALUE_HIGHLIGHT_X, VALUE3_HIGHLIGHT_Y, VALUE_HIGHLIGHT_WIDTH - 1, VALUE_HIGHLIGHT_HEIGHT, color, false);
-      break;
-  }
+function drawControlOutline(control: number, color: number) {
+  runOperationByControl(control, {
+    Brightness: () => oled.drawRect(BRIGHTNESS_HIGHLIGHT_X, BRIGHTNESS_HIGHLIGHT_Y, BRIGHTNESS_HIGHLIGHT_WIDTH - 1, BRIGHTNESS_HIGHLIGHT_HEIGHT, color, false),
+    Preset: () => oled.drawRect(PRESET_HIGHLIGHT_X, PRESET_HIGHLIGHT_Y, PRESET_HIGHLIGHT_WIDTH - 1, PRESET_HIGHLIGHT_HEIGHT, color, false),
+    Value1: () => oled.drawRect(VALUE_HIGHLIGHT_X, VALUE1_HIGHLIGHT_Y, VALUE_HIGHLIGHT_WIDTH - 1, VALUE_HIGHLIGHT_HEIGHT, color, false),
+    Value2: () => oled.drawRect(VALUE_HIGHLIGHT_X, VALUE2_HIGHLIGHT_Y, VALUE_HIGHLIGHT_WIDTH - 1, VALUE_HIGHLIGHT_HEIGHT, color, false),
+    Value3: () => oled.drawRect(VALUE_HIGHLIGHT_X, VALUE3_HIGHLIGHT_Y, VALUE_HIGHLIGHT_WIDTH - 1, VALUE_HIGHLIGHT_HEIGHT, color, false),
+    None: () => {}
+  });
 }
 
-function drawVerticalBar(x, y, w, h, percent) {
+function drawVerticalBar(x: number, y: number, w: number, h: number, percent: number) {
   const fillHeight = Math.round((h - 2) * percent);
   const emptyHeight = h - 2 - fillHeight;
 
@@ -172,7 +163,7 @@ function drawVerticalBar(x, y, w, h, percent) {
   }
 }
 
-function drawHorizontalBar(x, y, w, h, percent) {
+function drawHorizontalBar(x: number, y: number, w: number, h: number, percent: number) {
   const fillWidth = Math.round((w - 2) * percent);
   const emptyWidth = w - 2 - fillWidth;
 
@@ -200,7 +191,7 @@ function drawHorizontalBar(x, y, w, h, percent) {
   }
 }
 
-function drawBrightnessIcon(x, y, size) {
+function drawBrightnessIcon(x: number, y: number, size: number) {
   const midX = x + Math.floor(size / 2);
   const midY = y + Math.floor(size / 2);
   const indent = Math.round(size / 8);
@@ -211,60 +202,56 @@ function drawBrightnessIcon(x, y, size) {
   oled.drawLine(x + indent, y + indent, x + size - 1 - indent, y + size - 1 - indent, 1, false);
   oled.drawLine(x + indent, y + size - 1 - indent, x + size - 1 - indent, y + 1, 1, false);
 
-  while(radius > 1) {
+  while (radius > 1) {
     oled.drawCircle(midX, midY, radius, 1, false);
     radius--;
   }
 }
 
-function drawString(x, y, w, string) {
+function drawString(x: number, y: number, w: number, text: string) {
   oled.fillRect(x, y, w, TEXT_HEIGHT, 0, false);
   oled.setCursor(x, y);
-  oled.writeString(font, 1, string, 1, true, 2, false);
+  oled.writeString(font, 1, text, 1, true, 2, false);
 }
 
-function updateControl(control) {
+function updateControl(control: number) {
   drawControlOutline(previousControl, 0);
   drawControlOutline(control, 1);
   previousControl = control;
   oled.update();
 }
 
-function updateBrightness(brightness) {
+function updateBrightness(brightness: number) {
   drawVerticalBar(BRIGHTNESS_BAR_X, BRIGHTNESS_BAR_Y, BRIGHTNESS_BAR_WIDTH, BRIGHTNESS_BAR_HEIGHT, brightness / MAX_BRIGHTNESS);
   oled.update();
 }
 
-function updatePreset(preset) {
+function updatePreset(preset: number) {
   drawString(PRESET_VALUE_X, PRESET_VALUE_Y, 127 - PRESET_VALUE_X - PADDING,
-    codes.getCodeName('preset', preset));
+    getValueByPreset(preset, { Fade: 'Fade', Pulse: 'Pulse' }));
 
-  const presets = Object.keys(codes.value[preset]);
   const settings = state.getSettings();
-  if (presets[0]) {
-    drawString(VALUE_LABEL_X, VALUE1_Y, VALUE_WIDTH, presets[0][0] + ':');
-    drawHorizontalBar(VALUE_BAR_X, VALUE1_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.values[preset][presets[0]] / MAX_VALUE);
-  } else {
-    oled.fillRect(VALUE_LABEL_X, VALUE1_Y, VALUE_WIDTH, TEXT_HEIGHT, 0, false);
-  }
-  if (presets[1]) {
-    drawString(VALUE_LABEL_X, VALUE2_Y, VALUE_WIDTH, presets[1][0] + ':');
-    drawHorizontalBar(VALUE_BAR_X, VALUE2_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.values[preset][presets[1]] / MAX_VALUE);
-  } else {
-    oled.fillRect(VALUE_LABEL_X, VALUE2_Y, VALUE_WIDTH, TEXT_HEIGHT, 0, false);
-  }
-  if (presets[2]) {
-    drawString(VALUE_LABEL_X, VALUE3_Y, VALUE_WIDTH, presets[2][0] + ':');
-    drawHorizontalBar(VALUE_BAR_X, VALUE3_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.values[preset][presets[2]] / MAX_VALUE);
-  } else {
-    oled.fillRect(VALUE_LABEL_X, VALUE3_Y, VALUE_WIDTH, TEXT_HEIGHT, 0, false);
-  }
-
+  runOperationByPreset(preset, {
+    Fade: () => {
+      drawString(VALUE_LABEL_X, VALUE1_Y, VALUE_WIDTH, 'R:');
+      drawHorizontalBar(VALUE_BAR_X, VALUE1_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.fadeValues.rate / MAX_VALUE);
+      oled.fillRect(VALUE_LABEL_X, VALUE2_Y, VALUE_WIDTH, TEXT_HEIGHT, 0, false);
+      oled.fillRect(VALUE_LABEL_X, VALUE3_Y, VALUE_WIDTH, TEXT_HEIGHT, 0, false);
+    },
+    Pulse: () => {
+      drawString(VALUE_LABEL_X, VALUE1_Y, VALUE_WIDTH, 'R:');
+      drawHorizontalBar(VALUE_BAR_X, VALUE1_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.pulseValues.rate / MAX_VALUE);
+      drawString(VALUE_LABEL_X, VALUE2_Y, VALUE_WIDTH, 'H:');
+      drawHorizontalBar(VALUE_BAR_X, VALUE2_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.pulseValues.hue / MAX_VALUE);
+      drawString(VALUE_LABEL_X, VALUE3_Y, VALUE_WIDTH, 'S:');
+      drawHorizontalBar(VALUE_BAR_X, VALUE3_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, settings.pulseValues.saturation / MAX_VALUE);
+    }
+  });
   oled.update();
 }
 
-function updateValue({ code, value }) {
-  switch(code) {
+function updateValue({ code, value }: { code: number, value: number }) {
+  switch (code) {
     case 0:
       drawHorizontalBar(VALUE_BAR_X, VALUE1_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, value / MAX_VALUE);
       break;
@@ -279,7 +266,7 @@ function updateValue({ code, value }) {
   oled.update();
 }
 
-function updateClientCount(count) {
+function updateClientCount(count: number) {
   drawString(COUNT_X, COUNT_Y, TEXT_HEIGHT, count.toString());
   oled.update();
 }
