@@ -63,12 +63,12 @@ function updateAllValues() {
   const settings = state.getSettings();
   runOperationByPreset(settings.preset, {
     Fade: () => runOperationForEachFadeValue({
-      Rate: () => updateValue(FadeValue.Rate, settings.fadeValues.rate)
+      Rate: () => updateValue({ code: FadeValue.Rate, value: settings.fadeValues.rate })
     }),
     Pulse: () => runOperationForEachPulseValue({
-      Rate: () => updateValue(PulseValue.Rate, settings.pulseValues.rate),
-      Hue: () => updateValue(PulseValue.Hue, settings.pulseValues.hue),
-      Saturation: () => updateValue(PulseValue.Saturation, settings.pulseValues.saturation)
+      Rate: () => updateValue({ code: PulseValue.Rate, value: settings.pulseValues.rate }),
+      Hue: () => updateValue({ code: PulseValue.Hue, value: settings.pulseValues.hue }),
+      Saturation: () => updateValue({ code: PulseValue.Saturation, value: settings.pulseValues.saturation })
     })
   });
 }
@@ -84,7 +84,7 @@ function updatePreset(preset: number) {
   updateAllValues();
 }
 
-function updateValue(code: number, value: number) {
+function updateValue({ code, value }: { code: number, value: number }) {
   console.log(`Setting value ${code} to ${value}`);
   write(Buffer.from([ MessageType.SetValue, code, value ]));
 }

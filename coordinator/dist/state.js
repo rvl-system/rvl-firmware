@@ -59,7 +59,7 @@ var State = (function (_super) {
             Pulse: codes_1.numPulseValues
         });
         settings.currentControl++;
-        if (settings.currentControl === 2 + numPresetValues) {
+        if (settings.currentControl === 3 + numPresetValues) {
             settings.currentControl = 0;
         }
         this.emit('control', settings.currentControl);

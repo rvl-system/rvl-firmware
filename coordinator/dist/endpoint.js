@@ -57,12 +57,12 @@ function updateAllValues() {
     var settings = state_1.default.getSettings();
     util_1.runOperationByPreset(settings.preset, {
         Fade: function () { return util_1.runOperationForEachFadeValue({
-            Rate: function () { return updateValue(codes_1.FadeValue.Rate, settings.fadeValues.rate); }
+            Rate: function () { return updateValue({ code: codes_1.FadeValue.Rate, value: settings.fadeValues.rate }); }
         }); },
         Pulse: function () { return util_1.runOperationForEachPulseValue({
-            Rate: function () { return updateValue(codes_1.PulseValue.Rate, settings.pulseValues.rate); },
-            Hue: function () { return updateValue(codes_1.PulseValue.Hue, settings.pulseValues.hue); },
-            Saturation: function () { return updateValue(codes_1.PulseValue.Saturation, settings.pulseValues.saturation); }
+            Rate: function () { return updateValue({ code: codes_1.PulseValue.Rate, value: settings.pulseValues.rate }); },
+            Hue: function () { return updateValue({ code: codes_1.PulseValue.Hue, value: settings.pulseValues.hue }); },
+            Saturation: function () { return updateValue({ code: codes_1.PulseValue.Saturation, value: settings.pulseValues.saturation }); }
         }); }
     });
 }
@@ -75,7 +75,8 @@ function updatePreset(preset) {
     write(Buffer.from([codes_1.MessageType.SetPreset, preset]));
     updateAllValues();
 }
-function updateValue(code, value) {
+function updateValue(_a) {
+    var code = _a.code, value = _a.value;
     console.log("Setting value " + code + " to " + value);
     write(Buffer.from([codes_1.MessageType.SetValue, code, value]));
 }

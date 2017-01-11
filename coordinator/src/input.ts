@@ -27,9 +27,9 @@ const HOLD_ENGAGE_TIME = 1500;
 const HOLD_RATE = 200;
 const STEP = 4;
 
-const NEXT_BUTTON = 'GPIO13';
-const UP_BUTTON = 'GPIO5';
-const DOWN_BUTTON = 'GPIO6';
+const NEXT_BUTTON = 'GPIO4';
+const UP_BUTTON = 'GPIO17';
+const DOWN_BUTTON = 'GPIO27';
 
 export default function init(cb: () => void) {
 

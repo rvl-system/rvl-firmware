@@ -62,7 +62,7 @@ export class State extends EventEmitter {
     });
 
     settings.currentControl++;
-    if (settings.currentControl === 2 + numPresetValues) {
+    if (settings.currentControl === 3 + numPresetValues) {
       settings.currentControl = 0;
     }
 
