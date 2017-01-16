@@ -20,8 +20,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 'use strict';
 
 import * as five from 'johnny-five';
-import { Control } from './codes';
-import { runOperationByControl, getValueByPreset, runOperationByPreset } from './util';
+import { Control, IdleState } from './codes';
+import { runOperationByControl, getValueByPreset, runOperationByPreset, runOperationByIdleState } from './util';
 import state from './state';
 
 // tslint:disable-next-line:no-require-imports
@@ -120,6 +120,7 @@ export default function init(board: five.Board, cb: () => void) {
   state.on('preset', updatePreset);
   state.on('value', updateValue);
   state.on('client', updateClientCount);
+  state.on('idle', updateIdleState);
 
   setImmediate(cb);
 }
@@ -269,4 +270,20 @@ function updateValue({ code, value }: { code: number, value: number }) {
 function updateClientCount(count: number) {
   drawString(COUNT_X, COUNT_Y, TEXT_HEIGHT, count.toString());
   oled.update();
+}
+
+function updateIdleState(idleState: IdleState) {
+  runOperationByIdleState(idleState, {
+    Active: () => {
+      oled.dimDisplay(false);
+      oled.turnOnDisplay();
+    },
+    ShallowIdle: () => {
+      oled.dimDisplay(true);
+      oled.turnOnDisplay();
+    },
+    DeepIdle: () => {
+      oled.turnOffDisplay();
+    }
+  });
 }

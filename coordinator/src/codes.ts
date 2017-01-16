@@ -52,3 +52,10 @@ export enum PulseValue {
   Hue = 1,
   Saturation = 2
 };
+
+export const numIdleStates = 3;
+export enum IdleState {
+  Active = 0,
+  ShallowIdle = 1,
+  DeepIdle = 2
+}

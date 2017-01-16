@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EventEmitter } from 'events';
 import {
+  IdleState,
   numPresets,
   FadeValue, numFadeValues,
   PulseValue, numPulseValues
@@ -31,6 +32,8 @@ const BRIGHTNESS_STEP = 7;
 const MAX_BRIGHTNESS = 255;
 const VALUE_STEP = 4;
 const MAX_VALUE = 255;
+const DIM_TIMEOUT = 10000;
+const OFF_TIMEOUT = 5000;
 
 const settings = {
   preset: 0,
@@ -44,7 +47,8 @@ const settings = {
     saturation: 100
   },
   currentControl: 0,
-  numClients: 0
+  numClients: 0,
+  idleState: IdleState.DeepIdle
 };
 
 enum Direction {
@@ -80,9 +84,9 @@ export class State extends EventEmitter {
           }
           return value;
         case Direction.Down:
-          value += VALUE_STEP * steps;
-          if (value > MAX_VALUE) {
-            value = MAX_VALUE;
+          value -= VALUE_STEP * steps;
+          if (value < 0) {
+            value = 0;
           }
           return value;
         default:
@@ -168,6 +172,25 @@ export class State extends EventEmitter {
 
   public getSettings() {
     return settings;
+  }
+
+  private screenTimeout: NodeJS.Timer;
+
+  public setActive() {
+    clearTimeout(this.screenTimeout);
+    settings.idleState = IdleState.Active;
+    this.emit('idle', settings.idleState);
+  }
+
+  public setIdling() {
+    this.screenTimeout = setTimeout(() => {
+      settings.idleState = IdleState.ShallowIdle;
+      this.emit('idle', settings.idleState);
+      this.screenTimeout = setTimeout(() => {
+        settings.idleState = IdleState.DeepIdle;
+        this.emit('idle', settings.idleState);
+      }, OFF_TIMEOUT);
+    }, DIM_TIMEOUT);
   }
 }
 

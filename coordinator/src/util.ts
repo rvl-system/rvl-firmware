@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-import { MessageType, Preset , FadeValue, PulseValue, Control } from './codes';
+import { MessageType, Preset , FadeValue, PulseValue, Control, IdleState } from './codes';
 
 // Message Type helpers
 
@@ -189,4 +189,38 @@ export function runOperationForEachControl(operations: IControlOperations): void
   operations.Value2();
   operations.Value3();
   operations.None();
+}
+
+// Idle State helpers
+
+export interface IIdleValues {
+  Active: any;
+  ShallowIdle: any;
+  DeepIdle: any;
+}
+export function getValueByIdleState(idleState: IdleState, values: IIdleValues) {
+  switch (idleState) {
+    case IdleState.Active:
+      return values.Active;
+    case IdleState.ShallowIdle:
+      return values.ShallowIdle;
+    case IdleState.DeepIdle:
+      return values.DeepIdle;
+    default:
+      throw new Error(`Unknown idle state ${idleState}`);
+  }
+}
+
+export interface IIdleOperations {
+  Active: () => any;
+  ShallowIdle: () => any;
+  DeepIdle: () => any;
+}
+export function runOperationByIdleState(code: IdleState, operations: IIdleOperations): any {
+  return getValueByIdleState(code, operations)();
+}
+export function runOperationForEachIdleState(operations: IIdleOperations): void {
+  operations.Active();
+  operations.ShallowIdle();
+  operations.DeepIdle();
 }

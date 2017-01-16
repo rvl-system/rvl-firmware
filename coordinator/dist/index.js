@@ -24,6 +24,7 @@ var Raspi = require("raspi-io");
 var screen_1 = require("./screen");
 var input_1 = require("./input");
 var endpoint_1 = require("./endpoint");
+var state_1 = require("./state");
 var board = new johnny_five_1.Board({
     io: new Raspi({
         excludePins: [
@@ -39,5 +40,9 @@ board.on('ready', function () {
         function (next) { return screen_1.default(board, next); },
         function (next) { return input_1.default(next); },
         function (next) { return endpoint_1.default(next); }
-    ], function () { return console.log('Running'); });
+    ], function () {
+        state_1.default.setActive();
+        state_1.default.setIdling();
+        console.log('Running');
+    });
 });

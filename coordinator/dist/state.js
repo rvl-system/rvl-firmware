@@ -29,6 +29,8 @@ var BRIGHTNESS_STEP = 7;
 var MAX_BRIGHTNESS = 255;
 var VALUE_STEP = 4;
 var MAX_VALUE = 255;
+var DIM_TIMEOUT = 10000;
+var OFF_TIMEOUT = 5000;
 var settings = {
     preset: 0,
     brightness: 10,
@@ -41,7 +43,8 @@ var settings = {
         saturation: 100
     },
     currentControl: 0,
-    numClients: 0
+    numClients: 0,
+    idleState: codes_1.IdleState.DeepIdle
 };
 var Direction;
 (function (Direction) {
@@ -74,9 +77,9 @@ var State = (function (_super) {
                     }
                     return value;
                 case Direction.Down:
-                    value += VALUE_STEP * steps;
-                    if (value > MAX_VALUE) {
-                        value = MAX_VALUE;
+                    value -= VALUE_STEP * steps;
+                    if (value < 0) {
+                        value = 0;
                     }
                     return value;
                 default:
@@ -159,6 +162,22 @@ var State = (function (_super) {
     ;
     State.prototype.getSettings = function () {
         return settings;
+    };
+    State.prototype.setActive = function () {
+        clearTimeout(this.screenTimeout);
+        settings.idleState = codes_1.IdleState.Active;
+        this.emit('idle', settings.idleState);
+    };
+    State.prototype.setIdling = function () {
+        var _this = this;
+        this.screenTimeout = setTimeout(function () {
+            settings.idleState = codes_1.IdleState.ShallowIdle;
+            _this.emit('idle', settings.idleState);
+            _this.screenTimeout = setTimeout(function () {
+                settings.idleState = codes_1.IdleState.DeepIdle;
+                _this.emit('idle', settings.idleState);
+            }, OFF_TIMEOUT);
+        }, DIM_TIMEOUT);
     };
     return State;
 }(events_1.EventEmitter));

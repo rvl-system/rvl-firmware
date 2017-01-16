@@ -96,6 +96,7 @@ function init(board, cb) {
     state_1.default.on('preset', updatePreset);
     state_1.default.on('value', updateValue);
     state_1.default.on('client', updateClientCount);
+    state_1.default.on('idle', updateIdleState);
     setImmediate(cb);
 }
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -206,4 +207,19 @@ function updateValue(_a) {
 function updateClientCount(count) {
     drawString(COUNT_X, COUNT_Y, TEXT_HEIGHT, count.toString());
     oled.update();
+}
+function updateIdleState(idleState) {
+    util_1.runOperationByIdleState(idleState, {
+        Active: function () {
+            oled.dimDisplay(false);
+            oled.turnOnDisplay();
+        },
+        ShallowIdle: function () {
+            oled.dimDisplay(true);
+            oled.turnOnDisplay();
+        },
+        DeepIdle: function () {
+            oled.turnOffDisplay();
+        }
+    });
 }

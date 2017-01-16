@@ -56,3 +56,10 @@ var PulseValue;
     PulseValue[PulseValue["Saturation"] = 2] = "Saturation";
 })(PulseValue = exports.PulseValue || (exports.PulseValue = {}));
 ;
+exports.numIdleStates = 3;
+var IdleState;
+(function (IdleState) {
+    IdleState[IdleState["Active"] = 0] = "Active";
+    IdleState[IdleState["ShallowIdle"] = 1] = "ShallowIdle";
+    IdleState[IdleState["DeepIdle"] = 2] = "DeepIdle";
+})(IdleState = exports.IdleState || (exports.IdleState = {}));

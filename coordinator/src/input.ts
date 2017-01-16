@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-import { Control } from './codes';
+import { Control, IdleState } from './codes';
 import state from './state';
 import { Button } from 'johnny-five';
 
@@ -34,20 +34,30 @@ const DOWN_BUTTON = 'GPIO27';
 export default function init(cb: () => void) {
 
   const nextControlButton = new Button(NEXT_BUTTON);
-  nextControlButton.on('press', () => state.nextControl());
+  nextControlButton.on('down', () => {
+    if (state.getSettings().idleState === IdleState.Active) {
+      state.nextControl();
+    }
+    state.setActive();
+  });
+  nextControlButton.on('up', () => state.setIdling());
 
   const controlUpButton = new Button(UP_BUTTON);
   let controlUpTimeout: NodeJS.Timer;
   let controlUpInterval: NodeJS.Timer;
   controlUpButton.on('down', () => {
-    state.controlUp(1);
-    if (state.getSettings().currentControl !== Control.Preset) {
-      controlUpTimeout = setTimeout(() => {
-        controlUpInterval = setInterval(() => state.controlUp(STEP), HOLD_RATE);
-      }, HOLD_ENGAGE_TIME);
+    if (state.getSettings().idleState === IdleState.Active) {
+      state.controlUp(1);
+      if (state.getSettings().currentControl !== Control.Preset) {
+        controlUpTimeout = setTimeout(() => {
+          controlUpInterval = setInterval(() => state.controlUp(STEP), HOLD_RATE);
+        }, HOLD_ENGAGE_TIME);
+      }
     }
+    state.setActive();
   });
   controlUpButton.on('up', () => {
+    state.setIdling();
     clearTimeout(controlUpTimeout);
     clearInterval(controlUpInterval);
   });
@@ -56,14 +66,18 @@ export default function init(cb: () => void) {
   let controlDownTimeout: NodeJS.Timer;
   let controlDownInterval: NodeJS.Timer;
   controlDownButton.on('down', () => {
-    state.controlDown(1);
-    if (state.getSettings().currentControl !== Control.Preset) {
-      controlDownTimeout = setTimeout(() => {
-        controlDownInterval = setInterval(() => state.controlDown(STEP), HOLD_RATE);
-      }, HOLD_ENGAGE_TIME);
+    if (state.getSettings().idleState === IdleState.Active) {
+      state.controlDown(1);
+      if (state.getSettings().currentControl !== Control.Preset) {
+        controlDownTimeout = setTimeout(() => {
+          controlDownInterval = setInterval(() => state.controlDown(STEP), HOLD_RATE);
+        }, HOLD_ENGAGE_TIME);
+      }
     }
+    state.setActive();
   });
   controlDownButton.on('up', () => {
+    state.setIdling();
     clearTimeout(controlDownTimeout);
     clearInterval(controlDownInterval);
   });

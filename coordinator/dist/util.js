@@ -133,3 +133,26 @@ function runOperationForEachControl(operations) {
     operations.None();
 }
 exports.runOperationForEachControl = runOperationForEachControl;
+function getValueByIdleState(idleState, values) {
+    switch (idleState) {
+        case codes_1.IdleState.Active:
+            return values.Active;
+        case codes_1.IdleState.ShallowIdle:
+            return values.ShallowIdle;
+        case codes_1.IdleState.DeepIdle:
+            return values.DeepIdle;
+        default:
+            throw new Error("Unknown idle state " + idleState);
+    }
+}
+exports.getValueByIdleState = getValueByIdleState;
+function runOperationByIdleState(code, operations) {
+    return getValueByIdleState(code, operations)();
+}
+exports.runOperationByIdleState = runOperationByIdleState;
+function runOperationForEachIdleState(operations) {
+    operations.Active();
+    operations.ShallowIdle();
+    operations.DeepIdle();
+}
+exports.runOperationForEachIdleState = runOperationForEachIdleState;

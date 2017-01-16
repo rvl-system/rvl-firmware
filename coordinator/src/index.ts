@@ -27,6 +27,7 @@ import Raspi = require('raspi-io');
 import screenInit from './screen';
 import inputInit from './input';
 import endpointInit from './endpoint';
+import state from './state';
 
 const board = new Board({
   io: new Raspi({
@@ -44,5 +45,9 @@ board.on('ready', () => {
     (next) => screenInit(board, next),
     (next) => inputInit(next),
     (next) => endpointInit(next)
-  ], () => console.log('Running'));
+  ], () => {
+    state.setActive();
+    state.setIdling();
+    console.log('Running');
+  });
 });

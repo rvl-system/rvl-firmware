@@ -28,19 +28,29 @@ var UP_BUTTON = 'GPIO17';
 var DOWN_BUTTON = 'GPIO27';
 function init(cb) {
     var nextControlButton = new johnny_five_1.Button(NEXT_BUTTON);
-    nextControlButton.on('press', function () { return state_1.default.nextControl(); });
+    nextControlButton.on('down', function () {
+        if (state_1.default.getSettings().idleState === codes_1.IdleState.Active) {
+            state_1.default.nextControl();
+        }
+        state_1.default.setActive();
+    });
+    nextControlButton.on('up', function () { return state_1.default.setIdling(); });
     var controlUpButton = new johnny_five_1.Button(UP_BUTTON);
     var controlUpTimeout;
     var controlUpInterval;
     controlUpButton.on('down', function () {
-        state_1.default.controlUp(1);
-        if (state_1.default.getSettings().currentControl !== codes_1.Control.Preset) {
-            controlUpTimeout = setTimeout(function () {
-                controlUpInterval = setInterval(function () { return state_1.default.controlUp(STEP); }, HOLD_RATE);
-            }, HOLD_ENGAGE_TIME);
+        if (state_1.default.getSettings().idleState === codes_1.IdleState.Active) {
+            state_1.default.controlUp(1);
+            if (state_1.default.getSettings().currentControl !== codes_1.Control.Preset) {
+                controlUpTimeout = setTimeout(function () {
+                    controlUpInterval = setInterval(function () { return state_1.default.controlUp(STEP); }, HOLD_RATE);
+                }, HOLD_ENGAGE_TIME);
+            }
         }
+        state_1.default.setActive();
     });
     controlUpButton.on('up', function () {
+        state_1.default.setIdling();
         clearTimeout(controlUpTimeout);
         clearInterval(controlUpInterval);
     });
@@ -48,14 +58,18 @@ function init(cb) {
     var controlDownTimeout;
     var controlDownInterval;
     controlDownButton.on('down', function () {
-        state_1.default.controlDown(1);
-        if (state_1.default.getSettings().currentControl !== codes_1.Control.Preset) {
-            controlDownTimeout = setTimeout(function () {
-                controlDownInterval = setInterval(function () { return state_1.default.controlDown(STEP); }, HOLD_RATE);
-            }, HOLD_ENGAGE_TIME);
+        if (state_1.default.getSettings().idleState === codes_1.IdleState.Active) {
+            state_1.default.controlDown(1);
+            if (state_1.default.getSettings().currentControl !== codes_1.Control.Preset) {
+                controlDownTimeout = setTimeout(function () {
+                    controlDownInterval = setInterval(function () { return state_1.default.controlDown(STEP); }, HOLD_RATE);
+                }, HOLD_ENGAGE_TIME);
+            }
         }
+        state_1.default.setActive();
     });
     controlDownButton.on('up', function () {
+        state_1.default.setIdling();
         clearTimeout(controlDownTimeout);
         clearInterval(controlDownInterval);
     });
