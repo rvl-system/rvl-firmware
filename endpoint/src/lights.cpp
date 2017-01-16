@@ -36,6 +36,10 @@ void display_colors();
 
 void lights_setup() {
   strip.begin();
+  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+    rgb converted_color = hsv2rgb(colors[i]);
+    strip.setPixelColor(i, 0, 0, 0);
+  }
   strip.show();
   fade_set_buffer(colors);
   pulse_set_buffer(colors);

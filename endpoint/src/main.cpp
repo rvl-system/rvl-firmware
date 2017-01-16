@@ -22,9 +22,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "lights.h"
 
 void setup() {
-  messaging_setup();
+  Serial.begin(115200);
   lights_setup();
-  lights_set_preset(FADE_PRESET);
+  messaging_setup();
 }
 
 void loop() {
