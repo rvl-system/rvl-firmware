@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SCREEN_HEADER
 #define SCREEN_HEADER
 
-#include "codes.h"
+#include "common/codes.h"
 
 namespace Screen {
 

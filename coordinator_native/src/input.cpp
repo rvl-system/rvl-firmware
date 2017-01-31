@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "input.h"
 #include "state.h"
-#include "codes.h"
+#include "common/codes.h"
 #include "config.h"
 
 byte nextControlState = LOW;
@@ -36,6 +36,7 @@ void Input::init() {
   pinMode(BUTTON_NEXT_CONTROL, INPUT);
   pinMode(BUTTON_CONTROL_UP, INPUT);
   pinMode(BUTTON_CONTROL_DOWN, INPUT);
+  Serial.println("Input initialized");
 }
 
 void Input::loop() {

@@ -36,7 +36,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define BUTTON_CONTROL_UP 4
 #define BUTTON_CONTROL_DOWN 5
 
-#define CONTROL_PRESS_ENGAGE_TIME 75
+#define CONTROL_PRESS_ENGAGE_TIME 50
 #define CONTROL_HOLD_ENGAGE_TIME 2000
 #define CONTROL_HOLD_ENGAGE_STEP_INTERVAL 50
 

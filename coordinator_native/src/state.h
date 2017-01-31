@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef STATE_HEADER
 #define STATE_HEADER
 
-#include "codes.h"
+#include "common/codes.h"
 
 namespace State {
 

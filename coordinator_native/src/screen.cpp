@@ -23,7 +23,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "screen.h"
 #include "state.h"
-#include "codes.h"
+#include "common/codes.h"
 
 #define PIXEL_ON WHITE
 #define PIXEL_OFF BLACK

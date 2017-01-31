@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "codes.h"
+#include "common/codes.h"
 #include "screen.h"
 
 void emitControlEvent(Codes::Control::Control currentControl) {

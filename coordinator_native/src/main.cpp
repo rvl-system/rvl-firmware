@@ -21,14 +21,17 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "state.h"
 #include "screen.h"
 #include "input.h"
+#include "messaging.h"
 
 void setup() {
+  delay(200);
   Serial.begin(115200);
   Serial.println();
   Serial.println("Initializing");
   State::init();
   Screen::init();
   Input::init();
+  Messaging::init();
   Serial.println("Running");
 }
 
@@ -36,5 +39,6 @@ void loop() {
   State::loop();
   Screen::loop();
   Input::loop();
+  Messaging::loop();
   delay(1);
 }
