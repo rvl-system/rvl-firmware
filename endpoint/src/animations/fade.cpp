@@ -26,9 +26,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 hsv* fade_buffer;
 
 double fade_color_step = 0;
+double fade_max_brightness = 0;
 
 void fade_set_buffer(hsv* new_buffer) {
   fade_buffer = new_buffer;
+}
+
+void fade_lights_set_brightness(double new_brightness) {
+  fade_max_brightness = new_brightness;
 }
 
 void fade_set_value(unsigned char type, unsigned char value) {
@@ -43,7 +48,7 @@ void fade_init_colors() {
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
     fade_buffer[i].h = COLOR_DIFFERENCE * i; // angle
     fade_buffer[i].s = 1;
-    fade_buffer[i].v = BRIGHTNESS;
+    fade_buffer[i].v = fade_max_brightness;
   }
 }
 
@@ -53,5 +58,6 @@ void fade_update_colors() {
     if (fade_buffer[i].h >= 360.0) {
       fade_buffer[i].h = 0;
     }
+    fade_buffer[i].v = fade_max_brightness;
   }
 }

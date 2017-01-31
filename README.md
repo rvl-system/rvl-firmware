@@ -2,6 +2,10 @@
 
 Source code for my raver lights system. Written using [PlatformIO](http://platformio.org/).
 
+## Setting up the WIFI access point:
+
+https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software
+
 # License
 
 All schematics, layouts, software, and other documentation for aquarium-control is released under the General Public License.

@@ -23,9 +23,5 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define DATA_PIN 0
 #define CLOCK_PIN 2
 #define NUM_PIXELS 8
-#define BRIGHTNESS 0.2
-
-#define WIFI_SSID ""
-#define WIFI_PASSPHRASE ""
 
 #endif

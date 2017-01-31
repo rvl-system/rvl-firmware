@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,22 +17,27 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PULSE_HEADER
-#define PULSE_HEADER
+#ifndef CONFIG_HEADER
+#define CONFIG_HEADER
 
-#include "colorspace.h"
+#include "common/common_config.h"
 
-#define PULSE_RATE 0
-#define PULSE_DEFAULT_RATE 64
-#define PULSE_HUE 1
-#define PULSE_DEFAULT_HUE 200
-#define PULSE_SATURATION 2
-#define PULSE_DEFAULT_SATURATION 255
+#define LCD_ADDRESS 0x3C
+#define LCD_SDA 12
+#define LCD_SCL 13
+#define LCD_WIDTH 128
+#define LCD_HEIGHT 64
 
-void pulse_set_buffer(hsv* buffer);
-void pulse_lights_set_brightness(double new_brightness);
-void pulse_set_value(unsigned char type, unsigned char value);
-void pulse_init_colors();
-void pulse_update_colors();
+#define ACCELEROMETER_ADDRESS 0x3C
+#define ACCELEROMETER_SDA 16
+#define ACCELEROMETER_SCL 14
+
+#define BUTTON_NEXT_CONTROL 15
+#define BUTTON_CONTROL_UP 4
+#define BUTTON_CONTROL_DOWN 5
+
+#define CONTROL_PRESS_ENGAGE_TIME 75
+#define CONTROL_HOLD_ENGAGE_TIME 2000
+#define CONTROL_HOLD_ENGAGE_STEP_INTERVAL 50
 
 #endif

@@ -37,14 +37,14 @@ const OFF_TIMEOUT = 5000;
 
 const settings = {
   preset: 0,
-  brightness: 10,
+  brightness: 20,
   fadeValues: {
-    rate: 20
+    rate: 125
   },
   pulseValues: {
-    rate: 20,
+    rate: 125,
     hue: 0,
-    saturation: 100
+    saturation: 255
   },
   currentControl: 0,
   numClients: 0,
@@ -164,10 +164,12 @@ export class State extends EventEmitter {
 
   public clientConnected() {
     settings.numClients++;
+    this.emit('client', settings.numClients);
   };
 
   public clientDisconnected() {
     settings.numClients--;
+    this.emit('client', settings.numClients);
   };
 
   public getSettings() {

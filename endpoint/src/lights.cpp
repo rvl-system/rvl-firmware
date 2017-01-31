@@ -30,6 +30,7 @@ Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTST
 
 hsv colors[NUM_PIXELS];
 unsigned char preset;
+unsigned char brightness = 0;
 
 void update_colors();
 void display_colors();
@@ -78,6 +79,12 @@ void lights_set_value(unsigned char type, unsigned char value) {
   }
 }
 
+void lights_set_brightness(unsigned char new_brightness) {
+  double scaled_brightness = (double)new_brightness / 255.0;
+  fade_lights_set_brightness(scaled_brightness);
+  pulse_lights_set_brightness(scaled_brightness);
+}
+
 void update_colors() {
   switch (preset) {
     case FADE_PRESET:
@@ -92,7 +99,11 @@ void update_colors() {
 void display_colors() {
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
     rgb converted_color = hsv2rgb(colors[i]);
-    strip.setPixelColor(i, (int)(converted_color.r * 255), (int)(converted_color.g * 255), (int)(converted_color.b * 255));
+    strip.setPixelColor(i,
+      (int)(converted_color.r * 255),
+      (int)(converted_color.g * 255),
+      (int)(converted_color.b * 255)
+    );
   }
   strip.show();
 }

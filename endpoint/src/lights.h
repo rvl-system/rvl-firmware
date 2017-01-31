@@ -27,5 +27,6 @@ void lights_setup();
 void lights_loop();
 void lights_set_preset(unsigned char new_preset);
 void lights_set_value(unsigned char type, unsigned char value);
+void lights_set_brightness(unsigned char brightness);
 
 #endif

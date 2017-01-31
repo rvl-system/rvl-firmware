@@ -23,9 +23,9 @@ var johnny_five_1 = require("johnny-five");
 var HOLD_ENGAGE_TIME = 1500;
 var HOLD_RATE = 200;
 var STEP = 4;
-var NEXT_BUTTON = 'GPIO4';
-var UP_BUTTON = 'GPIO17';
-var DOWN_BUTTON = 'GPIO27';
+var NEXT_BUTTON = 'GPIO17';
+var UP_BUTTON = 'GPIO27';
+var DOWN_BUTTON = 'GPIO22';
 function init(cb) {
     var nextControlButton = new johnny_five_1.Button(NEXT_BUTTON);
     nextControlButton.on('down', function () {

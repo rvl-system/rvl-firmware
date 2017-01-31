@@ -19,36 +19,47 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-import { createServer, Socket } from 'net';
+import { createSocket } from 'dgram';
+import { parallel } from 'async';
 import state from './state';
 import { MessageType, FadeValue, PulseValue } from './codes';
 import { runOperationByPreset, runOperationForEachFadeValue, runOperationForEachPulseValue } from './util';
 
-const connectedClients: Socket[] = [];
+const PORT = 3000;
+const CLIENT_TIMEOUT = 5000;
+const CLIENT_HEARTBEAT_CODE = 126;
+
+const connectedClients: { [ address: string ]: NodeJS.Timer } = {};
+const writeBuffer: Buffer[] = [];
+
+const server = createSocket('udp4');
+
+server.on('message', (message: Buffer, rinfo) => {
+  if (message.length !== 1 || message[0] !== CLIENT_HEARTBEAT_CODE) {
+    return;
+  }
+  if (connectedClients[rinfo.address]) {
+    clearTimeout(connectedClients[rinfo.address]);
+  } else {
+    console.log(`Client ${rinfo.address} connected`);
+    state.clientConnected();
+    setTimeout(() => updateAll(), 100);
+  }
+
+  connectedClients[rinfo.address] = setTimeout(() => {
+    console.log(`Client ${rinfo.address} disconnected`);
+    delete connectedClients[rinfo.address];
+    state.clientDisconnected();
+  }, CLIENT_TIMEOUT);
+});
 
 export default function init(cb: () => void) {
-
-  const server = createServer((socket) => {
-    connectedClients.push(socket);
-    socket.on('close', () => {
-      const socketIndex = connectedClients.indexOf(socket);
-      if (socketIndex === -1) {
-        throw new Error('Could not find socket in connected sockets list');
-      }
-      connectedClients.splice(socketIndex, 1);
-      state.clientDisconnected();
-    });
-    state.clientConnected();
-    updateAll();
-  }).on('error', (err) => {
-    console.error(err);
-  });
-
-  server.listen(3000, () => {
+  server.bind({ port: PORT }, () => {
     state.on('brightness', updateBrightness);
     state.on('preset', updatePreset);
     state.on('value', updateValue);
     updateAll();
+    console.log('Endpoint server listening');
     cb();
   });
 }
@@ -89,8 +100,25 @@ function updateValue({ code, value }: { code: number, value: number }) {
   write(Buffer.from([ MessageType.SetValue, code, value ]));
 }
 
+let isWriting = false;
 function write(buffer: Buffer) {
-  for (const connectedClient of connectedClients) {
-    connectedClient.write(buffer);
+  const connectedClientAddresses = Object.keys(connectedClients);
+  if (connectedClientAddresses.length === 0) {
+    isWriting = false;
+    return;
   }
+  if (isWriting) {
+    writeBuffer.push(buffer);
+    return;
+  }
+  isWriting = true;
+  parallel(connectedClientAddresses.map((address) => (next: () => void) => {
+    server.send(buffer, PORT, address, next);
+  }), () => {
+    isWriting = false;
+    const nextBuffer = writeBuffer.shift();
+    if (nextBuffer) {
+      write(nextBuffer);
+    }
+  });
 }

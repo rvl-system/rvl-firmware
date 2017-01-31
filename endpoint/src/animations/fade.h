@@ -26,6 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define FADE_DEFAULT_RATE 128
 
 void fade_set_buffer(hsv* buffer);
+void fade_lights_set_brightness(double new_brightness);
 void fade_set_value(unsigned char type, unsigned char value);
 void fade_init_colors();
 void fade_update_colors();

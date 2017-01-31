@@ -25,8 +25,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 hsv* pulse_buffer;
 
-double pulse_rate = 0;
+double pulse_step = 0;
 
+double pulse_max_brightness = 0;
 double current_brightness = 0;
 unsigned char current_direction = 0;
 
@@ -34,10 +35,14 @@ void pulse_set_buffer(hsv* new_buffer) {
   pulse_buffer = new_buffer;
 }
 
+void pulse_lights_set_brightness(double new_brightness) {
+  pulse_max_brightness = new_brightness;
+}
+
 void pulse_set_value(unsigned char type, unsigned char value) {
   switch(type) {
     case PULSE_RATE:
-      pulse_rate = (double)value / 64000.0;
+      pulse_step = ((double)value / 255.0) / 100;
       break;
     case PULSE_HUE:
       for (unsigned int i = 0; i < NUM_PIXELS; i++) {
@@ -64,19 +69,19 @@ void pulse_init_colors() {
 
 void pulse_update_colors() {
   if (current_direction) {
-    current_brightness += pulse_rate;
+    current_brightness += pulse_step;
     if (current_brightness >= 1.0) {
       current_direction = 0;
       current_brightness = 1;
     }
   } else {
-    current_brightness -= pulse_rate;
+    current_brightness -= pulse_step;
     if (current_brightness <= 0) {
       current_direction = 1;
       current_brightness = 0;
     }
   }
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    pulse_buffer[i].v = current_brightness * BRIGHTNESS;
+    pulse_buffer[i].v = current_brightness * pulse_max_brightness;
   }
 }

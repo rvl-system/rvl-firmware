@@ -19,21 +19,26 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 #include "config.h"
 #include "lights.h"
 #include "messaging.h"
 
-#define STATE_WAITING 0
-#define STATE_READING 1
+#define STATE_WAITING 1
+#define STATE_READING 2
 
-#define ACCESS_POINT "192.168.4.1"
+#define SERVER_PORT 3000
+byte SERVER_IP[] = { 192, 168, 1, 143 };
 
-byte SERVER[] = { 192, 168, 4, 1 };
+#define HEARTBEAT_RATE 1000
+#define HEARTBEAT_CODE 126
 
 unsigned char state = STATE_WAITING;
 int message_type;
 
-WiFiClient controller_client;
+unsigned int heartbeat_count = 0;
+
+WiFiUDP Udp;
 
 void messaging_setup() {
   delay(10);
@@ -54,22 +59,30 @@ void messaging_setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-  if (controller_client.connect(SERVER, 3000)) {
-    Serial.println("Connected to coordinator");
-  }
+  Udp.begin(SERVER_PORT);
+  Serial.println("UDP server listening");
 }
 
 void messaging_loop() {
-  if (!controller_client.connected()) {
-    Serial.println();
-    Serial.println("Disconnected from coordinator");
-    controller_client.stop();
-    while (true) {}
+  heartbeat_count++;
+  if (heartbeat_count >= HEARTBEAT_RATE && state == STATE_WAITING) {
+    heartbeat_count = 0;
+    Serial.println("Sending heartbeat");
+    Serial.println(WiFi.localIP());
+    Udp.beginPacket(SERVER_IP, SERVER_PORT);
+    Udp.write(HEARTBEAT_CODE);
+    Udp.endPacket();
   }
-  if (controller_client.available() > 0) {
+  if (Udp.available() == 0) {
+    Udp.parsePacket();
+  }
+  if (Udp.available() > 0) {
+    Serial.print("Available packets: ");
+    Serial.print(Udp.available());
+    Serial.println();
     switch (state) {
       case STATE_WAITING:
-        message_type = controller_client.read();
+        message_type = Udp.read();
         Serial.print("Message Type: ");
         Serial.println(message_type);
         state = STATE_READING;
@@ -77,8 +90,8 @@ void messaging_loop() {
       case STATE_READING:
         switch(message_type) {
           case MESSAGE_SET_PRESET:
-            if (controller_client.available() >= 1) {
-              int preset = controller_client.read();
+            if (Udp.available() >= 1) {
+              int preset = Udp.read();
               Serial.print("Changing preset to: ");
               Serial.println(preset);
               lights_set_preset(preset);
@@ -86,9 +99,9 @@ void messaging_loop() {
             }
             break;
           case MESSAGE_SET_VALUE:
-            if (controller_client.available() >= 2) {
-              int type = controller_client.read();
-              int value = controller_client.read();
+            if (Udp.available() >= 2) {
+              int type = Udp.read();
+              int value = Udp.read();
               Serial.print("Changing value ");
               Serial.print(type);
               Serial.print(" to ");
@@ -98,7 +111,13 @@ void messaging_loop() {
             }
             break;
           case MESSAGE_SET_BRIGHTNESS:
-            // TODO
+            if (Udp.available() >= 1) {
+              int brightness = Udp.read();
+              Serial.print("Changing brightness to: ");
+              Serial.println(brightness);
+              lights_set_brightness(brightness);
+              state = STATE_WAITING;
+            }
             break;
           default:
             Serial.print("Unknown message type: ");

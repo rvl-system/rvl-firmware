@@ -17,32 +17,42 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 'use strict';
-var net_1 = require("net");
+var dgram_1 = require("dgram");
+var async_1 = require("async");
 var state_1 = require("./state");
 var codes_1 = require("./codes");
 var util_1 = require("./util");
-var connectedClients = [];
-function init(cb) {
-    var server = net_1.createServer(function (socket) {
-        connectedClients.push(socket);
-        socket.on('close', function () {
-            var socketIndex = connectedClients.indexOf(socket);
-            if (socketIndex === -1) {
-                throw new Error('Could not find socket in connected sockets list');
-            }
-            connectedClients.splice(socketIndex, 1);
-            state_1.default.clientDisconnected();
-        });
+var PORT = 3000;
+var CLIENT_TIMEOUT = 5000;
+var CLIENT_HEARTBEAT_CODE = 126;
+var connectedClients = {};
+var writeBuffer = [];
+var server = dgram_1.createSocket('udp4');
+server.on('message', function (message, rinfo) {
+    if (message.length !== 1 || message[0] !== CLIENT_HEARTBEAT_CODE) {
+        return;
+    }
+    if (connectedClients[rinfo.address]) {
+        clearTimeout(connectedClients[rinfo.address]);
+    }
+    else {
+        console.log("Client " + rinfo.address + " connected");
         state_1.default.clientConnected();
-        updateAll();
-    }).on('error', function (err) {
-        console.error(err);
-    });
-    server.listen(3000, function () {
+        setTimeout(function () { return updateAll(); }, 100);
+    }
+    connectedClients[rinfo.address] = setTimeout(function () {
+        console.log("Client " + rinfo.address + " disconnected");
+        delete connectedClients[rinfo.address];
+        state_1.default.clientDisconnected();
+    }, CLIENT_TIMEOUT);
+});
+function init(cb) {
+    server.bind({ port: PORT }, function () {
         state_1.default.on('brightness', updateBrightness);
         state_1.default.on('preset', updatePreset);
         state_1.default.on('value', updateValue);
         updateAll();
+        console.log('Endpoint server listening');
         cb();
     });
 }
@@ -80,9 +90,25 @@ function updateValue(_a) {
     console.log("Setting value " + code + " to " + value);
     write(Buffer.from([codes_1.MessageType.SetValue, code, value]));
 }
+var isWriting = false;
 function write(buffer) {
-    for (var _i = 0, connectedClients_1 = connectedClients; _i < connectedClients_1.length; _i++) {
-        var connectedClient = connectedClients_1[_i];
-        connectedClient.write(buffer);
+    var connectedClientAddresses = Object.keys(connectedClients);
+    if (connectedClientAddresses.length === 0) {
+        isWriting = false;
+        return;
     }
+    if (isWriting) {
+        writeBuffer.push(buffer);
+        return;
+    }
+    isWriting = true;
+    async_1.parallel(connectedClientAddresses.map(function (address) { return function (next) {
+        server.send(buffer, PORT, address, next);
+    }; }), function () {
+        isWriting = false;
+        var nextBuffer = writeBuffer.shift();
+        if (nextBuffer) {
+            write(nextBuffer);
+        }
+    });
 }

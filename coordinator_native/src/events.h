@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,22 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PULSE_HEADER
-#define PULSE_HEADER
+#ifndef EVENTS_HEADER
+#define EVENTS_HEADER
 
-#include "colorspace.h"
-
-#define PULSE_RATE 0
-#define PULSE_DEFAULT_RATE 64
-#define PULSE_HUE 1
-#define PULSE_DEFAULT_HUE 200
-#define PULSE_SATURATION 2
-#define PULSE_DEFAULT_SATURATION 255
-
-void pulse_set_buffer(hsv* buffer);
-void pulse_lights_set_brightness(double new_brightness);
-void pulse_set_value(unsigned char type, unsigned char value);
-void pulse_init_colors();
-void pulse_update_colors();
+void emitControlEvent(Codes::Control::Control currentControl);
+void emitValueEvent(Codes::Preset::Preset preset, int code, int newValue);
+void emitBrightnessEvent(int brightness);
+void emitPresetEvent(Codes::Preset::Preset preset);
+void emitClientEvent(int numClients);
+void emitIdleEvent(Codes::IdleState::IdleState idleState);
 
 #endif
