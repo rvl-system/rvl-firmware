@@ -2,9 +2,7 @@
 
 Source code for my raver lights system. Written using [PlatformIO](http://platformio.org/).
 
-## Setting up the WIFI access point:
-
-https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software
+This project is still under heavy development, documentation coming soon once things have settled!
 
 # License
 
