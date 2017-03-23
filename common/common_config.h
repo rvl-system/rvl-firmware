@@ -20,7 +20,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef COMMON_CONFIG_HEADER
 #define COMMON_CONFIG_HEADER
 
+#include <ESP8266WiFi.h>
+
 #define WIFI_SSID "RaverLights"
 #define WIFI_PASSPHRASE "4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}"
+
+#define SERVER_PORT 3000
+#define HEARTBEAT_CODE 126
 
 #endif

@@ -29,16 +29,16 @@ void setup() {
   Serial.println();
   Serial.println("Initializing");
   State::init();
-  Screen::init();
   Input::init();
+  Screen::init();
   Messaging::init();
   Serial.println("Running");
 }
 
 void loop() {
   State::loop();
-  Screen::loop();
   Input::loop();
+  Screen::loop();
   Messaging::loop();
   delay(1);
 }

@@ -18,24 +18,20 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <Encoder.h>
 #include "input.h"
 #include "state.h"
 #include "common/codes.h"
 #include "config.h"
 
-byte nextControlState = LOW;
+byte nextControlState = BUTTON_NEXT_CONTROL_OFF;
 int nextControlHoldTime = 0;
 
-byte controlUpState = LOW;
-int controlUpHoldTime = 0;
-
-byte controlDownState = LOW;
-int controlDownHoldTime = 0;
+Encoder encoder(ENCODER_A, ENCODER_B);
+long currentEncoderPosition = -999;
 
 void Input::init() {
-  pinMode(BUTTON_NEXT_CONTROL, INPUT);
-  pinMode(BUTTON_CONTROL_UP, INPUT);
-  pinMode(BUTTON_CONTROL_DOWN, INPUT);
+  pinMode(BUTTON_NEXT_CONTROL, INPUT_PULLUP);
   Serial.println("Input initialized");
 }
 
@@ -46,7 +42,7 @@ void Input::loop() {
   int currentNextControlState = digitalRead(BUTTON_NEXT_CONTROL);
   if (currentNextControlState != nextControlState) {
     nextControlState = currentNextControlState;
-    if (nextControlState == HIGH) {
+    if (nextControlState == BUTTON_NEXT_CONTROL_ON) {
       State::setActive();
     } else {
       State::setIdling();
@@ -56,55 +52,20 @@ void Input::loop() {
       nextControlHoldTime = 0;
     }
   }
-  if (nextControlState == HIGH) {
+  if (nextControlState == BUTTON_NEXT_CONTROL_ON) {
     nextControlHoldTime++;
   }
 
-  int currentControlUpState = digitalRead(BUTTON_CONTROL_UP);
-  if (currentControlUpState != controlUpState) {
-    controlUpState = currentControlUpState;
-    if (controlUpState == HIGH) {
-      State::setActive();
-    } else {
-      State::setIdling();
-      if (controlUpHoldTime >= CONTROL_PRESS_ENGAGE_TIME) {
-        State::controlUp();
-      }
-      controlUpHoldTime = 0;
-    }
-  }
-  if (controlUpState == HIGH) {
-    controlUpHoldTime++;
-    if (controlUpHoldTime >= CONTROL_HOLD_ENGAGE_TIME &&
-      controlUpHoldTime % CONTROL_HOLD_ENGAGE_STEP_INTERVAL == 0 &&
-      settings->currentControl != Codes::Control::Preset &&
-      settings->idleState == Codes::IdleState::Active
-    ) {
+  long newEncoderPosition = encoder.read();
+  if (newEncoderPosition >= currentEncoderPosition + ENCODER_STEPS_PER_CLICK ||
+    newEncoderPosition <= currentEncoderPosition - ENCODER_STEPS_PER_CLICK
+  ) {
+    if (newEncoderPosition > currentEncoderPosition) {
       State::controlUp();
-    }
-  }
-
-  int currentControlDownState = digitalRead(BUTTON_CONTROL_DOWN);
-  if (currentControlDownState != controlDownState) {
-    controlDownState = currentControlDownState;
-    if (controlDownState == HIGH) {
-      State::setActive();
     } else {
-      State::setIdling();
-      if (controlDownHoldTime >= CONTROL_PRESS_ENGAGE_TIME) {
-        State::controlDown();
-      }
-      controlDownHoldTime = 0;
-    }
-  }
-  if (controlDownState == HIGH) {
-    controlDownHoldTime++;
-    if (controlDownHoldTime >= CONTROL_HOLD_ENGAGE_TIME &&
-      controlDownHoldTime % CONTROL_HOLD_ENGAGE_STEP_INTERVAL == 0 &&
-      settings->currentControl != Codes::Control::Preset &&
-      settings->idleState == Codes::IdleState::Active
-    ) {
       State::controlDown();
     }
+    State::setActive();
+    currentEncoderPosition = newEncoderPosition;
   }
 }
