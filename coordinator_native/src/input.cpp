@@ -28,7 +28,7 @@ byte nextControlState = BUTTON_NEXT_CONTROL_OFF;
 int nextControlHoldTime = 0;
 
 Encoder encoder(ENCODER_A, ENCODER_B);
-long currentEncoderPosition = -999;
+long encoderPosition = -999;
 
 void Input::init() {
   pinMode(BUTTON_NEXT_CONTROL, INPUT_PULLUP);
@@ -39,17 +39,18 @@ void Input::loop() {
 
   State::Settings* settings = State::getSettings();
 
-  int currentNextControlState = digitalRead(BUTTON_NEXT_CONTROL);
-  if (currentNextControlState != nextControlState) {
-    nextControlState = currentNextControlState;
-    if (nextControlState == BUTTON_NEXT_CONTROL_ON) {
-      State::setActive();
-    } else {
-      State::setIdling();
-      if (nextControlHoldTime >= CONTROL_PRESS_ENGAGE_TIME) {
+  int newNextControlState = digitalRead(BUTTON_NEXT_CONTROL);
+  if (newNextControlState != nextControlState) {
+    nextControlState = newNextControlState;
+    if (nextControlState == BUTTON_NEXT_CONTROL_OFF) {
+      if (State::getSettings()->idleState != Codes::IdleState::DeepIdle &&
+        nextControlHoldTime >= CONTROL_PRESS_ENGAGE_TIME
+      ) {
         State::nextControl();
       }
+      State::setActive();
       nextControlHoldTime = 0;
+      State::setIdling();
     }
   }
   if (nextControlState == BUTTON_NEXT_CONTROL_ON) {
@@ -57,15 +58,18 @@ void Input::loop() {
   }
 
   long newEncoderPosition = encoder.read();
-  if (newEncoderPosition >= currentEncoderPosition + ENCODER_STEPS_PER_CLICK ||
-    newEncoderPosition <= currentEncoderPosition - ENCODER_STEPS_PER_CLICK
+  if (newEncoderPosition >= encoderPosition + ENCODER_STEPS_PER_CLICK ||
+    newEncoderPosition <= encoderPosition - ENCODER_STEPS_PER_CLICK
   ) {
-    if (newEncoderPosition > currentEncoderPosition) {
-      State::controlUp();
-    } else {
-      State::controlDown();
+    if (State::getSettings()->idleState != Codes::IdleState::DeepIdle) {
+      if (newEncoderPosition > encoderPosition) {
+        State::controlUp();
+      } else {
+        State::controlDown();
+      }
     }
     State::setActive();
-    currentEncoderPosition = newEncoderPosition;
+    encoderPosition = newEncoderPosition;
+    State::setIdling();
   }
 }
