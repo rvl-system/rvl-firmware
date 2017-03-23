@@ -1,4 +1,4 @@
-update=Monday, February 06, 2017 'PMt' 01:30:43 PM
+update=Wednesday, March 22, 2017 'PMt' 11:09:27 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -61,3 +61,4 @@ LibName29=valves
 LibName30=/Users/bryan/Library/Application Support/kicad/libraries/kicad-ESP8266/ESP8266
 LibName31=/Users/bryan/Projects/robots/raver-lights/components/DIY-OLED/DIY-OLED
 LibName32=/Users/bryan/Projects/robots/raver-lights/components/TSWA/TSWA
+LibName33=/Users/bryan/Projects/robots/raver-lights/components/Rotary_Encoder/Rotary_Encoder
