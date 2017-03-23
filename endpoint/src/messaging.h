@@ -20,11 +20,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MESSAGING_HEADER
 #define MESSAGING_HEADER
 
-#define MESSAGE_SET_PRESET 0
-#define MESSAGE_SET_VALUE 1
-#define MESSAGE_SET_BRIGHTNESS 2
+namespace Messaging {
 
-void messaging_setup();
-void messaging_loop();
+  void setup();
+  void loop();
+
+}
 
 #endif

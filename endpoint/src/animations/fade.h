@@ -20,15 +20,20 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef FADE_HEADER
 #define FADE_HEADER
 
+#include <Arduino.h>
 #include "colorspace.h"
+#include "common/codes.h"
 
-#define FADE_RATE 0
 #define FADE_DEFAULT_RATE 128
 
-void fade_set_buffer(hsv* buffer);
-void fade_lights_set_brightness(double new_brightness);
-void fade_set_value(unsigned char type, unsigned char value);
-void fade_init_colors();
-void fade_update_colors();
+namespace Fade {
+
+  void setBuffer(hsv* buffer);
+  void setBrightness(double newBrightness);
+  void setValue(Codes::FadeValue::FadeValue type, byte value);
+  void initColors();
+  void updateColors();
+
+}
 
 #endif

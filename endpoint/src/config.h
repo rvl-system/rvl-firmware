@@ -20,6 +20,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_HEADER
 #define CONFIG_HEADER
 
+#include "common/common_config.h"
+
 #define DATA_PIN 0
 #define CLOCK_PIN 2
 #define NUM_PIXELS 8

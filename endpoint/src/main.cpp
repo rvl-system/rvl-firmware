@@ -22,13 +22,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "lights.h"
 
 void setup() {
+  delay(200);
   Serial.begin(115200);
-  lights_setup();
-  messaging_setup();
+  Serial.println("Initializing");
+  Lights::setup();
+  Messaging::setup();
+  Serial.println("Running");
 }
 
 void loop() {
-  messaging_loop();
-  lights_loop();
+  Lights::loop();
+  Messaging::loop();
   delay(1);
 }

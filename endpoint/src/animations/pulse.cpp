@@ -20,68 +20,69 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "pulse.h"
 #include "colorspace.h"
 #include "config.h"
+#include "common/codes.h"
 
 #define COLOR_DIFFERENCE 40
 
-hsv* pulse_buffer;
+hsv* pulseBuffer;
 
-double pulse_step = 0;
+double pulseStep = 0;
 
-double pulse_max_brightness = 0;
-double current_brightness = 0;
-unsigned char current_direction = 0;
+double pulseMaxBrightness = 0;
+double currentBrightness = 0;
+unsigned char currentDirection = 0;
 
-void pulse_set_buffer(hsv* new_buffer) {
-  pulse_buffer = new_buffer;
+void Pulse::setBuffer(hsv* newBuffer) {
+  pulseBuffer = newBuffer;
 }
 
-void pulse_lights_set_brightness(double new_brightness) {
-  pulse_max_brightness = new_brightness;
+void Pulse::setBrightness(double newBrightness) {
+  pulseMaxBrightness = newBrightness;
 }
 
-void pulse_set_value(unsigned char type, unsigned char value) {
+void Pulse::setValue(Codes::PulseValue::PulseValue type, byte value) {
   switch(type) {
-    case PULSE_RATE:
-      pulse_step = ((double)value / 255.0) / 100;
+    case Codes::PulseValue::Rate:
+      pulseStep = ((double)value / 255.0) / 100;
       break;
-    case PULSE_HUE:
+    case Codes::PulseValue::Hue:
       for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-        pulse_buffer[i].h = (double)value * 360.0 / 255;
+        pulseBuffer[i].h = (double)value * 360.0 / 255;
       }
       break;
-    case PULSE_SATURATION:
+    case Codes::PulseValue::Saturation:
       for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-        pulse_buffer[i].s = (double)value / 255;
+        pulseBuffer[i].s = (double)value / 255;
       }
       break;
   }
 }
 
-void pulse_init_colors() {
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    pulse_buffer[i].h = 0;
-    pulse_buffer[i].s = 1;
-    pulse_buffer[i].v = 0;
+void Pulse::initColors() {
+  for (int i = 0; i < NUM_PIXELS; i++) {
+    pulseBuffer[i].h = 0;
+    pulseBuffer[i].s = 1;
+    pulseBuffer[i].v = 0;
   }
-  current_brightness = 0;
-  current_direction = 0;
+  currentBrightness = 0;
+  currentDirection = 0;
 }
 
-void pulse_update_colors() {
-  if (current_direction) {
-    current_brightness += pulse_step;
-    if (current_brightness >= 1.0) {
-      current_direction = 0;
-      current_brightness = 1;
+void Pulse::updateColors() {
+  if (currentDirection) {
+    currentBrightness += pulseStep;
+    if (currentBrightness >= 1.0) {
+      currentDirection = 0;
+      currentBrightness = 1;
     }
   } else {
-    current_brightness -= pulse_step;
-    if (current_brightness <= 0) {
-      current_direction = 1;
-      current_brightness = 0;
+    currentBrightness -= pulseStep;
+    if (currentBrightness <= 0) {
+      currentDirection = 1;
+      currentBrightness = 0;
     }
   }
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    pulse_buffer[i].v = current_brightness * pulse_max_brightness;
+  for (int i = 0; i < NUM_PIXELS; i++) {
+    pulseBuffer[i].v = currentBrightness * pulseMaxBrightness;
   }
 }

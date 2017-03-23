@@ -20,6 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <Adafruit_DotStar.h>
 #include "colorspace.h"
+#include "common/codes.h"
 #include "config.h"
 #include "lights.h"
 
@@ -29,74 +30,96 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTSTAR_BRG);
 
 hsv colors[NUM_PIXELS];
-unsigned char preset;
-unsigned char brightness = 0;
+Codes::Preset::Preset preset;
+byte brightness = 0;
 
-void update_colors();
-void display_colors();
+void updateColors();
+void displayColors();
 
-void lights_setup() {
+void Lights::setup() {
   strip.begin();
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
     rgb converted_color = hsv2rgb(colors[i]);
     strip.setPixelColor(i, 0, 0, 0);
   }
   strip.show();
-  fade_set_buffer(colors);
-  pulse_set_buffer(colors);
+  Fade::setBuffer(colors);
+  Pulse::setBuffer(colors);
+
+  Serial.println("Lights initialized");
 }
 
-void lights_loop() {
-  update_colors();
-  display_colors();
+void Lights::loop() {
+  updateColors();
+  displayColors();
 }
 
-void lights_set_preset(unsigned char new_preset) {
-  preset = new_preset;
+void Lights::setPreset(Codes::Preset::Preset newPreset) {
+  preset = newPreset;
   switch (preset) {
-    case FADE_PRESET:
-      fade_init_colors();
-      fade_set_value(FADE_RATE, FADE_DEFAULT_RATE);
+    case Codes::Preset::Fade:
+      Fade::initColors();
+      Fade::setValue(Codes::FadeValue::Rate, FADE_DEFAULT_RATE);
       break;
-    case PULSE_PRESET:
-      pulse_init_colors();
-      pulse_set_value(PULSE_RATE, PULSE_DEFAULT_RATE);
-      pulse_set_value(PULSE_HUE, PULSE_DEFAULT_HUE);
-      pulse_set_value(PULSE_SATURATION, PULSE_DEFAULT_SATURATION);
+    case Codes::Preset::Pulse:
+      Pulse::initColors();
+      Pulse::setValue(Codes::PulseValue::Rate, PULSE_DEFAULT_RATE);
+      Pulse::setValue(Codes::PulseValue::Hue, PULSE_DEFAULT_HUE);
+      Pulse::setValue(Codes::PulseValue::Saturation, PULSE_DEFAULT_SATURATION);
       break;
   }
-  display_colors();
+  displayColors();
 }
 
-void lights_set_value(unsigned char type, unsigned char value) {
+void Lights::setValue(byte type, byte value) {
   switch (preset) {
-    case FADE_PRESET:
-      fade_set_value(type, value);
+    case Codes::Preset::Fade:
+      switch (type) {
+        case Codes::FadeValue::Rate:
+          Fade::setValue(Codes::FadeValue::Rate, value);
+          break;
+        default:
+          Serial.println("Attempted to set invalid Fade Value");
+          break;
+      }
       break;
-    case PULSE_PRESET:
-      pulse_set_value(type, value);
+    case Codes::Preset::Pulse:
+      switch(type) {
+        case Codes::PulseValue::Rate:
+          Pulse::setValue(Codes::PulseValue::Rate, value);
+          break;
+        case Codes::PulseValue::Hue:
+          Pulse::setValue(Codes::PulseValue::Hue, value);
+          break;
+        case Codes::PulseValue::Saturation:
+          Pulse::setValue(Codes::PulseValue::Saturation, value);
+          break;
+        default:
+          Serial.println("Attempted to set invalid Pulse Value");
+          break;
+      }
       break;
   }
 }
 
-void lights_set_brightness(unsigned char new_brightness) {
-  double scaled_brightness = (double)new_brightness / 255.0;
-  fade_lights_set_brightness(scaled_brightness);
-  pulse_lights_set_brightness(scaled_brightness);
+void Lights::setBrightness(byte newBrightness) {
+  double scaledBrightness = (double)newBrightness / 255.0;
+  Fade::setBrightness(scaledBrightness);
+  Pulse::setBrightness(scaledBrightness);
 }
 
-void update_colors() {
+void updateColors() {
   switch (preset) {
-    case FADE_PRESET:
-      fade_update_colors();
+    case Codes::Preset::Fade:
+      Fade::updateColors();
       break;
-    case PULSE_PRESET:
-      pulse_update_colors();
+    case Codes::Preset::Pulse:
+      Pulse::updateColors();
       break;
   }
 }
 
-void display_colors() {
+void displayColors() {
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
     rgb converted_color = hsv2rgb(colors[i]);
     strip.setPixelColor(i,

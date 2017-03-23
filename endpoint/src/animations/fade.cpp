@@ -20,44 +20,45 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "animations/fade.h"
 #include "colorspace.h"
 #include "config.h"
+#include "common/codes.h"
 
 #define COLOR_DIFFERENCE 40
 
-hsv* fade_buffer;
+hsv* fadeBuffer;
 
-double fade_color_step = 0;
-double fade_max_brightness = 0;
+double fadeColorStep = 0;
+double fadeMaxBrightness = 0;
 
-void fade_set_buffer(hsv* new_buffer) {
-  fade_buffer = new_buffer;
+void Fade::setBuffer(hsv* newBuffer) {
+  fadeBuffer = newBuffer;
 }
 
-void fade_lights_set_brightness(double new_brightness) {
-  fade_max_brightness = new_brightness;
+void Fade::setBrightness(double newBrightness) {
+  fadeMaxBrightness = newBrightness;
 }
 
-void fade_set_value(unsigned char type, unsigned char value) {
+void Fade::setValue(Codes::FadeValue::FadeValue type, byte value) {
   switch(type) {
-    case FADE_RATE:
-      fade_color_step = (double)value / 1280.0;
+    case Codes::FadeValue::Rate:
+      fadeColorStep = (double)value / 1280.0;
       break;
   }
 }
 
-void fade_init_colors() {
+void Fade::initColors() {
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    fade_buffer[i].h = COLOR_DIFFERENCE * i; // angle
-    fade_buffer[i].s = 1;
-    fade_buffer[i].v = fade_max_brightness;
+    fadeBuffer[i].h = COLOR_DIFFERENCE * i; // angle
+    fadeBuffer[i].s = 1;
+    fadeBuffer[i].v = fadeMaxBrightness;
   }
 }
 
-void fade_update_colors() {
+void Fade::updateColors() {
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    fade_buffer[i].h += fade_color_step;
-    if (fade_buffer[i].h >= 360.0) {
-      fade_buffer[i].h = 0;
+    fadeBuffer[i].h += fadeColorStep;
+    if (fadeBuffer[i].h >= 360.0) {
+      fadeBuffer[i].h = 0;
     }
-    fade_buffer[i].v = fade_max_brightness;
+    fadeBuffer[i].v = fadeMaxBrightness;
   }
 }

@@ -20,13 +20,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef LIGHTS_HEADER
 #define LIGHTS_HEADER
 
-#define FADE_PRESET 0
-#define PULSE_PRESET 1
+#include <Arduino.h>
+#include "common/codes.h"
 
-void lights_setup();
-void lights_loop();
-void lights_set_preset(unsigned char new_preset);
-void lights_set_value(unsigned char type, unsigned char value);
-void lights_set_brightness(unsigned char brightness);
+namespace Lights {
+
+  void setup();
+  void loop();
+  void setPreset(Codes::Preset::Preset newPreset);
+  void setValue(byte type, byte value);
+  void setBrightness(byte brightness);
+}
 
 #endif

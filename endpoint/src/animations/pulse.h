@@ -20,19 +20,22 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PULSE_HEADER
 #define PULSE_HEADER
 
+#include <Arduino.h>
 #include "colorspace.h"
+#include "common/codes.h"
 
-#define PULSE_RATE 0
 #define PULSE_DEFAULT_RATE 64
-#define PULSE_HUE 1
 #define PULSE_DEFAULT_HUE 200
-#define PULSE_SATURATION 2
 #define PULSE_DEFAULT_SATURATION 255
 
-void pulse_set_buffer(hsv* buffer);
-void pulse_lights_set_brightness(double new_brightness);
-void pulse_set_value(unsigned char type, unsigned char value);
-void pulse_init_colors();
-void pulse_update_colors();
+namespace Pulse {
+
+  void setBuffer(hsv* buffer);
+  void setBrightness(double new_brightness);
+  void setValue(Codes::PulseValue::PulseValue type, byte value);
+  void initColors();
+  void updateColors();
+
+}
 
 #endif
