@@ -1,0 +1,428 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:ESP8266
+LIBS:DIY-OLED
+LIBS:TSWA
+LIBS:Coordinator Board-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L LM3671 U1
+U 1 1 57A0D83A
+P 3450 3600
+F 0 "U1" H 3200 3825 60  0000 L CNN
+F 1 "LM3671" H 3200 3350 60  0000 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5" H 3450 3250 60  0000 C CNN
+F 3 "" H 3450 3250 60  0000 C CNN
+	1    3450 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch_SPDT_x2 SW1
+U 1 1 57A0DADD
+P 3550 2950
+F 0 "SW1" H 3350 3100 50  0000 C CNN
+F 1 "Switch_SPDT_x2" H 3300 2800 50  0000 C CNN
+F 2 "CL-SA-12C:CL-SA-12C4" H 3850 3250 50  0000 C CNN
+F 3 "" H 3550 2950 50  0000 C CNN
+	1    3550 2950
+	-1   0    0    -1  
+$EndComp
+$Comp
+L CONN_01X02 P1
+U 1 1 57A0DC23
+P 2500 3650
+F 0 "P1" H 2500 3800 50  0000 C CNN
+F 1 "POWER" V 2600 3650 50  0000 C CNN
+F 2 "PH_Connector:S2B-PH-K-S" H 3000 3450 50  0000 C CNN
+F 3 "" H 2500 3650 50  0000 C CNN
+	1    2500 3650
+	-1   0    0    -1  
+$EndComp
+$Comp
+L INDUCTOR L1
+U 1 1 57A0E1B1
+P 4200 3500
+F 0 "L1" V 4150 3500 50  0000 C CNN
+F 1 "2.2uH" V 4300 3500 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 4400 3800 50  0000 C CNN
+F 3 "" H 4200 3500 50  0000 C CNN
+	1    4200 3500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L C C2
+U 1 1 57A0E396
+P 4850 4000
+F 0 "C2" H 4875 4100 50  0000 L CNN
+F 1 "10uF" H 5000 4000 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 4500 3850 50  0000 C CNN
+F 3 "" H 4850 4000 50  0000 C CNN
+	1    4850 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C1
+U 1 1 57A0E3BE
+P 2850 3400
+F 0 "C1" H 2875 3500 50  0000 L CNN
+F 1 "4.7uF" H 2600 3500 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 2350 3600 50  0000 C CNN
+F 3 "" H 2850 3400 50  0000 C CNN
+	1    2850 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X03 P4
+U 1 1 584F7038
+P 5450 4750
+F 0 "P4" H 5450 4950 50  0000 C CNN
+F 1 "SERIAL" V 5550 4750 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" V 5700 3950 50  0000 C CNN
+F 3 "" H 5450 4750 50  0000 C CNN
+	1    5450 4750
+	0    1    1    0   
+$EndComp
+$Comp
+L CONN_01X02 P5
+U 1 1 58859834
+P 6350 2650
+F 0 "P5" H 6350 2800 50  0000 C CNN
+F 1 "PGRM" V 6450 2650 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" V 6800 3000 50  0000 C CNN
+F 3 "" H 6350 2650 50  0000 C CNN
+	1    6350 2650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L R R1
+U 1 1 58978884
+P 6650 2700
+F 0 "R1" V 6730 2700 50  0000 C CNN
+F 1 "1k" V 6650 2700 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 6400 2100 50  0000 C CNN
+F 3 "" H 6650 2700 50  0000 C CNN
+	1    6650 2700
+	-1   0    0    1   
+$EndComp
+NoConn ~ 8550 3650
+$Comp
+L R R2
+U 1 1 589793EA
+P 6100 3250
+F 0 "R2" V 6180 3250 50  0000 C CNN
+F 1 "10k" V 6100 3250 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 5200 3250 50  0000 C CNN
+F 3 "" H 6100 3250 50  0000 C CNN
+	1    6100 3250
+	0    1    1    0   
+$EndComp
+$Comp
+L CONN_01X04 P3
+U 1 1 589796B0
+P 8000 4750
+F 0 "P3" H 8000 5000 50  0000 C CNN
+F 1 "Peripheral" V 8100 4750 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x04_Pitch2.00mm" V 8800 4800 50  0000 C CNN
+F 3 "" H 8000 4750 50  0000 C CNN
+	1    8000 4750
+	0    1    1    0   
+$EndComp
+$Comp
+L R_PACK4 RP1
+U 1 1 5897D990
+P 9350 3600
+F 0 "RP1" H 9350 4100 50  0000 C CNN
+F 1 "10k" H 9350 3550 50  0000 C CNN
+F 2 "R_Array:R_Array_Concave_4x0805" V 9850 3950 50  0000 C CNN
+F 3 "" H 9350 3600 50  0000 C CNN
+	1    9350 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L DIY-OLED-0.96 U4
+U 1 1 5898EB2B
+P 6650 4950
+F 0 "U4" V 6450 4850 60  0000 C CNN
+F 1 "DIY-OLED-0.96" H 6650 5050 60  0000 C CNN
+F 2 "DIY-OLED:DIY-OLED-0.96" H 6650 5300 60  0000 C CNN
+F 3 "" H 6650 4950 60  0000 C CNN
+	1    6650 4950
+	-1   0    0    1   
+$EndComp
+NoConn ~ 7900 2550
+NoConn ~ 7800 2550
+NoConn ~ 7700 2550
+NoConn ~ 7600 2550
+NoConn ~ 7500 2550
+NoConn ~ 7400 2550
+$Comp
+L ESP-12E U3
+U 1 1 58977E50
+P 7650 3450
+F 0 "U3" H 7650 3350 50  0000 C CNN
+F 1 "ESP-12E" H 7650 3550 50  0000 C CNN
+F 2 "ESP8266:ESP-12" H 7650 3450 50  0001 C CNN
+F 3 "" H 7650 3450 50  0001 C CNN
+	1    7650 3450
+	-1   0    0    1   
+$EndComp
+$Comp
+L CONN_01X01 P10
+U 1 1 589A31E3
+P 1800 4500
+F 0 "P10" H 1800 4600 50  0000 C CNN
+F 1 "Mounting Hole" H 2150 4500 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 4700 50  0000 C CNN
+F 3 "" H 1800 4500 50  0000 C CNN
+	1    1800 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P11
+U 1 1 589A324B
+P 1800 4750
+F 0 "P11" H 1800 4850 50  0000 C CNN
+F 1 "Mounting Hole" H 2150 4750 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 5200 50  0000 C CNN
+F 3 "" H 1800 4750 50  0000 C CNN
+	1    1800 4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P12
+U 1 1 589A32AD
+P 1800 5000
+F 0 "P12" H 1800 5100 50  0000 C CNN
+F 1 "Mounting Hole" H 2150 5000 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 5700 50  0000 C CNN
+F 3 "" H 1800 5000 50  0000 C CNN
+	1    1800 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X01 P13
+U 1 1 589A32E6
+P 1800 5250
+F 0 "P13" H 1800 5350 50  0000 C CNN
+F 1 "Mounting Hole" H 2150 5250 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 6200 50  0000 C CNN
+F 3 "" H 1800 5250 50  0000 C CNN
+	1    1800 5250
+	1    0    0    -1  
+$EndComp
+NoConn ~ 1600 4500
+NoConn ~ 1600 4750
+NoConn ~ 1600 5000
+NoConn ~ 1600 5250
+$Comp
+L TSWA-3N-CD23 U2
+U 1 1 5897DDE5
+P 9050 4950
+F 0 "U2" V 9250 4850 60  0000 C CNN
+F 1 "TSWA-3N-CD23" H 9050 5100 60  0000 C CNN
+F 2 "TSWA:TSWA-3N-CD23" H 9050 5200 60  0000 C CNN
+F 3 "" H 9050 4950 60  0000 C CNN
+	1    9050 4950
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	2700 3600 2700 2850
+Wire Wire Line
+	2700 2850 3250 2850
+Wire Wire Line
+	3850 2950 4000 2950
+Wire Wire Line
+	3000 3150 3000 3600
+Wire Wire Line
+	3000 3500 3050 3500
+Connection ~ 3000 3500
+Wire Wire Line
+	2700 3700 3050 3700
+Wire Wire Line
+	2850 3550 2850 4450
+Wire Wire Line
+	2850 4450 9750 4450
+Connection ~ 2850 3700
+Wire Wire Line
+	3850 3500 3900 3500
+Wire Wire Line
+	4000 2950 4000 3150
+Wire Wire Line
+	4000 3150 2850 3150
+Wire Wire Line
+	2850 3150 2850 3250
+Connection ~ 3000 3150
+Wire Wire Line
+	4850 2450 4850 3850
+Wire Wire Line
+	3850 3700 4850 3700
+Connection ~ 4850 3700
+Wire Wire Line
+	4850 4150 4850 4450
+Wire Wire Line
+	3000 3600 3050 3600
+Connection ~ 3000 3600
+Wire Wire Line
+	4500 3500 4850 3500
+Connection ~ 4850 4450
+Connection ~ 4850 3500
+Wire Wire Line
+	5350 3050 5350 4550
+Connection ~ 5350 4450
+Wire Wire Line
+	5450 3750 6750 3750
+Wire Wire Line
+	8650 3750 8550 3750
+Wire Wire Line
+	4850 2450 9650 2450
+Connection ~ 8650 3050
+Connection ~ 4850 3350
+Connection ~ 8650 2450
+Wire Wire Line
+	5450 3750 5450 4550
+Wire Wire Line
+	5550 3650 6750 3650
+Wire Wire Line
+	5550 3650 5550 4550
+Wire Wire Line
+	6650 3350 6750 3350
+Wire Wire Line
+	6650 2550 6650 2450
+Connection ~ 6650 2450
+Wire Wire Line
+	6650 2850 6650 3350
+Wire Wire Line
+	6300 2850 6300 3050
+Connection ~ 6300 3050
+Wire Wire Line
+	6400 2850 6400 2950
+Wire Wire Line
+	6400 2950 6650 2950
+Connection ~ 6650 2950
+Wire Wire Line
+	5750 3250 5950 3250
+Wire Wire Line
+	5750 2450 5750 4350
+Connection ~ 5750 2450
+Wire Wire Line
+	5350 3050 6750 3050
+Wire Wire Line
+	6750 3250 6250 3250
+Wire Wire Line
+	8650 2450 8650 3750
+Wire Wire Line
+	8550 3050 8650 3050
+Wire Wire Line
+	9650 2450 9650 3550
+Wire Wire Line
+	9750 4450 9750 3250
+Connection ~ 9750 3350
+Connection ~ 9750 3450
+Wire Wire Line
+	8050 4550 8050 4450
+Connection ~ 8050 4450
+Wire Wire Line
+	5750 4350 9150 4350
+Connection ~ 5750 3250
+Wire Wire Line
+	8150 4350 8150 4550
+Wire Wire Line
+	6650 4150 7950 4150
+Wire Wire Line
+	8550 3150 8750 3150
+Wire Wire Line
+	8750 3150 8750 4250
+Wire Wire Line
+	8750 4250 7850 4250
+Connection ~ 8150 4350
+Wire Wire Line
+	8850 3450 8850 4550
+Connection ~ 8850 3450
+Wire Wire Line
+	8950 3350 8950 4550
+Connection ~ 8950 3350
+Wire Wire Line
+	9050 3250 9050 4550
+Connection ~ 9050 3250
+Wire Wire Line
+	9150 4350 9150 4550
+Wire Wire Line
+	6450 3450 6750 3450
+Wire Wire Line
+	6650 3550 6750 3550
+Wire Wire Line
+	7850 4250 7850 4550
+Wire Wire Line
+	7950 4150 7950 4550
+Wire Wire Line
+	6650 3550 6650 4150
+Wire Wire Line
+	6750 3150 6550 3150
+Wire Wire Line
+	6450 3450 6450 4550
+Wire Wire Line
+	6550 3150 6550 4550
+Wire Wire Line
+	8550 3250 9150 3250
+Wire Wire Line
+	8550 3350 9150 3350
+Wire Wire Line
+	8550 3450 9150 3450
+Wire Wire Line
+	8550 3550 9150 3550
+Wire Wire Line
+	9750 3250 9550 3250
+Wire Wire Line
+	9750 3350 9550 3350
+Wire Wire Line
+	9550 3450 9750 3450
+Wire Wire Line
+	9650 3550 9550 3550
+Wire Wire Line
+	6750 4550 6750 4350
+Connection ~ 6750 4350
+Wire Wire Line
+	6650 4550 6650 4450
+Connection ~ 6650 4450
+$EndSCHEMATC

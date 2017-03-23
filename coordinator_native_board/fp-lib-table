@@ -1,0 +1,7 @@
+(fp_lib_table
+  (lib (name DIY-OLED)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/DIY-OLED/DIY-OLED.pretty)(options "")(descr ""))
+  (lib (name TSWA)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/TSWA/TSWA.pretty)(options "")(descr ""))
+  (lib (name R_Array)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/R_Array/R_Array.pretty)(options "")(descr ""))
+  (lib (name CL-SA-12C)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/CL-SA-12C/CL-SA-12C.pretty)(options "")(descr ""))
+  (lib (name PH_Connector)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/PH_Connector/PH_Connector.pretty)(options "")(descr ""))
+)
