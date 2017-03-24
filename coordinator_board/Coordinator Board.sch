@@ -159,17 +159,6 @@ F 3 "" H 6100 3250 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L CONN_01X04 P3
-U 1 1 589796B0
-P 8000 4750
-F 0 "P3" H 8000 5000 50  0000 C CNN
-F 1 "Peripheral" V 8100 4750 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x04_Pitch2.00mm" V 8800 4800 50  0000 C CNN
-F 3 "" H 8000 4750 50  0000 C CNN
-	1    8000 4750
-	0    1    1    0   
-$EndComp
-$Comp
 L DIY-OLED-0.96 U4
 U 1 1 5898EB2B
 P 6650 4950
@@ -197,53 +186,6 @@ F 3 "" H 7650 3450 50  0001 C CNN
 	1    7650 3450
 	-1   0    0    1   
 $EndComp
-$Comp
-L CONN_01X01 P10
-U 1 1 589A31E3
-P 1800 4500
-F 0 "P10" H 1800 4600 50  0000 C CNN
-F 1 "Mounting Hole" H 2150 4500 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 4700 50  0000 C CNN
-F 3 "" H 1800 4500 50  0000 C CNN
-	1    1800 4500
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P11
-U 1 1 589A324B
-P 1800 4750
-F 0 "P11" H 1800 4850 50  0000 C CNN
-F 1 "Mounting Hole" H 2150 4750 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 5200 50  0000 C CNN
-F 3 "" H 1800 4750 50  0000 C CNN
-	1    1800 4750
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P12
-U 1 1 589A32AD
-P 1800 5000
-F 0 "P12" H 1800 5100 50  0000 C CNN
-F 1 "Mounting Hole" H 2150 5000 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 5700 50  0000 C CNN
-F 3 "" H 1800 5000 50  0000 C CNN
-	1    1800 5000
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P13
-U 1 1 589A32E6
-P 1800 5250
-F 0 "P13" H 1800 5350 50  0000 C CNN
-F 1 "Mounting Hole" H 2150 5250 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_2.2mm_M2" H 1800 6200 50  0000 C CNN
-F 3 "" H 1800 5250 50  0000 C CNN
-	1    1800 5250
-	1    0    0    -1  
-$EndComp
-NoConn ~ 1600 4500
-NoConn ~ 1600 4750
-NoConn ~ 1600 5000
 NoConn ~ 1600 5250
 Wire Wire Line
 	2700 3600 2700 2850
@@ -266,9 +208,9 @@ Connection ~ 2850 3700
 Wire Wire Line
 	3850 3500 3900 3500
 Wire Wire Line
-	4000 3150 4000 2950
+	4000 2950 4000 3150
 Wire Wire Line
-	2850 3150 4000 3150
+	4000 3150 2850 3150
 Wire Wire Line
 	2850 3150 2850 3250
 Connection ~ 3000 3150
@@ -332,31 +274,9 @@ Wire Wire Line
 	8650 2450 8650 3750
 Wire Wire Line
 	8550 3050 8650 3050
-Wire Wire Line
-	8050 4450 8050 4550
-Wire Wire Line
-	5750 4350 8150 4350
 Connection ~ 5750 3250
 Wire Wire Line
-	8150 4350 8150 4550
-Wire Wire Line
-	6650 4150 7950 4150
-Wire Wire Line
-	8550 3150 8750 3150
-Wire Wire Line
-	8750 3150 8750 4250
-Wire Wire Line
-	8750 4250 7850 4250
-Wire Wire Line
 	6450 3450 6750 3450
-Wire Wire Line
-	6650 3550 6750 3550
-Wire Wire Line
-	7850 4250 7850 4550
-Wire Wire Line
-	7950 4150 7950 4550
-Wire Wire Line
-	6650 3550 6650 4150
 Wire Wire Line
 	6750 3150 6550 3150
 Wire Wire Line
@@ -365,7 +285,6 @@ Wire Wire Line
 	6550 3150 6550 4550
 Wire Wire Line
 	6750 4550 6750 4350
-Connection ~ 6750 4350
 Wire Wire Line
 	6650 4550 6650 4450
 Connection ~ 6650 4450
@@ -386,7 +305,7 @@ U 1 1 58D36C2B
 P 9500 4850
 F 0 "U5" V 9350 4850 60  0000 C CNN
 F 1 "Rotary_Encoder" V 9750 4850 60  0000 C CNN
-F 2 "" H 9500 4850 60  0000 C CNN
+F 2 "Rotary_Encoder:Rotary_Encoder" V 9900 4850 60  0000 C CNN
 F 3 "" H 9500 4850 60  0000 C CNN
 	1    9500 4850
 	0    1    1    0   
@@ -414,10 +333,9 @@ Wire Wire Line
 Wire Wire Line
 	10050 4800 10050 5000
 Wire Wire Line
-	8750 5000 10050 5000
+	10050 5000 8750 5000
 Wire Wire Line
-	8750 4450 8750 5000
-Connection ~ 8050 4450
+	8750 5000 8750 4450
 Wire Wire Line
 	9050 4700 8750 4700
 Connection ~ 8750 4700
@@ -427,4 +345,8 @@ Wire Wire Line
 	9050 3550 9050 2850
 Wire Wire Line
 	9050 2450 9050 2550
+NoConn ~ 8550 3150
+Wire Wire Line
+	6750 4350 5750 4350
+NoConn ~ 6750 3550
 $EndSCHEMATC
