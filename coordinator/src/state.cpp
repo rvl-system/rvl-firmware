@@ -81,7 +81,7 @@ void State::nextControl() {
       break;
   }
 
-  emitControlEvent(settings.currentControl);
+  Events::emitControlEvent(settings.currentControl);
 }
 
 int calculateNewValue(int value, bool direction) {
@@ -124,7 +124,7 @@ void handleValueChange(int code, bool direction) {
       }
       break;
   }
-  emitValueEvent(settings.preset, code, newValue);
+  Events::emitValueEvent(settings.preset, code, newValue);
 }
 
 void State::controlUp() {
@@ -135,7 +135,7 @@ void State::controlUp() {
         if (settings.brightness > MAX_BRIGHTNESS) {
           settings.brightness = MAX_BRIGHTNESS;
         }
-        emitBrightnessEvent(settings.brightness);
+        Events::emitBrightnessEvent(settings.brightness);
       }
       break;
     case Codes::Control::Preset:
@@ -147,7 +147,7 @@ void State::controlUp() {
           settings.preset = Codes::Preset::Fade;
           break;
       }
-      emitPresetEvent(settings.preset);
+      Events::emitPresetEvent(settings.preset);
       break;
     case Codes::Control::Value1:
       handleValueChange(0, true);
@@ -169,7 +169,7 @@ void State::controlDown() {
         if (settings.brightness < 0) {
           settings.brightness = 0;
         }
-        emitBrightnessEvent(settings.brightness);
+        Events::emitBrightnessEvent(settings.brightness);
       }
       break;
     case Codes::Control::Preset:
@@ -181,7 +181,7 @@ void State::controlDown() {
           settings.preset = Codes::Preset::Fade;
           break;
       }
-      emitPresetEvent(settings.preset);
+      Events::emitPresetEvent(settings.preset);
       break;
     case Codes::Control::Value1:
       handleValueChange(0, false);
@@ -197,18 +197,18 @@ void State::controlDown() {
 
 void State::clientConnected() {
   settings.numClients++;
-  emitClientEvent(settings.numClients);
+  Events::emitClientEvent(settings.numClients);
 }
 
 void State::clientDisconnected() {
   settings.numClients--;
-  emitClientEvent(settings.numClients);
+  Events::emitClientEvent(settings.numClients);
 }
 
 void State::setActive() {
   isActive = true;
   settings.idleState = Codes::IdleState::Active;
-  emitIdleEvent(settings.idleState);
+  Events::emitIdleEvent(settings.idleState);
 }
 
 void State::setIdling() {
@@ -228,11 +228,11 @@ void State::loop() {
         case Codes::IdleState::Active:
           idleCountdown = OFF_TIMEOUT;
           settings.idleState = Codes::IdleState::ShallowIdle;
-          emitIdleEvent(settings.idleState);
+          Events::emitIdleEvent(settings.idleState);
           break;
         case Codes::IdleState::ShallowIdle:
           settings.idleState = Codes::IdleState::DeepIdle;
-          emitIdleEvent(settings.idleState);
+          Events::emitIdleEvent(settings.idleState);
           break;
       }
     }

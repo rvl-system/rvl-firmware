@@ -20,11 +20,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EVENTS_HEADER
 #define EVENTS_HEADER
 
-void emitControlEvent(Codes::Control::Control currentControl);
-void emitValueEvent(Codes::Preset::Preset preset, int code, int newValue);
-void emitBrightnessEvent(int brightness);
-void emitPresetEvent(Codes::Preset::Preset preset);
-void emitClientEvent(int numClients);
-void emitIdleEvent(Codes::IdleState::IdleState idleState);
+namespace Events {
+
+  void emitControlEvent(Codes::Control::Control currentControl);
+  void emitValueEvent(Codes::Preset::Preset preset, int code, int newValue);
+  void emitBrightnessEvent(int brightness);
+  void emitPresetEvent(Codes::Preset::Preset preset);
+  void emitClientEvent(int numClients);
+  void emitIdleEvent(Codes::IdleState::IdleState idleState);
+
+}
 
 #endif
