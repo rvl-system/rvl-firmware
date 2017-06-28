@@ -18,7 +18,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <Encoder.h>
 #include "input.h"
 #include "state.h"
 #include "common/codes.h"
@@ -26,9 +25,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 byte nextControlState = BUTTON_NEXT_CONTROL_OFF;
 int nextControlHoldTime = 0;
-
-Encoder encoder(ENCODER_A, ENCODER_B);
-long encoderPosition = -999;
 
 void Input::init() {
   pinMode(BUTTON_NEXT_CONTROL, INPUT_PULLUP);
@@ -57,19 +53,18 @@ void Input::loop() {
     nextControlHoldTime++;
   }
 
-  long newEncoderPosition = encoder.read();
-  if (newEncoderPosition >= encoderPosition + ENCODER_STEPS_PER_CLICK ||
-    newEncoderPosition <= encoderPosition - ENCODER_STEPS_PER_CLICK
-  ) {
-    if (State::getSettings()->idleState != Codes::IdleState::DeepIdle) {
-      if (newEncoderPosition > encoderPosition) {
-        State::controlUp();
-      } else {
-        State::controlDown();
-      }
-    }
-    State::setActive();
-    encoderPosition = newEncoderPosition;
-    State::setIdling();
-  }
+  // if (newEncoderPosition >= encoderPosition + ENCODER_STEPS_PER_CLICK ||
+  //   newEncoderPosition <= encoderPosition - ENCODER_STEPS_PER_CLICK
+  // ) {
+  //   if (State::getSettings()->idleState != Codes::IdleState::DeepIdle) {
+  //     if (newEncoderPosition > encoderPosition) {
+  //       State::controlUp();
+  //     } else {
+  //       State::controlDown();
+  //     }
+  //   }
+  //   State::setActive();
+  //   encoderPosition = newEncoderPosition;
+  //   State::setIdling();
+  // }
 }

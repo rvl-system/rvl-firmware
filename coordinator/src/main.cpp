@@ -31,7 +31,7 @@ void setup() {
   State::init();
   Input::init();
   Screen::init();
-  Messaging::init();
+  // Messaging::init();
   Serial.println("Running");
 }
 
@@ -39,6 +39,7 @@ void loop() {
   State::loop();
   Input::loop();
   Screen::loop();
-  Messaging::loop();
+  // Messaging::loop();
+  ESP.wdtFeed();
   delay(1);
 }

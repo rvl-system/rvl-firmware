@@ -23,20 +23,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "common/common_config.h"
 
 #define LCD_ADDRESS 0x3C
-#define LCD_SDA 12
-#define LCD_SCL 13
+#define LCD_SDA 4
+#define LCD_SCL 5
 #define LCD_WIDTH 128
 #define LCD_HEIGHT 64
 
-#define ACCELEROMETER_ADDRESS 0x3C
-#define ACCELEROMETER_SDA 16
-#define ACCELEROMETER_SCL 14
-
-#define BUTTON_NEXT_CONTROL 13
+#define BUTTON_NEXT_CONTROL 12
 #define BUTTON_NEXT_CONTROL_ON LOW
 #define BUTTON_NEXT_CONTROL_OFF HIGH
-#define ENCODER_A 5
-#define ENCODER_B 4
+#define ENCODER_A 16
+#define ENCODER_B 14
 #define ENCODER_STEPS_PER_CLICK 4
 
 #define CONTROL_PRESS_ENGAGE_TIME 50
