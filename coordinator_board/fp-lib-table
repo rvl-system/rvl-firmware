@@ -5,4 +5,5 @@
   (lib (name CL-SA-12C)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/CL-SA-12C/CL-SA-12C.pretty)(options "")(descr ""))
   (lib (name PH_Connector)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/PH_Connector/PH_Connector.pretty)(options "")(descr ""))
   (lib (name Rotary_Encoder)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/Rotary_Encoder/Rotary_Encoder.pretty)(options "")(descr ""))
+  (lib (name SF303GJ26)(type KiCad)(uri /Users/bryan/Projects/robots/raver-lights/components/SF303GJ26/SF303GJ26.pretty)(options "")(descr ""))
 )

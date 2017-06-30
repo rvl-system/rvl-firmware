@@ -1,4 +1,4 @@
-update=Wednesday, March 22, 2017 'PMt' 11:09:27 PM
+update=Tuesday, June 27, 2017 'PMt' 11:33:55 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -62,3 +62,4 @@ LibName30=/Users/bryan/Library/Application Support/kicad/libraries/kicad-ESP8266
 LibName31=/Users/bryan/Projects/robots/raver-lights/components/DIY-OLED/DIY-OLED
 LibName32=/Users/bryan/Projects/robots/raver-lights/components/TSWA/TSWA
 LibName33=/Users/bryan/Projects/robots/raver-lights/components/Rotary_Encoder/Rotary_Encoder
+LibName34=/Users/bryan/Projects/robots/raver-lights/components/SF303GJ26/sf303gj26
