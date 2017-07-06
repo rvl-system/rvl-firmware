@@ -195,13 +195,11 @@ void State::controlDown() {
   }
 }
 
-void State::clientConnected() {
-  settings.numClients++;
-  Events::emitClientEvent(settings.numClients);
-}
-
-void State::clientDisconnected() {
-  settings.numClients--;
+void State::setClientsConnected(int numClients) {
+  if (numClients == settings.numClients) {
+    return;
+  }
+  settings.numClients = numClients;
   Events::emitClientEvent(settings.numClients);
 }
 

@@ -17,28 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Arduino.h>
-#include "state.h"
-#include "screen.h"
-#include "input.h"
-#include "messaging.h"
+#include "common_config.h"
 
-void setup() {
-  delay(200);
-  Serial.begin(115200);
-  Serial.println();
-  Serial.println("Initializing");
-  State::init();
-  Input::init();
-  Screen::init();
-  Messaging::init();
-  Serial.println("Running");
-}
-
-void loop() {
-  State::loop();
-  Input::loop();
-  Screen::loop();
-  Messaging::loop();
-  delay(10);
-}
+IPAddress SERVER_IP(192, 168, 42, 1);
+IPAddress GATEWAY(192, 168, 42, 255);
+IPAddress SUBNET(255, 255, 255, 0);

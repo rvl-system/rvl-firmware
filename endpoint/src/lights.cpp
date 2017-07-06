@@ -32,6 +32,8 @@ Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTST
 hsv colors[NUM_PIXELS];
 Codes::Preset::Preset preset;
 byte brightness = 0;
+int commandTime = 0;
+int commandTimeSyncTime = millis();
 
 void updateColors();
 void displayColors();
@@ -54,7 +56,15 @@ void Lights::loop() {
   displayColors();
 }
 
+void Lights::setCommandTime(unsigned long newCommandTime) {
+  Serial.print("Setting newCommandTime to: ");
+  Serial.println(newCommandTime);
+  commandTime = newCommandTime;
+}
+
 void Lights::setPreset(Codes::Preset::Preset newPreset) {
+  Serial.print("Setting preset to: ");
+  Serial.println(newPreset);
   preset = newPreset;
   switch (preset) {
     case Codes::Preset::Fade:
@@ -72,6 +82,8 @@ void Lights::setPreset(Codes::Preset::Preset newPreset) {
 }
 
 void Lights::setValue(byte type, byte value) {
+  Serial.print("Setting value to: ");
+  Serial.println(type, value);
   switch (preset) {
     case Codes::Preset::Fade:
       switch (type) {
@@ -103,6 +115,8 @@ void Lights::setValue(byte type, byte value) {
 }
 
 void Lights::setBrightness(byte newBrightness) {
+  Serial.print("Setting brightness to: ");
+  Serial.println(newBrightness);
   double scaledBrightness = (double)newBrightness / 255.0;
   Fade::setBrightness(scaledBrightness);
   Pulse::setBrightness(scaledBrightness);

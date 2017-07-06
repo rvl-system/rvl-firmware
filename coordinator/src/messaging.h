@@ -20,10 +20,13 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MESSAGING_HEADER
 #define MESSAGING_HEADER
 
+#include "common/codes.h"
+
 namespace Messaging {
 
   void init();
   void loop();
+  void update();
 
 }
 

@@ -28,4 +28,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define SERVER_PORT 3000
 #define HEARTBEAT_CODE 126
 
+extern IPAddress SERVER_IP;
+extern IPAddress GATEWAY;
+extern IPAddress SUBNET;
+
 #endif

@@ -22,69 +22,80 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "config.h"
 #include "messaging.h"
-
-IPAddress WIFI_SERVER_IP(192, 168, 42, 1);
-IPAddress WIFI_GATEWAY(192, 168, 42, 255);
-IPAddress WIFI_SUBNET(255, 255, 255, 0);
+#include "state.h"
 
 WiFiUDP udp;
 
-struct ClientInfo {
-  uint32_t ip = 0;
-  int timeout = 0;
-};
+unsigned long commandStartTime = millis();
 
-ClientInfo clients[5];
+void sync();
 
 void Messaging::init() {
   Serial.print("Setting soft-AP configuration...");
-  Serial.println(WiFi.softAPConfig(WIFI_SERVER_IP, WIFI_GATEWAY, WIFI_SUBNET) ? "Ready" : "Failed!");
+  if (WiFi.softAPConfig(SERVER_IP, GATEWAY, SUBNET)) {
+    Serial.println("Ready");
+  } else {
+    Serial.println("Failed!");
+    return;
+  }
 
   Serial.print("Starting soft-AP ");
   Serial.print(WIFI_SSID);
   Serial.print("...");
-  Serial.println(WiFi.softAP(WIFI_SSID, WIFI_PASSPHRASE, 2, false) ? "Ready" : "Failed!");
+
+  if (WiFi.softAP(WIFI_SSID, WIFI_PASSPHRASE, 8, false)) {
+    Serial.println("Ready");
+  } else {
+    Serial.println("Failed!");
+    return;
+  }
 
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
 
-  Serial.println("Starting UDP server");
-  udp.begin(SERVER_PORT);
-
   Serial.println("Messaging initialized");
 }
 
+void sync() {
+  Serial.println("Syncing");
+  State::Settings* settings = State::getSettings();
+  udp.beginPacket(GATEWAY, SERVER_PORT);
+  uint32_t commandTime = (uint32_t)(millis() - commandStartTime);
+  udp.write((byte*)&commandTime, 4);
+  udp.write(settings->brightness);
+  udp.write(settings->preset);
+  switch(settings->preset) {
+    case Codes::Preset::Fade:
+      udp.write(settings->fadeValues.rate);
+      for (int i = 0; i < 9; i++) {
+        udp.write((byte)0);
+      }
+      break;
+    case Codes::Preset::Pulse:
+      udp.write(settings->pulseValues.rate);
+      udp.write(settings->pulseValues.hue);
+      udp.write(settings->pulseValues.saturation);
+      for (int i = 0; i < 7; i++) {
+        udp.write((byte)0);
+      }
+      break;
+  }
+  udp.endPacket();
+}
+
+int nextSyncTime = millis();
+int numConnectedClients = 0;
 void Messaging::loop() {
-  if (udp.available() == 0) {
-    udp.parsePacket();
+  if (millis() < nextSyncTime) {
+    return;
   }
-  if (udp.available() > 0) {
-    Serial.println("Available");
-    IPAddress ip = udp.remoteIP();
-    for (int i = 0; i < 5; i++) {
-      if (clients[i].ip == (uint32_t)ip) {
-        clients[i].timeout = CLIENT_TIMEOUT;
-        break;
-      }
-      if (clients[i].ip == 0) {
-        Serial.print("Client connected: ");
-        Serial.println(ip);
-        clients[i].ip = (uint32_t)ip;
-        clients[i].timeout = CLIENT_TIMEOUT;
-        break;
-      }
-    }
-  }
-  for (int i = 0; i < 5; i++) {
-    if (clients[i].ip != 0) {
-      clients[i].timeout--;
-      if (clients[i].timeout == 0) {
-        Serial.print("Client disconnected: ");
-        IPAddress ip = clients[i].ip;
-        Serial.println(ip);
-        clients[i].ip = 0;
-        clients[i].timeout = 0;
-      }
-    }
-  }
+
+  State::setClientsConnected(WiFi.softAPgetStationNum());
+  nextSyncTime = millis() + CLIENT_SYNC_INTERVAL;
+  sync();
+}
+
+void Messaging::update() {
+  commandStartTime = millis();
+  sync();
 }

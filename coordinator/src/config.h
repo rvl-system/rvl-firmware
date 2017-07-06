@@ -41,4 +41,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define CLIENT_TIMEOUT 5000
 
+#define CLIENT_SYNC_INTERVAL 2000
+
 #endif

@@ -25,18 +25,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "lights.h"
 #include "messaging.h"
 
-#define STATE_WAITING 1
-#define STATE_READING 2
-
-IPAddress SERVER_IP(192, 168, 4, 1);
-
-#define HEARTBEAT_RATE 1000
-
-unsigned char state = STATE_WAITING;
-Codes::MessageType::MessageType messageType;
-
-unsigned int heartbeatCount = 0;
-
 WiFiUDP udp;
 
 void Messaging::setup() {
@@ -55,97 +43,36 @@ void Messaging::setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
+  Serial.println("Starting UDP server");
   udp.begin(SERVER_PORT);
-  Serial.println("UDP server listening");
 
   Serial.println("Messaging initialized");
 }
 
 void Messaging::loop() {
-  heartbeatCount++;
-  if (heartbeatCount >= HEARTBEAT_RATE && state == STATE_WAITING) {
-    heartbeatCount = 0;
-    Serial.println("Sending heartbeat");
-    Serial.println(WiFi.localIP());
-    udp.beginPacket(SERVER_IP, SERVER_PORT);
-    udp.write(HEARTBEAT_CODE);
-    udp.endPacket();
+  int packetSize = udp.parsePacket();
+  if (packetSize == 0) {
+    return;
   }
-  if (udp.available() == 0) {
-    udp.parsePacket();
+  Serial.print("Sync packet received");
+  if (packetSize != 16) {
+    Serial.println("Received incorrect packet size, resetting...");
+    ESP.reset();
   }
-  if (udp.available() > 0) {
-    Serial.print("Available packets: ");
-    Serial.print(udp.available());
-    Serial.println();
-    switch (state) {
-      case STATE_WAITING:
-        switch(udp.read()) {
-          case Codes::MessageType::SetPreset:
-            messageType = Codes::MessageType::SetPreset;
-            break;
-          case Codes::MessageType::SetValue:
-            messageType = Codes::MessageType::SetValue;
-            break;
-          case Codes::MessageType::SetBrightness:
-            messageType = Codes::MessageType::SetBrightness;
-            break;
-          default:
-            Serial.print("Received unkown message type");
-            return;
-        }
-        Serial.println(messageType);
-        state = STATE_READING;
-        break;
-      case STATE_READING:
-        switch(messageType) {
-          case Codes::MessageType::SetPreset:
-            if (udp.available() >= 1) {
-              Codes::Preset::Preset preset;
-              switch(udp.read()) {
-                case Codes::Preset::Fade:
-                  preset = Codes::Preset::Fade;
-                  break;
-                case Codes::Preset::Pulse:
-                  preset = Codes::Preset::Pulse;
-                  break;
-                default:
-                  Serial.print("Received unkown preset");
-                  state = STATE_WAITING;
-                  return;
-              }
-              Serial.print("Changing preset to: ");
-              Serial.println(preset);
-              Lights::setPreset(preset);
-              state = STATE_WAITING;
-            }
-            break;
-          case Codes::MessageType::SetValue:
-            if (udp.available() >= 2) {
-              int type = udp.read();
-              int value = udp.read();
-              Serial.print("Changing value ");
-              Serial.print(type);
-              Serial.print(" to ");
-              Serial.println(value);
-              Lights::setValue(type, value);
-              state = STATE_WAITING;
-            }
-            break;
-          case Codes::MessageType::SetBrightness:
-            if (udp.available() >= 1) {
-              int brightness = udp.read();
-              Serial.print("Changing brightness to: ");
-              Serial.println(brightness);
-              Lights::setBrightness(brightness);
-              state = STATE_WAITING;
-            }
-            break;
-        }
-        break;
-      default:
-        Serial.print("Unknown state: ");
-        Serial.println(state);
-    }
+
+  unsigned long commandTime;
+  udp.read((byte*)&commandTime, 4);
+  Lights::setCommandTime(commandTime);
+
+  Lights::setBrightness(udp.read());
+
+  Lights::setPreset((Codes::Preset::Preset)udp.read());
+
+  Lights::setValue((byte)0, udp.read());
+  // Lights::setValue((byte)1, udp.read());
+  // Lights::setValue((byte)2, udp.read());
+
+  for (int i = 0; i < 7; i++) {
+    udp.read();
   }
 }

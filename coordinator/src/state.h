@@ -53,8 +53,7 @@ namespace State {
   void controlUp();
   void controlDown();
 
-  void clientConnected();
-  void clientDisconnected();
+  void setClientsConnected(int numConnectedClients);
 
   void setActive();
   void setIdling();
