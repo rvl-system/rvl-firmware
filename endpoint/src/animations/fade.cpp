@@ -24,41 +24,28 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define COLOR_DIFFERENCE 40
 
-hsv* fadeBuffer;
+namespace Fade {
 
-double fadeColorStep = 0;
-double fadeMaxBrightness = 0;
+  double step = 0;
+  double brightness = 0;
 
-void Fade::setBuffer(hsv* newBuffer) {
-  fadeBuffer = newBuffer;
-}
-
-void Fade::setBrightness(double newBrightness) {
-  fadeMaxBrightness = newBrightness;
-}
-
-void Fade::setValue(Codes::FadeValue::FadeValue type, byte value) {
-  switch(type) {
-    case Codes::FadeValue::Rate:
-      fadeColorStep = (double)value / 1280.0;
-      break;
+  void setBrightness(double newBrightness) {
+    brightness = newBrightness;
   }
-}
 
-void Fade::initColors() {
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    fadeBuffer[i].h = COLOR_DIFFERENCE * i; // angle
-    fadeBuffer[i].s = 1;
-    fadeBuffer[i].v = fadeMaxBrightness;
+  void setValues(byte* values) {
+    step = (double)values[0] / 1280.0;
   }
-}
 
-void Fade::updateColors() {
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    fadeBuffer[i].h += fadeColorStep;
-    if (fadeBuffer[i].h >= 360.0) {
-      fadeBuffer[i].h = 0;
+  void initColors(hsv* buffer) {
+  }
+
+  void updateColors(uint32_t commandTime, hsv* buffer) {
+    for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+      buffer[i].h = ((int)(commandTime * step) + COLOR_DIFFERENCE * i) % 360;
+      buffer[i].s = 1;
+      buffer[i].v = brightness;
     }
-    fadeBuffer[i].v = fadeMaxBrightness;
   }
+
 }

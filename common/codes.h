@@ -33,7 +33,8 @@ namespace Codes {
   namespace Preset {
     enum Preset {
       Fade = 0,
-      Pulse = 1
+      Pulse = 1,
+      Unknown = 255
     };
   }
 

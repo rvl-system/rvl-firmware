@@ -30,10 +30,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTSTAR_BRG);
 
 hsv colors[NUM_PIXELS];
-Codes::Preset::Preset preset;
+Codes::Preset::Preset preset = Codes::Preset::Unknown;
 byte brightness = 0;
-int commandTime = 0;
-int commandTimeSyncTime = millis();
+uint32_t commandTime = 0;
+unsigned long lastUpdateTime = 0;
 
 void updateColors();
 void displayColors();
@@ -45,8 +45,6 @@ void Lights::setup() {
     strip.setPixelColor(i, 0, 0, 0);
   }
   strip.show();
-  Fade::setBuffer(colors);
-  Pulse::setBuffer(colors);
 
   Serial.println("Lights initialized");
 }
@@ -56,90 +54,66 @@ void Lights::loop() {
   displayColors();
 }
 
-void Lights::setCommandTime(unsigned long newCommandTime) {
-  Serial.print("Setting newCommandTime to: ");
+void Lights::update(uint32_t newCommandTime, byte newBrightness, Codes::Preset::Preset newPreset, byte* newPresetValues) {
+
+  lastUpdateTime = millis();
+
+  Serial.print("Setting command time to: ");
   Serial.println(newCommandTime);
   commandTime = newCommandTime;
-}
 
-void Lights::setPreset(Codes::Preset::Preset newPreset) {
-  Serial.print("Setting preset to: ");
-  Serial.println(newPreset);
-  preset = newPreset;
+  if (newBrightness != brightness) {
+    Serial.print("Changing brightness to: ");
+    Serial.println(newBrightness);
+    brightness = newBrightness;
+    double scaledBrightness = (double)newBrightness / 255.0;
+    Fade::setBrightness(scaledBrightness);
+    Pulse::setBrightness(scaledBrightness);
+  }
+
+  if (preset != newPreset) {
+    Serial.print("Changing preset to: ");
+    Serial.println(newPreset);
+    preset = newPreset;
+    switch (preset) {
+      case Codes::Preset::Fade:
+        Fade::initColors(colors);
+        break;
+      case Codes::Preset::Pulse:
+        Pulse::initColors(colors);
+        break;
+    }
+  }
+
   switch (preset) {
     case Codes::Preset::Fade:
-      Fade::initColors();
-      Fade::setValue(Codes::FadeValue::Rate, FADE_DEFAULT_RATE);
+      Fade::setValues(newPresetValues);
       break;
     case Codes::Preset::Pulse:
-      Pulse::initColors();
-      Pulse::setValue(Codes::PulseValue::Rate, PULSE_DEFAULT_RATE);
-      Pulse::setValue(Codes::PulseValue::Hue, PULSE_DEFAULT_HUE);
-      Pulse::setValue(Codes::PulseValue::Saturation, PULSE_DEFAULT_SATURATION);
+      Pulse::setValues(newPresetValues);
       break;
   }
-  displayColors();
-}
-
-void Lights::setValue(byte type, byte value) {
-  Serial.print("Setting value to: ");
-  Serial.println(type, value);
-  switch (preset) {
-    case Codes::Preset::Fade:
-      switch (type) {
-        case Codes::FadeValue::Rate:
-          Fade::setValue(Codes::FadeValue::Rate, value);
-          break;
-        default:
-          Serial.println("Attempted to set invalid Fade Value");
-          break;
-      }
-      break;
-    case Codes::Preset::Pulse:
-      switch(type) {
-        case Codes::PulseValue::Rate:
-          Pulse::setValue(Codes::PulseValue::Rate, value);
-          break;
-        case Codes::PulseValue::Hue:
-          Pulse::setValue(Codes::PulseValue::Hue, value);
-          break;
-        case Codes::PulseValue::Saturation:
-          Pulse::setValue(Codes::PulseValue::Saturation, value);
-          break;
-        default:
-          Serial.println("Attempted to set invalid Pulse Value");
-          break;
-      }
-      break;
-  }
-}
-
-void Lights::setBrightness(byte newBrightness) {
-  Serial.print("Setting brightness to: ");
-  Serial.println(newBrightness);
-  double scaledBrightness = (double)newBrightness / 255.0;
-  Fade::setBrightness(scaledBrightness);
-  Pulse::setBrightness(scaledBrightness);
 }
 
 void updateColors() {
+  uint32_t adjustedCommandTime = (millis() - lastUpdateTime) + commandTime;
   switch (preset) {
     case Codes::Preset::Fade:
-      Fade::updateColors();
+      Fade::updateColors(adjustedCommandTime, colors);
       break;
     case Codes::Preset::Pulse:
-      Pulse::updateColors();
+      Pulse::updateColors(adjustedCommandTime, colors);
       break;
   }
 }
 
 void displayColors() {
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    rgb converted_color = hsv2rgb(colors[i]);
+    rgb convertedColor = hsv2rgb(colors[i]);
     strip.setPixelColor(i,
-      (int)(converted_color.r * 255),
-      (int)(converted_color.g * 255),
-      (int)(converted_color.b * 255)
+      (int)(convertedColor.r * 255),
+      (int)(convertedColor.g * 255),
+      (int)(convertedColor.b * 255)
     );
   }
   strip.show();

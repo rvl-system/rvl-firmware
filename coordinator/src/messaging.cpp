@@ -67,7 +67,7 @@ void sync() {
   switch(settings->preset) {
     case Codes::Preset::Fade:
       udp.write(settings->fadeValues.rate);
-      for (int i = 0; i < 9; i++) {
+      for (int i = 0; i < NUM_PRESET_VALUES - 1; i++) {
         udp.write((byte)0);
       }
       break;
@@ -75,7 +75,7 @@ void sync() {
       udp.write(settings->pulseValues.rate);
       udp.write(settings->pulseValues.hue);
       udp.write(settings->pulseValues.saturation);
-      for (int i = 0; i < 7; i++) {
+      for (int i = 0; i < NUM_PRESET_VALUES - 3; i++) {
         udp.write((byte)0);
       }
       break;

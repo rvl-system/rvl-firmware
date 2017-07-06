@@ -30,11 +30,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Pulse {
 
-  void setBuffer(hsv* buffer);
-  void setBrightness(double new_brightness);
-  void setValue(Codes::PulseValue::PulseValue type, byte value);
-  void initColors();
-  void updateColors();
+  void setBrightness(double newBrightness);
+  void setValues(byte* values);
+  void initColors(hsv* buffer);
+  void updateColors(uint32_t commandTime, hsv* buffer);
 
 }
 

@@ -27,11 +27,8 @@ namespace Lights {
 
   void setup();
   void loop();
+  void update(uint32_t commandTime, byte brightness, Codes::Preset::Preset preset, byte* presetValues);
 
-  void setCommandTime(unsigned long commandTime);
-  void setPreset(Codes::Preset::Preset newPreset);
-  void setValue(byte type, byte value);
-  void setBrightness(byte brightness);
 }
 
 #endif

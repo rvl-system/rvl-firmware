@@ -26,7 +26,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define WIFI_PASSPHRASE "4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}"
 
 #define SERVER_PORT 3000
-#define HEARTBEAT_CODE 126
+
+#define NUM_PRESET_VALUES 10
 
 extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;

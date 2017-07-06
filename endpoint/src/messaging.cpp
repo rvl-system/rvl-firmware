@@ -60,19 +60,12 @@ void Messaging::loop() {
     ESP.reset();
   }
 
-  unsigned long commandTime;
+  uint32_t commandTime;
   udp.read((byte*)&commandTime, 4);
-  Lights::setCommandTime(commandTime);
+  byte brightness = udp.read();
+  byte preset = udp.read();
+  byte presetValues[NUM_PRESET_VALUES];
+  udp.read(presetValues, NUM_PRESET_VALUES);
 
-  Lights::setBrightness(udp.read());
-
-  Lights::setPreset((Codes::Preset::Preset)udp.read());
-
-  Lights::setValue((byte)0, udp.read());
-  // Lights::setValue((byte)1, udp.read());
-  // Lights::setValue((byte)2, udp.read());
-
-  for (int i = 0; i < 7; i++) {
-    udp.read();
-  }
+  Lights::update(commandTime, brightness, (Codes::Preset::Preset)preset, presetValues);
 }
