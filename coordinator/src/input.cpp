@@ -23,48 +23,85 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "common/codes.h"
 #include "config.h"
 
-byte nextControlState = BUTTON_NEXT_CONTROL_OFF;
-int nextControlHoldTime = 0;
+namespace Input {
 
-void Input::init() {
-  pinMode(BUTTON_NEXT_CONTROL, INPUT_PULLUP);
-  Serial.println("Input initialized");
-}
+  enum ButtonChangeState {
+    None = 0,
+    Pressed = 1,
+    Holding = 2
+  };
 
-void Input::loop() {
+  struct ButtonInfo {
+    uint16_t holdTime;
+    byte state;
+    byte gpio;
+    bool isWakeupPress;
+  };
 
-  State::Settings* settings = State::getSettings();
+  ButtonInfo nextButtonInfo = { 5, BUTTON_OFF, BUTTON_NEXT, false };
+  ButtonInfo upButtonInfo = { 5, BUTTON_OFF, BUTTON_UP, false };
+  ButtonInfo downButtonInfo = { 5, BUTTON_OFF, BUTTON_DOWN, false };
 
-  int newNextControlState = digitalRead(BUTTON_NEXT_CONTROL);
-  if (newNextControlState != nextControlState) {
-    nextControlState = newNextControlState;
-    if (nextControlState == BUTTON_NEXT_CONTROL_OFF) {
-      if (State::getSettings()->idleState != Codes::IdleState::DeepIdle &&
-        nextControlHoldTime >= CONTROL_PRESS_ENGAGE_TIME
-      ) {
-        State::nextControl();
+  void init() {
+    pinMode(nextButtonInfo.gpio, INPUT_PULLUP);
+    pinMode(upButtonInfo.gpio, INPUT_PULLUP);
+    pinMode(downButtonInfo.gpio, INPUT_PULLUP);
+    Serial.println("Input initialized");
+  }
+
+  ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
+    ButtonChangeState returnValue = None;
+    byte state = digitalRead(buttonInfo->gpio);
+    if (state == BUTTON_ON) {
+      if (buttonInfo->state == BUTTON_OFF) {
+        buttonInfo->isWakeupPress = State::getSettings()->idleState == Codes::IdleState::DeepIdle;
+        if (buttonInfo->holdTime > BUTTON_PRESS_ENGAGE_TIME) {
+          buttonInfo->state = BUTTON_ON;
+          State::setActive();
+          if (!buttonInfo->isWakeupPress) {
+            returnValue = Pressed;
+          }
+        }
+      } else if (!buttonInfo->isWakeupPress && buttonInfo->holdTime > BUTTON_HOLD_ENGAGE_TIME) {
+        returnValue = Holding;
       }
-      State::setActive();
-      nextControlHoldTime = 0;
-      State::setIdling();
+      buttonInfo->holdTime++;
+    } else {
+      buttonInfo->state = BUTTON_OFF;
+      buttonInfo->holdTime = 0;
     }
-  }
-  if (nextControlState == BUTTON_NEXT_CONTROL_ON) {
-    nextControlHoldTime++;
+    return returnValue;
   }
 
-  // if (newEncoderPosition >= encoderPosition + ENCODER_STEPS_PER_CLICK ||
-  //   newEncoderPosition <= encoderPosition - ENCODER_STEPS_PER_CLICK
-  // ) {
-  //   if (State::getSettings()->idleState != Codes::IdleState::DeepIdle) {
-  //     if (newEncoderPosition > encoderPosition) {
-  //       State::controlUp();
-  //     } else {
-  //       State::controlDown();
-  //     }
-  //   }
-  //   State::setActive();
-  //   encoderPosition = newEncoderPosition;
-  //   State::setIdling();
-  // }
+  int stepCount = 0;
+  void loop() {
+
+    switch (getButtonChangeState(&nextButtonInfo)) {
+      case Pressed:
+        State::nextControl();
+        break;
+      case Holding:
+        // Do Nothing
+        break;
+      case None:
+        // Do Nothing
+        break;
+    }
+
+    switch (getButtonChangeState(&upButtonInfo)) {
+      case Pressed:
+        State::controlUp();
+        break;
+      case Holding:
+        if (State::getSettings()->currentControl != Codes::Control::Preset) {
+          State::controlUp();
+        }
+        break;
+      case None:
+        // Do Nothing
+        break;
+    }
+
+  }
+
 }

@@ -37,9 +37,6 @@ namespace Fade {
     step = (double)values[0] / 1280.0;
   }
 
-  void initColors(hsv* buffer) {
-  }
-
   void updateColors(uint32_t commandTime, hsv* buffer) {
     for (unsigned int i = 0; i < NUM_PIXELS; i++) {
       buffer[i].h = ((int)(commandTime * step) + COLOR_DIFFERENCE * i) % 360;

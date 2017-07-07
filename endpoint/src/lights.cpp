@@ -75,14 +75,6 @@ void Lights::update(uint32_t newCommandTime, byte newBrightness, Codes::Preset::
     Serial.print("Changing preset to: ");
     Serial.println(newPreset);
     preset = newPreset;
-    switch (preset) {
-      case Codes::Preset::Fade:
-        Fade::initColors(colors);
-        break;
-      case Codes::Preset::Pulse:
-        Pulse::initColors(colors);
-        break;
-    }
   }
 
   switch (preset) {

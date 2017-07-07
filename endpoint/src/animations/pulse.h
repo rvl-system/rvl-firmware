@@ -32,7 +32,6 @@ namespace Pulse {
 
   void setBrightness(double newBrightness);
   void setValues(byte* values);
-  void initColors(hsv* buffer);
   void updateColors(uint32_t commandTime, hsv* buffer);
 
 }

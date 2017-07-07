@@ -22,9 +22,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "common/codes.h"
 #include "events.h"
 
-const int BRIGHTNESS_STEP = 7;
+const int BRIGHTNESS_STEP = 1;
 const int MAX_BRIGHTNESS = 255;
-const int VALUE_STEP = 4;
+const int VALUE_STEP = 1;
 const int MAX_VALUE = 255;
 const int DIM_TIMEOUT = 10000;
 const int OFF_TIMEOUT = 5000;

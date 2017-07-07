@@ -20,6 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "common/codes.h"
 #include "screen.h"
+#include "messaging.h"
 #include "events.h"
 
 void Events::emitControlEvent(Codes::Control::Control currentControl) {
@@ -38,6 +39,7 @@ void Events::emitValueEvent(Codes::Preset::Preset preset, int code, int newValue
   Serial.println(newValue);
 
   Screen::updateValue(preset, code, newValue);
+  Messaging::update();
 }
 
 void Events::emitBrightnessEvent(int brightness) {
@@ -45,6 +47,7 @@ void Events::emitBrightnessEvent(int brightness) {
   Serial.println(brightness);
 
   Screen::updateBrightness(brightness);
+  Messaging::update();
 }
 
 void Events::emitPresetEvent(Codes::Preset::Preset preset) {
@@ -52,6 +55,7 @@ void Events::emitPresetEvent(Codes::Preset::Preset preset) {
   Serial.println(preset);
 
   Screen::updatePreset(preset);
+  Messaging::update();
 }
 
 void Events::emitClientEvent(int numClients) {
@@ -59,6 +63,7 @@ void Events::emitClientEvent(int numClients) {
   Serial.println(numClients);
 
   Screen::updateClientCount(numClients);
+  Messaging::update();
 }
 
 void Events::emitIdleEvent(Codes::IdleState::IdleState idleState) {
@@ -66,4 +71,5 @@ void Events::emitIdleEvent(Codes::IdleState::IdleState idleState) {
   Serial.println(idleState);
 
   Screen::updateIdleState(idleState);
+  Messaging::update();
 }
