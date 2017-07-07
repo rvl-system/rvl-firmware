@@ -26,6 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 WiFiUDP udp;
 
+Codes::Preset::Preset currentPreset = Codes::Preset::Unknown;
 unsigned long commandStartTime = millis();
 
 void sync();
@@ -96,6 +97,10 @@ void Messaging::loop() {
 }
 
 void Messaging::update() {
-  commandStartTime = millis();
+  Codes::Preset::Preset newPreset = State::getSettings()->preset;
+  if (newPreset != currentPreset) {
+    currentPreset = newPreset;
+    commandStartTime = millis();
+  }
   sync();
 }
