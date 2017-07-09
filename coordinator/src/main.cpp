@@ -22,6 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "screen.h"
 #include "input.h"
 #include "messaging.h"
+#include "config.h"
 
 void setup() {
   delay(200);
@@ -36,9 +37,10 @@ void setup() {
 }
 
 void loop() {
+  unsigned long startTime = millis();
   State::loop();
   Input::loop();
   Screen::loop();
   Messaging::loop();
-  delay(10);
+  delay(UPDATE_RATE - (millis() - startTime));
 }

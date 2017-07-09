@@ -20,6 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "messaging.h"
 #include "lights.h"
+#include "config.h"
 
 void setup() {
   delay(200);
@@ -31,7 +32,8 @@ void setup() {
 }
 
 void loop() {
+  unsigned long startTime = millis();
   Lights::loop();
   Messaging::loop();
-  delay(1);
+  delay(UPDATE_RATE - (millis() - startTime));
 }

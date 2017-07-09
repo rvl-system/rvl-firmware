@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Adafruit_DotStar.h>
 #include "colorspace.h"
 #include "common/codes.h"
+#include "animation.h"
 #include "config.h"
 #include "lights.h"
 
@@ -35,10 +36,16 @@ byte brightness = 0;
 uint32_t commandTime = 0;
 unsigned long lastUpdateTime = 0;
 
+Animation::AnimationBase* animations[NUM_PRESETS];
+
 void updateColors();
 void displayColors();
 
 void Lights::setup() {
+
+  animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
+  animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
+
   strip.begin();
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {
     rgb converted_color = hsv2rgb(colors[i]);
@@ -67,8 +74,9 @@ void Lights::update(uint32_t newCommandTime, byte newBrightness, Codes::Preset::
     Serial.println(newBrightness);
     brightness = newBrightness;
     double scaledBrightness = (double)newBrightness / 255.0;
-    Fade::setBrightness(scaledBrightness);
-    Pulse::setBrightness(scaledBrightness);
+    for (int i = 0; i < NUM_PRESETS; i++) {
+      animations[i]->setBrightness(scaledBrightness);
+    }
   }
 
   if (preset != newPreset) {
@@ -77,25 +85,15 @@ void Lights::update(uint32_t newCommandTime, byte newBrightness, Codes::Preset::
     preset = newPreset;
   }
 
-  switch (preset) {
-    case Codes::Preset::Fade:
-      Fade::setValues(newPresetValues);
-      break;
-    case Codes::Preset::Pulse:
-      Pulse::setValues(newPresetValues);
-      break;
+  if (preset != Codes::Preset::Unknown) {
+    animations[preset]->setValues(newPresetValues);
   }
 }
 
 void updateColors() {
-  uint32_t adjustedCommandTime = (millis() - lastUpdateTime) + commandTime;
-  switch (preset) {
-    case Codes::Preset::Fade:
-      Fade::updateColors(adjustedCommandTime, colors);
-      break;
-    case Codes::Preset::Pulse:
-      Pulse::updateColors(adjustedCommandTime, colors);
-      break;
+  if (preset != Codes::Preset::Unknown) {
+    uint32_t adjustedCommandTime = (millis() - lastUpdateTime) + commandTime;
+    animations[preset]->updateColors(adjustedCommandTime, colors);
   }
 }
 

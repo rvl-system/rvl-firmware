@@ -32,17 +32,17 @@ namespace Pulse {
 
   double brightness = 0;
 
-  void setBrightness(double newBrightness) {
+  void PulseAnimation::setBrightness(double newBrightness) {
     brightness = newBrightness;
   }
 
-  void setValues(byte* values) {
+  void PulseAnimation::setValues(byte* values) {
     pulseStep = ((double)values[0] / 255.0) / 300;
     hue = (double)values[1] * 360.0 / 255;
     saturation = (double)values[2] / 255;
   }
 
-  void updateColors(uint32_t commandTime, hsv* buffer) {
+  void PulseAnimation::updateColors(uint32_t commandTime, hsv* buffer) {
 
     uint32_t period = 2 / pulseStep;
     uint32_t periodTime = commandTime % period;

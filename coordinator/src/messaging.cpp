@@ -29,6 +29,8 @@ WiFiUDP udp;
 Codes::Preset::Preset currentPreset = Codes::Preset::Unknown;
 unsigned long commandStartTime = millis();
 
+bool needsSync = false;
+
 void sync();
 
 void Messaging::init() {
@@ -87,9 +89,10 @@ void sync() {
 int nextSyncTime = millis();
 int numConnectedClients = 0;
 void Messaging::loop() {
-  if (millis() < nextSyncTime) {
+  if (millis() < nextSyncTime && !needsSync) {
     return;
   }
+  needsSync = false;
 
   State::setClientsConnected(WiFi.softAPgetStationNum());
   nextSyncTime = millis() + CLIENT_SYNC_INTERVAL;
@@ -102,5 +105,5 @@ void Messaging::update() {
     currentPreset = newPreset;
     commandStartTime = millis();
   }
-  sync();
+  needsSync = true;
 }

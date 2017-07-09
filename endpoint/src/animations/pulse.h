@@ -23,6 +23,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "colorspace.h"
 #include "common/codes.h"
+#include "animation.h"
 
 #define PULSE_DEFAULT_RATE 64
 #define PULSE_DEFAULT_HUE 200
@@ -30,9 +31,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Pulse {
 
-  void setBrightness(double newBrightness);
-  void setValues(byte* values);
-  void updateColors(uint32_t commandTime, hsv* buffer);
+  class PulseAnimation : public Animation::AnimationBase {
+    public:
+      void setBrightness(double newBrightness);
+      void setValues(byte* values);
+      void updateColors(uint32_t commandTime, hsv* buffer);
+  };
 
 }
 

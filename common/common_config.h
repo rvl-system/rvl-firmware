@@ -27,6 +27,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SERVER_PORT 3000
 
+#define UPDATE_RATE 33
+
+#define NUM_PRESETS 2
 #define NUM_PRESET_VALUES 10
 
 extern IPAddress SERVER_IP;

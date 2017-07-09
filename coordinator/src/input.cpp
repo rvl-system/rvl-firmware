@@ -32,7 +32,7 @@ namespace Input {
   };
 
   struct ButtonInfo {
-    uint16_t holdTime;
+    unsigned long holdStartTime;
     byte state;
     byte gpio;
     bool isWakeupPress;
@@ -53,27 +53,30 @@ namespace Input {
     ButtonChangeState returnValue = None;
     byte state = digitalRead(buttonInfo->gpio);
     if (state == BUTTON_ON) {
+      unsigned long now = millis();
+      if (buttonInfo->holdStartTime == -1) {
+        buttonInfo->holdStartTime = now;
+      }
+      unsigned long holdTime = now - buttonInfo->holdStartTime;
       if (buttonInfo->state == BUTTON_OFF) {
         buttonInfo->isWakeupPress = State::getSettings()->idleState == Codes::IdleState::DeepIdle;
-        if (buttonInfo->holdTime > BUTTON_PRESS_ENGAGE_TIME) {
+        if (holdTime > BUTTON_PRESS_ENGAGE_TIME) {
           buttonInfo->state = BUTTON_ON;
           State::setActive();
           if (!buttonInfo->isWakeupPress) {
             returnValue = Pressed;
           }
         }
-      } else if (!buttonInfo->isWakeupPress && buttonInfo->holdTime > BUTTON_HOLD_ENGAGE_TIME) {
+      } else if (!buttonInfo->isWakeupPress && holdTime > BUTTON_HOLD_ENGAGE_TIME) {
         returnValue = Holding;
       }
-      buttonInfo->holdTime++;
     } else {
       buttonInfo->state = BUTTON_OFF;
-      buttonInfo->holdTime = 0;
+      buttonInfo->holdStartTime = 0;
     }
     return returnValue;
   }
 
-  int stepCount = 0;
   void loop() {
 
     switch (getButtonChangeState(&nextButtonInfo)) {
@@ -101,6 +104,20 @@ namespace Input {
         // Do Nothing
         break;
     }
+
+    // switch (getButtonChangeState(&downButtonInfo)) {
+    //   case Pressed:
+    //     State::controlUp();
+    //     break;
+    //   case Holding:
+    //     if (State::getSettings()->currentControl != Codes::Control::Preset) {
+    //       State::controlDown();
+    //     }
+    //     break;
+    //   case None:
+    //     // Do Nothing
+    //     break;
+    // }
 
   }
 
