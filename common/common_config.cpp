@@ -36,6 +36,12 @@ const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { "Rt", "Sp", "Hu", NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
 
+const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES] = {
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 4, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
+
 const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { 255, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 255, 255, 255, 0, 0, 0, 0, 0, 0, 0 },
@@ -44,6 +50,6 @@ const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES] = {
 
 const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { 125, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 125, 0, 255, 0, 0, 0, 0, 0, 0, 0 },
-  { 125, 4, 0, 0, 0, 0, 0, 0, 0, 0 }
+  { 125, 120, 255, 0, 0, 0, 0, 0, 0, 0 },
+  { 125, 8, 120, 0, 0, 0, 0, 0, 0, 0 }
 };

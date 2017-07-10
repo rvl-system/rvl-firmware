@@ -60,8 +60,8 @@ int calculateNewValue(byte code, int value, bool direction) {
     }
   } else {
     value--;
-    if (value < 0) {
-      value = 0;
+    if (value < presetValueMin[settings.preset][code]) {
+      value = presetValueMin[settings.preset][code];
     }
   }
   return value;

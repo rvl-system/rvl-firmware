@@ -38,6 +38,7 @@ extern IPAddress SUBNET;
 
 extern const char* presetNames[NUM_PRESETS];
 extern const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES];
+extern const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 

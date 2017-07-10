@@ -241,6 +241,7 @@ void Screen::updatePreset(byte preset) {
       updateValue(preset, i, settings->presetValues[preset][i]);
     } else {
       display.setColor(PIXEL_OFF);
+      // + 2 is a hack to clear descenders
       display.fillRect(VALUE_LABEL_X, VALUEX_Y[i], VALUE_WIDTH, TEXT_HEIGHT + 2);
     }
   }
@@ -249,7 +250,7 @@ void Screen::updatePreset(byte preset) {
 }
 
 void Screen::updateValue(byte preset, byte code, byte value) {
-  drawHorizontalBar(VALUE_BAR_X, VALUEX_Y[code], VALUE_BAR_WIDTH, TEXT_HEIGHT, (double)value / (double)presetValueMax[preset][code]);
+  drawHorizontalBar(VALUE_BAR_X, VALUEX_Y[code], VALUE_BAR_WIDTH, TEXT_HEIGHT, ((double)value - presetValueMin[preset][code]) / ((double)presetValueMax[preset][code] - presetValueMin[preset][code]));
   display.display();
 }
 

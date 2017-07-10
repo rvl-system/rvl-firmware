@@ -27,6 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "animations/fade.h"
 #include "animations/pulse.h"
+#include "animations/wave.h"
 
 Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTSTAR_BRG);
 
@@ -45,6 +46,7 @@ void Lights::setup() {
 
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
+  animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
 
   strip.begin();
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {

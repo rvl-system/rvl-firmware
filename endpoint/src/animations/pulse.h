@@ -25,10 +25,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "common/codes.h"
 #include "animation.h"
 
-#define PULSE_DEFAULT_RATE 64
-#define PULSE_DEFAULT_HUE 200
-#define PULSE_DEFAULT_SATURATION 255
-
 namespace Pulse {
 
   class PulseAnimation : public Animation::AnimationBase {

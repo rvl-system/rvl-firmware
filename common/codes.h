@@ -22,18 +22,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Codes {
 
-  namespace MessageType {
-    enum MessageType {
-      SetPreset = 0,
-      SetValue = 1,
-      SetBrightness = 2
-    };
-  }
-
   namespace Preset {
     enum Preset {
       Fade = 0,
       Pulse = 1,
+      Wave = 2,
       Unknown = 255
     };
   }
@@ -46,20 +39,6 @@ namespace Codes {
       Value1 = 3,
       Value2 = 4,
       Value3 = 5
-    };
-  }
-
-  namespace FadeValue {
-    enum FadeValue {
-      Rate = 0
-    };
-  }
-
-  namespace PulseValue {
-    enum PulseValue {
-      Rate = 0,
-      Hue = 1,
-      Saturation = 2
     };
   }
 
