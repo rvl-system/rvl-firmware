@@ -30,9 +30,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define BUTTON_ON LOW
 #define BUTTON_OFF HIGH
-#define BUTTON_NEXT 12
-#define BUTTON_UP 14
-#define BUTTON_DOWN 16
+#define BUTTON_NEXT 16
+#define BUTTON_UP 12
+#define BUTTON_DOWN 14
 
 #define BUTTON_PRESS_ENGAGE_TIME 5
 #define BUTTON_HOLD_ENGAGE_TIME 200

@@ -105,19 +105,19 @@ namespace Input {
         break;
     }
 
-    // switch (getButtonChangeState(&downButtonInfo)) {
-    //   case Pressed:
-    //     State::controlUp();
-    //     break;
-    //   case Holding:
-    //     if (State::getSettings()->currentControl != Codes::Control::Preset) {
-    //       State::controlDown();
-    //     }
-    //     break;
-    //   case None:
-    //     // Do Nothing
-    //     break;
-    // }
+    switch (getButtonChangeState(&downButtonInfo)) {
+      case Pressed:
+        State::controlUp();
+        break;
+      case Holding:
+        if (State::getSettings()->currentControl != Codes::Control::Preset) {
+          State::controlDown();
+        }
+        break;
+      case None:
+        // Do Nothing
+        break;
+    }
 
   }
 
