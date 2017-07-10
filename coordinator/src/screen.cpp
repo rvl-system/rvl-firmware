@@ -88,10 +88,12 @@ const int VALUE3_HIGHLIGHT_Y = VALUE3_Y - HIGHIGHT_PADDING;
 const int COUNT_X = LCD_WIDTH - PADDING - TEXT_HEIGHT;
 const int COUNT_Y = VALUE2_Y + 6;
 
-Codes::Control::Control previousControl = Codes::Control::None;
+const int VALUEX_Y[] = { VALUE1_Y, VALUE2_Y, VALUE3_Y };
+
+byte previousControl = 0;
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-void drawControlOutline(Codes::Control::Control control, OLEDDISPLAY_COLOR color) {
+void drawControlOutline(byte control, OLEDDISPLAY_COLOR color) {
   display.setColor(color);
   switch(control) {
     case Codes::Control::Brightness:
@@ -169,9 +171,9 @@ void drawHorizontalBar(int x, int y, int w, int h, double percent) {
 }
 
 void drawBrightnessIcon(int x, int y, int size) {
-  const int midX = x + size / 2;
-  const int midY = y + size / 2;
-  const int indent = size / 8;
+  int midX = x + size / 2;
+  int midY = y + size / 2;
+  int indent = size / 8;
   int radius = size / 3;
 
   display.setColor(PIXEL_ON);
@@ -215,62 +217,43 @@ void Screen::init() {
 void Screen::loop() {
 }
 
-void Screen::updateControl(Codes::Control::Control control) {
+void Screen::updateControl(byte control) {
   drawControlOutline(previousControl, PIXEL_OFF);
   drawControlOutline(control, PIXEL_ON);
   previousControl = control;
   display.display();
 }
 
-void Screen::updateBrightness(int brightness) {
+void Screen::updateBrightness(byte brightness) {
   drawVerticalBar(BRIGHTNESS_BAR_X, BRIGHTNESS_BAR_Y, BRIGHTNESS_BAR_WIDTH, BRIGHTNESS_BAR_HEIGHT, (double)brightness / (double)MAX_BRIGHTNESS);
   display.display();
 }
 
-void Screen::updatePreset(Codes::Preset::Preset preset) {
+void Screen::updatePreset(byte preset) {
+  drawString(PRESET_VALUE_X, PRESET_VALUE_Y, 127 - PRESET_VALUE_X - PADDING, presetNames[preset]);
+
+  // TODO: add support for more than three values
   State::Settings* settings = State::getSettings();
-  switch(preset) {
-    case Codes::Preset::Fade:
+  for (int i = 0; i < 3; i++) {
+    if (presetValueLabels[preset][i] != NULL) {
       display.setColor(PIXEL_ON);
-      drawString(PRESET_VALUE_X, PRESET_VALUE_Y, 127 - PRESET_VALUE_X - PADDING, "Fade");
-      drawString(VALUE_LABEL_X, VALUE1_Y, VALUE_WIDTH, "R:");
-      updateValue(Codes::Preset::Fade, Codes::FadeValue::Rate, settings->fadeValues.rate);
+      drawString(VALUE_LABEL_X, VALUEX_Y[i], VALUE_WIDTH, presetValueLabels[preset][i]);
+      updateValue(preset, i, settings->presetValues[preset][i]);
+    } else {
       display.setColor(PIXEL_OFF);
-      display.fillRect(VALUE_LABEL_X, VALUE2_Y, VALUE_WIDTH, TEXT_HEIGHT);
-      display.fillRect(VALUE_LABEL_X, VALUE3_Y, VALUE_WIDTH, TEXT_HEIGHT);
-      break;
-    case Codes::Preset::Pulse:
-      display.setColor(PIXEL_ON);
-      drawString(PRESET_VALUE_X, PRESET_VALUE_Y, 127 - PRESET_VALUE_X - PADDING, "Pulse");
-      drawString(VALUE_LABEL_X, VALUE1_Y, VALUE_WIDTH, "R:");
-      updateValue(Codes::Preset::Pulse, Codes::PulseValue::Rate, settings->pulseValues.rate);
-      drawString(VALUE_LABEL_X, VALUE2_Y, VALUE_WIDTH, "H:");
-      updateValue(Codes::Preset::Pulse, Codes::PulseValue::Hue, settings->pulseValues.hue);
-      drawString(VALUE_LABEL_X, VALUE3_Y, VALUE_WIDTH, "S:");
-      updateValue(Codes::Preset::Pulse, Codes::PulseValue::Saturation, settings->pulseValues.saturation);
-      break;
+      display.fillRect(VALUE_LABEL_X, VALUEX_Y[i], VALUE_WIDTH, TEXT_HEIGHT);
+    }
   }
 
   display.display();
 }
 
-void Screen::updateValue(Codes::Preset::Preset preset, int code, int value) {
-  switch (code) {
-    case 0:
-      drawHorizontalBar(VALUE_BAR_X, VALUE1_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, (double)value / (double)MAX_VALUE);
-      break;
-    case 1:
-      drawHorizontalBar(VALUE_BAR_X, VALUE2_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, (double)value / (double)MAX_VALUE);
-      break;
-    case 2:
-      drawHorizontalBar(VALUE_BAR_X, VALUE3_Y, VALUE_BAR_WIDTH, TEXT_HEIGHT, (double)value / (double)MAX_VALUE);
-      break;
-  }
-
+void Screen::updateValue(byte preset, byte code, byte value) {
+  drawHorizontalBar(VALUE_BAR_X, VALUEX_Y[code], VALUE_BAR_WIDTH, TEXT_HEIGHT, (double)value / (double)MAX_VALUE);
   display.display();
 }
 
-void Screen::updateClientCount(int count) {
+void Screen::updateClientCount(byte count) {
   char convertedCount[3];
   itoa(count, convertedCount, 10);
   if (count < 10) {

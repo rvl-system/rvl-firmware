@@ -23,14 +23,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "messaging.h"
 #include "events.h"
 
-void Events::emitControlEvent(Codes::Control::Control currentControl) {
+void Events::emitControlEvent(byte currentControl) {
   Serial.print("Setting control ");
   Serial.println(currentControl);
 
   Screen::updateControl(currentControl);
 }
 
-void Events::emitValueEvent(Codes::Preset::Preset preset, int code, int newValue) {
+void Events::emitValueEvent(byte preset, byte code, byte newValue) {
   Serial.print("Setting preset ");
   Serial.print(preset);
   Serial.print(" code ");
@@ -42,7 +42,7 @@ void Events::emitValueEvent(Codes::Preset::Preset preset, int code, int newValue
   Messaging::update();
 }
 
-void Events::emitBrightnessEvent(int brightness) {
+void Events::emitBrightnessEvent(byte brightness) {
   Serial.print("Setting brightness to ");
   Serial.println(brightness);
 
@@ -50,7 +50,7 @@ void Events::emitBrightnessEvent(int brightness) {
   Messaging::update();
 }
 
-void Events::emitPresetEvent(Codes::Preset::Preset preset) {
+void Events::emitPresetEvent(byte preset) {
   Serial.print("Setting preset ");
   Serial.println(preset);
 
@@ -58,7 +58,7 @@ void Events::emitPresetEvent(Codes::Preset::Preset preset) {
   Messaging::update();
 }
 
-void Events::emitClientEvent(int numClients) {
+void Events::emitClientEvent(byte numClients) {
   Serial.print("Setting num clients to ");
   Serial.println(numClients);
 

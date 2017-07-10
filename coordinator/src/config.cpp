@@ -17,23 +17,20 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCREEN_HEADER
-#define SCREEN_HEADER
+#include <Arduino.h>
+#include "config.h"
 
-#include "common/codes.h"
+const char* presetNames[NUM_PRESETS] = {
+  "Fade",
+  "Pulse"
+};
 
-namespace Screen {
+const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES] = {
+  { "Rt", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL },
+  { "Rt", "Hu", "Sa", NULL, NULL, NULL, NULL, NULL, NULL, NULL }
+};
 
-  void init();
-  void loop();
-
-  void updateControl(byte control);
-  void updateBrightness(byte brightness);
-  void updatePreset(byte preset);
-  void updateValue(byte preset, byte code, byte number);
-  void updateClientCount(byte count);
-  void updateIdleState(Codes::IdleState::IdleState idleState);
-
-}
-
-#endif
+const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES] = {
+  { 125, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 125, 0, 255, 0, 0, 0, 0, 0, 0, 0 }
+};

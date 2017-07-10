@@ -21,27 +21,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define STATE_HEADER
 
 #include "common/codes.h"
+#include "config.h"
 
 namespace State {
 
-  struct FadeValueSettings {
-    int rate = 125;
-  };
-
-  struct PulseValueSettings {
-    int rate = 125;
-    int hue = 0;
-    int saturation = 255;
-  };
-
   struct Settings {
-    Codes::Preset::Preset preset = Codes::Preset::Fade;
+    byte preset = 0;
     int brightness = 25;
-    FadeValueSettings fadeValues;
-    PulseValueSettings pulseValues;
-    Codes::Control::Control currentControl = Codes::Control::None;
-    int numClients = 0;
+    byte** presetValues;
+
     Codes::IdleState::IdleState idleState = Codes::IdleState::Active;
+    byte currentControl = 0;
+    int numClients = 0;
   };
 
   void init();

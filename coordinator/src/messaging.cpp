@@ -26,7 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 WiFiUDP udp;
 
-Codes::Preset::Preset currentPreset = Codes::Preset::Unknown;
+byte currentPreset = Codes::Preset::Unknown;
 unsigned long commandStartTime = millis();
 
 bool needsSync = false;
@@ -64,25 +64,20 @@ void sync() {
   State::Settings* settings = State::getSettings();
   udp.beginPacket(GATEWAY, SERVER_PORT);
   uint32_t commandTime = (uint32_t)(millis() - commandStartTime);
+  Serial.print(commandTime);
   udp.write((byte*)&commandTime, 4);
+  Serial.print(',');
+  Serial.print(settings->brightness);
   udp.write(settings->brightness);
+  Serial.print(',');
+  Serial.print(settings->preset);
   udp.write(settings->preset);
-  switch(settings->preset) {
-    case Codes::Preset::Fade:
-      udp.write(settings->fadeValues.rate);
-      for (int i = 0; i < NUM_PRESET_VALUES - 1; i++) {
-        udp.write((byte)0);
-      }
-      break;
-    case Codes::Preset::Pulse:
-      udp.write(settings->pulseValues.rate);
-      udp.write(settings->pulseValues.hue);
-      udp.write(settings->pulseValues.saturation);
-      for (int i = 0; i < NUM_PRESET_VALUES - 3; i++) {
-        udp.write((byte)0);
-      }
-      break;
+  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
+    Serial.print(',');
+    Serial.print(settings->presetValues[settings->preset][i]);
+    udp.write(settings->presetValues[settings->preset][i]);
   }
+  Serial.println("");
   udp.endPacket();
 }
 
@@ -100,7 +95,7 @@ void Messaging::loop() {
 }
 
 void Messaging::update() {
-  Codes::Preset::Preset newPreset = State::getSettings()->preset;
+  byte newPreset = State::getSettings()->preset;
   if (newPreset != currentPreset) {
     currentPreset = newPreset;
     commandStartTime = millis();

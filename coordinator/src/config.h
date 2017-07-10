@@ -41,4 +41,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define CLIENT_SYNC_INTERVAL 2000
 
+extern const char* presetNames[NUM_PRESETS];
+extern const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES];
+extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
+
 #endif

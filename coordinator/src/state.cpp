@@ -39,46 +39,16 @@ State::Settings* State::getSettings() {
 }
 
 void State::nextControl() {
-  int numPresetValues;
-  switch (settings.preset) {
-    case Codes::Preset::Fade:
-      switch(settings.currentControl) {
-        case Codes::Control::None:
-          settings.currentControl = Codes::Control::Brightness;
-          break;
-        case Codes::Control::Brightness:
-          settings.currentControl = Codes::Control::Preset;
-          break;
-        case Codes::Control::Preset:
-          settings.currentControl = Codes::Control::Value1;
-          break;
-        case Codes::Control::Value1:
-          settings.currentControl = Codes::Control::None;
-          break;
-      }
+  int maxControls = 3;
+  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
+    if (presetValueLabels[settings.preset][i] == NULL) {
       break;
-    case Codes::Preset::Pulse:
-      switch(settings.currentControl) {
-        case Codes::Control::None:
-          settings.currentControl = Codes::Control::Brightness;
-          break;
-        case Codes::Control::Brightness:
-          settings.currentControl = Codes::Control::Preset;
-          break;
-        case Codes::Control::Preset:
-          settings.currentControl = Codes::Control::Value1;
-          break;
-        case Codes::Control::Value1:
-          settings.currentControl = Codes::Control::Value2;
-          break;
-        case Codes::Control::Value2:
-          settings.currentControl = Codes::Control::Value3;
-          break;
-        case Codes::Control::Value3:
-          settings.currentControl = Codes::Control::None;
-          break;
-      }
-      break;
+    }
+    maxControls++;
+  }
+  settings.currentControl++;
+  if (settings.currentControl == maxControls) {
+    settings.currentControl = 0;
   }
 
   Events::emitControlEvent(settings.currentControl);
@@ -101,29 +71,8 @@ int calculateNewValue(int value, bool direction) {
 }
 
 void handleValueChange(int code, bool direction) {
-  int newValue;
-  switch(settings.preset) {
-    case Codes::Preset::Fade:
-      switch(code) {
-        case Codes::FadeValue::Rate:
-          newValue = settings.fadeValues.rate = calculateNewValue(settings.fadeValues.rate, direction);
-          break;
-      }
-      break;
-    case Codes::Preset::Pulse:
-      switch(code) {
-        case Codes::PulseValue::Rate:
-          newValue = settings.pulseValues.rate = calculateNewValue(settings.pulseValues.rate, direction);
-          break;
-        case Codes::PulseValue::Hue:
-          newValue = settings.pulseValues.hue = calculateNewValue(settings.pulseValues.hue, direction);
-          break;
-        case Codes::PulseValue::Saturation:
-          newValue = settings.pulseValues.saturation = calculateNewValue(settings.pulseValues.saturation, direction);
-          break;
-      }
-      break;
-  }
+  int newValue = calculateNewValue(settings.presetValues[settings.preset][code], direction);
+  settings.presetValues[settings.preset][code] = newValue;
   Events::emitValueEvent(settings.preset, code, newValue);
 }
 
@@ -139,13 +88,9 @@ void State::controlUp() {
       }
       break;
     case Codes::Control::Preset:
-      switch(settings.preset) {
-        case Codes::Preset::Fade:
-          settings.preset = Codes::Preset::Pulse;
-          break;
-        case Codes::Preset::Pulse:
-          settings.preset = Codes::Preset::Fade;
-          break;
+      settings.preset++;
+      if (settings.preset == NUM_PRESETS) {
+        settings.preset = 0;
       }
       Events::emitPresetEvent(settings.preset);
       break;
@@ -215,6 +160,13 @@ void State::setIdling() {
 }
 
 void State::init() {
+  settings.presetValues = new byte*[NUM_PRESETS];
+  for (int i = 0; i < NUM_PRESETS; i++) {
+    settings.presetValues[i] = new byte[NUM_PRESET_VALUES];
+    for (int j = 0; j < NUM_PRESET_VALUES; j++) {
+      settings.presetValues[i][j] = presetValueDefaults[i][j];
+    }
+  }
   Serial.println("State initialized");
 }
 
