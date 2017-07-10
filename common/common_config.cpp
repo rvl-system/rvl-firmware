@@ -17,8 +17,33 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <Arduino.h>
 #include "common_config.h"
 
 IPAddress SERVER_IP(192, 168, 42, 1);
 IPAddress GATEWAY(192, 168, 42, 255);
 IPAddress SUBNET(255, 255, 255, 0);
+
+const char* presetNames[NUM_PRESETS] = {
+  "Fade",
+  "Pulse",
+  "Wave"
+};
+
+const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES] = {
+  { "Rt", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL },
+  { "Rt", "Hu", "Sa", NULL, NULL, NULL, NULL, NULL, NULL, NULL },
+  { "Rt", "Sp", "Hu", NULL, NULL, NULL, NULL, NULL, NULL, NULL }
+};
+
+const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES] = {
+  { 255, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 255, 255, 255, 0, 0, 0, 0, 0, 0, 0 },
+  { 255, 16, 255, 0, 0, 0, 0, 0, 0, 0 }
+};
+
+const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES] = {
+  { 125, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 125, 0, 255, 0, 0, 0, 0, 0, 0, 0 },
+  { 125, 4, 0, 0, 0, 0, 0, 0, 0, 0 }
+};

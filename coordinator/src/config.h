@@ -34,15 +34,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define BUTTON_UP 12
 #define BUTTON_DOWN 14
 
-#define BUTTON_PRESS_ENGAGE_TIME 5
-#define BUTTON_HOLD_ENGAGE_TIME 200
+#define BUTTON_PRESS_ENGAGE_TIME 50
+#define BUTTON_HOLD_ENGAGE_TIME 2000
 
 #define CLIENT_TIMEOUT 5000
 
 #define CLIENT_SYNC_INTERVAL 2000
-
-extern const char* presetNames[NUM_PRESETS];
-extern const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES];
-extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
 #endif

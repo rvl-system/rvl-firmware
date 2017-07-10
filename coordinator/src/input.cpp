@@ -72,7 +72,7 @@ namespace Input {
       }
     } else {
       buttonInfo->state = BUTTON_OFF;
-      buttonInfo->holdStartTime = 0;
+      buttonInfo->holdStartTime = -1;
     }
     return returnValue;
   }
@@ -107,7 +107,7 @@ namespace Input {
 
     switch (getButtonChangeState(&downButtonInfo)) {
       case Pressed:
-        State::controlUp();
+        State::controlDown();
         break;
       case Holding:
         if (State::getSettings()->currentControl != Codes::Control::Preset) {

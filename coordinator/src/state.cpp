@@ -24,8 +24,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 const int BRIGHTNESS_STEP = 1;
 const int MAX_BRIGHTNESS = 255;
-const int VALUE_STEP = 1;
-const int MAX_VALUE = 255;
 const int DIM_TIMEOUT = 10000;
 const int OFF_TIMEOUT = 5000;
 
@@ -54,24 +52,23 @@ void State::nextControl() {
   Events::emitControlEvent(settings.currentControl);
 }
 
-int calculateNewValue(int value, bool direction) {
+int calculateNewValue(byte code, int value, bool direction) {
   if (direction) {
-    value += VALUE_STEP;
-    if (value > MAX_VALUE) {
-      value = MAX_VALUE;
+    value++;
+    if (value > presetValueMax[settings.preset][code]) {
+      value = presetValueMax[settings.preset][code];
     }
-    return value;
   } else {
-    value -= VALUE_STEP;
+    value--;
     if (value < 0) {
       value = 0;
     }
-    return value;
   }
+  return value;
 }
 
 void handleValueChange(int code, bool direction) {
-  int newValue = calculateNewValue(settings.presetValues[settings.preset][code], direction);
+  int newValue = calculateNewValue(code, settings.presetValues[settings.preset][code], direction);
   settings.presetValues[settings.preset][code] = newValue;
   Events::emitValueEvent(settings.preset, code, newValue);
 }

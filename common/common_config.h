@@ -29,11 +29,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define UPDATE_RATE 33
 
-#define NUM_PRESETS 2
+#define NUM_PRESETS 3
 #define NUM_PRESET_VALUES 10
 
 extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;
 extern IPAddress SUBNET;
+
+extern const char* presetNames[NUM_PRESETS];
+extern const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES];
+extern const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES];
+extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
 #endif

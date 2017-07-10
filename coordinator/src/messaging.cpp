@@ -64,20 +64,12 @@ void sync() {
   State::Settings* settings = State::getSettings();
   udp.beginPacket(GATEWAY, SERVER_PORT);
   uint32_t commandTime = (uint32_t)(millis() - commandStartTime);
-  Serial.print(commandTime);
   udp.write((byte*)&commandTime, 4);
-  Serial.print(',');
-  Serial.print(settings->brightness);
   udp.write(settings->brightness);
-  Serial.print(',');
-  Serial.print(settings->preset);
   udp.write(settings->preset);
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    Serial.print(',');
-    Serial.print(settings->presetValues[settings->preset][i]);
     udp.write(settings->presetValues[settings->preset][i]);
   }
-  Serial.println("");
   udp.endPacket();
 }
 
