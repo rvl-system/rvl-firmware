@@ -27,7 +27,8 @@ void Events::emitControlEvent(byte currentControl) {
   Serial.print("Setting control ");
   Serial.println(currentControl);
 
-  Screen::updateControl(currentControl);
+  // Screen::updateControl(currentControl);
+  Screen::update();
 }
 
 void Events::emitValueEvent(byte preset, byte code, byte newValue) {
@@ -38,7 +39,8 @@ void Events::emitValueEvent(byte preset, byte code, byte newValue) {
   Serial.print(" to value ");
   Serial.println(newValue);
 
-  Screen::updateValue(preset, code, newValue);
+  // Screen::updateValue(preset, code, newValue);
+  Screen::update();
   Messaging::update();
 }
 
@@ -46,7 +48,8 @@ void Events::emitBrightnessEvent(byte brightness) {
   Serial.print("Setting brightness to ");
   Serial.println(brightness);
 
-  Screen::updateBrightness(brightness);
+  // Screen::updateBrightness(brightness);
+  Screen::update();
   Messaging::update();
 }
 
@@ -54,7 +57,8 @@ void Events::emitPresetEvent(byte preset) {
   Serial.print("Setting preset ");
   Serial.println(preset);
 
-  Screen::updatePreset(preset);
+  // Screen::updatePreset(preset);
+  Screen::update();
   Messaging::update();
 }
 
@@ -62,7 +66,8 @@ void Events::emitClientEvent(byte numClients) {
   Serial.print("Setting num clients to ");
   Serial.println(numClients);
 
-  Screen::updateClientCount(numClients);
+  // Screen::updateClientCount(numClients);
+  Screen::update();
   Messaging::update();
 }
 
@@ -70,6 +75,7 @@ void Events::emitIdleEvent(Codes::IdleState::IdleState idleState) {
   Serial.print("Setting idle state to ");
   Serial.println(idleState);
 
-  Screen::updateIdleState(idleState);
+  // Screen::updateIdleState(idleState);
+  Screen::update();
   Messaging::update();
 }

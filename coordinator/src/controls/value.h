@@ -17,23 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCREEN_HEADER
-#define SCREEN_HEADER
+#ifndef VALUE_CONTROL_HEADER
+#define VALUE_CONTROL_HEADER
 
-#include "common/codes.h"
+#include <Arduino.h>
+#include "SSD1306Brzo.h"
 
-namespace Screen {
+namespace ValueControl {
 
-  void init();
-  void loop();
-  void update();
-
-  void updateControl(byte control);
-  void updateBrightness(byte brightness);
-  void updatePreset(byte preset);
-  void updateValue(byte preset, byte code, byte number);
-  void updateClientCount(byte count);
-  void updateIdleState(Codes::IdleState::IdleState idleState);
+  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* label, byte value);
 
 }
 

@@ -27,6 +27,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define LCD_SCL 5
 #define LCD_WIDTH 128
 #define LCD_HEIGHT 64
+#define ACTIVE_CONTRAST 255
+#define SHALLOW_IDLE_CONTRAST 16
 
 #define BUTTON_ON LOW
 #define BUTTON_OFF HIGH

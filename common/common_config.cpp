@@ -31,9 +31,9 @@ const char* presetNames[NUM_PRESETS] = {
 };
 
 const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES] = {
-  { "Rt", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL },
-  { "Rt", "Hu", "Sa", NULL, NULL, NULL, NULL, NULL, NULL, NULL },
-  { "Rt", "Sp", "Hu", NULL, NULL, NULL, NULL, NULL, NULL, NULL }
+  { "RT", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL },
+  { "RT", "HA", "SA", NULL, NULL, NULL, NULL, NULL, NULL, NULL },
+  { "RT", "SP", "H1", "H2", NULL, NULL, NULL, NULL, NULL, NULL }
 };
 
 const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES] = {
@@ -45,11 +45,11 @@ const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES] = {
 const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { 255, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 255, 255, 255, 0, 0, 0, 0, 0, 0, 0 },
-  { 255, 16, 255, 0, 0, 0, 0, 0, 0, 0 }
+  { 255, 16, 255, 255, 0, 0, 0, 0, 0, 0 }
 };
 
 const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { 125, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 125, 120, 255, 0, 0, 0, 0, 0, 0, 0 },
-  { 125, 8, 120, 0, 0, 0, 0, 0, 0, 0 }
+  { 125, 8, 120, 80, 0, 0, 0, 0, 0, 0 }
 };

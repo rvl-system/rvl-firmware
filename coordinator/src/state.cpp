@@ -91,14 +91,8 @@ void State::controlUp() {
       }
       Events::emitPresetEvent(settings.preset);
       break;
-    case Codes::Control::Value1:
-      handleValueChange(0, true);
-      break;
-    case Codes::Control::Value2:
-      handleValueChange(1, true);
-      break;
-    case Codes::Control::Value3:
-      handleValueChange(2, true);
+    default:
+      handleValueChange(settings.currentControl - 3, true);
       break;
   }
 }
