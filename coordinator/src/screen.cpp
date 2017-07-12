@@ -47,72 +47,92 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define COUNT_X 122
 #define COUNT_Y 40
 
-SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
+namespace Screen {
 
-void Screen::init() {
-  display.init();
-  display.flipScreenVertically();
-  display.clear();
-  display.setFont(ArialMT_Plain_10);
+  SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-  Screen::update();
+  void init() {
+    display.init();
+    display.flipScreenVertically();
+    display.clear();
+    display.setFont(ArialMT_Plain_10);
 
-  Serial.println("Screen initialized");
-}
+    Screen::update();
 
-void Screen::loop() {
-}
+    Serial.println("Screen initialized");
+  }
 
-void Screen::update() {
-  State::Settings* settings = State::getSettings();
-  display.clear();
-  display.setColor(WHITE);
+  void loop() {
+  }
 
-  // Draw the brightness icon
-  BrightnessControl::render(
-    display,
-    BRIGHTNESS_X,
-    BRIGHTNESS_Y,
-    BRIGHTNESS_WIDTH,
-    BRIGHTNESS_HEIGHT,
-    settings->currentControl == Codes::Control::Brightness,
-    settings->brightness
-  );
-
-  // Draw the preset
-  PresetControl::render(
-    display,
-    PRESET_X,
-    PRESET_Y,
-    PRESET_WIDTH,
-    PRESET_HEIGHT,
-    settings->currentControl == Codes::Control::Preset,
-    presetNames[settings->preset]
-  );
-
-  // Draw the values
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    const char* label = presetValueLabels[settings->preset][i];
-    if (label != NULL) {
-      ValueControl::render(
-        display,
-        VALUE_X,
-        (i + 1) * VALUE_SPACING,
-        VALUE_WIDTH,
-        VALUE_HEIGHT,
-        settings->currentControl == i + 3,
-        label,
-        (double)(settings->presetValues[settings->preset][i] - presetValueMin[settings->preset][i]) / (double)(presetValueMax[settings->preset][i] - presetValueMin[settings->preset][i])
-      );
+  void updateIdleState(Codes::IdleState::IdleState idleState) {
+    switch(idleState) {
+      case Codes::IdleState::Active:
+        display.setContrast(ACTIVE_CONTRAST);
+        display.displayOn();
+        break;
+      case Codes::IdleState::ShallowIdle:
+        display.setContrast(SHALLOW_IDLE_CONTRAST);
+        display.displayOn();
+        break;
+      case Codes::IdleState::DeepIdle:
+        display.displayOff();
+        break;
     }
   }
 
-  // Draw the number of connected clients
-  char convertedCount[2];
-  itoa(settings->numClients, convertedCount, 10);
-  convertedCount[1] = 0;
-  display.drawString(COUNT_X, COUNT_Y, convertedCount);
-  display.display();
+  void update() {
+    State::Settings* settings = State::getSettings();
+    display.clear();
+    display.setColor(WHITE);
 
-  display.display();
+    // Draw the brightness icon
+    BrightnessControl::render(
+      display,
+      BRIGHTNESS_X,
+      BRIGHTNESS_Y,
+      BRIGHTNESS_WIDTH,
+      BRIGHTNESS_HEIGHT,
+      settings->currentControl == Codes::Control::Brightness,
+      settings->brightness
+    );
+
+    // Draw the preset
+    PresetControl::render(
+      display,
+      PRESET_X,
+      PRESET_Y,
+      PRESET_WIDTH,
+      PRESET_HEIGHT,
+      settings->currentControl == Codes::Control::Preset,
+      presetNames[settings->preset]
+    );
+
+    // Draw the values
+    for (int i = 0; i < NUM_PRESET_VALUES; i++) {
+      const char* label = presetValueLabels[settings->preset][i];
+      if (label != NULL) {
+        ValueControl::render(
+          display,
+          VALUE_X,
+          (i + 1) * VALUE_SPACING,
+          VALUE_WIDTH,
+          VALUE_HEIGHT,
+          settings->currentControl == i + 3,
+          label,
+          (double)(settings->presetValues[settings->preset][i] - presetValueMin[settings->preset][i]) / (double)(presetValueMax[settings->preset][i] - presetValueMin[settings->preset][i])
+        );
+      }
+    }
+
+    // Draw the number of connected clients
+    char convertedCount[2];
+    itoa(settings->numClients, convertedCount, 10);
+    convertedCount[1] = 0;
+    display.drawString(COUNT_X, COUNT_Y, convertedCount);
+    display.display();
+
+    display.display();
+  }
+
 }

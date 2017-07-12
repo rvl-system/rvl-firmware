@@ -71,6 +71,9 @@ namespace Input {
         returnValue = Holding;
       }
     } else {
+      if (buttonInfo->state != BUTTON_OFF) {
+        State::setIdling();
+      }
       buttonInfo->state = BUTTON_OFF;
       buttonInfo->holdStartTime = -1;
     }

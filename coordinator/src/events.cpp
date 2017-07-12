@@ -75,7 +75,5 @@ void Events::emitIdleEvent(Codes::IdleState::IdleState idleState) {
   Serial.print("Setting idle state to ");
   Serial.println(idleState);
 
-  // Screen::updateIdleState(idleState);
-  Screen::update();
-  Messaging::update();
+  Screen::updateIdleState(idleState);
 }
