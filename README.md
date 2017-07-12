@@ -6,7 +6,7 @@ This project is still under heavy development, documentation coming soon once th
 
 # License
 
-All schematics, layouts, software, and other documentation for aquarium-control is released under the General Public License.
+All schematics, layouts, software, and other documentation for raver-lights is released under the General Public License.
 
 Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
 
