@@ -22,14 +22,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "colorspace.h"
 #include "config.h"
 #include "common/codes.h"
-
-#define MIN_MAGNITUDE 0
+#include "colorspace.h"
 
 namespace Wave {
 
   double step = 0;
   byte spacing = 0;
-  double hue = 0;
+  double hueForeground = 0;
+  double hueBackground = 0;
 
   double brightness = 0;
 
@@ -40,7 +40,8 @@ namespace Wave {
   void WaveAnimation::setValues(byte* values) {
     step = ((double)values[0] / 255.0) / 300;
     spacing = values[1];
-    hue = (double)values[2] * 360.0 / 255;
+    hueForeground = (double)values[2] * 360.0 / 255;
+    hueBackground = (double)values[3] * 360.0 / 255;
   }
 
   void WaveAnimation::updateColors(uint32_t commandTime, hsv* buffer) {
@@ -49,10 +50,31 @@ namespace Wave {
     double periodTime = 2 * PI * (commandTime % period) / period;
 
     for (int i = 0; i < NUM_PIXELS; i++) {
-      double magnitude = sin(2 * PI * (i % spacing) / spacing + periodTime);
-      buffer[i].h = hue;
-      buffer[i].s = 1.0;
-      buffer[i].v = (magnitude < MIN_MAGNITUDE ? MIN_MAGNITUDE : magnitude) * brightness;
+      double alpha = sin(2 * PI * (i % spacing) / spacing + periodTime);
+      if (alpha < 0) {
+        alpha = 0;
+      }
+
+      hsv foregroundHSV;
+      foregroundHSV.h = hueForeground;
+      foregroundHSV.s = 1;
+      foregroundHSV.v = brightness;
+
+      rgb foregroundRGB = hsv2rgb(foregroundHSV);
+
+      hsv backgroundHSV;
+      backgroundHSV.h = hueBackground;
+      backgroundHSV.s = 1;
+      backgroundHSV.v = brightness;
+
+      rgb backgroundRGB = hsv2rgb(backgroundHSV);
+
+      rgb compositedRGB;
+      compositedRGB.r = (foregroundRGB.r * alpha + backgroundRGB.r * (1 - alpha));
+      compositedRGB.g = (foregroundRGB.g * alpha + backgroundRGB.g * (1 - alpha));
+      compositedRGB.b = (foregroundRGB.b * alpha + backgroundRGB.b * (1 - alpha));
+
+      buffer[i] = rgb2hsv(compositedRGB);
     }
   }
 

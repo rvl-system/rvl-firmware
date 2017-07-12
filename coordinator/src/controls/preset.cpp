@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "value.h"
 
 #define CONTENT_PADDING 3
-#define LABEL_WIDTH 35
+#define LABEL_WIDTH 49
 
 namespace PresetControl {
 
@@ -31,7 +31,7 @@ namespace PresetControl {
       display.drawRect(x, y, width, height);
     }
 
-    display.drawString(x + CONTENT_PADDING, y, "Preset: ");
+    display.drawString(x + CONTENT_PADDING, y, "PRESET: ");
     display.drawString(x + CONTENT_PADDING + LABEL_WIDTH, y, preset);
 
   }

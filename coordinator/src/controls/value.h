@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace ValueControl {
 
-  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* label, byte value);
+  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* label, double value);
 
 }
 

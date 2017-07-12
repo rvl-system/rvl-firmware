@@ -102,7 +102,7 @@ void Screen::update() {
         VALUE_HEIGHT,
         settings->currentControl == i + 3,
         label,
-        settings->presetValues[settings->preset][i]
+        (double)(settings->presetValues[settings->preset][i] - presetValueMin[settings->preset][i]) / (double)(presetValueMax[settings->preset][i] - presetValueMin[settings->preset][i])
       );
     }
   }

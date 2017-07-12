@@ -119,14 +119,8 @@ void State::controlDown() {
       }
       Events::emitPresetEvent(settings.preset);
       break;
-    case Codes::Control::Value1:
-      handleValueChange(0, false);
-      break;
-    case Codes::Control::Value2:
-      handleValueChange(1, false);
-      break;
-    case Codes::Control::Value3:
-      handleValueChange(2, false);
+    default:
+      handleValueChange(settings.currentControl - 3, false);
       break;
   }
 }
