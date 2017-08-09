@@ -26,8 +26,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace State {
 
   struct Settings {
-    byte preset = 0;
-    int brightness = 25;
+    byte preset = DEFAULT_PRESET;
+    int brightness = DEFAULT_BRIGHTNESS;
     byte** presetValues;
 
     Codes::IdleState::IdleState idleState = Codes::IdleState::Active;

@@ -55,6 +55,8 @@ void Lights::setup() {
   }
   strip.show();
 
+  Lights::update(0, DEFAULT_BRIGHTNESS, (Codes::Preset::Preset)DEFAULT_PRESET, (byte*)presetValueDefaults[DEFAULT_PRESET]);
+
   Serial.println("Lights initialized");
 }
 

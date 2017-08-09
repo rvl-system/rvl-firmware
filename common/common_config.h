@@ -32,6 +32,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define NUM_PRESETS 3
 #define NUM_PRESET_VALUES 10
 
+#define DEFAULT_PRESET 0
+#define DEFAULT_BRIGHTNESS 25
+
 extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;
 extern IPAddress SUBNET;
