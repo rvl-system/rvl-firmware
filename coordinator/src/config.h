@@ -32,7 +32,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define BUTTON_ON LOW
 #define BUTTON_OFF HIGH
-#define BUTTON_NEXT 16
+#define BUTTON_NEXT 13
 #define BUTTON_UP 12
 #define BUTTON_DOWN 14
 
