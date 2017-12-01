@@ -4,6 +4,10 @@ Source code for my raver lights system. Written using [PlatformIO](http://platfo
 
 This project is still under heavy development, documentation coming soon once things have settled!
 
+In the mean time, check out this tech demo of the hardware (as of August 2017).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/c0nkdtS_-Bg" frameborder="0" allowfullscreen></iframe>
+
 # License
 
 All schematics, layouts, software, and other documentation for raver-lights is released under the General Public License.
