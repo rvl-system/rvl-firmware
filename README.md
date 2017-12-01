@@ -6,7 +6,9 @@ This project is still under heavy development, documentation coming soon once th
 
 In the mean time, check out this tech demo of the hardware (as of August 2017).
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/c0nkdtS_-Bg" frameborder="0" allowfullscreen></iframe>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=c0nkdtS_-Bg" target="_blank">
+  <img src="http://img.youtube.com/vi/c0nkdtS_-Bg/0.jpg" alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" />
+</a>
 
 # License
 
