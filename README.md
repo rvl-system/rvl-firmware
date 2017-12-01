@@ -4,11 +4,15 @@ Source code for my raver lights system. Written using [PlatformIO](http://platfo
 
 This project is still under heavy development, documentation coming soon once things have settled!
 
-In the mean time, check out this tech demo of the hardware (as of August 2017).
+In the mean time, check out this tech demo video of the hardware (as of August 2017).
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=c0nkdtS_-Bg" target="_blank">
-  <img src="http://img.youtube.com/vi/c0nkdtS_-Bg/0.jpg" alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" />
+  <img src="http://img.youtube.com/vi/c0nkdtS_-Bg/0.jpg" alt="Video of a tech demonstration of Raver Lights" width="240" height="180" border="10" />
 </a>
+
+And a photo of the system on my bike at Burning Man 2017:
+
+![Photo of Raver Lights on a bike at Burning Man 2017](https://nebri.us/static/bm2017-bike.jpg)
 
 # License
 
