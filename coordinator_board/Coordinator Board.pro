@@ -62,3 +62,4 @@ LibName30=external-components/ESP8266/ESP8266
 LibName31=kicad-components/components/lcd/nebrius-lcd
 LibName32=kicad-components/components/regulators/nebrius-regulators
 LibName33=kicad-components/components/switch/nebrius-switch
+LibName34=kicad-components/components/conn/nebrius-conn
