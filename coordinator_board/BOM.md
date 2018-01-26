@@ -4,7 +4,7 @@
 |-------------|-------------|----------|------|------|
 | [ESP-12e](https://www.amazon.com/Esp8266-Esp-12e-Wireless-Transceiver-IFANCY-TECH/dp/B01GZ0687C/) | ESP-12e WiFi Microcontroller | 1 | $4.94 | $4.94 |
 | [SSD1306](https://www.amazon.com/gp/product/B072Q2X2LL/) | 128x64 pixel two-color LCD Display | 1 | $7.99 | $7.99 |
-| [SF3O3GJ2](https://www.sparkfun.com/products/10063) | 5-way Tactile Switch | 1 | $1.95)
+| [SF3O3GJ2](https://www.sparkfun.com/products/10063) | 5-way Tactile Switch | 1 | $1.95 | $1.95 |
 | [ERJ-6GEY0R00V‎](https://www.digikey.com/product-detail/en/panasonic-electronic-components/ERJ-6GEY0R00V/P0.0ACT-ND/82955) | RES SMD 0 OHM JUMPER 1/8W 0805 | 1 | $0.10 | $0.10 |
 | [74479275222‎](https://www.digikey.com/product-detail/en/wurth-electronics-inc/74479275222/732-9708-1-ND/5870862) | FIXED IND 2.2UH 1.3A 176 MOHM | 1 | $1.19 | $1.19 |
 | [10118194-0001LF‎](https://www.digikey.com/product-detail/en/amphenol-fci/10118194-0001LF/609-4618-1-ND/2785382) | CONN USB MICRO B RECPT SMT R/A | 1 | $0.46 | $0.46 |
