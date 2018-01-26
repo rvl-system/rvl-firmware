@@ -14,7 +14,9 @@
 | [ERA-6AEB102V‎](https://www.digikey.com/product-detail/en/panasonic-electronic-components/ERA-6AEB102V/P1.0KDACT-ND/1465947) | RES SMD 1K OHM 0.1% 1/8W 0805 | 1 | $0.36 | $0.36 |
 | [‎CL-SA-12C4-22‎](https://www.digikey.com/product-detail/en/nidec-copal-electronics/CL-SA-12C4-22/563-1385-ND/4010214) | SWITCH SLIDE SPDT 500MA 12V | 1 | $2.60 | $2.60 |
 | [GRM219R60J475KE19D‎](https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM219R60J475KE19D/490-6450-1-ND/3845647) | CAP CER 4.7UF 6.3V X5R 0805 | 1 | $0.28 | $0.28 |
-| [GRM21BR60J106ME19L‎](https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J106ME19L/490-1718-1-ND/587425) | CAP CER 10UF 6.3V X5R 0805 | 1 | $0.12 | $0.12 |
+| [GRM21BR60J106ME19L‎](https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J106ME19L/490-1718-1-ND/587425) | CAP CER 10UF 6.3V X5R 0805 | 4 | $0.12 | $0.12 |
+| [GRM219R71C104KA01D‎](https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM219R71C104KA01D/490-1683-1-ND/587529) | CAP CER 0.1UF 16V X7R 0805 | 1 | $0.14 | $0.14 |
+| [MFU0805FF01000P100‎](https://www.digikey.com/product-detail/en/vishay-beyschlag/MFU0805FF01000P100/MFU08051.00CT-ND/1206546) | FUSE BOARD MOUNT 1A 32VDC 0805 | 1 | $0.49 | $0.49 |
 | [LM3671MF-3.3/NOPB‎](https://www.digikey.com/product-detail/en/texas-instruments/LM3671MF-3.3-NOPB/LM3671MF-3.3-NOPBCT-ND/1590190) | IC REG BUCK 3.3V 0.6A SYNC SOT23 | 1 | $1.43 | $1.43 |
 | [‎LTST-C150TBKT‎](https://www.digikey.com/product-detail/en/lite-on-inc/LTST-C150TBKT/160-1643-1-ND/573584) | LED BLUE CLEAR 1206 SMD | 1 | $0.39 | $0.39 |
 | [EXB-N8V103JX‎](https://www.digikey.com/product-detail/en/panasonic-electronic-components/EXB-N8V103JX/Y10103CT-ND/671669) | RES ARRAY 4 RES 10K OHM 0804 | 1 | $0.10 | $0.10 |
@@ -22,6 +24,6 @@
 | [CD74HC4050NSR‎](https://www.digikey.com/product-detail/en/texas-instruments/CD74HC4050NSR/296-23207-1-ND/1830739) | IC BUFF NON-INVERT 6V 16SO | 1 | $0.50 | $0.50 |
 | [M22-2010305‎](https://www.digikey.com/product-detail/en/harwin-inc/M22-2010305/952-2274-ND/3728238) | SIL VERTICAL PC TAIL PIN HEADER | 1 | $0.22 | $0.22 |
 | [PCB Board]() | Custom PCB from OSH Park | 1 | TBD | TBD |
-| | | | | **$27.66** |
+| | | | | **TBD** |
 
 * All prices in USC. Value current as of January 26th, 2018
