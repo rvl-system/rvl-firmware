@@ -1,4 +1,4 @@
-update=Saturday, January 13, 2018 'PMt' 12:08:22 PM
+update=Friday, January 26, 2018 'AMt' 09:48:32 AM
 version=1
 last_client=kicad
 [pcbnew]
@@ -64,3 +64,14 @@ LibName32=kicad-components/components/lcd/nebrius-lcd
 LibName33=kicad-components/components/regulators/nebrius-regulators
 LibName34=kicad-components/components/switch/nebrius-switch
 LibName35=kicad-components/components/conn/nebrius-conn
+LibName36=kicad-components/components/logic/nebrius-logic
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
