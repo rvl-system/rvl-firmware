@@ -22,7 +22,6 @@
 | [CD74HC4050NSR‎](https://www.digikey.com/product-detail/en/texas-instruments/CD74HC4050NSR/296-23207-1-ND/1830739) | IC BUFF NON-INVERT 6V 16SO | 1 | $0.50 | $0.50 |
 | [M22-2010305‎](https://www.digikey.com/product-detail/en/harwin-inc/M22-2010305/952-2274-ND/3728238) | SIL VERTICAL PC TAIL PIN HEADER | 1 | $0.22 | $0.22 |
 | [PCB Board]() | Custom PCB from OSH Park | 1 | TBD | TBD |
-|-------------|-------------|----------|------|------------|
-|             |             |          |      | **$27.66** |
+| | | | | **$27.66** |
 
 * All prices in USC. Value current as of January 26th, 2018
