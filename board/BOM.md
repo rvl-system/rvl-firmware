@@ -1,6 +1,6 @@
 # Bill of Materials
 
-| Part Number | Description | Quantity | Unit Cost* | Total Cost |
+| Part Number | Description | Quantity | Unit Cost* | Total Cost* |
 |-------------|-------------|----------|------|------|
 | [ESP-12e](https://www.amazon.com/Esp8266-Esp-12e-Wireless-Transceiver-IFANCY-TECH/dp/B01GZ0687C/) | ESP-12e WiFi Microcontroller | 1 | $4.94 | $4.94 |
 | [SSD1306](https://www.amazon.com/gp/product/B072Q2X2LL/) | 128x64 pixel two-color LCD Display | 1 | $7.99 | $7.99 |
@@ -23,4 +23,4 @@
 | [PCB Board](https://oshpark.com/shared_projects/7CyOR2JB) | Custom PCB from OSH Park | 1 | $8.50 | $8.50 |
 | | | | | **$35.76** |
 
-* All prices in USD. Value current as of February 20th, 2018
+* All prices in USD. Prices current as of February 20th, 2018
