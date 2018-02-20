@@ -23,4 +23,4 @@
 | [PCB Board](https://oshpark.com/shared_projects/7CyOR2JB) | Custom PCB from OSH Park | 1 | $8.50 | $8.50 |
 | | | | | **$35.76** |
 
-* All prices in USC. Value current as of January 26th, 2018
+* All prices in USD. Value current as of February 20th, 2018
