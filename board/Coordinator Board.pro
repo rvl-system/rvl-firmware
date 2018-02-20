@@ -1,4 +1,4 @@
-update=Tuesday, February 13, 2018 'AMt' 09:35:21 AM
+update=Tuesday, February 20, 2018 'AMt' 10:29:08 AM
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,6 +25,16 @@ version=1
 NetIExt=net
 [general]
 version=1
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
 [eeschema]
 version=1
 LibDir=
@@ -65,13 +75,5 @@ LibName33=kicad-components/components/regulators/nebrius-regulators
 LibName34=kicad-components/components/switch/nebrius-switch
 LibName35=kicad-components/components/conn/nebrius-conn
 LibName36=kicad-components/components/logic/nebrius-logic
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
+LibName37=logic_programmable
+LibName38=74xgxx
