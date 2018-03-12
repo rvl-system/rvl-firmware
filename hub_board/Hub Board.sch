@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:diode
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -36,7 +37,7 @@ LIBS:nebrius-conn
 LIBS:nebrius-logic
 LIBS:logic_programmable
 LIBS:74xgxx
-LIBS:Coordinator Board-cache
+LIBS:Hub Board-cache
 EELAYER 25 0
 EELAYER END
 $Descr USLetter 11000 8500
@@ -52,15 +53,15 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L LM3671-RESCUE-Coordinator_Board U1
+L LM3671 U1
 U 1 1 57A0D83A
-P 2450 4800
-F 0 "U1" H 2200 5025 60  0000 L CNN
-F 1 "LM3671" H 2200 4550 60  0000 L CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23-5" H 1950 3950 60  0000 C CNN
-F 3 "" H 2450 4450 60  0000 C CNN
-	1    2450 4800
-	1    0    0    -1
+P 2500 4800
+F 0 "U1" H 2300 5050 60  0000 L CNN
+F 1 "LM3671" H 2250 4550 60  0000 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5" H 2000 3950 60  0000 C CNN
+F 3 "" H 2500 4450 60  0000 C CNN
+	1    2500 4800
+	1    0    0    -1  
 $EndComp
 $Comp
 L Switch_SPDT_x2 SW1
@@ -71,18 +72,18 @@ F 1 "Switch_SPDT_x2" H 2300 4000 50  0000 C CNN
 F 2 "CL-SA-12C:CL-SA-12C4" H 2850 4450 50  0000 C CNN
 F 3 "" H 2550 4150 50  0000 C CNN
 	1    2550 4150
-	-1   0    0    -1
+	-1   0    0    -1  
 $EndComp
 $Comp
 L INDUCTOR L1
 U 1 1 57A0E1B1
-P 3200 4700
-F 0 "L1" V 3150 4700 50  0000 C CNN
-F 1 "2.2uH" V 3300 4700 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 3400 5000 50  0000 C CNN
-F 3 "" H 3200 4700 50  0000 C CNN
-	1    3200 4700
-	0    -1   -1   0
+P 3450 4700
+F 0 "L1" V 3400 4700 50  0000 C CNN
+F 1 "2.2uH" V 3550 4700 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 3650 5000 50  0000 C CNN
+F 3 "" H 3450 4700 50  0000 C CNN
+	1    3450 4700
+	0    -1   -1   0   
 $EndComp
 $Comp
 L C C2
@@ -93,7 +94,7 @@ F 1 "10uF" H 4000 5200 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 3100 4500 50  0000 C CNN
 F 3 "" H 3850 5200 50  0000 C CNN
 	1    3850 5200
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L C C1
@@ -104,7 +105,7 @@ F 1 "4.7uF" H 1600 4700 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 1350 4800 50  0000 C CNN
 F 3 "" H 1850 4600 50  0000 C CNN
 	1    1850 4600
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L CONN_01X03 P4
@@ -115,7 +116,7 @@ F 1 "SERIAL" V 4550 5950 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" V 4700 5150 50  0000 C CNN
 F 3 "" H 4450 5950 50  0000 C CNN
 	1    4450 5950
-	0    1    1    0
+	0    1    1    0   
 $EndComp
 $Comp
 L R R2
@@ -126,7 +127,7 @@ F 1 "1k" V 5650 4000 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" H 5150 3400 50  0000 C CNN
 F 3 "" H 5650 4000 50  0000 C CNN
 	1    5650 4000
-	-1   0    0    1
+	-1   0    0    1   
 $EndComp
 $Comp
 L DIY-OLED-0.96 U4
@@ -137,7 +138,7 @@ F 1 "DIY-OLED-0.96" H 7850 5900 60  0000 C CNN
 F 2 "nebrius-lcd:DIY-OLED-0.96" H 8050 6150 60  0000 C CNN
 F 3 "" H 7850 5800 60  0000 C CNN
 	1    7850 5800
-	-1   0    0    1
+	-1   0    0    1   
 $EndComp
 $Comp
 L ESP-12E U3
@@ -148,7 +149,7 @@ F 1 "ESP-12E" H 6650 4750 50  0000 C CNN
 F 2 "ESP8266:ESP-12E_SMD" H 6650 4650 50  0001 C CNN
 F 3 "" H 6650 4650 50  0001 C CNN
 	1    6650 4650
-	-1   0    0    1
+	-1   0    0    1   
 $EndComp
 $Comp
 L R R5
@@ -159,7 +160,7 @@ F 1 "10k" V 8150 4150 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 8000 3800 50  0000 C CNN
 F 3 "" H 8150 4150 50  0000 C CNN
 	1    8150 4150
-	-1   0    0    1
+	-1   0    0    1   
 $EndComp
 $Comp
 L R R6
@@ -170,7 +171,7 @@ F 1 "10k" V 8400 4150 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 8650 4350 50  0000 C CNN
 F 3 "" H 8400 4150 50  0000 C CNN
 	1    8400 4150
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR01
@@ -181,7 +182,7 @@ F 1 "+3.3V" H 3850 4740 50  0000 C CNN
 F 2 "" H 3850 4600 50  0000 C CNN
 F 3 "" H 3850 4600 50  0000 C CNN
 	1    3850 4600
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR02
@@ -192,7 +193,7 @@ F 1 "+3.3V" H 5800 6690 50  0000 C CNN
 F 2 "" H 5800 6550 50  0000 C CNN
 F 3 "" H 5800 6550 50  0000 C CNN
 	1    5800 6550
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR03
@@ -203,7 +204,7 @@ F 1 "+3.3V" H 7950 5340 50  0000 C CNN
 F 2 "" H 7950 5200 50  0000 C CNN
 F 3 "" H 7950 5200 50  0000 C CNN
 	1    7950 5200
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR04
@@ -214,7 +215,7 @@ F 1 "+3.3V" H 5650 3890 50  0000 C CNN
 F 2 "" H 5650 3750 50  0000 C CNN
 F 3 "" H 5650 3750 50  0000 C CNN
 	1    5650 3750
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR05
@@ -225,7 +226,7 @@ F 1 "+3.3V" H 8150 4040 50  0000 C CNN
 F 2 "" H 8150 3900 50  0000 C CNN
 F 3 "" H 8150 3900 50  0000 C CNN
 	1    8150 3900
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR06
@@ -236,7 +237,7 @@ F 1 "+3.3V" H 8400 4040 50  0000 C CNN
 F 2 "" H 8400 3900 50  0000 C CNN
 F 3 "" H 8400 3900 50  0000 C CNN
 	1    8400 3900
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR07
@@ -247,7 +248,7 @@ F 1 "+3.3V" H 7650 4040 50  0000 C CNN
 F 2 "" H 7650 3900 50  0000 C CNN
 F 3 "" H 7650 3900 50  0000 C CNN
 	1    7650 3900
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR08
@@ -258,7 +259,7 @@ F 1 "GND" H 1850 5100 50  0000 C CNN
 F 2 "" H 1850 5250 50  0000 C CNN
 F 3 "" H 1850 5250 50  0000 C CNN
 	1    1850 5250
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR09
@@ -269,7 +270,7 @@ F 1 "GND" H 3850 5300 50  0000 C CNN
 F 2 "" H 3850 5450 50  0000 C CNN
 F 3 "" H 3850 5450 50  0000 C CNN
 	1    3850 5450
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR010
@@ -280,7 +281,7 @@ F 1 "GND" H 5000 4200 50  0000 C CNN
 F 2 "" H 5000 4350 50  0000 C CNN
 F 3 "" H 5000 4350 50  0000 C CNN
 	1    5000 4350
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR011
@@ -291,7 +292,7 @@ F 1 "GND" H 4200 5600 50  0000 C CNN
 F 2 "" H 4200 5750 50  0000 C CNN
 F 3 "" H 4200 5750 50  0000 C CNN
 	1    4200 5750
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR012
@@ -302,7 +303,7 @@ F 1 "GND" H 8100 5250 50  0000 C CNN
 F 2 "" H 8100 5400 50  0000 C CNN
 F 3 "" H 8100 5400 50  0000 C CNN
 	1    8100 5400
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR013
@@ -313,7 +314,7 @@ F 1 "GND" H 5400 6600 50  0000 C CNN
 F 2 "" H 5400 6750 50  0000 C CNN
 F 3 "" H 5400 6750 50  0000 C CNN
 	1    5400 6750
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L Switch_DPST SW2
@@ -324,7 +325,7 @@ F 1 "Switch_DPST" V 4950 3050 50  0000 C CNN
 F 2 "nebrius-switch:KMR641NG" V 4750 2800 50  0000 C CNN
 F 3 "" H 4900 3650 50  0000 C CNN
 	1    4900 3650
-	0    1    -1   0
+	0    1    -1   0   
 $EndComp
 $Comp
 L GND #PWR014
@@ -335,7 +336,7 @@ F 1 "GND" H 5300 3200 50  0000 C CNN
 F 2 "" H 5300 3350 50  0000 C CNN
 F 3 "" H 5300 3350 50  0000 C CNN
 	1    5300 3350
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 NoConn ~ 4700 3350
 NoConn ~ 4700 3950
@@ -348,7 +349,7 @@ F 1 "10k" H 5550 6300 50  0000 C CNN
 F 2 "nebrius-discrete:R_Array_Concave_4x2012.kicad_mod" V 4700 6900 50  0000 C CNN
 F 3 "" H 5550 6350 50  0000 C CNN
 	1    5550 6350
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 $Comp
 L +3.3V #PWR015
@@ -359,7 +360,7 @@ F 1 "+3.3V" H 6800 5690 50  0000 C CNN
 F 2 "" H 6800 5550 50  0000 C CNN
 F 3 "" H 6800 5550 50  0000 C CNN
 	1    6800 5550
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L Conn_01x04 J1
@@ -370,7 +371,7 @@ F 1 "Conn_01x04" H 3100 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 3100 1150 50  0001 C CNN
 F 3 "" H 3100 1150 50  0001 C CNN
 	1    3100 1150
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 $Comp
 L Conn_01x04 J2
@@ -381,7 +382,7 @@ F 1 "Conn_01x04" H 3750 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 3750 1150 50  0001 C CNN
 F 3 "" H 3750 1150 50  0001 C CNN
 	1    3750 1150
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 $Comp
 L +5V #PWR016
@@ -392,7 +393,7 @@ F 1 "+5V" H 3000 3940 50  0000 C CNN
 F 2 "" H 3000 3800 50  0001 C CNN
 F 3 "" H 3000 3800 50  0001 C CNN
 	1    3000 3800
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +5V #PWR017
@@ -403,7 +404,7 @@ F 1 "+5V" H 2650 1490 50  0000 C CNN
 F 2 "" H 2650 1350 50  0001 C CNN
 F 3 "" H 2650 1350 50  0001 C CNN
 	1    2650 1350
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 NoConn ~ 6900 3750
 NoConn ~ 6800 3750
@@ -416,22 +417,22 @@ F 1 "Conn_01x04" H 5050 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 5050 1150 50  0001 C CNN
 F 3 "" H 5050 1150 50  0001 C CNN
 	1    5050 1150
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 $Comp
 L 10118194 U0
 U 1 1 5A5AABAF
-P 1000 4850
-F 0 "U0" H 900 5350 60  0000 C CNN
-F 1 "10118194" H 900 5150 60  0000 C CNN
-F 2 "nebrius-conn:10118194" H 1000 4850 60  0001 C CNN
-F 3 "" H 1000 4850 60  0001 C CNN
-	1    1000 4850
-	0    -1   -1   0
+P 1000 4900
+F 0 "U0" H 900 5400 60  0000 C CNN
+F 1 "10118194" H 900 5200 60  0000 C CNN
+F 2 "nebrius-conn:10118194" H 1000 4900 60  0001 C CNN
+F 3 "" H 1000 4900 60  0001 C CNN
+	1    1000 4900
+	0    -1   -1   0   
 $EndComp
-NoConn ~ 1200 4850
-NoConn ~ 1200 4950
-NoConn ~ 1200 5050
+NoConn ~ 1200 4900
+NoConn ~ 1200 5000
+NoConn ~ 1200 5100
 NoConn ~ 2250 4050
 $Comp
 L GND #PWR018
@@ -442,7 +443,7 @@ F 1 "GND" H 5250 1500 50  0000 C CNN
 F 2 "" H 5250 1650 50  0001 C CNN
 F 3 "" H 5250 1650 50  0001 C CNN
 	1    5250 1650
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L SN74LVC1T45 U6
@@ -453,7 +454,7 @@ F 1 "SN74LVC1T45 - MOSI" H 6600 2350 60  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering" H 6600 2050 60  0001 C CNN
 F 3 "" H 6600 2050 60  0001 C CNN
 	1    6600 2050
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L SN74LVC1T45 U7
@@ -464,7 +465,7 @@ F 1 "SN74LVC1T45 - SCLK" H 6600 3000 60  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering" H 6600 2700 60  0001 C CNN
 F 3 "" H 6600 2700 60  0001 C CNN
 	1    6600 2700
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR019
@@ -475,7 +476,7 @@ F 1 "GND" H 5850 2750 50  0000 C CNN
 F 2 "" H 5850 2900 50  0001 C CNN
 F 3 "" H 5850 2900 50  0001 C CNN
 	1    5850 2900
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR020
@@ -486,7 +487,7 @@ F 1 "GND" H 7350 2750 50  0000 C CNN
 F 2 "" H 7350 2900 50  0001 C CNN
 F 3 "" H 7350 2900 50  0001 C CNN
 	1    7350 2900
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +5V #PWR021
@@ -497,18 +498,18 @@ F 1 "+5V" H 5950 1990 50  0000 C CNN
 F 2 "" H 5950 1850 50  0001 C CNN
 F 3 "" H 5950 1850 50  0001 C CNN
 	1    5950 1850
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L Fuse F0
 U 1 1 5A6BD755
-P 1450 5150
-F 0 "F0" V 1530 5150 50  0000 C CNN
-F 1 "Fuse" V 1375 5150 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 1380 5150 50  0001 C CNN
-F 3 "" H 1450 5150 50  0001 C CNN
-	1    1450 5150
-	0    1    1    0
+P 1450 5200
+F 0 "F0" V 1530 5200 50  0000 C CNN
+F 1 "Fuse" V 1375 5200 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 1380 5200 50  0001 C CNN
+F 3 "" H 1450 5200 50  0001 C CNN
+	1    1450 5200
+	0    1    1    0   
 $EndComp
 $Comp
 L +3.3V #PWR022
@@ -519,38 +520,41 @@ F 1 "+3.3V" H 7250 1990 50  0000 C CNN
 F 2 "" H 7250 1850 50  0001 C CNN
 F 3 "" H 7250 1850 50  0001 C CNN
 	1    7250 1850
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 Wire Wire Line
 	2850 4150 3000 4150
 Wire Wire Line
-	2000 4350 2000 4800
-Wire Wire Line
 	2000 4700 2050 4700
 Connection ~ 2000 4700
 Wire Wire Line
-	1600 4900 2050 4900
+	1850 4750 1850 4800
 Wire Wire Line
-	1850 4750 1850 5250
-Connection ~ 1850 4900
+	1850 4800 1850 5250
 Wire Wire Line
-	2850 4700 2900 4700
+	2950 4700 3150 4700
 Wire Wire Line
-	3000 4350 3000 3800
+	3000 4350 3000 4150
 Wire Wire Line
-	1850 4350 3000 4350
+	3000 4150 3000 3800
+Wire Wire Line
+	1850 4350 2000 4350
+Wire Wire Line
+	2000 4350 3000 4350
 Wire Wire Line
 	1850 4350 1850 4450
 Connection ~ 2000 4350
 Wire Wire Line
-	3850 4600 3850 5050
+	3850 4600 3850 4700
 Wire Wire Line
-	2850 4900 3850 4900
+	3850 4700 3850 4900
+Wire Wire Line
+	3850 4900 3850 5050
+Wire Wire Line
+	2950 4900 3850 4900
 Connection ~ 3850 4900
 Wire Wire Line
-	2000 4800 2050 4800
-Wire Wire Line
-	3500 4700 3850 4700
+	3750 4700 3850 4700
 Connection ~ 3850 4700
 Wire Wire Line
 	4450 4950 5750 4950
@@ -563,7 +567,9 @@ Wire Wire Line
 Wire Wire Line
 	4550 4850 4550 5750
 Wire Wire Line
-	5100 4550 5750 4550
+	5100 4550 5650 4550
+Wire Wire Line
+	5650 4550 5750 4550
 Wire Wire Line
 	5650 4150 5650 4550
 Wire Wire Line
@@ -610,18 +616,22 @@ Wire Wire Line
 Wire Wire Line
 	5300 3250 5300 3350
 Wire Wire Line
-	1600 4900 1600 4750
-Wire Wire Line
-	1600 4750 1200 4750
+	1600 4800 1200 4800
 Connection ~ 3000 4150
 Wire Wire Line
 	2250 4250 1700 4250
 Wire Wire Line
-	1700 4250 1700 5150
+	1700 4250 1700 5200
 Wire Wire Line
 	3000 1450 3000 1350
 Wire Wire Line
-	2650 1450 4950 1450
+	2650 1450 3000 1450
+Wire Wire Line
+	3000 1450 3650 1450
+Wire Wire Line
+	3650 1450 4300 1450
+Wire Wire Line
+	4300 1450 4950 1450
 Wire Wire Line
 	2650 1450 2650 1350
 Wire Wire Line
@@ -631,7 +641,9 @@ Wire Wire Line
 	4950 1450 4950 1350
 Connection ~ 3650 1450
 Wire Wire Line
-	5250 1350 5250 1650
+	5250 1350 5250 1550
+Wire Wire Line
+	5250 1550 5250 1650
 Wire Wire Line
 	3950 1550 3950 1350
 Connection ~ 5250 1550
@@ -639,14 +651,18 @@ Wire Wire Line
 	3300 1550 3300 1350
 Connection ~ 3950 1550
 Wire Wire Line
-	5950 1850 5950 2600
+	5950 1850 5950 1950
+Wire Wire Line
+	5950 1950 5950 2600
 Wire Wire Line
 	5950 1950 6050 1950
 Wire Wire Line
 	5950 2600 6050 2600
 Connection ~ 5950 1950
 Wire Wire Line
-	7250 1850 7250 2600
+	7250 1850 7250 1950
+Wire Wire Line
+	7250 1950 7250 2600
 Wire Wire Line
 	7250 1950 7150 1950
 Wire Wire Line
@@ -655,25 +671,41 @@ Connection ~ 7250 1950
 Wire Wire Line
 	7150 2050 7350 2050
 Wire Wire Line
-	7350 2050 7350 2900
+	7350 2050 7350 2700
+Wire Wire Line
+	7350 2700 7350 2900
 Wire Wire Line
 	7150 2700 7350 2700
 Connection ~ 7350 2700
 Wire Wire Line
 	6050 2050 5850 2050
 Wire Wire Line
-	5850 2050 5850 2900
+	5850 2050 5850 2700
+Wire Wire Line
+	5850 2700 5850 2900
 Wire Wire Line
 	6050 2700 5850 2700
 Connection ~ 5850 2700
 Wire Wire Line
-	3200 2150 6050 2150
+	3200 2150 3850 2150
 Wire Wire Line
-	3100 2800 6050 2800
+	3850 2150 4500 2150
 Wire Wire Line
-	1200 5150 1300 5150
+	4500 2150 5150 2150
 Wire Wire Line
-	1700 5150 1600 5150
+	5150 2150 6050 2150
+Wire Wire Line
+	3100 2800 3750 2800
+Wire Wire Line
+	3750 2800 4400 2800
+Wire Wire Line
+	4400 2800 5050 2800
+Wire Wire Line
+	5050 2800 6050 2800
+Wire Wire Line
+	1200 5200 1300 5200
+Wire Wire Line
+	1700 5200 1600 5200
 Wire Wire Line
 	7750 2150 7750 4350
 Wire Wire Line
@@ -687,7 +719,9 @@ NoConn ~ 6600 3750
 NoConn ~ 6500 3750
 NoConn ~ 6400 3750
 Wire Wire Line
-	5200 4350 5200 6150
+	5200 4350 5200 5750
+Wire Wire Line
+	5200 5750 5200 6150
 $Comp
 L SF303GJ26 U5
 U 1 1 59534F8F
@@ -697,10 +731,12 @@ F 1 "SF303GJ26" H 6100 5600 60  0000 C CNN
 F 2 "nebrius-switch:SF303GJ26" H 6550 5350 60  0000 C CNN
 F 3 "" H 6250 5800 60  0000 C CNN
 	1    6250 5800
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5400 6550 5400 6750
+	5400 6550 5400 6650
+Wire Wire Line
+	5400 6650 5400 6750
 Wire Wire Line
 	5300 6550 5300 6650
 Connection ~ 5400 6650
@@ -710,11 +746,15 @@ Connection ~ 5300 6650
 Wire Wire Line
 	5750 4650 5300 4650
 Wire Wire Line
-	5300 4650 5300 6150
+	5300 4650 5300 5500
+Wire Wire Line
+	5300 5500 5300 6150
 Wire Wire Line
 	5750 4750 5400 4750
 Wire Wire Line
-	5400 4750 5400 6150
+	5400 4750 5400 5650
+Wire Wire Line
+	5400 5650 5400 6150
 Wire Wire Line
 	6600 5750 6800 5750
 Wire Wire Line
@@ -730,7 +770,9 @@ Connection ~ 5300 5500
 Wire Wire Line
 	7650 4450 7650 5400
 Wire Wire Line
-	5200 6650 5400 6650
+	5200 6650 5300 6650
+Wire Wire Line
+	5300 6650 5400 6650
 Wire Wire Line
 	5500 6550 5500 6650
 Wire Wire Line
@@ -750,7 +792,7 @@ F 1 "POT" V 8900 4850 50  0000 C CNN
 F 2 "nebrius-discrete:Model-35-Pot" H 9000 4850 50  0001 C CNN
 F 3 "" H 9000 4850 50  0001 C CNN
 	1    9000 4850
-	-1   0    0    1
+	-1   0    0    1   
 $EndComp
 $Comp
 L GND #PWR023
@@ -761,7 +803,7 @@ F 1 "GND" H 9000 4950 50  0000 C CNN
 F 2 "" H 9000 5100 50  0001 C CNN
 F 3 "" H 9000 5100 50  0001 C CNN
 	1    9000 5100
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR024
@@ -772,7 +814,7 @@ F 1 "+3.3V" H 9000 4740 50  0000 C CNN
 F 2 "" H 9000 4600 50  0001 C CNN
 F 3 "" H 9000 4600 50  0001 C CNN
 	1    9000 4600
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 Wire Wire Line
 	9000 4600 9000 4700
@@ -781,7 +823,11 @@ Wire Wire Line
 Wire Wire Line
 	7550 4850 8850 4850
 Wire Wire Line
-	3300 1550 5250 1550
+	3300 1550 3950 1550
+Wire Wire Line
+	3950 1550 4600 1550
+Wire Wire Line
+	4600 1550 5250 1550
 $Comp
 L Conn_01x04 J3
 U 1 1 5A8CA884
@@ -791,7 +837,7 @@ F 1 "Conn_01x04" H 4400 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 4400 1150 50  0001 C CNN
 F 3 "" H 4400 1150 50  0001 C CNN
 	1    4400 1150
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	4300 1350 4300 1450
@@ -838,4 +884,17 @@ Wire Wire Line
 	7750 2150 7150 2150
 Wire Wire Line
 	7150 2800 7850 2800
+Wire Wire Line
+	1600 4800 1850 4800
+Wire Wire Line
+	1850 4800 2050 4800
+Connection ~ 1850 4800
+Wire Wire Line
+	1600 4800 1600 4800
+Wire Wire Line
+	2000 4900 2050 4900
+Wire Wire Line
+	2000 4350 2000 4700
+Wire Wire Line
+	2000 4700 2000 4900
 $EndSCHEMATC
