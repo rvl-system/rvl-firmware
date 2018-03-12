@@ -346,7 +346,7 @@ U 1 1 59615F7B
 P 5550 6350
 F 0 "RP1" H 5550 6800 50  0000 C CNN
 F 1 "10k" H 5550 6300 50  0000 C CNN
-F 2 "nebrius-discrete:R_Array_Concave_4x0805" V 4700 6900 50  0000 C CNN
+F 2 "nebrius-discrete:R_Array_Concave_4x2012.kicad_mod" V 4700 6900 50  0000 C CNN
 F 3 "" H 5550 6350 50  0000 C CNN
 	1    5550 6350
 	0    -1   -1   0   
