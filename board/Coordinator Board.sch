@@ -1,5 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:Coordinator Board-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -61,7 +60,7 @@ F 1 "LM3671" H 2200 4550 60  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5" H 1950 3950 60  0000 C CNN
 F 3 "" H 2450 4450 60  0000 C CNN
 	1    2450 4800
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L Switch_SPDT_x2 SW1
@@ -72,7 +71,7 @@ F 1 "Switch_SPDT_x2" H 2300 4000 50  0000 C CNN
 F 2 "CL-SA-12C:CL-SA-12C4" H 2850 4450 50  0000 C CNN
 F 3 "" H 2550 4150 50  0000 C CNN
 	1    2550 4150
-	-1   0    0    -1  
+	-1   0    0    -1
 $EndComp
 $Comp
 L INDUCTOR L1
@@ -83,7 +82,7 @@ F 1 "2.2uH" V 3300 4700 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 3400 5000 50  0000 C CNN
 F 3 "" H 3200 4700 50  0000 C CNN
 	1    3200 4700
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 $Comp
 L C C2
@@ -94,7 +93,7 @@ F 1 "10uF" H 4000 5200 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 3100 4500 50  0000 C CNN
 F 3 "" H 3850 5200 50  0000 C CNN
 	1    3850 5200
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L C C1
@@ -105,7 +104,7 @@ F 1 "4.7uF" H 1600 4700 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 1350 4800 50  0000 C CNN
 F 3 "" H 1850 4600 50  0000 C CNN
 	1    1850 4600
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L CONN_01X03 P4
@@ -116,7 +115,7 @@ F 1 "SERIAL" V 4550 5950 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" V 4700 5150 50  0000 C CNN
 F 3 "" H 4450 5950 50  0000 C CNN
 	1    4450 5950
-	0    1    1    0   
+	0    1    1    0
 $EndComp
 $Comp
 L R R2
@@ -127,7 +126,7 @@ F 1 "1k" V 5650 4000 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" H 5150 3400 50  0000 C CNN
 F 3 "" H 5650 4000 50  0000 C CNN
 	1    5650 4000
-	-1   0    0    1   
+	-1   0    0    1
 $EndComp
 $Comp
 L DIY-OLED-0.96 U4
@@ -138,7 +137,7 @@ F 1 "DIY-OLED-0.96" H 7850 5900 60  0000 C CNN
 F 2 "nebrius-lcd:DIY-OLED-0.96" H 8050 6150 60  0000 C CNN
 F 3 "" H 7850 5800 60  0000 C CNN
 	1    7850 5800
-	-1   0    0    1   
+	-1   0    0    1
 $EndComp
 $Comp
 L ESP-12E U3
@@ -149,7 +148,7 @@ F 1 "ESP-12E" H 6650 4750 50  0000 C CNN
 F 2 "ESP8266:ESP-12E_SMD" H 6650 4650 50  0001 C CNN
 F 3 "" H 6650 4650 50  0001 C CNN
 	1    6650 4650
-	-1   0    0    1   
+	-1   0    0    1
 $EndComp
 $Comp
 L R R5
@@ -160,7 +159,7 @@ F 1 "10k" V 8150 4150 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 8000 3800 50  0000 C CNN
 F 3 "" H 8150 4150 50  0000 C CNN
 	1    8150 4150
-	-1   0    0    1   
+	-1   0    0    1
 $EndComp
 $Comp
 L R R6
@@ -171,7 +170,7 @@ F 1 "10k" V 8400 4150 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 8650 4350 50  0000 C CNN
 F 3 "" H 8400 4150 50  0000 C CNN
 	1    8400 4150
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR01
@@ -182,7 +181,7 @@ F 1 "+3.3V" H 3850 4740 50  0000 C CNN
 F 2 "" H 3850 4600 50  0000 C CNN
 F 3 "" H 3850 4600 50  0000 C CNN
 	1    3850 4600
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR02
@@ -193,7 +192,7 @@ F 1 "+3.3V" H 5800 6690 50  0000 C CNN
 F 2 "" H 5800 6550 50  0000 C CNN
 F 3 "" H 5800 6550 50  0000 C CNN
 	1    5800 6550
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR03
@@ -204,7 +203,7 @@ F 1 "+3.3V" H 7950 5340 50  0000 C CNN
 F 2 "" H 7950 5200 50  0000 C CNN
 F 3 "" H 7950 5200 50  0000 C CNN
 	1    7950 5200
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR04
@@ -215,7 +214,7 @@ F 1 "+3.3V" H 5650 3890 50  0000 C CNN
 F 2 "" H 5650 3750 50  0000 C CNN
 F 3 "" H 5650 3750 50  0000 C CNN
 	1    5650 3750
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR05
@@ -226,7 +225,7 @@ F 1 "+3.3V" H 8150 4040 50  0000 C CNN
 F 2 "" H 8150 3900 50  0000 C CNN
 F 3 "" H 8150 3900 50  0000 C CNN
 	1    8150 3900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR06
@@ -237,7 +236,7 @@ F 1 "+3.3V" H 8400 4040 50  0000 C CNN
 F 2 "" H 8400 3900 50  0000 C CNN
 F 3 "" H 8400 3900 50  0000 C CNN
 	1    8400 3900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR07
@@ -248,7 +247,7 @@ F 1 "+3.3V" H 7650 4040 50  0000 C CNN
 F 2 "" H 7650 3900 50  0000 C CNN
 F 3 "" H 7650 3900 50  0000 C CNN
 	1    7650 3900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR08
@@ -259,7 +258,7 @@ F 1 "GND" H 1850 5100 50  0000 C CNN
 F 2 "" H 1850 5250 50  0000 C CNN
 F 3 "" H 1850 5250 50  0000 C CNN
 	1    1850 5250
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR09
@@ -270,7 +269,7 @@ F 1 "GND" H 3850 5300 50  0000 C CNN
 F 2 "" H 3850 5450 50  0000 C CNN
 F 3 "" H 3850 5450 50  0000 C CNN
 	1    3850 5450
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR010
@@ -281,7 +280,7 @@ F 1 "GND" H 5000 4200 50  0000 C CNN
 F 2 "" H 5000 4350 50  0000 C CNN
 F 3 "" H 5000 4350 50  0000 C CNN
 	1    5000 4350
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR011
@@ -292,7 +291,7 @@ F 1 "GND" H 4200 5600 50  0000 C CNN
 F 2 "" H 4200 5750 50  0000 C CNN
 F 3 "" H 4200 5750 50  0000 C CNN
 	1    4200 5750
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR012
@@ -303,7 +302,7 @@ F 1 "GND" H 8100 5250 50  0000 C CNN
 F 2 "" H 8100 5400 50  0000 C CNN
 F 3 "" H 8100 5400 50  0000 C CNN
 	1    8100 5400
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR013
@@ -314,7 +313,7 @@ F 1 "GND" H 5400 6600 50  0000 C CNN
 F 2 "" H 5400 6750 50  0000 C CNN
 F 3 "" H 5400 6750 50  0000 C CNN
 	1    5400 6750
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L Switch_DPST SW2
@@ -325,7 +324,7 @@ F 1 "Switch_DPST" V 4950 3050 50  0000 C CNN
 F 2 "nebrius-switch:KMR641NG" V 4750 2800 50  0000 C CNN
 F 3 "" H 4900 3650 50  0000 C CNN
 	1    4900 3650
-	0    1    -1   0   
+	0    1    -1   0
 $EndComp
 $Comp
 L GND #PWR014
@@ -336,7 +335,7 @@ F 1 "GND" H 5300 3200 50  0000 C CNN
 F 2 "" H 5300 3350 50  0000 C CNN
 F 3 "" H 5300 3350 50  0000 C CNN
 	1    5300 3350
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 NoConn ~ 4700 3350
 NoConn ~ 4700 3950
@@ -349,7 +348,7 @@ F 1 "10k" H 5550 6300 50  0000 C CNN
 F 2 "nebrius-discrete:R_Array_Concave_4x2012.kicad_mod" V 4700 6900 50  0000 C CNN
 F 3 "" H 5550 6350 50  0000 C CNN
 	1    5550 6350
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 $Comp
 L +3.3V #PWR015
@@ -360,7 +359,7 @@ F 1 "+3.3V" H 6800 5690 50  0000 C CNN
 F 2 "" H 6800 5550 50  0000 C CNN
 F 3 "" H 6800 5550 50  0000 C CNN
 	1    6800 5550
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L Conn_01x04 J1
@@ -371,7 +370,7 @@ F 1 "Conn_01x04" H 3100 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 3100 1150 50  0001 C CNN
 F 3 "" H 3100 1150 50  0001 C CNN
 	1    3100 1150
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 $Comp
 L Conn_01x04 J2
@@ -382,7 +381,7 @@ F 1 "Conn_01x04" H 3750 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 3750 1150 50  0001 C CNN
 F 3 "" H 3750 1150 50  0001 C CNN
 	1    3750 1150
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 $Comp
 L +5V #PWR016
@@ -393,7 +392,7 @@ F 1 "+5V" H 3000 3940 50  0000 C CNN
 F 2 "" H 3000 3800 50  0001 C CNN
 F 3 "" H 3000 3800 50  0001 C CNN
 	1    3000 3800
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +5V #PWR017
@@ -404,7 +403,7 @@ F 1 "+5V" H 2650 1490 50  0000 C CNN
 F 2 "" H 2650 1350 50  0001 C CNN
 F 3 "" H 2650 1350 50  0001 C CNN
 	1    2650 1350
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 NoConn ~ 6900 3750
 NoConn ~ 6800 3750
@@ -417,7 +416,7 @@ F 1 "Conn_01x04" H 5050 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 5050 1150 50  0001 C CNN
 F 3 "" H 5050 1150 50  0001 C CNN
 	1    5050 1150
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 $Comp
 L 10118194 U0
@@ -428,7 +427,7 @@ F 1 "10118194" H 900 5150 60  0000 C CNN
 F 2 "nebrius-conn:10118194" H 1000 4850 60  0001 C CNN
 F 3 "" H 1000 4850 60  0001 C CNN
 	1    1000 4850
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 NoConn ~ 1200 4850
 NoConn ~ 1200 4950
@@ -443,7 +442,7 @@ F 1 "GND" H 5250 1500 50  0000 C CNN
 F 2 "" H 5250 1650 50  0001 C CNN
 F 3 "" H 5250 1650 50  0001 C CNN
 	1    5250 1650
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L SN74LVC1T45 U6
@@ -454,7 +453,7 @@ F 1 "SN74LVC1T45 - MOSI" H 6600 2350 60  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering" H 6600 2050 60  0001 C CNN
 F 3 "" H 6600 2050 60  0001 C CNN
 	1    6600 2050
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L SN74LVC1T45 U7
@@ -465,7 +464,7 @@ F 1 "SN74LVC1T45 - SCLK" H 6600 3000 60  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering" H 6600 2700 60  0001 C CNN
 F 3 "" H 6600 2700 60  0001 C CNN
 	1    6600 2700
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR019
@@ -476,7 +475,7 @@ F 1 "GND" H 5850 2750 50  0000 C CNN
 F 2 "" H 5850 2900 50  0001 C CNN
 F 3 "" H 5850 2900 50  0001 C CNN
 	1    5850 2900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR020
@@ -487,7 +486,7 @@ F 1 "GND" H 7350 2750 50  0000 C CNN
 F 2 "" H 7350 2900 50  0001 C CNN
 F 3 "" H 7350 2900 50  0001 C CNN
 	1    7350 2900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +5V #PWR021
@@ -498,7 +497,7 @@ F 1 "+5V" H 5950 1990 50  0000 C CNN
 F 2 "" H 5950 1850 50  0001 C CNN
 F 3 "" H 5950 1850 50  0001 C CNN
 	1    5950 1850
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L Fuse F0
@@ -509,7 +508,7 @@ F 1 "Fuse" V 1375 5150 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 1380 5150 50  0001 C CNN
 F 3 "" H 1450 5150 50  0001 C CNN
 	1    1450 5150
-	0    1    1    0   
+	0    1    1    0
 $EndComp
 $Comp
 L +3.3V #PWR022
@@ -520,7 +519,7 @@ F 1 "+3.3V" H 7250 1990 50  0000 C CNN
 F 2 "" H 7250 1850 50  0001 C CNN
 F 3 "" H 7250 1850 50  0001 C CNN
 	1    7250 1850
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	2850 4150 3000 4150
@@ -698,7 +697,7 @@ F 1 "SF303GJ26" H 6100 5600 60  0000 C CNN
 F 2 "nebrius-switch:SF303GJ26" H 6550 5350 60  0000 C CNN
 F 3 "" H 6250 5800 60  0000 C CNN
 	1    6250 5800
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	5400 6550 5400 6750
@@ -751,7 +750,7 @@ F 1 "POT" V 8900 4850 50  0000 C CNN
 F 2 "nebrius-discrete:Model-35-Pot" H 9000 4850 50  0001 C CNN
 F 3 "" H 9000 4850 50  0001 C CNN
 	1    9000 4850
-	-1   0    0    1   
+	-1   0    0    1
 $EndComp
 $Comp
 L GND #PWR023
@@ -762,7 +761,7 @@ F 1 "GND" H 9000 4950 50  0000 C CNN
 F 2 "" H 9000 5100 50  0001 C CNN
 F 3 "" H 9000 5100 50  0001 C CNN
 	1    9000 5100
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L +3.3V #PWR024
@@ -773,7 +772,7 @@ F 1 "+3.3V" H 9000 4740 50  0000 C CNN
 F 2 "" H 9000 4600 50  0001 C CNN
 F 3 "" H 9000 4600 50  0001 C CNN
 	1    9000 4600
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	9000 4600 9000 4700
@@ -792,7 +791,7 @@ F 1 "Conn_01x04" H 4400 850 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 4400 1150 50  0001 C CNN
 F 3 "" H 4400 1150 50  0001 C CNN
 	1    4400 1150
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 Wire Wire Line
 	4300 1350 4300 1450
