@@ -1,3 +1,6 @@
 [submodule "kicad-components"]
 	path = hub_board/kicad-components
 	url = git@github.com:nebrius/kicad-components.git
+[submodule "endpoint_board/kicad-components"]
+	path = endpoint_board/kicad-components
+	url = https://github.com/nebrius/kicad-components
