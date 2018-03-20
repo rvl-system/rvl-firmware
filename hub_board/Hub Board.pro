@@ -1,4 +1,4 @@
-update=Tuesday, February 20, 2018 'AMt' 10:29:08 AM
+update=Monday, March 19, 2018 'PMt' 04:25:42 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -77,3 +77,4 @@ LibName35=kicad-components/components/conn/nebrius-conn
 LibName36=kicad-components/components/logic/nebrius-logic
 LibName37=logic_programmable
 LibName38=74xgxx
+LibName39=onsemi
