@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:diode
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -30,6 +31,7 @@ LIBS:contrib
 LIBS:valves
 LIBS:nebrius-microcontrollers
 LIBS:nebrius-regulators
+LIBS:nebrius-lcd
 LIBS:Endpoint Board-cache
 EELAYER 25 0
 EELAYER END
@@ -54,7 +56,7 @@ F 1 "Switch_SPDT_x2" H 6000 2950 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x03" H 6550 3400 50  0000 C CNN
 F 3 "" H 6250 3100 50  0000 C CNN
 	1    6250 3100
-	-1   0    0    -1
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X02 P1
@@ -65,18 +67,7 @@ F 1 "POWER" V 5100 3800 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" H 5500 3600 50  0000 C CNN
 F 3 "" H 5000 3800 50  0000 C CNN
 	1    5000 3800
-	-1   0    0    -1
-$EndComp
-$Comp
-L CONN_01X04 P2
-U 1 1 57A0DCA2
-P 6250 4900
-F 0 "P2" H 6250 5150 50  0000 C CNN
-F 1 "LIGHT" V 6350 4900 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x04" V 6500 4900 50  0000 C CNN
-F 3 "" H 6250 4900 50  0000 C CNN
-	1    6250 4900
-	0    1    1    0
+	-1   0    0    -1  
 $EndComp
 $Comp
 L INDUCTOR L1
@@ -87,7 +78,7 @@ F 1 "2.2uH" V 7000 3650 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 7100 3950 50  0000 C CNN
 F 3 "" H 6900 3650 50  0000 C CNN
 	1    6900 3650
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 $Comp
 L C C2
@@ -98,7 +89,7 @@ F 1 "10uF" H 7700 4150 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 7588 4000 50  0000 C CNN
 F 3 "" H 7550 4150 50  0000 C CNN
 	1    7550 4150
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L C C1
@@ -109,7 +100,7 @@ F 1 "4.7uF" H 5100 3650 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 4850 3750 50  0000 C CNN
 F 3 "" H 5350 3550 50  0000 C CNN
 	1    5350 3550
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 $Comp
 L CONN_01X03 P4
@@ -120,7 +111,7 @@ F 1 "SERIAL" V 9450 3750 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" H 9650 3500 50  0000 C CNN
 F 3 "" H 9350 3750 50  0000 C CNN
 	1    9350 3750
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 Wire Wire Line
 	5200 3750 5200 3000
@@ -215,7 +206,7 @@ F 1 "RUN" V 7400 2800 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" V 7550 2600 50  0000 C CNN
 F 3 "" H 7300 2800 50  0000 C CNN
 	1    7300 2800
-	0    -1   -1   0
+	0    -1   -1   0   
 $EndComp
 $Comp
 L CONN_01X02 P6
@@ -223,10 +214,10 @@ U 1 1 58859834
 P 6850 4900
 F 0 "P6" H 6850 5050 50  0000 C CNN
 F 1 "PGRM" V 6950 4900 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" V 7300 5250 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.00mm" V 7150 5750 50  0000 C CNN
 F 3 "" H 6850 4900 50  0000 C CNN
 	1    6850 4900
-	0    1    1    0
+	0    1    1    0   
 $EndComp
 Wire Wire Line
 	6800 4700 6800 4600
@@ -243,7 +234,7 @@ F 1 "LM3671" H 6100 3450 60  0000 C CNN
 F 2 "" H 6100 3750 60  0001 C CNN
 F 3 "" H 6100 3750 60  0001 C CNN
 	1    6100 3750
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 Wire Wire Line
 	5650 3650 5500 3650
@@ -263,7 +254,18 @@ F 1 "ESP-01" H 8150 3350 60  0000 C CNN
 F 2 "" H 8150 3700 60  0001 C CNN
 F 3 "" H 8150 3700 60  0001 C CNN
 	1    8150 3700
-	1    0    0    -1
+	1    0    0    -1  
 $EndComp
 NoConn ~ 5950 3200
+$Comp
+L DotStar U3
+U 1 1 5AB151BC
+P 6250 5050
+F 0 "U3" H 6600 5100 60  0000 C CNN
+F 1 "DotStar" H 6250 5200 60  0000 C CNN
+F 2 "" H 6250 5050 60  0001 C CNN
+F 3 "" H 6250 5050 60  0001 C CNN
+	1    6250 5050
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC
