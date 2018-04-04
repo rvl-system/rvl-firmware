@@ -1,0 +1,27 @@
+{
+  "name": "base_station",
+  "version": "1.0.0",
+  "description": "Base Station code for the Raver Lights system",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "tslint 'src/**/*.ts'",
+    "build": "tsc",
+    "start": "./bin/cli.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bryan Hughes <bryan@nebri.us>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "async": "^2.6.0",
+    "johnny-five": "^0.14.2",
+    "oled-font-5x7": "^1.0.1",
+    "oled-js": "^4.0.5",
+    "raspi-io": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/async": "^2.0.48",
+    "@types/johnny-five": "0.0.35",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1"
+  }
+}
