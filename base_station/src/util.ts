@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 'use strict';
 
-import { MessageType, Preset , FadeValue, PulseValue, Control, IdleState } from './codes';
+import { Preset, Control, IdleState } from './codes';
 
 // Message Type helpers
 

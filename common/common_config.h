@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define COMMON_CONFIG_HEADER
 
 #include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 
 #define WIFI_SSID "RaverLights"
 #define WIFI_PASSPHRASE "4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}"
@@ -44,5 +45,7 @@ extern const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
+
+extern WiFiUDP udp;
 
 #endif

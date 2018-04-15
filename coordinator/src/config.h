@@ -22,6 +22,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "common/common_config.h"
 
+#define DATA_PIN 0
+#define CLOCK_PIN 2
+#define NUM_PIXELS 120
+
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4
 #define LCD_SCL 5
@@ -30,11 +34,25 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define ACTIVE_CONTRAST 255
 #define SHALLOW_IDLE_CONTRAST 16
 
-#define BUTTON_ON LOW
-#define BUTTON_OFF HIGH
-#define BUTTON_NEXT 13
-#define BUTTON_UP 12
-#define BUTTON_DOWN 14
+#define BUTTON_NEXT 12
+#define BUTTON_NEXT_ON LOW
+#define BUTTON_NEXT_OFF HIGH
+
+#define BUTTON_UP 16
+#define BUTTON_UP_ON LOW
+#define BUTTON_UP_OFF HIGH
+
+#define BUTTON_DOWN 15
+#define BUTTON_DOWN_ON HIGH
+#define BUTTON_DOWN_OFF LOW
+
+#define BUTTON_LEFT 14
+#define BUTTON_LEFT_ON LOW
+#define BUTTON_LEFT_OFF HIGH
+
+#define BUTTON_RIGHT 13
+#define BUTTON_RIGHT_ON LOW
+#define BUTTON_RIGHT_OFF HIGH
 
 #define BUTTON_PRESS_ENGAGE_TIME 50
 #define BUTTON_HOLD_ENGAGE_TIME 2000

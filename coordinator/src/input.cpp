@@ -35,33 +35,35 @@ namespace Input {
     unsigned long holdStartTime;
     byte state;
     byte gpio;
+    byte on;
+    byte off;
     bool isWakeupPress;
   };
 
-  ButtonInfo nextButtonInfo = { 5, BUTTON_OFF, BUTTON_NEXT, false };
-  ButtonInfo upButtonInfo = { 5, BUTTON_OFF, BUTTON_UP, false };
-  ButtonInfo downButtonInfo = { 5, BUTTON_OFF, BUTTON_DOWN, false };
+  ButtonInfo nextButtonInfo = { 5, BUTTON_NEXT_OFF, BUTTON_NEXT, BUTTON_NEXT_ON, BUTTON_NEXT_OFF, false };
+  ButtonInfo upButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF, false };
+  ButtonInfo downButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF, false };
 
   void init() {
-    pinMode(nextButtonInfo.gpio, INPUT_PULLUP);
-    pinMode(upButtonInfo.gpio, INPUT_PULLUP);
-    pinMode(downButtonInfo.gpio, INPUT_PULLUP);
+    pinMode(nextButtonInfo.gpio, INPUT);
+    pinMode(upButtonInfo.gpio, INPUT);
+    pinMode(downButtonInfo.gpio, INPUT);
     Serial.println("Input initialized");
   }
 
   ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
     ButtonChangeState returnValue = None;
     byte state = digitalRead(buttonInfo->gpio);
-    if (state == BUTTON_ON) {
+    if (state == buttonInfo->on) {
       unsigned long now = millis();
       if (buttonInfo->holdStartTime == -1) {
         buttonInfo->holdStartTime = now;
       }
       unsigned long holdTime = now - buttonInfo->holdStartTime;
-      if (buttonInfo->state == BUTTON_OFF) {
+      if (buttonInfo->state == buttonInfo->off) {
         buttonInfo->isWakeupPress = State::getSettings()->idleState == Codes::IdleState::DeepIdle;
         if (holdTime > BUTTON_PRESS_ENGAGE_TIME) {
-          buttonInfo->state = BUTTON_ON;
+          buttonInfo->state = buttonInfo->on;
           State::setActive();
           if (!buttonInfo->isWakeupPress) {
             returnValue = Pressed;
@@ -71,10 +73,10 @@ namespace Input {
         returnValue = Holding;
       }
     } else {
-      if (buttonInfo->state != BUTTON_OFF) {
+      if (buttonInfo->state != buttonInfo->off) {
         State::setIdling();
       }
-      buttonInfo->state = BUTTON_OFF;
+      buttonInfo->state = buttonInfo->off;
       buttonInfo->holdStartTime = -1;
     }
     return returnValue;

@@ -53,7 +53,6 @@ namespace Screen {
 
   void init() {
     display.init();
-    display.flipScreenVertically();
     display.clear();
     display.setFont(ArialMT_Plain_10);
 
@@ -86,7 +85,7 @@ namespace Screen {
     display.clear();
     display.setColor(WHITE);
 
-    // Draw the brightness icon
+    // // Draw the brightness icon
     BrightnessControl::render(
       display,
       BRIGHTNESS_X,
@@ -130,7 +129,6 @@ namespace Screen {
     itoa(settings->numClients, convertedCount, 10);
     convertedCount[1] = 0;
     display.drawString(COUNT_X, COUNT_Y, convertedCount);
-    display.display();
 
     display.display();
   }

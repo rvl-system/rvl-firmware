@@ -18,11 +18,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <WiFiUdp.h>
 #include "common_config.h"
 
 IPAddress SERVER_IP(192, 168, 42, 1);
 IPAddress GATEWAY(192, 168, 42, 255);
 IPAddress SUBNET(255, 255, 255, 0);
+
+WiFiUDP udp;
 
 const char* presetNames[NUM_PRESETS] = {
   "FADE",

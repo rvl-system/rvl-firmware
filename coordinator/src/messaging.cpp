@@ -24,8 +24,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "messaging.h"
 #include "state.h"
 
-WiFiUDP udp;
-
 byte currentPreset = Codes::Preset::Unknown;
 unsigned long commandStartTime = millis();
 
