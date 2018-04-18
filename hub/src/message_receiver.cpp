@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include "config.h"
-#include "common/codes.h"
+#include "codes.h"
 #include "lights.h"
 #include "message_receiver.h"
 
@@ -37,6 +37,7 @@ void MessagingReceiver::init() {
 }
 
 void MessagingReceiver::loop() {
+  return; // TODO: re-enable and wire into state
 
   switch (state) {
     case STATE_DISCONNECTED:
@@ -84,7 +85,8 @@ void MessagingReceiver::loop() {
       byte presetValues[NUM_PRESET_VALUES];
       udp.read(presetValues, NUM_PRESET_VALUES);
 
-      Lights::update(commandTime, brightness, (Codes::Preset::Preset)preset, presetValues);
+      // TODO: set state here
+      // Lights::update(commandTime, brightness, (Codes::Preset::Preset)preset, presetValues);
       break;
   }
 }

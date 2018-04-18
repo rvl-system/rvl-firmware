@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "colorspace.h"
-#include "common/codes.h"
+#include "codes.h"
 #include "animation.h"
 
 namespace Fade {

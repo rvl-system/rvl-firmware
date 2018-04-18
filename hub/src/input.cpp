@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "input.h"
 #include "state.h"
-#include "common/codes.h"
+#include "codes.h"
 #include "config.h"
 
 namespace Input {

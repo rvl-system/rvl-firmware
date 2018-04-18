@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INPUT_HEADER
 #define INPUT_HEADER
 
-#include "common/codes.h"
+#include "codes.h"
 
 namespace Input {
 

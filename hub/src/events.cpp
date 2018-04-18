@@ -18,16 +18,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "common/codes.h"
+#include "codes.h"
 #include "screen.h"
 #include "messaging.h"
 #include "events.h"
+#include "lights.h"
 
 void Events::emitControlEvent(byte currentControl) {
   Serial.print("Setting control ");
   Serial.println(currentControl);
 
-  // Screen::updateControl(currentControl);
   Screen::update();
 }
 
@@ -39,36 +39,36 @@ void Events::emitValueEvent(byte preset, byte code, byte newValue) {
   Serial.print(" to value ");
   Serial.println(newValue);
 
-  // Screen::updateValue(preset, code, newValue);
   Screen::update();
   Messaging::update();
+  Lights::update();
 }
 
 void Events::emitBrightnessEvent(byte brightness) {
   Serial.print("Setting brightness to ");
   Serial.println(brightness);
 
-  // Screen::updateBrightness(brightness);
   Screen::update();
   Messaging::update();
+  Lights::update();
 }
 
 void Events::emitPresetEvent(byte preset) {
   Serial.print("Setting preset ");
   Serial.println(preset);
 
-  // Screen::updatePreset(preset);
   Screen::update();
   Messaging::update();
+  Lights::update();
 }
 
 void Events::emitClientEvent(byte numClients) {
   Serial.print("Setting num clients to ");
   Serial.println(numClients);
 
-  // Screen::updateClientCount(numClients);
   Screen::update();
   Messaging::update();
+  Lights::update();
 }
 
 void Events::emitIdleEvent(Codes::IdleState::IdleState idleState) {

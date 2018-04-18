@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "pulse.h"
 #include "colorspace.h"
 #include "config.h"
-#include "common/codes.h"
+#include "codes.h"
 
 #define NUM_PIXELS 8
 

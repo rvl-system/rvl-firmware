@@ -23,7 +23,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "screen.h"
 #include "state.h"
-#include "common/codes.h"
+#include "codes.h"
 
 #include "controls/brightness.h"
 #include "controls/preset.h"

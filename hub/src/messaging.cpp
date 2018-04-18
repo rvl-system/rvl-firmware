@@ -62,6 +62,7 @@ void sync() {
   State::Settings* settings = State::getSettings();
   udp.beginPacket(GATEWAY, SERVER_PORT);
   uint32_t commandTime = (uint32_t)(millis() - commandStartTime);
+  State::getSettings()->commandTime = commandTime;
   udp.write((byte*)&commandTime, 4);
   udp.write(settings->brightness);
   udp.write(settings->preset);

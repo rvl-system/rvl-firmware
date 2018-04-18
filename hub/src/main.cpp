@@ -36,7 +36,7 @@ void setup() {
   Screen::init();
   Messaging::init();
   Lights::init();
-  MessagingReceiver::init();
+  // MessagingReceiver::init();
   Serial.println("Running");
 }
 
@@ -47,6 +47,6 @@ void loop() {
   Screen::loop();
   Messaging::loop();
   Lights::loop();
-  MessagingReceiver::loop();
+  // MessagingReceiver::loop();
   delay(UPDATE_RATE - (millis() - startTime));
 }

@@ -1,0 +1,21 @@
+{
+  "files.associations": {
+    "atomic": "cpp",
+    "functional": "cpp",
+    "locale": "cpp",
+    "memory": "cpp",
+    "system_error": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "iterator": "cpp",
+    "string": "cpp",
+    "chrono": "cpp",
+    "__bit_reference": "cpp",
+    "algorithm": "cpp",
+    "bitset": "cpp",
+    "ios": "cpp",
+    "initializer_list": "cpp",
+    "utility": "cpp",
+    "__locale": "cpp"
+  }
+}

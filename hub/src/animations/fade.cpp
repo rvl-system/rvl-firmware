@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "animations/fade.h"
 #include "colorspace.h"
 #include "config.h"
-#include "common/codes.h"
+#include "codes.h"
 
 #define COLOR_DIFFERENCE 40
 

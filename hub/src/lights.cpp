@@ -20,95 +20,101 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <Adafruit_DotStar.h>
 #include "colorspace.h"
-#include "common/codes.h"
+#include "codes.h"
 #include "animation.h"
 #include "config.h"
 #include "lights.h"
+#include "state.h"
 
 #include "animations/fade.h"
 #include "animations/pulse.h"
 #include "animations/wave.h"
 
-Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTSTAR_BRG);
+namespace Lights {
 
-hsv colors[NUM_PIXELS];
-Codes::Preset::Preset preset = Codes::Preset::Unknown;
-byte brightness = 0;
-uint32_t commandTime = 0;
-unsigned long lastUpdateTime = 0;
+  Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTSTAR_BRG);
 
-Animation::AnimationBase* animations[NUM_PRESETS];
+  hsv colors[NUM_PIXELS];
+  Codes::Preset::Preset preset = Codes::Preset::Unknown;
+  byte brightness = 0;
+  uint32_t commandTime = 0;
+  unsigned long lastUpdateTime = 0;
 
-void updateColors();
-void displayColors();
+  Animation::AnimationBase* animations[NUM_PRESETS];
 
-void Lights::init() {
+  void updateColors();
+  void displayColors();
 
-  animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
-  animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
-  animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
+  void init() {
 
-  strip.begin();
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    rgb converted_color = hsv2rgb(colors[i]);
-    strip.setPixelColor(i, 0, 0, 0);
+    animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
+    animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
+    animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
+
+    strip.begin();
+    for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+      rgb converted_color = hsv2rgb(colors[i]);
+      strip.setPixelColor(i, 0, 0, 0);
+    }
+    strip.show();
+
+    update();
+
+    Serial.println("Lights initialized");
   }
-  strip.show();
 
-  Lights::update(0, DEFAULT_BRIGHTNESS, (Codes::Preset::Preset)DEFAULT_PRESET, (byte*)presetValueDefaults[DEFAULT_PRESET]);
+  void loop() {
+    updateColors();
+    displayColors();
+  }
 
-  Serial.println("Lights initialized");
-}
+  void update() {
+    State::Settings* settings = State::getSettings();
 
-void Lights::loop() {
-  updateColors();
-  displayColors();
-}
+    lastUpdateTime = millis();
 
-void Lights::update(uint32_t newCommandTime, byte newBrightness, Codes::Preset::Preset newPreset, byte* newPresetValues) {
+    Serial.print("Setting command time to: ");
+    Serial.println(settings->commandTime);
+    commandTime = settings->commandTime;
 
-  lastUpdateTime = millis();
+    if (settings->brightness != brightness) {
+      Serial.print("Changing brightness to: ");
+      Serial.println(settings->brightness);
+      brightness = settings->brightness;
+      double scaledBrightness = (double)settings->brightness / 255.0;
+      for (int i = 0; i < NUM_PRESETS; i++) {
+        animations[i]->setBrightness(scaledBrightness);
+      }
+    }
 
-  Serial.print("Setting command time to: ");
-  Serial.println(newCommandTime);
-  commandTime = newCommandTime;
+    if (preset != settings->preset) {
+      Serial.print("Changing preset to: ");
+      Serial.println(settings->preset);
+      preset = (Codes::Preset::Preset)settings->preset;
+    }
 
-  if (newBrightness != brightness) {
-    Serial.print("Changing brightness to: ");
-    Serial.println(newBrightness);
-    brightness = newBrightness;
-    double scaledBrightness = (double)newBrightness / 255.0;
-    for (int i = 0; i < NUM_PRESETS; i++) {
-      animations[i]->setBrightness(scaledBrightness);
+    if (preset != Codes::Preset::Unknown) {
+      animations[preset]->setValues(settings->presetValues[settings->preset]);
     }
   }
 
-  if (preset != newPreset) {
-    Serial.print("Changing preset to: ");
-    Serial.println(newPreset);
-    preset = newPreset;
+  void updateColors() {
+    if (preset != Codes::Preset::Unknown) {
+      uint32_t adjustedCommandTime = (millis() - lastUpdateTime) + commandTime;
+      animations[preset]->updateColors(adjustedCommandTime, colors);
+    }
   }
 
-  if (preset != Codes::Preset::Unknown) {
-    animations[preset]->setValues(newPresetValues);
+  void displayColors() {
+    for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+      rgb convertedColor = hsv2rgb(colors[i]);
+      strip.setPixelColor(i,
+        (int)(convertedColor.r * 255),
+        (int)(convertedColor.g * 255),
+        (int)(convertedColor.b * 255)
+      );
+    }
+    strip.show();
   }
-}
 
-void updateColors() {
-  if (preset != Codes::Preset::Unknown) {
-    uint32_t adjustedCommandTime = (millis() - lastUpdateTime) + commandTime;
-    animations[preset]->updateColors(adjustedCommandTime, colors);
-  }
-}
-
-void displayColors() {
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    rgb convertedColor = hsv2rgb(colors[i]);
-    strip.setPixelColor(i,
-      (int)(convertedColor.r * 255),
-      (int)(convertedColor.g * 255),
-      (int)(convertedColor.b * 255)
-    );
-  }
-  strip.show();
 }

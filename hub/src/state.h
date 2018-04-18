@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef STATE_HEADER
 #define STATE_HEADER
 
-#include "common/codes.h"
+#include "codes.h"
 #include "config.h"
 
 namespace State {
@@ -33,6 +33,8 @@ namespace State {
     Codes::IdleState::IdleState idleState = Codes::IdleState::Active;
     byte currentControl = 0;
     int numClients = 0;
+
+    uint32_t commandTime = 0;
   };
 
   void init();

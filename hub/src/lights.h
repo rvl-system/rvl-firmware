@@ -21,13 +21,13 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define LIGHTS_HEADER
 
 #include <Arduino.h>
-#include "common/codes.h"
+#include "codes.h"
 
 namespace Lights {
 
   void init();
   void loop();
-  void update(uint32_t commandTime, byte brightness, Codes::Preset::Preset preset, byte* presetValues);
+  void update();
 
 }
 
