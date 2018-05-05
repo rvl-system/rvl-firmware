@@ -24,7 +24,9 @@ namespace Codes {
 
 namespace EventTypes {
   enum EventTypes {
-    StateChange
+    AnimationChange,
+    ScreenChange,
+    InputChange
   };
 }
 

@@ -24,6 +24,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./screen.h"
 #include "./state.h"
 #include "./codes.h"
+#include "./events.h"
 
 #include "./controls/brightness.h"
 #include "./controls/preset.h"
@@ -51,7 +52,20 @@ namespace Screen {
 
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
+class ScreenStateListener : public Events::EventListenerInterface {
+ public:
+  void onEvent() {
+    Serial.println("Screen Update called");
+    update();
+  }
+};
+
 void init() {
+  auto listener = new ScreenStateListener();
+  Events::on(Codes::EventTypes::AnimationChange, listener);
+  // TODO(nebrius): Causes the code to freeze if uncommented, need to fix
+  // Events::on(Codes::EventTypes::ScreenChange, listener);
+  Events::on(Codes::EventTypes::InputChange, listener);
   display.init();
   display.clear();
   display.setFont(ArialMT_Plain_10);

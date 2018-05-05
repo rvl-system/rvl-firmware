@@ -22,13 +22,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Events {
 
-void emitControlEvent(byte currentControl);
-void emitValueEvent(byte preset, byte code, byte newValue);
-void emitBrightnessEvent(byte brightness);
-void emitPresetEvent(byte preset);
-void emitClientEvent(byte numClients);
-void emitIdleEvent(Codes::IdleState::IdleState idleState);
-
 class EventListenerInterface {
  public:
   virtual void onEvent() = 0;

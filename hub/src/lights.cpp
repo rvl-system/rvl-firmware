@@ -56,11 +56,11 @@ class LightsStateListener : public Events::EventListenerInterface {
 };
 
 void init() {
+  Events::on(Codes::EventTypes::AnimationChange, new LightsStateListener());
+
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
   animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
-
-  Events::on(Codes::EventTypes::StateChange, new LightsStateListener());
 
   strip.begin();
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {

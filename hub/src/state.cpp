@@ -52,8 +52,9 @@ void nextControl() {
     settings.currentControl = 0;
   }
 
-  Events::emit(Codes::EventTypes::StateChange);
-  Events::emitControlEvent(settings.currentControl);
+  Serial.print("Setting control ");
+  Serial.println(settings.currentControl);
+  Events::emit(Codes::EventTypes::InputChange);
 }
 
 int calculateNewValue(byte code, int value, bool direction) {
@@ -74,8 +75,14 @@ int calculateNewValue(byte code, int value, bool direction) {
 void handleValueChange(int code, bool direction) {
   int newValue = calculateNewValue(code, settings.presetValues[settings.preset][code], direction);
   settings.presetValues[settings.preset][code] = newValue;
-  Events::emit(Codes::EventTypes::StateChange);
-  Events::emitValueEvent(settings.preset, code, newValue);
+
+  Serial.print("Setting preset ");
+  Serial.print(settings.preset);
+  Serial.print(" code ");
+  Serial.print(code);
+  Serial.print(" to value ");
+  Serial.println(newValue);
+  Events::emit(Codes::EventTypes::AnimationChange);
 }
 
 void controlUp() {
@@ -86,8 +93,9 @@ void controlUp() {
         if (settings.brightness > MAX_BRIGHTNESS) {
           settings.brightness = MAX_BRIGHTNESS;
         }
-        Events::emit(Codes::EventTypes::StateChange);
-        Events::emitBrightnessEvent(settings.brightness);
+        Serial.print("Setting brightness to ");
+        Serial.println(settings.brightness);
+        Events::emit(Codes::EventTypes::AnimationChange);
       }
       break;
     case Codes::Control::Preset:
@@ -95,8 +103,9 @@ void controlUp() {
       if (settings.preset == NUM_PRESETS) {
         settings.preset = 0;
       }
-      Events::emit(Codes::EventTypes::StateChange);
-      Events::emitPresetEvent(settings.preset);
+      Serial.print("Setting preset ");
+      Serial.println(settings.preset);
+      Events::emit(Codes::EventTypes::AnimationChange);
       break;
     default:
       handleValueChange(settings.currentControl - 3, true);
@@ -112,8 +121,9 @@ void controlDown() {
         if (settings.brightness < 0) {
           settings.brightness = 0;
         }
-        Events::emit(Codes::EventTypes::StateChange);
-        Events::emitBrightnessEvent(settings.brightness);
+        Serial.print("Setting brightness to ");
+        Serial.println(settings.brightness);
+        Events::emit(Codes::EventTypes::AnimationChange);
       }
       break;
     case Codes::Control::Preset:
@@ -125,8 +135,9 @@ void controlDown() {
           settings.preset = Codes::Preset::Fade;
           break;
       }
-      Events::emit(Codes::EventTypes::StateChange);
-      Events::emitPresetEvent(settings.preset);
+      Serial.print("Setting preset ");
+      Serial.println(settings.preset);
+      Events::emit(Codes::EventTypes::AnimationChange);
       break;
     default:
       handleValueChange(settings.currentControl - 3, false);
@@ -139,15 +150,22 @@ void setClientsConnected(int numClients) {
     return;
   }
   settings.numClients = numClients;
-  Events::emit(Codes::EventTypes::StateChange);
-  Events::emitClientEvent(settings.numClients);
+
+  Serial.print("Setting num clients to ");
+  Serial.println(settings.numClients);
+  Events::emit(Codes::EventTypes::ScreenChange);
+}
+
+void setIdleState(Codes::IdleState::IdleState newIdleState) {
+  settings.idleState = newIdleState;
+  Serial.print("Setting idle state to ");
+  Serial.println(settings.idleState);
+  Events::emit(Codes::EventTypes::ScreenChange);
 }
 
 void setActive() {
   isActive = true;
-  settings.idleState = Codes::IdleState::Active;
-  Events::emit(Codes::EventTypes::StateChange);
-  Events::emitIdleEvent(settings.idleState);
+  setIdleState(Codes::IdleState::Active);
 }
 
 void setIdling() {
@@ -172,16 +190,12 @@ void loop() {
       case Codes::IdleState::Active:
         if (millis() >= idleStartTime + DIM_TIMEOUT) {
           idleStartTime = millis();
-          settings.idleState = Codes::IdleState::ShallowIdle;
-          Events::emit(Codes::EventTypes::StateChange);
-          Events::emitIdleEvent(settings.idleState);
+          setIdleState(Codes::IdleState::ShallowIdle);
         }
         break;
       case Codes::IdleState::ShallowIdle:
         if (millis() >= idleStartTime + OFF_TIMEOUT) {
-          settings.idleState = Codes::IdleState::DeepIdle;
-          Events::emit(Codes::EventTypes::StateChange);
-          Events::emitIdleEvent(settings.idleState);
+          setIdleState(Codes::IdleState::DeepIdle);
         }
         break;
     }

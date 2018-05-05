@@ -23,6 +23,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./config.h"
 #include "./messaging/messaging_server.h"
 #include "./state.h"
+#include "./events.h"
 
 namespace MessagingServer {
 
@@ -33,7 +34,16 @@ bool needsSync = false;
 
 void sync();
 
+class MessagingServerStateListener : public Events::EventListenerInterface {
+ public:
+  void onEvent() {
+    update();
+  }
+};
+
 void init() {
+  Events::on(Codes::EventTypes::AnimationChange, new MessagingServerStateListener());
+
   Serial.print("Setting soft-AP configuration...");
   if (WiFi.softAPConfig(SERVER_IP, GATEWAY, SUBNET)) {
     Serial.println("Ready");
