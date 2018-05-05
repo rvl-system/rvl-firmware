@@ -18,13 +18,13 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "state.h"
-#include "screen.h"
-#include "input.h"
-#include "lights.h"
-#include "messaging.h"
-#include "message_receiver.h"
-#include "config.h"
+#include "./state.h"
+#include "./screen.h"
+#include "./input.h"
+#include "./lights.h"
+#include "./messaging.h"
+#include "./message_receiver.h"
+#include "./config.h"
 
 void setup() {
   delay(200);
@@ -35,18 +35,18 @@ void setup() {
   Input::init();
   Screen::init();
   Messaging::init();
-  Lights::init();
   // MessagingReceiver::init();
+  Lights::init();
   Serial.println("Running");
 }
 
 void loop() {
-  unsigned long startTime = millis();
+  uint32 startTime = millis();
   State::loop();
   Input::loop();
   Screen::loop();
   Messaging::loop();
-  Lights::loop();
   // MessagingReceiver::loop();
+  Lights::loop();
   delay(UPDATE_RATE - (millis() - startTime));
 }

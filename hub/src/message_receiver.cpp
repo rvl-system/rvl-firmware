@@ -20,24 +20,27 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include "config.h"
-#include "codes.h"
-#include "lights.h"
-#include "message_receiver.h"
+#include "./config.h"
+#include "./codes.h"
+#include "./lights.h"
+#include "./message_receiver.h"
+
+namespace MessagingReceiver {
 
 #define STATE_DISCONNECTED 0
 #define STATE_CONNECTING 1
 #define STATE_CONNECTED 2
 
 byte state = STATE_DISCONNECTED;
-unsigned long nextTimeToPrintDot = 0;
+uint32 nextTimeToPrintDot = 0;
 
-void MessagingReceiver::init() {
+void init() {
   Serial.println("Messaging Receiver initialized");
 }
 
-void MessagingReceiver::loop() {
-  return; // TODO: re-enable and wire into state
+void loop() {
+  // TODO(nebrius): re-enable and wire into state
+  return;
 
   switch (state) {
     case STATE_DISCONNECTED:
@@ -78,15 +81,17 @@ void MessagingReceiver::loop() {
         ESP.reset();
       }
 
-      uint32_t commandTime;
-      udp.read((byte*)&commandTime, 4);
+      uint32 commandTime;
+      udp.read(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
       byte brightness = udp.read();
       byte preset = udp.read();
       byte presetValues[NUM_PRESET_VALUES];
       udp.read(presetValues, NUM_PRESET_VALUES);
 
-      // TODO: set state here
+      // TODO(nebrius): set state here
       // Lights::update(commandTime, brightness, (Codes::Preset::Preset)preset, presetValues);
       break;
   }
 }
+
+}  // namespace MessagingReceiver

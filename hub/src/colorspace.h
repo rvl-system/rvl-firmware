@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COLORSPACE_HEADER
-#define COLORSPACE_HEADER
+#ifndef COLORSPACE_H_
+#define COLORSPACE_H_
+
+namespace colorspace {
 
 typedef struct {
   double r;       // percent
@@ -35,4 +37,6 @@ typedef struct {
 hsv rgb2hsv(rgb in);
 rgb hsv2rgb(hsv in);
 
-#endif
+}  // namespace colorspace
+
+#endif  // COLORSPACE_H_

@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PULSE_HEADER
-#define PULSE_HEADER
+#ifndef ANIMATIONS_PULSE_H_
+#define ANIMATIONS_PULSE_H_
 
 #include <Arduino.h>
-#include "colorspace.h"
-#include "codes.h"
-#include "animation.h"
+#include "./colorspace.h"
+#include "./codes.h"
+#include "./animation.h"
 
 namespace Pulse {
 
-  class PulseAnimation : public Animation::AnimationBase {
-    public:
-      void setBrightness(double newBrightness);
-      void setValues(byte* values);
-      void updateColors(uint32_t commandTime, hsv* buffer);
-  };
+class PulseAnimation : public Animation::AnimationBase {
+ public:
+  void setBrightness(double newBrightness);
+  void setValues(byte* values);
+  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
+};
 
-}
+}  // namespave Pulse
 
-#endif
+#endif  // ANIMATIONS_PULSE_H_

@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCREEN_HEADER
-#define SCREEN_HEADER
+#ifndef SCREEN_H_
+#define SCREEN_H_
 
-#include "codes.h"
+#include "./codes.h"
 
 namespace Screen {
 
-  void init();
-  void loop();
-  void update();
-  void updateIdleState(Codes::IdleState::IdleState idleState);
+void init();
+void loop();
+void update();
+void updateIdleState(Codes::IdleState::IdleState idleState);
 
 }
 
-#endif
+#endif  // SCREEN_H_

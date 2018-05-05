@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "animations/fade.h"
-#include "colorspace.h"
-#include "config.h"
-#include "codes.h"
+#include "./animations/fade.h"
+#include "./colorspace.h"
+#include "./config.h"
+#include "./codes.h"
 
 #define COLOR_DIFFERENCE 40
 
@@ -28,23 +28,23 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Fade {
 
-  double step = 0;
-  double brightness = 0;
+double step = 0;
+double brightness = 0;
 
-  void FadeAnimation::setBrightness(double newBrightness) {
-    brightness = newBrightness;
-  }
-
-  void FadeAnimation::setValues(byte* values) {
-    step = (double)values[0] / 1280.0;
-  }
-
-  void FadeAnimation::updateColors(uint32_t commandTime, hsv* buffer) {
-    for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-      buffer[i].h = ((int)(commandTime * step) + COLOR_DIFFERENCE * i) % 360;
-      buffer[i].s = 1;
-      buffer[i].v = brightness;
-    }
-  }
-
+void FadeAnimation::setBrightness(double newBrightness) {
+  brightness = newBrightness;
 }
+
+void FadeAnimation::setValues(byte* values) {
+  step = static_cast<double>(values[0]) / 1280.0;
+}
+
+void FadeAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
+  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+    buffer[i].h = (static_cast<int>(commandTime * step) + COLOR_DIFFERENCE * i) % 360;
+    buffer[i].s = 1;
+    buffer[i].v = brightness;
+  }
+}
+
+}  // namespace Fade

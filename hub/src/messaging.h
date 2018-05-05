@@ -17,17 +17,17 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_HEADER
-#define MESSAGING_HEADER
+#ifndef MESSAGING_H_
+#define MESSAGING_H_
 
-#include "codes.h"
+#include "./codes.h"
 
 namespace Messaging {
 
-  void init();
-  void loop();
-  void update();
+void init();
+void loop();
+void update();
 
 }
 
-#endif
+#endif  // MESSAGING_H_

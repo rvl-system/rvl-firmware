@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_RECEIVER_HEADER
-#define MESSAGING_RECEIVER_HEADER
+#ifndef MESSAGE_RECEIVER_H_
+#define MESSAGE_RECEIVER_H_
 
 namespace MessagingReceiver {
 
-  void init();
-  void loop();
+void init();
+void loop();
 
-}
+}  // namespace MessagingReceiver
 
-#endif
+#endif  // MESSAGE_RECEIVER_H_

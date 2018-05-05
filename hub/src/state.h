@@ -17,40 +17,40 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATE_HEADER
-#define STATE_HEADER
+#ifndef STATE_H_
+#define STATE_H_
 
-#include "codes.h"
-#include "config.h"
+#include "./codes.h"
+#include "./config.h"
 
 namespace State {
 
-  struct Settings {
-    byte preset = DEFAULT_PRESET;
-    int brightness = DEFAULT_BRIGHTNESS;
-    byte** presetValues;
+struct Settings {
+  byte preset = DEFAULT_PRESET;
+  int brightness = DEFAULT_BRIGHTNESS;
+  byte** presetValues;
 
-    Codes::IdleState::IdleState idleState = Codes::IdleState::Active;
-    byte currentControl = 0;
-    int numClients = 0;
+  Codes::IdleState::IdleState idleState = Codes::IdleState::Active;
+  byte currentControl = 0;
+  int numClients = 0;
 
-    uint32_t commandTime = 0;
-  };
+  uint32 commandTime = 0;
+};
 
-  void init();
-  void loop();
+void init();
+void loop();
 
-  Settings* getSettings();
+Settings* getSettings();
 
-  void nextControl();
-  void controlUp();
-  void controlDown();
+void nextControl();
+void controlUp();
+void controlDown();
 
-  void setClientsConnected(int numConnectedClients);
+void setClientsConnected(int numConnectedClients);
 
-  void setActive();
-  void setIdling();
+void setActive();
+void setIdling();
 
-}
+}  // namespace State
 
-#endif
+#endif  // STATE_H_

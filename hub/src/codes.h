@@ -17,39 +17,39 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODES_HEADER
-#define CODES_HEADER
+#ifndef CODES_H_
+#define CODES_H_
 
 namespace Codes {
 
-  namespace Preset {
-    enum Preset {
-      Fade = 0,
-      Pulse = 1,
-      Wave = 2,
-      Unknown = 255
-    };
-  }
-
-  namespace Control {
-    enum Control {
-      None = 0,
-      Brightness = 1,
-      Preset = 2,
-      Value1 = 3,
-      Value2 = 4,
-      Value3 = 5
-    };
-  }
-
-  namespace IdleState {
-    enum IdleState {
-      Active = 0,
-      ShallowIdle = 1,
-      DeepIdle = 2
-    };
-  }
-
+namespace Preset {
+  enum Preset {
+    Fade = 0,
+    Pulse = 1,
+    Wave = 2,
+    Unknown = 255
+  };
 }
 
-#endif
+namespace Control {
+  enum Control {
+    None = 0,
+    Brightness = 1,
+    Preset = 2,
+    Value1 = 3,
+    Value2 = 4,
+    Value3 = 5
+  };
+}
+
+namespace IdleState {
+  enum IdleState {
+    Active = 0,
+    ShallowIdle = 1,
+    DeepIdle = 2
+  };
+}
+
+}  // namespace Codes
+
+#endif  // CODES_H_

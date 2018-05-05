@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef EVENTS_HEADER
-#define EVENTS_HEADER
+#ifndef EVENTS_H_
+#define EVENTS_H_
 
 namespace Events {
 
-  void emitControlEvent(byte currentControl);
-  void emitValueEvent(byte preset, byte code, byte newValue);
-  void emitBrightnessEvent(byte brightness);
-  void emitPresetEvent(byte preset);
-  void emitClientEvent(byte numClients);
-  void emitIdleEvent(Codes::IdleState::IdleState idleState);
+void emitControlEvent(byte currentControl);
+void emitValueEvent(byte preset, byte code, byte newValue);
+void emitBrightnessEvent(byte brightness);
+void emitPresetEvent(byte preset);
+void emitClientEvent(byte numClients);
+void emitIdleEvent(Codes::IdleState::IdleState idleState);
 
-}
+}  // namespace Events
 
-#endif
+#endif  // EVENTS_H_

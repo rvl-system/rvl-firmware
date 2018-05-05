@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef VALUE_BRIGHTNESS_HEADER
-#define VALUE_BRIGHTNESS_HEADER
+#ifndef CONTROLS_BRIGHTNESS_H_
+#define CONTROLS_BRIGHTNESS_H_
 
 #include <Arduino.h>
-#include "SSD1306Brzo.h"
+#include <SSD1306Brzo.h>
 
 namespace BrightnessControl {
 
-  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, byte brightness);
+void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, byte brightness);
 
-}
+}  // namespace BrightnessControl
 
-#endif
+#endif  // CONTROLS_BRIGHTNESS_H_

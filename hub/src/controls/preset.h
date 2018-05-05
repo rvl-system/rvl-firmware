@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PRESET_CONTROL_HEADER
-#define PRESET_CONTROL_HEADER
+#ifndef CONTROLS_PRESET_H_
+#define CONTROLS_PRESET_H_
 
 #include <Arduino.h>
-#include "SSD1306Brzo.h"
+#include <SSD1306Brzo.h>
 
 namespace PresetControl {
 
-  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset);
+void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset);
 
-}
+}  // namespace PresetControl
 
-#endif
+#endif  // CONTROLS_PRESET_H_

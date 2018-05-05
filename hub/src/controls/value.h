@@ -17,16 +17,24 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef VALUE_CONTROL_HEADER
-#define VALUE_CONTROL_HEADER
+#ifndef CONTROLS_VALUE_H_
+#define CONTROLS_VALUE_H_
 
 #include <Arduino.h>
-#include "SSD1306Brzo.h"
+#include <SSD1306Brzo.h>
 
 namespace ValueControl {
 
-  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* label, double value);
+void render(
+  SSD1306Brzo display,
+  byte x,
+  byte y,
+  byte width,
+  byte height,
+  bool isSelected,
+  const char* label,
+  double value);
 
-}
+}  // namespace ValueControl
 
-#endif
+#endif  // CONTROLS_VALUE_H_

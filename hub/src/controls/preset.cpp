@@ -18,22 +18,21 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "value.h"
+#include "./controls/preset.h"
+#include "./controls/value.h"
 
 #define CONTENT_PADDING 3
 #define LABEL_WIDTH 49
 
 namespace PresetControl {
 
-  void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset) {
-
-    if (isSelected) {
-      display.drawRect(x, y, width, height);
-    }
-
-    display.drawString(x + CONTENT_PADDING, y, "PRESET: ");
-    display.drawString(x + CONTENT_PADDING + LABEL_WIDTH, y, preset);
-
+void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset) {
+  if (isSelected) {
+    display.drawRect(x, y, width, height);
   }
 
+  display.drawString(x + CONTENT_PADDING, y, "PRESET: ");
+  display.drawString(x + CONTENT_PADDING + LABEL_WIDTH, y, preset);
 }
+
+}  // namespace PresetControl

@@ -20,18 +20,20 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <Arduino.h>
-#include "config.h"
-#include "messaging.h"
-#include "state.h"
+#include "./config.h"
+#include "./messaging.h"
+#include "./state.h"
+
+namespace Messaging {
 
 byte currentPreset = Codes::Preset::Unknown;
-unsigned long commandStartTime = millis();
+uint32 commandStartTime = millis();
 
 bool needsSync = false;
 
 void sync();
 
-void Messaging::init() {
+void init() {
   Serial.print("Setting soft-AP configuration...");
   if (WiFi.softAPConfig(SERVER_IP, GATEWAY, SUBNET)) {
     Serial.println("Ready");
@@ -61,9 +63,9 @@ void sync() {
   Serial.println("Syncing");
   State::Settings* settings = State::getSettings();
   udp.beginPacket(GATEWAY, SERVER_PORT);
-  uint32_t commandTime = (uint32_t)(millis() - commandStartTime);
+  uint32 commandTime = static_cast<uint32>(millis() - commandStartTime);
   State::getSettings()->commandTime = commandTime;
-  udp.write((byte*)&commandTime, 4);
+  udp.write(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
   udp.write(settings->brightness);
   udp.write(settings->preset);
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
@@ -74,7 +76,7 @@ void sync() {
 
 int nextSyncTime = millis();
 int numConnectedClients = 0;
-void Messaging::loop() {
+void loop() {
   if (millis() < nextSyncTime && !needsSync) {
     return;
   }
@@ -85,7 +87,7 @@ void Messaging::loop() {
   sync();
 }
 
-void Messaging::update() {
+void update() {
   byte newPreset = State::getSettings()->preset;
   if (newPreset != currentPreset) {
     currentPreset = newPreset;
@@ -93,3 +95,5 @@ void Messaging::update() {
   }
   needsSync = true;
 }
+
+}  // namespace Messaging

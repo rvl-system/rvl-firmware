@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef WAVE_HEADER
-#define WAVE_HEADER
+#ifndef ANIMATIONS_WAVE_H_
+#define ANIMATIONS_WAVE_H_
 
 #include <Arduino.h>
-#include "colorspace.h"
-#include "codes.h"
-#include "animation.h"
+#include "./colorspace.h"
+#include "./codes.h"
+#include "./animation.h"
 
 namespace Wave {
 
-  class WaveAnimation : public Animation::AnimationBase {
-    public:
-      void setBrightness(double newBrightness);
-      void setValues(byte* values);
-      void updateColors(uint32_t commandTime, hsv* buffer);
-  };
+class WaveAnimation : public Animation::AnimationBase {
+ public:
+  void setBrightness(double newBrightness);
+  void setValues(byte* values);
+  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
+};
 
-}
+}  // namespace Wave
 
-#endif
+#endif  // ANIMATIONS_WAVE_H_

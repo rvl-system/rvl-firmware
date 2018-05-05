@@ -18,20 +18,22 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "codes.h"
-#include "screen.h"
-#include "messaging.h"
-#include "events.h"
-#include "lights.h"
+#include "./codes.h"
+#include "./screen.h"
+#include "./messaging.h"
+#include "./events.h"
+#include "./lights.h"
 
-void Events::emitControlEvent(byte currentControl) {
+namespace Events {
+
+void emitControlEvent(byte currentControl) {
   Serial.print("Setting control ");
   Serial.println(currentControl);
 
   Screen::update();
 }
 
-void Events::emitValueEvent(byte preset, byte code, byte newValue) {
+void emitValueEvent(byte preset, byte code, byte newValue) {
   Serial.print("Setting preset ");
   Serial.print(preset);
   Serial.print(" code ");
@@ -44,7 +46,7 @@ void Events::emitValueEvent(byte preset, byte code, byte newValue) {
   Lights::update();
 }
 
-void Events::emitBrightnessEvent(byte brightness) {
+void emitBrightnessEvent(byte brightness) {
   Serial.print("Setting brightness to ");
   Serial.println(brightness);
 
@@ -53,7 +55,7 @@ void Events::emitBrightnessEvent(byte brightness) {
   Lights::update();
 }
 
-void Events::emitPresetEvent(byte preset) {
+void emitPresetEvent(byte preset) {
   Serial.print("Setting preset ");
   Serial.println(preset);
 
@@ -62,7 +64,7 @@ void Events::emitPresetEvent(byte preset) {
   Lights::update();
 }
 
-void Events::emitClientEvent(byte numClients) {
+void emitClientEvent(byte numClients) {
   Serial.print("Setting num clients to ");
   Serial.println(numClients);
 
@@ -71,9 +73,11 @@ void Events::emitClientEvent(byte numClients) {
   Lights::update();
 }
 
-void Events::emitIdleEvent(Codes::IdleState::IdleState idleState) {
+void emitIdleEvent(Codes::IdleState::IdleState idleState) {
   Serial.print("Setting idle state to ");
   Serial.println(idleState);
 
   Screen::updateIdleState(idleState);
 }
+
+}  // namespace Events

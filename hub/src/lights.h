@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIGHTS_HEADER
-#define LIGHTS_HEADER
+#ifndef LIGHTS_H_
+#define LIGHTS_H_
 
 #include <Arduino.h>
-#include "codes.h"
+#include "./codes.h"
 
 namespace Lights {
 
-  void init();
-  void loop();
-  void update();
+void init();
+void loop();
+void update();
 
-}
+}  // namespace Lights
 
-#endif
+#endif  // LIGHTS_H_

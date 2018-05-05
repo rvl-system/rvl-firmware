@@ -17,18 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUT_HEADER
-#define INPUT_HEADER
+#ifndef INPUT_H_
+#define INPUT_H_
 
-#include "codes.h"
+#include "./codes.h"
 
 namespace Input {
 
-  void init();
-  void loop();
+void init();
+void loop();
 
-}
+}  // namespace Input
 
-
-
-#endif
+#endif  // INPUT_H_

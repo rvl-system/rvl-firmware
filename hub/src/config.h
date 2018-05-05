@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIG_HEADER
-#define CONFIG_HEADER
+#ifndef CONFIG_H_
+#define CONFIG_H_
 
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
@@ -87,4 +87,4 @@ extern WiFiUDP udp;
 
 #define CLIENT_SYNC_INTERVAL 2000
 
-#endif
+#endif  // CONFIG_H_

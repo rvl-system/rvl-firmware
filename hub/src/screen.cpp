@@ -19,15 +19,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <brzo_i2c.h>
-#include "SSD1306Brzo.h"
-#include "config.h"
-#include "screen.h"
-#include "state.h"
-#include "codes.h"
+#include <SSD1306Brzo.h>
+#include "./config.h"
+#include "./screen.h"
+#include "./state.h"
+#include "./codes.h"
 
-#include "controls/brightness.h"
-#include "controls/preset.h"
-#include "controls/value.h"
+#include "./controls/brightness.h"
+#include "./controls/preset.h"
+#include "./controls/value.h"
 
 #define BRIGHTNESS_X 0
 #define BRIGHTNESS_Y 0
@@ -49,88 +49,86 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Screen {
 
-  SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
+SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-  void init() {
-    display.init();
-    display.clear();
-    display.setFont(ArialMT_Plain_10);
+void init() {
+  display.init();
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
 
-    Screen::update();
+  Screen::update();
 
-    Serial.println("Screen initialized");
-  }
-
-  void loop() {
-  }
-
-  void updateIdleState(Codes::IdleState::IdleState idleState) {
-    switch(idleState) {
-      case Codes::IdleState::Active:
-        display.setContrast(ACTIVE_CONTRAST);
-        display.displayOn();
-        break;
-      case Codes::IdleState::ShallowIdle:
-        display.setContrast(SHALLOW_IDLE_CONTRAST);
-        display.displayOn();
-        break;
-      case Codes::IdleState::DeepIdle:
-        display.displayOff();
-        break;
-    }
-  }
-
-  void update() {
-    State::Settings* settings = State::getSettings();
-    display.clear();
-    display.setColor(WHITE);
-
-    // // Draw the brightness icon
-    BrightnessControl::render(
-      display,
-      BRIGHTNESS_X,
-      BRIGHTNESS_Y,
-      BRIGHTNESS_WIDTH,
-      BRIGHTNESS_HEIGHT,
-      settings->currentControl == Codes::Control::Brightness,
-      settings->brightness
-    );
-
-    // Draw the preset
-    PresetControl::render(
-      display,
-      PRESET_X,
-      PRESET_Y,
-      PRESET_WIDTH,
-      PRESET_HEIGHT,
-      settings->currentControl == Codes::Control::Preset,
-      presetNames[settings->preset]
-    );
-
-    // Draw the values
-    for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-      const char* label = presetValueLabels[settings->preset][i];
-      if (label != NULL) {
-        ValueControl::render(
-          display,
-          VALUE_X,
-          (i + 1) * VALUE_SPACING,
-          VALUE_WIDTH,
-          VALUE_HEIGHT,
-          settings->currentControl == i + 3,
-          label,
-          (double)(settings->presetValues[settings->preset][i] - presetValueMin[settings->preset][i]) / (double)(presetValueMax[settings->preset][i] - presetValueMin[settings->preset][i])
-        );
-      }
-    }
-
-    // Draw the number of connected clients
-    char convertedCount[2];
-    itoa(settings->numClients, convertedCount, 10);
-    convertedCount[1] = 0;
-    display.drawString(COUNT_X, COUNT_Y, convertedCount);
-
-    display.display();
-  }
-
+  Serial.println("Screen initialized");
 }
+
+void loop() {
+}
+
+void updateIdleState(Codes::IdleState::IdleState idleState) {
+  switch (idleState) {
+    case Codes::IdleState::Active:
+      display.setContrast(ACTIVE_CONTRAST);
+      display.displayOn();
+      break;
+    case Codes::IdleState::ShallowIdle:
+      display.setContrast(SHALLOW_IDLE_CONTRAST);
+      display.displayOn();
+      break;
+    case Codes::IdleState::DeepIdle:
+      display.displayOff();
+      break;
+  }
+}
+
+void update() {
+  State::Settings* settings = State::getSettings();
+  display.clear();
+  display.setColor(WHITE);
+
+  // // Draw the brightness icon
+  BrightnessControl::render(
+    display,
+    BRIGHTNESS_X,
+    BRIGHTNESS_Y,
+    BRIGHTNESS_WIDTH,
+    BRIGHTNESS_HEIGHT,
+    settings->currentControl == Codes::Control::Brightness,
+    settings->brightness);
+
+  // Draw the preset
+  PresetControl::render(
+    display,
+    PRESET_X,
+    PRESET_Y,
+    PRESET_WIDTH,
+    PRESET_HEIGHT,
+    settings->currentControl == Codes::Control::Preset,
+    presetNames[settings->preset]);
+
+  // Draw the values
+  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
+    const char* label = presetValueLabels[settings->preset][i];
+    if (label != NULL) {
+      ValueControl::render(
+        display,
+        VALUE_X,
+        (i + 1) * VALUE_SPACING,
+        VALUE_WIDTH,
+        VALUE_HEIGHT,
+        settings->currentControl == i + 3,
+        label,
+        static_cast<double>(settings->presetValues[settings->preset][i] - presetValueMin[settings->preset][i]) /
+          static_cast<double>(presetValueMax[settings->preset][i] - presetValueMin[settings->preset][i]));
+    }
+  }
+
+  // Draw the number of connected clients
+  char convertedCount[2];
+  itoa(settings->numClients, convertedCount, 10);
+  convertedCount[1] = 0;
+  display.drawString(COUNT_X, COUNT_Y, convertedCount);
+
+  display.display();
+}
+
+}  // namespace Screen
