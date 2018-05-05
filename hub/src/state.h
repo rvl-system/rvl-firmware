@@ -51,6 +51,13 @@ void setClientsConnected(int numConnectedClients);
 void setActive();
 void setIdling();
 
+class StateListenerInterface {
+ public:
+  virtual void onStateUpdate() = 0;
+};
+
+void addStateListener(StateListenerInterface* listener);
+
 }  // namespace State
 
 #endif  // STATE_H_

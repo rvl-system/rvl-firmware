@@ -22,7 +22,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./screen.h"
 #include "./messaging/messaging_server.h"
 #include "./events.h"
-#include "./lights.h"
 
 namespace Events {
 
@@ -43,7 +42,6 @@ void emitValueEvent(byte preset, byte code, byte newValue) {
 
   Screen::update();
   MessagingServer::update();
-  Lights::update();
 }
 
 void emitBrightnessEvent(byte brightness) {
@@ -52,7 +50,6 @@ void emitBrightnessEvent(byte brightness) {
 
   Screen::update();
   MessagingServer::update();
-  Lights::update();
 }
 
 void emitPresetEvent(byte preset) {
@@ -61,7 +58,6 @@ void emitPresetEvent(byte preset) {
 
   Screen::update();
   MessagingServer::update();
-  Lights::update();
 }
 
 void emitClientEvent(byte numClients) {
@@ -70,7 +66,6 @@ void emitClientEvent(byte numClients) {
 
   Screen::update();
   MessagingServer::update();
-  Lights::update();
 }
 
 void emitIdleEvent(Codes::IdleState::IdleState idleState) {

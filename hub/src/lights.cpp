@@ -45,10 +45,21 @@ Animation::AnimationBase* animations[NUM_PRESETS];
 void updateColors();
 void displayColors();
 
+void update();
+
+class LightsStateListener : public State::StateListenerInterface {
+ public:
+  void onStateUpdate() {
+    update();
+  }
+};
+
 void init() {
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
   animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
+
+  State::addStateListener(new LightsStateListener());
 
   strip.begin();
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {

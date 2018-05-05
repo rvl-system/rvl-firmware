@@ -27,7 +27,6 @@ namespace Lights {
 
 void init();
 void loop();
-void update();
 
 }  // namespace Lights
 

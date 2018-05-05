@@ -28,11 +28,29 @@ namespace State {
 #define MAX_BRIGHTNESS 255
 #define DIM_TIMEOUT 10000
 #define OFF_TIMEOUT 5000
+#define MAX_LISTENERS 255
 
 bool isActive = false;
 uint32 idleStartTime = millis();
 
 Settings settings;
+
+StateListenerInterface* listeners[MAX_LISTENERS];
+uint8 numListeners = 0;
+
+void addStateListener(StateListenerInterface* listener) {
+  if (numListeners == MAX_LISTENERS) {
+    Serial.println("Max event listeners reached");
+    return;
+  }
+  listeners[numListeners++] = listener;
+}
+
+void emit() {
+  for (uint8 i = 0; i < numListeners; i++) {
+    listeners[i]->onStateUpdate();
+  }
+}
 
 Settings* getSettings() {
   return &settings;
@@ -51,6 +69,7 @@ void nextControl() {
     settings.currentControl = 0;
   }
 
+  emit();
   Events::emitControlEvent(settings.currentControl);
 }
 
@@ -72,6 +91,7 @@ int calculateNewValue(byte code, int value, bool direction) {
 void handleValueChange(int code, bool direction) {
   int newValue = calculateNewValue(code, settings.presetValues[settings.preset][code], direction);
   settings.presetValues[settings.preset][code] = newValue;
+  emit();
   Events::emitValueEvent(settings.preset, code, newValue);
 }
 
@@ -83,6 +103,7 @@ void controlUp() {
         if (settings.brightness > MAX_BRIGHTNESS) {
           settings.brightness = MAX_BRIGHTNESS;
         }
+        emit();
         Events::emitBrightnessEvent(settings.brightness);
       }
       break;
@@ -91,6 +112,7 @@ void controlUp() {
       if (settings.preset == NUM_PRESETS) {
         settings.preset = 0;
       }
+      emit();
       Events::emitPresetEvent(settings.preset);
       break;
     default:
@@ -107,6 +129,7 @@ void controlDown() {
         if (settings.brightness < 0) {
           settings.brightness = 0;
         }
+        emit();
         Events::emitBrightnessEvent(settings.brightness);
       }
       break;
@@ -119,6 +142,7 @@ void controlDown() {
           settings.preset = Codes::Preset::Fade;
           break;
       }
+      emit();
       Events::emitPresetEvent(settings.preset);
       break;
     default:
@@ -132,12 +156,14 @@ void setClientsConnected(int numClients) {
     return;
   }
   settings.numClients = numClients;
+  emit();
   Events::emitClientEvent(settings.numClients);
 }
 
 void setActive() {
   isActive = true;
   settings.idleState = Codes::IdleState::Active;
+  emit();
   Events::emitIdleEvent(settings.idleState);
 }
 
@@ -164,12 +190,14 @@ void loop() {
         if (millis() >= idleStartTime + DIM_TIMEOUT) {
           idleStartTime = millis();
           settings.idleState = Codes::IdleState::ShallowIdle;
+          emit();
           Events::emitIdleEvent(settings.idleState);
         }
         break;
       case Codes::IdleState::ShallowIdle:
         if (millis() >= idleStartTime + OFF_TIMEOUT) {
           settings.idleState = Codes::IdleState::DeepIdle;
+          emit();
           Events::emitIdleEvent(settings.idleState);
         }
         break;

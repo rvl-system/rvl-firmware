@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_MESSAGE_RECEIVER_H_
-#define MESSAGING_MESSAGE_RECEIVER_H_
+#ifndef MESSAGING_MESSAGING_CLIENT_H_
+#define MESSAGING_MESSAGING_CLIENT_H_
 
 namespace MessagingClient {
 
@@ -27,4 +27,4 @@ void loop();
 
 }  // namespace MessagingClient
 
-#endif  // MESSAGING_MESSAGE_RECEIVER_H_
+#endif  // MESSAGING_MESSAGING_CLIENT_H_
