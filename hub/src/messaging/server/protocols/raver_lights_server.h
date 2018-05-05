@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,35 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATE_H_
-#define STATE_H_
+#ifndef MESSAGING_SERVER_PROTOCOLS_RAVER_LIGHTS_SERVER_H_
+#define MESSAGING_SERVER_PROTOCOLS_RAVER_LIGHTS_SERVER_H_
 
-#include "./codes.h"
-#include "./config.h"
-
-namespace State {
-
-struct Settings {
-  byte preset = DEFAULT_PRESET;
-  uint8 brightness = DEFAULT_BRIGHTNESS;
-  byte** presetValues;
-
-  byte currentControl = 0;
-  uint8 numClients = 0;
-
-  uint32 commandTime = 0;
-};
+namespace RaverLightsServer {
 
 void init();
+void loop();
 
-Settings* getSettings();
+}  // namespace RaverLightsServer
 
-void nextControl();
-void controlUp();
-void controlDown();
-
-void setClientsConnected(int numConnectedClients);
-
-}  // namespace State
-
-#endif  // STATE_H_
+#endif  // MESSAGING_SERVER_PROTOCOLS_RAVER_LIGHTS_SERVER_H_

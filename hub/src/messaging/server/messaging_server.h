@@ -20,14 +20,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MESSAGING_SERVER_MESSAGING_SERVER_H_
 #define MESSAGING_SERVER_MESSAGING_SERVER_H_
 
+#include <Arduino.h>
 #include "./codes.h"
 
 namespace MessagingServer {
 
 void init();
 void loop();
-void update();
 
-}
+}  // namespace MessagingServer
 
 #endif  // MESSAGING_SERVER_MESSAGING_SERVER_H_

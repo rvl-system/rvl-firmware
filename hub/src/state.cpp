@@ -153,7 +153,7 @@ void setClientsConnected(int numClients) {
 
   Serial.print("Setting num clients to ");
   Serial.println(settings.numClients);
-  Event::emit(Codes::EventTypes::ScreenChange);
+  Event::emit(Codes::EventTypes::InputChange);
 }
 
 void init() {

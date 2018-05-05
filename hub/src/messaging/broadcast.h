@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,35 +17,20 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATE_H_
-#define STATE_H_
+#ifndef MESSAGING_BROADCAST_H_
+#define MESSAGING_BROADCAST_H_
 
-#include "./codes.h"
-#include "./config.h"
+#include <arduino.h>
 
-namespace State {
+namespace Broadcast {
 
-struct Settings {
-  byte preset = DEFAULT_PRESET;
-  uint8 brightness = DEFAULT_BRIGHTNESS;
-  byte** presetValues;
+void begin();
+void write(uint8 data);
+void write(uint16 data);
+void write(uint32 data);
+void write(byte* data, uint16 length);
+void end();
 
-  byte currentControl = 0;
-  uint8 numClients = 0;
+}  // namespace Broadcast
 
-  uint32 commandTime = 0;
-};
-
-void init();
-
-Settings* getSettings();
-
-void nextControl();
-void controlUp();
-void controlDown();
-
-void setClientsConnected(int numConnectedClients);
-
-}  // namespace State
-
-#endif  // STATE_H_
+#endif  // MESSAGING_BROADCAST_H_

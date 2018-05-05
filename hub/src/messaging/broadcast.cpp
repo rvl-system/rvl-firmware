@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,35 +17,36 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATE_H_
-#define STATE_H_
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
+#include "./messaging/broadcast.h"
+#include "../config.h"
 
-#include "./codes.h"
-#include "./config.h"
+namespace Broadcast {
 
-namespace State {
+void begin() {
+  udp.beginPacket(GATEWAY, SERVER_PORT);
+}
 
-struct Settings {
-  byte preset = DEFAULT_PRESET;
-  uint8 brightness = DEFAULT_BRIGHTNESS;
-  byte** presetValues;
+void write(uint8 data) {
+  udp.write(data);
+}
 
-  byte currentControl = 0;
-  uint8 numClients = 0;
+void write(uint16 data) {
+  udp.write(data);
+}
 
-  uint32 commandTime = 0;
-};
+void write(uint32 data) {
+  udp.write(data);
+}
 
-void init();
+void write(byte* data, uint16 length) {
+  udp.write(data, length);
+}
 
-Settings* getSettings();
+void end() {
+  udp.endPacket();
+}
 
-void nextControl();
-void controlUp();
-void controlDown();
-
-void setClientsConnected(int numConnectedClients);
-
-}  // namespace State
-
-#endif  // STATE_H_
+}  // namespace Broadcast

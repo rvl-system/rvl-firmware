@@ -18,32 +18,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
 #include <Arduino.h>
 #include "./messaging/server/messaging_server.h"
+#include "./messaging/broadcast.h"
 #include "./config.h"
 #include "./state.h"
-#include "./event.h"
+
+#include "./messaging/server/protocols/clock_sync_server.h"
+#include "./messaging/server/protocols/raver_lights_server.h"
 
 namespace MessagingServer {
 
-byte currentPreset = Codes::Preset::Unknown;
-uint32 commandStartTime = millis();
-
-bool needsSync = false;
-
-void sync();
-
-class MessagingServerStateListener : public Event::EventListenerInterface {
- public:
-  void onEvent() {
-    update();
-  }
-};
-
 void init() {
-  Event::on(Codes::EventTypes::AnimationChange, new MessagingServerStateListener());
-
   Serial.print("Setting soft-AP configuration...");
   if (WiFi.softAPConfig(SERVER_IP, GATEWAY, SUBNET)) {
     Serial.println("Ready");
@@ -66,44 +52,17 @@ void init() {
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
 
+  ClockSyncServer::init();
+  RaverLightsServer::init();
+
   Serial.println("Messaging initialized");
 }
 
-void sync() {
-  Serial.println("Syncing");
-  State::Settings* settings = State::getSettings();
-  udp.beginPacket(GATEWAY, SERVER_PORT);
-  uint32 commandTime = static_cast<uint32>(millis() - commandStartTime);
-  State::getSettings()->commandTime = commandTime;
-  udp.write(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
-  udp.write(settings->brightness);
-  udp.write(settings->preset);
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    udp.write(settings->presetValues[settings->preset][i]);
-  }
-  udp.endPacket();
-}
-
-int nextSyncTime = millis();
-int numConnectedClients = 0;
 void loop() {
-  if (millis() < nextSyncTime && !needsSync) {
-    return;
-  }
-  needsSync = false;
-
   State::setClientsConnected(WiFi.softAPgetStationNum());
-  nextSyncTime = millis() + CLIENT_SYNC_INTERVAL;
-  sync();
-}
 
-void update() {
-  byte newPreset = State::getSettings()->preset;
-  if (newPreset != currentPreset) {
-    currentPreset = newPreset;
-    commandStartTime = millis();
-  }
-  needsSync = true;
+  ClockSyncServer::loop();
+  RaverLightsServer::loop();
 }
 
 }  // namespace MessagingServer

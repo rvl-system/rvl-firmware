@@ -55,7 +55,6 @@ SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 class ScreenStateListener : public Event::EventListenerInterface {
  public:
   void onEvent() {
-    Serial.println("Screen Update called");
     update();
   }
 };

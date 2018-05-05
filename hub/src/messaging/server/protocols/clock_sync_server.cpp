@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,35 +17,17 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATE_H_
-#define STATE_H_
+#include "./messaging/server/protocols/clock_sync_server.h"
+#include "./messaging/server/messaging_server.h"
 
-#include "./codes.h"
-#include "./config.h"
+namespace ClockSyncServer {
 
-namespace State {
+void init() {
+  // Nothing to do
+}
 
-struct Settings {
-  byte preset = DEFAULT_PRESET;
-  uint8 brightness = DEFAULT_BRIGHTNESS;
-  byte** presetValues;
+void loop() {
+  // Nothing to do yet
+}
 
-  byte currentControl = 0;
-  uint8 numClients = 0;
-
-  uint32 commandTime = 0;
-};
-
-void init();
-
-Settings* getSettings();
-
-void nextControl();
-void controlUp();
-void controlDown();
-
-void setClientsConnected(int numConnectedClients);
-
-}  // namespace State
-
-#endif  // STATE_H_
+}  // namespace ClockSyncServer
