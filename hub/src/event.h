@@ -30,6 +30,6 @@ class EventListenerInterface {
 void on(int eventType, EventListenerInterface* listener);
 void emit(int evenType);
 
-}  // namespace Events
+}  // namespace Event
 
 #endif  // EVENT_H_

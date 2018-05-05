@@ -20,8 +20,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include "./messaging/messaging_client.h"
-#include "../config.h"  // Why does this one single file require ".." but none of the others do?
+#include "./messaging/client/messaging_client.h"
+#include "../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
 
 namespace MessagingClient {

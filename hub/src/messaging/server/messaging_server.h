@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_MESSAGING_SERVER_H_
-#define MESSAGING_MESSAGING_SERVER_H_
+#ifndef MESSAGING_SERVER_MESSAGING_SERVER_H_
+#define MESSAGING_SERVER_MESSAGING_SERVER_H_
 
 #include "./codes.h"
 
@@ -30,4 +30,4 @@ void update();
 
 }
 
-#endif  // MESSAGING_MESSAGING_SERVER_H_
+#endif  // MESSAGING_SERVER_MESSAGING_SERVER_H_

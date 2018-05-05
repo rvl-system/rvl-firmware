@@ -21,8 +21,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <WiFiUdp.h>
 #include <Arduino.h>
 #include "./messaging/messaging.h"
-#include "./messaging_server.h"
-#include "./messaging_client.h"
+#include "./server/messaging_server.h"
+#include "./client/messaging_client.h"
 #include "./config.h"
 #include "./state.h"
 

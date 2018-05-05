@@ -42,4 +42,4 @@ void emit(int eventType) {
   }
 }
 
-}  // namespace Events
+}  // namespace Event
