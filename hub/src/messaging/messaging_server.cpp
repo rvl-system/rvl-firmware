@@ -20,10 +20,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <Arduino.h>
-#include "./config.h"
 #include "./messaging/messaging_server.h"
+#include "./config.h"
 #include "./state.h"
-#include "./events.h"
+#include "./event.h"
 
 namespace MessagingServer {
 
@@ -34,7 +34,7 @@ bool needsSync = false;
 
 void sync();
 
-class MessagingServerStateListener : public Events::EventListenerInterface {
+class MessagingServerStateListener : public Event::EventListenerInterface {
  public:
   void onEvent() {
     update();
@@ -42,7 +42,7 @@ class MessagingServerStateListener : public Events::EventListenerInterface {
 };
 
 void init() {
-  Events::on(Codes::EventTypes::AnimationChange, new MessagingServerStateListener());
+  Event::on(Codes::EventTypes::AnimationChange, new MessagingServerStateListener());
 
   Serial.print("Setting soft-AP configuration...");
   if (WiFi.softAPConfig(SERVER_IP, GATEWAY, SUBNET)) {

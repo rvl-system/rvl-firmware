@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include <Arduino.h>
-#include "./colorspace.h"
+#include "./lights/colorspace.h"
 
 namespace colorspace {
 

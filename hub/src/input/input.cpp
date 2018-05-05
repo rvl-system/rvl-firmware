@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./input.h"
+#include "./input/input.h"
 #include "./state.h"
 #include "./codes.h"
 #include "./config.h"
@@ -37,12 +37,11 @@ struct ButtonInfo {
   byte gpio;
   byte on;
   byte off;
-  bool isWakeupPress;
 };
 
-ButtonInfo nextButtonInfo = { 5, BUTTON_NEXT_OFF, BUTTON_NEXT, BUTTON_NEXT_ON, BUTTON_NEXT_OFF, false };
-ButtonInfo upButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF, false };
-ButtonInfo downButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF, false };
+ButtonInfo nextButtonInfo = { 5, BUTTON_NEXT_OFF, BUTTON_NEXT, BUTTON_NEXT_ON, BUTTON_NEXT_OFF };
+ButtonInfo upButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF };
+ButtonInfo downButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF };
 
 void init() {
   pinMode(nextButtonInfo.gpio, INPUT);
@@ -61,21 +60,14 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
     }
     uint32 holdTime = now - buttonInfo->holdStartTime;
     if (buttonInfo->state == buttonInfo->off) {
-      buttonInfo->isWakeupPress = State::getSettings()->idleState == Codes::IdleState::DeepIdle;
       if (holdTime > BUTTON_PRESS_ENGAGE_TIME) {
         buttonInfo->state = buttonInfo->on;
-        State::setActive();
-        if (!buttonInfo->isWakeupPress) {
-          returnValue = Pressed;
-        }
+        returnValue = Pressed;
       }
-    } else if (!buttonInfo->isWakeupPress && holdTime > BUTTON_HOLD_ENGAGE_TIME) {
+    } else if (holdTime > BUTTON_HOLD_ENGAGE_TIME) {
       returnValue = Holding;
     }
   } else {
-    if (buttonInfo->state != buttonInfo->off) {
-      State::setIdling();
-    }
     buttonInfo->state = buttonInfo->off;
     buttonInfo->holdStartTime = -1;
   }

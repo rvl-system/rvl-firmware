@@ -17,19 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef EVENTS_H_
-#define EVENTS_H_
+#ifndef SCREEN_CONTROLS_PRESET_H_
+#define SCREEN_CONTROLS_PRESET_H_
 
-namespace Events {
+#include <Arduino.h>
+#include <SSD1306Brzo.h>
 
-class EventListenerInterface {
- public:
-  virtual void onEvent() = 0;
-};
+namespace PresetControl {
 
-void on(int eventType, EventListenerInterface* listener);
-void emit(int evenType);
+void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset);
 
-}  // namespace Events
+}  // namespace PresetControl
 
-#endif  // EVENTS_H_
+#endif  // SCREEN_CONTROLS_PRESET_H_

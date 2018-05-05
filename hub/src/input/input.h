@@ -17,29 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <list>
-#include "./events.h"
+#ifndef INPUT_INPUT_H_
+#define INPUT_INPUT_H_
 
-namespace Events {
+#include "./codes.h"
 
-struct ListenerEntry {
- public:
-  int eventType;
-  EventListenerInterface* listener;
-};
-std::list<ListenerEntry> listeners;
+namespace Input {
 
-void on(int eventType, EventListenerInterface* listener) {
-  ListenerEntry entry = { eventType, listener };
-  listeners.push_back(entry);
-}
+void init();
+void loop();
 
-void emit(int eventType) {
-  for (auto& listener : listeners) {
-    if (listener.eventType == eventType) {
-      listener.listener->onEvent();
-    }
-  }
-}
+}  // namespace Input
 
-}  // namespace Events
+#endif  // INPUT_INPUT_H_

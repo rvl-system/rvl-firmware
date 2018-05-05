@@ -30,7 +30,6 @@ struct Settings {
   int brightness = DEFAULT_BRIGHTNESS;
   byte** presetValues;
 
-  Codes::IdleState::IdleState idleState = Codes::IdleState::Active;
   byte currentControl = 0;
   int numClients = 0;
 
@@ -38,7 +37,6 @@ struct Settings {
 };
 
 void init();
-void loop();
 
 Settings* getSettings();
 
@@ -47,9 +45,6 @@ void controlUp();
 void controlDown();
 
 void setClientsConnected(int numConnectedClients);
-
-void setActive();
-void setIdling();
 
 }  // namespace State
 

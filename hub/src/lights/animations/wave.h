@@ -17,26 +17,24 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COLORSPACE_H_
-#define COLORSPACE_H_
+#ifndef LIGHTS_ANIMATIONS_WAVE_H_
+#define LIGHTS_ANIMATIONS_WAVE_H_
 
-namespace colorspace {
+#include <Arduino.h>
 
-typedef struct {
-  double r;       // percent
-  double g;       // percent
-  double b;       // percent
-} rgb;
+#include "./lights/colorspace.h"
+#include "./lights/animation.h"
+#include "./codes.h"
 
-typedef struct {
-  double h;       // angle in degrees
-  double s;       // percent
-  double v;       // percent
-} hsv;
+namespace Wave {
 
-hsv rgb2hsv(rgb in);
-rgb hsv2rgb(hsv in);
+class WaveAnimation : public Animation::AnimationBase {
+ public:
+  void setBrightness(double newBrightness);
+  void setValues(byte* values);
+  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
+};
 
-}  // namespace colorspace
+}  // namespace Wave
 
-#endif  // COLORSPACE_H_
+#endif  // LIGHTS_ANIMATIONS_WAVE_H_

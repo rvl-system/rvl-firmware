@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./animations/pulse.h"
-#include "./colorspace.h"
+#include "./lights/animations/pulse.h"
+#include "./lights/colorspace.h"
 #include "./config.h"
 #include "./codes.h"
 

@@ -17,24 +17,29 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_VALUE_H_
-#define CONTROLS_VALUE_H_
+#include <list>
+#include "./event.h"
 
-#include <Arduino.h>
-#include <SSD1306Brzo.h>
+namespace Event {
 
-namespace ValueControl {
+struct ListenerEntry {
+ public:
+  int eventType;
+  EventListenerInterface* listener;
+};
+std::list<ListenerEntry> listeners;
 
-void render(
-  SSD1306Brzo display,
-  byte x,
-  byte y,
-  byte width,
-  byte height,
-  bool isSelected,
-  const char* label,
-  double value);
+void on(int eventType, EventListenerInterface* listener) {
+  ListenerEntry entry = { eventType, listener };
+  listeners.push_back(entry);
+}
 
-}  // namespace ValueControl
+void emit(int eventType) {
+  for (auto& listener : listeners) {
+    if (listener.eventType == eventType) {
+      listener.listener->onEvent();
+    }
+  }
+}
 
-#endif  // CONTROLS_VALUE_H_
+}  // namespace Events

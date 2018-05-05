@@ -20,15 +20,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <brzo_i2c.h>
 #include <SSD1306Brzo.h>
+#include "./screen/screen.h"
 #include "./config.h"
-#include "./screen.h"
 #include "./state.h"
 #include "./codes.h"
-#include "./events.h"
+#include "./event.h"
 
-#include "./controls/brightness.h"
-#include "./controls/preset.h"
-#include "./controls/value.h"
+#include "./screen/controls/brightness.h"
+#include "./screen/controls/preset.h"
+#include "./screen/controls/value.h"
 
 #define BRIGHTNESS_X 0
 #define BRIGHTNESS_Y 0
@@ -52,7 +52,7 @@ namespace Screen {
 
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-class ScreenStateListener : public Events::EventListenerInterface {
+class ScreenStateListener : public Event::EventListenerInterface {
  public:
   void onEvent() {
     Serial.println("Screen Update called");
@@ -62,10 +62,8 @@ class ScreenStateListener : public Events::EventListenerInterface {
 
 void init() {
   auto listener = new ScreenStateListener();
-  Events::on(Codes::EventTypes::AnimationChange, listener);
-  // TODO(nebrius): Causes the code to freeze if uncommented, need to fix
-  // Events::on(Codes::EventTypes::ScreenChange, listener);
-  Events::on(Codes::EventTypes::InputChange, listener);
+  Event::on(Codes::EventTypes::AnimationChange, listener);
+  Event::on(Codes::EventTypes::InputChange, listener);
   display.init();
   display.clear();
   display.setFont(ArialMT_Plain_10);
@@ -76,22 +74,6 @@ void init() {
 }
 
 void loop() {
-}
-
-void updateIdleState(Codes::IdleState::IdleState idleState) {
-  switch (idleState) {
-    case Codes::IdleState::Active:
-      display.setContrast(ACTIVE_CONTRAST);
-      display.displayOn();
-      break;
-    case Codes::IdleState::ShallowIdle:
-      display.setContrast(SHALLOW_IDLE_CONTRAST);
-      display.displayOn();
-      break;
-    case Codes::IdleState::DeepIdle:
-      display.displayOff();
-      break;
-  }
 }
 
 void update() {

@@ -19,17 +19,17 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <Adafruit_DotStar.h>
-#include "./colorspace.h"
+#include "./lights/colorspace.h"
+#include "./lights/animation.h"
+#include "./lights/lights.h"
 #include "./codes.h"
-#include "./animation.h"
 #include "./config.h"
-#include "./lights.h"
 #include "./state.h"
-#include "./events.h"
+#include "./event.h"
 
-#include "./animations/fade.h"
-#include "./animations/pulse.h"
-#include "./animations/wave.h"
+#include "./lights/animations/fade.h"
+#include "./lights/animations/pulse.h"
+#include "./lights/animations/wave.h"
 
 namespace Lights {
 
@@ -48,7 +48,7 @@ void displayColors();
 
 void update();
 
-class LightsStateListener : public Events::EventListenerInterface {
+class LightsStateListener : public Event::EventListenerInterface {
  public:
   void onEvent() {
     update();
@@ -56,7 +56,7 @@ class LightsStateListener : public Events::EventListenerInterface {
 };
 
 void init() {
-  Events::on(Codes::EventTypes::AnimationChange, new LightsStateListener());
+  Event::on(Codes::EventTypes::AnimationChange, new LightsStateListener());
 
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();

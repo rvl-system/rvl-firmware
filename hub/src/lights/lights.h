@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,22 +17,17 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef LIGHTS_LIGHTS_H_
+#define LIGHTS_LIGHTS_H_
+
 #include <Arduino.h>
-#include "./controls/preset.h"
-#include "./controls/value.h"
+#include "./codes.h"
 
-#define CONTENT_PADDING 3
-#define LABEL_WIDTH 49
+namespace Lights {
 
-namespace PresetControl {
+void init();
+void loop();
 
-void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset) {
-  if (isSelected) {
-    display.drawRect(x, y, width, height);
-  }
+}  // namespace Lights
 
-  display.drawString(x + CONTENT_PADDING, y, "PRESET: ");
-  display.drawString(x + CONTENT_PADDING + LABEL_WIDTH, y, preset);
-}
-
-}  // namespace PresetControl
+#endif  // LIGHTS_LIGHTS_H_

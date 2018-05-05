@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,16 +17,26 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_PRESET_H_
-#define CONTROLS_PRESET_H_
+#ifndef LIGHTS_COLORSPACE_H_
+#define LIGHTS_COLORSPACE_H_
 
-#include <Arduino.h>
-#include <SSD1306Brzo.h>
+namespace colorspace {
 
-namespace PresetControl {
+typedef struct {
+  double r;       // percent
+  double g;       // percent
+  double b;       // percent
+} rgb;
 
-void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset);
+typedef struct {
+  double h;       // angle in degrees
+  double s;       // percent
+  double v;       // percent
+} hsv;
 
-}  // namespace PresetControl
+hsv rgb2hsv(rgb in);
+rgb hsv2rgb(hsv in);
 
-#endif  // CONTROLS_PRESET_H_
+}  // namespace colorspace
+
+#endif  // LIGHTS_COLORSPACE_H_

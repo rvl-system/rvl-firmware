@@ -17,16 +17,19 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUT_H_
-#define INPUT_H_
+#ifndef EVENT_H_
+#define EVENT_H_
 
-#include "./codes.h"
+namespace Event {
 
-namespace Input {
+class EventListenerInterface {
+ public:
+  virtual void onEvent() = 0;
+};
 
-void init();
-void loop();
+void on(int eventType, EventListenerInterface* listener);
+void emit(int evenType);
 
-}  // namespace Input
+}  // namespace Events
 
-#endif  // INPUT_H_
+#endif  // EVENT_H_

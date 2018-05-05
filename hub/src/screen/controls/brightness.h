@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,23 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ANIMATIONS_PULSE_H_
-#define ANIMATIONS_PULSE_H_
+#ifndef SCREEN_CONTROLS_BRIGHTNESS_H_
+#define SCREEN_CONTROLS_BRIGHTNESS_H_
 
 #include <Arduino.h>
-#include "./colorspace.h"
-#include "./codes.h"
-#include "./animation.h"
+#include <SSD1306Brzo.h>
 
-namespace Pulse {
+namespace BrightnessControl {
 
-class PulseAnimation : public Animation::AnimationBase {
- public:
-  void setBrightness(double newBrightness);
-  void setValues(byte* values);
-  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
-};
+void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, byte brightness);
 
-}  // namespave Pulse
+}  // namespace BrightnessControl
 
-#endif  // ANIMATIONS_PULSE_H_
+#endif  // SCREEN_CONTROLS_BRIGHTNESS_H_

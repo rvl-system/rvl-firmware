@@ -18,8 +18,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <math.h>
-#include "./animations/wave.h"
-#include "./colorspace.h"
+#include "./lights/animations/wave.h"
+#include "./lights/colorspace.h"
 #include "./config.h"
 #include "./codes.h"
 

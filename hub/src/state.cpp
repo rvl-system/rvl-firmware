@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "./state.h"
 #include "./codes.h"
-#include "./events.h"
+#include "./event.h"
 
 namespace State {
 
@@ -54,7 +54,7 @@ void nextControl() {
 
   Serial.print("Setting control ");
   Serial.println(settings.currentControl);
-  Events::emit(Codes::EventTypes::InputChange);
+  Event::emit(Codes::EventTypes::InputChange);
 }
 
 int calculateNewValue(byte code, int value, bool direction) {
@@ -82,7 +82,7 @@ void handleValueChange(int code, bool direction) {
   Serial.print(code);
   Serial.print(" to value ");
   Serial.println(newValue);
-  Events::emit(Codes::EventTypes::AnimationChange);
+  Event::emit(Codes::EventTypes::AnimationChange);
 }
 
 void controlUp() {
@@ -95,7 +95,7 @@ void controlUp() {
         }
         Serial.print("Setting brightness to ");
         Serial.println(settings.brightness);
-        Events::emit(Codes::EventTypes::AnimationChange);
+        Event::emit(Codes::EventTypes::AnimationChange);
       }
       break;
     case Codes::Control::Preset:
@@ -105,7 +105,7 @@ void controlUp() {
       }
       Serial.print("Setting preset ");
       Serial.println(settings.preset);
-      Events::emit(Codes::EventTypes::AnimationChange);
+      Event::emit(Codes::EventTypes::AnimationChange);
       break;
     default:
       handleValueChange(settings.currentControl - 3, true);
@@ -123,7 +123,7 @@ void controlDown() {
         }
         Serial.print("Setting brightness to ");
         Serial.println(settings.brightness);
-        Events::emit(Codes::EventTypes::AnimationChange);
+        Event::emit(Codes::EventTypes::AnimationChange);
       }
       break;
     case Codes::Control::Preset:
@@ -137,7 +137,7 @@ void controlDown() {
       }
       Serial.print("Setting preset ");
       Serial.println(settings.preset);
-      Events::emit(Codes::EventTypes::AnimationChange);
+      Event::emit(Codes::EventTypes::AnimationChange);
       break;
     default:
       handleValueChange(settings.currentControl - 3, false);
@@ -153,24 +153,7 @@ void setClientsConnected(int numClients) {
 
   Serial.print("Setting num clients to ");
   Serial.println(settings.numClients);
-  Events::emit(Codes::EventTypes::ScreenChange);
-}
-
-void setIdleState(Codes::IdleState::IdleState newIdleState) {
-  settings.idleState = newIdleState;
-  Serial.print("Setting idle state to ");
-  Serial.println(settings.idleState);
-  Events::emit(Codes::EventTypes::ScreenChange);
-}
-
-void setActive() {
-  isActive = true;
-  setIdleState(Codes::IdleState::Active);
-}
-
-void setIdling() {
-  idleStartTime = millis();
-  isActive = false;
+  Event::emit(Codes::EventTypes::ScreenChange);
 }
 
 void init() {
@@ -182,24 +165,6 @@ void init() {
     }
   }
   Serial.println("State initialized");
-}
-
-void loop() {
-  if (!isActive) {
-    switch (settings.idleState) {
-      case Codes::IdleState::Active:
-        if (millis() >= idleStartTime + DIM_TIMEOUT) {
-          idleStartTime = millis();
-          setIdleState(Codes::IdleState::ShallowIdle);
-        }
-        break;
-      case Codes::IdleState::ShallowIdle:
-        if (millis() >= idleStartTime + OFF_TIMEOUT) {
-          setIdleState(Codes::IdleState::DeepIdle);
-        }
-        break;
-    }
-  }
 }
 
 }  // namespace State

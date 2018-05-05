@@ -17,23 +17,34 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ANIMATIONS_FADE_H_
-#define ANIMATIONS_FADE_H_
-
-#include <Arduino.h>
-#include "./colorspace.h"
+#include "./lights/animations/fade.h"
+#include "./lights/colorspace.h"
+#include "./config.h"
 #include "./codes.h"
-#include "./animation.h"
+
+#define COLOR_DIFFERENCE 40
+
+#define NUM_PIXELS 8
 
 namespace Fade {
 
-class FadeAnimation : public Animation::AnimationBase {
- public:
-  void setBrightness(double newBrightness);
-  void setValues(byte* values);
-  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
-};
+double step = 0;
+double brightness = 0;
 
+void FadeAnimation::setBrightness(double newBrightness) {
+  brightness = newBrightness;
 }
 
-#endif  // ANIMATIONS_FADE_H_
+void FadeAnimation::setValues(byte* values) {
+  step = static_cast<double>(values[0]) / 1280.0;
+}
+
+void FadeAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
+  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+    buffer[i].h = (static_cast<int>(commandTime * step) + COLOR_DIFFERENCE * i) % 360;
+    buffer[i].s = 1;
+    buffer[i].v = brightness;
+  }
+}
+
+}  // namespace Fade
