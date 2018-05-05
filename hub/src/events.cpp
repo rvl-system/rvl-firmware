@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <list>
 #include <Arduino.h>
 #include "./codes.h"
 #include "./screen.h"
@@ -24,6 +25,26 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./events.h"
 
 namespace Events {
+
+struct ListenerEntry {
+ public:
+  int eventType;
+  EventListenerInterface* listener;
+};
+std::list<ListenerEntry> listeners;
+
+void on(int eventType, EventListenerInterface* listener) {
+  ListenerEntry entry = { eventType, listener };
+  listeners.push_back(entry);
+}
+
+void emit(int eventType) {
+  for (auto& listener : listeners) {
+    if (listener.eventType == eventType) {
+      listener.listener->onEvent();
+    }
+  }
+}
 
 void emitControlEvent(byte currentControl) {
   Serial.print("Setting control ");

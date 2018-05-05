@@ -25,6 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./config.h"
 #include "./lights.h"
 #include "./state.h"
+#include "./events.h"
 
 #include "./animations/fade.h"
 #include "./animations/pulse.h"
@@ -47,9 +48,9 @@ void displayColors();
 
 void update();
 
-class LightsStateListener : public State::StateListenerInterface {
+class LightsStateListener : public Events::EventListenerInterface {
  public:
-  void onStateUpdate() {
+  void onEvent() {
     update();
   }
 };
@@ -59,7 +60,7 @@ void init() {
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
   animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
 
-  State::addStateListener(new LightsStateListener());
+  Events::on(Codes::EventTypes::StateChange, new LightsStateListener());
 
   strip.begin();
   for (unsigned int i = 0; i < NUM_PIXELS; i++) {

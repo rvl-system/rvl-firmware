@@ -22,6 +22,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Codes {
 
+namespace EventTypes {
+  enum EventTypes {
+    StateChange
+  };
+}
+
 namespace Preset {
   enum Preset {
     Fade = 0,

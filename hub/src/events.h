@@ -29,6 +29,14 @@ void emitPresetEvent(byte preset);
 void emitClientEvent(byte numClients);
 void emitIdleEvent(Codes::IdleState::IdleState idleState);
 
+class EventListenerInterface {
+ public:
+  virtual void onEvent() = 0;
+};
+
+void on(int eventType, EventListenerInterface* listener);
+void emit(int evenType);
+
 }  // namespace Events
 
 #endif  // EVENTS_H_
