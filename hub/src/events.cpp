@@ -18,10 +18,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <list>
-#include <Arduino.h>
-#include "./codes.h"
-#include "./screen.h"
-#include "./messaging/messaging_server.h"
 #include "./events.h"
 
 namespace Events {
