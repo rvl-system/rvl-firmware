@@ -20,12 +20,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include "./config.h"
-#include "./codes.h"
-#include "./lights.h"
-#include "./message_receiver.h"
+#include "../config.h"
+#include "../codes.h"
+#include "../lights.h"
+#include "./messaging/messaging_client.h"
 
-namespace MessagingReceiver {
+namespace MessagingClient {
 
 #define STATE_DISCONNECTED 0
 #define STATE_CONNECTING 1
@@ -35,7 +35,7 @@ byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
 void init() {
-  Serial.println("Messaging Receiver initialized");
+  Serial.println("Messaging Client initialized");
 }
 
 void loop() {
@@ -94,4 +94,4 @@ void loop() {
   }
 }
 
-}  // namespace MessagingReceiver
+}  // namespace MessagingClient

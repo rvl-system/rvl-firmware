@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,17 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_H_
-#define MESSAGING_H_
+#ifndef MESSAGING_MESSAGE_RECEIVER_H_
+#define MESSAGING_MESSAGE_RECEIVER_H_
 
-#include "./codes.h"
-
-namespace Messaging {
+namespace MessagingClient {
 
 void init();
 void loop();
-void update();
 
-}
+}  // namespace MessagingClient
 
-#endif  // MESSAGING_H_
+#endif  // MESSAGING_MESSAGE_RECEIVER_H_

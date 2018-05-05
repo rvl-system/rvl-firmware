@@ -21,10 +21,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <WiFiUdp.h>
 #include <Arduino.h>
 #include "./config.h"
-#include "./messaging.h"
+#include "./messaging/messaging_server.h"
 #include "./state.h"
 
-namespace Messaging {
+namespace MessagingServer {
 
 byte currentPreset = Codes::Preset::Unknown;
 uint32 commandStartTime = millis();
@@ -96,4 +96,4 @@ void update() {
   needsSync = true;
 }
 
-}  // namespace Messaging
+}  // namespace MessagingServer

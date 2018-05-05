@@ -20,7 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "./codes.h"
 #include "./screen.h"
-#include "./messaging.h"
+#include "./messaging/messaging_server.h"
 #include "./events.h"
 #include "./lights.h"
 
@@ -42,7 +42,7 @@ void emitValueEvent(byte preset, byte code, byte newValue) {
   Serial.println(newValue);
 
   Screen::update();
-  Messaging::update();
+  MessagingServer::update();
   Lights::update();
 }
 
@@ -51,7 +51,7 @@ void emitBrightnessEvent(byte brightness) {
   Serial.println(brightness);
 
   Screen::update();
-  Messaging::update();
+  MessagingServer::update();
   Lights::update();
 }
 
@@ -60,7 +60,7 @@ void emitPresetEvent(byte preset) {
   Serial.println(preset);
 
   Screen::update();
-  Messaging::update();
+  MessagingServer::update();
   Lights::update();
 }
 
@@ -69,7 +69,7 @@ void emitClientEvent(byte numClients) {
   Serial.println(numClients);
 
   Screen::update();
-  Messaging::update();
+  MessagingServer::update();
   Lights::update();
 }
 
