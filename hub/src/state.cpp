@@ -54,7 +54,7 @@ void nextControl() {
 
   Serial.print("Setting control ");
   Serial.println(settings.currentControl);
-  Event::emit(Codes::EventTypes::InputChange);
+  Event::emit(Codes::EventType::InputChange);
 }
 
 int calculateNewValue(byte code, int value, bool direction) {
@@ -82,7 +82,7 @@ void handleValueChange(int code, bool direction) {
   Serial.print(code);
   Serial.print(" to value ");
   Serial.println(newValue);
-  Event::emit(Codes::EventTypes::AnimationChange);
+  Event::emit(Codes::EventType::AnimationChange);
 }
 
 void controlUp() {
@@ -95,7 +95,7 @@ void controlUp() {
         }
         Serial.print("Setting brightness to ");
         Serial.println(settings.brightness);
-        Event::emit(Codes::EventTypes::AnimationChange);
+        Event::emit(Codes::EventType::AnimationChange);
       }
       break;
     case Codes::Control::Preset:
@@ -105,7 +105,7 @@ void controlUp() {
       }
       Serial.print("Setting preset ");
       Serial.println(settings.preset);
-      Event::emit(Codes::EventTypes::AnimationChange);
+      Event::emit(Codes::EventType::AnimationChange);
       break;
     default:
       handleValueChange(settings.currentControl - 3, true);
@@ -123,7 +123,7 @@ void controlDown() {
         }
         Serial.print("Setting brightness to ");
         Serial.println(settings.brightness);
-        Event::emit(Codes::EventTypes::AnimationChange);
+        Event::emit(Codes::EventType::AnimationChange);
       }
       break;
     case Codes::Control::Preset:
@@ -137,7 +137,7 @@ void controlDown() {
       }
       Serial.print("Setting preset ");
       Serial.println(settings.preset);
-      Event::emit(Codes::EventTypes::AnimationChange);
+      Event::emit(Codes::EventType::AnimationChange);
       break;
     default:
       handleValueChange(settings.currentControl - 3, false);
@@ -153,7 +153,7 @@ void setClientsConnected(int numClients) {
 
   Serial.print("Setting num clients to ");
   Serial.println(settings.numClients);
-  Event::emit(Codes::EventTypes::InputChange);
+  Event::emit(Codes::EventType::InputChange);
 }
 
 void init() {

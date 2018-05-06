@@ -30,6 +30,7 @@ struct Settings {
   uint8 brightness = DEFAULT_BRIGHTNESS;
   byte** presetValues;
 
+  byte mode = 0;
   byte currentControl = 0;
   uint8 numClients = 0;
 

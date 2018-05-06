@@ -23,17 +23,26 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./messaging/messaging.h"
 #include "./server/messaging_server.h"
 #include "./client/messaging_client.h"
+#include "./codes.h"
 #include "./config.h"
 #include "./state.h"
 
 namespace Messaging {
 
 void init() {
+  // TODO(nebrius): How to handle init here? Need to move WiFi AP into loop
   MessagingServer::init();
 }
 
 void loop() {
-  MessagingServer::loop();
+  switch (State::getSettings()->mode) {
+    case Codes::Mode::Controller:
+      MessagingServer::loop();
+      break;
+    case Codes::Mode::Receiver:
+      MessagingClient::loop();
+      break;
+  }
 }
 
 }  // namespace Messaging

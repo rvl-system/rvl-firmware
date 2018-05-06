@@ -27,7 +27,6 @@ namespace Screen {
 void init();
 void loop();
 void update();
-void updateIdleState(Codes::IdleState::IdleState idleState);
 
 }
 

@@ -56,7 +56,7 @@ class LightsStateListener : public Event::EventListenerInterface {
 };
 
 void init() {
-  Event::on(Codes::EventTypes::AnimationChange, new LightsStateListener());
+  Event::on(Codes::EventType::AnimationChange, new LightsStateListener());
 
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();

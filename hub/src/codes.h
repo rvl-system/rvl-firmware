@@ -22,8 +22,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Codes {
 
-namespace EventTypes {
-  enum EventTypes {
+namespace Mode {
+  enum Mode {
+    Controller = 0,
+    Receiver = 1,
+    Standalone = 2
+  };
+}
+
+namespace EventType {
+  enum EventType {
     AnimationChange,
     InputChange
   };
@@ -46,14 +54,6 @@ namespace Control {
     Value1 = 3,
     Value2 = 4,
     Value3 = 5
-  };
-}
-
-namespace IdleState {
-  enum IdleState {
-    Active = 0,
-    ShallowIdle = 1,
-    DeepIdle = 2
   };
 }
 

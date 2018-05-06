@@ -43,7 +43,7 @@ class MessagingServerStateListener : public Event::EventListenerInterface {
 };
 
 void init() {
-  Event::on(Codes::EventTypes::AnimationChange, new MessagingServerStateListener());
+  Event::on(Codes::EventType::AnimationChange, new MessagingServerStateListener());
 }
 
 void loop() {

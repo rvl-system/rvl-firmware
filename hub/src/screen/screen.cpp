@@ -61,8 +61,8 @@ class ScreenStateListener : public Event::EventListenerInterface {
 
 void init() {
   auto listener = new ScreenStateListener();
-  Event::on(Codes::EventTypes::AnimationChange, listener);
-  Event::on(Codes::EventTypes::InputChange, listener);
+  Event::on(Codes::EventType::AnimationChange, listener);
+  Event::on(Codes::EventType::InputChange, listener);
   display.init();
   display.clear();
   display.setFont(ArialMT_Plain_10);
