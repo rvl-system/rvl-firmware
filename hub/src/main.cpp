@@ -31,8 +31,10 @@ void setup() {
   Serial.println();
   Serial.println("Initializing");
   State::init();
+#ifdef SERVER
   Input::init();
   Screen::init();
+#endif
   Messaging::init();
   Lights::init();
   Serial.println("Running");
@@ -40,8 +42,10 @@ void setup() {
 
 void loop() {
   uint32 startTime = millis();
+#ifdef SERVER
   Input::loop();
   Screen::loop();
+#endif
   Messaging::loop();
   Lights::loop();
   delay(UPDATE_RATE - (millis() - startTime));

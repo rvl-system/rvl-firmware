@@ -62,6 +62,8 @@ void sync() {
   Serial.println("Syncing");
   State::Settings* settings = State::getSettings();
   uint32 commandTime = static_cast<uint32>(millis() - commandStartTime);
+
+  // TODO(nebrius): Update to set through State object, not modify directly
   settings->commandTime = commandTime;
 
   Broadcast::begin();

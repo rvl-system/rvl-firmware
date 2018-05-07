@@ -156,6 +156,15 @@ void setClientsConnected(int numClients) {
   Event::emit(Codes::EventType::InputChange);
 }
 
+void setAnimation(uint32 commandTime, uint8 preset, uint8* presetValues) {
+  settings.commandTime = commandTime;
+  settings.preset = preset;
+  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
+    settings.presetValues[preset][i] = presetValues[i];
+  }
+  Event::emit(Codes::EventType::AnimationChange);
+}
+
 void init() {
   settings.presetValues = new byte*[NUM_PRESETS];
   for (int i = 0; i < NUM_PRESETS; i++) {

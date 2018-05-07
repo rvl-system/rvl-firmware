@@ -74,7 +74,7 @@ void update() {
   display.clear();
   display.setColor(WHITE);
 
-  // // Draw the brightness icon
+  // Draw the brightness icon
   BrightnessControl::render(
     display,
     BRIGHTNESS_X,

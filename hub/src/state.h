@@ -26,12 +26,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace State {
 
 struct Settings {
-  byte preset = DEFAULT_PRESET;
+  uint8 preset = DEFAULT_PRESET;
   uint8 brightness = DEFAULT_BRIGHTNESS;
-  byte** presetValues;
+  uint8** presetValues;
 
-  byte mode = 0;
-  byte currentControl = 0;
+#ifdef SERVER
+  uint8 mode = 0;
+#else
+  uint8 mode = 1;
+#endif
+  uint8 currentControl = 0;
   uint8 numClients = 0;
 
   uint32 commandTime = 0;
@@ -46,6 +50,8 @@ void controlUp();
 void controlDown();
 
 void setClientsConnected(int numConnectedClients);
+
+void setAnimation(uint32 commandTime, uint8 preset, uint8* presetValues);
 
 }  // namespace State
 

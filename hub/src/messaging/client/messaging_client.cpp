@@ -23,6 +23,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./messaging/client/messaging_client.h"
 #include "../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
+#include "./state.h"
 
 namespace MessagingClient {
 
@@ -71,21 +72,20 @@ void loop() {
       if (packetSize == 0) {
         return;
       }
-      Serial.print("Sync packet received");
+      Serial.println("Sync packet received");
       if (packetSize != 16) {
         Serial.println("Received incorrect packet size, resetting device...");
         ESP.reset();
       }
 
       uint32 commandTime;
-      udp.read(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
-      byte brightness = udp.read();
-      byte preset = udp.read();
-      byte presetValues[NUM_PRESET_VALUES];
+      udp.read(static_cast<uint8*>(static_cast<void*>(&commandTime)), 4);
+      uint8 brightness = udp.read();
+      uint8 preset = udp.read();
+      uint8 presetValues[NUM_PRESET_VALUES];
       udp.read(presetValues, NUM_PRESET_VALUES);
 
-      // TODO(nebrius): set state here
-      // Lights::update(commandTime, brightness, (Codes::Preset::Preset)preset, presetValues);
+      State::setAnimation(commandTime, preset, presetValues);
       break;
   }
 }
