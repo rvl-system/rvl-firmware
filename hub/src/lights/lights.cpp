@@ -48,15 +48,8 @@ void displayColors();
 
 void update();
 
-class LightsStateListener : public Event::EventListenerInterface {
- public:
-  void onEvent() {
-    update();
-  }
-};
-
 void init() {
-  Event::on(Codes::EventType::AnimationChange, new LightsStateListener());
+  Event::on(Codes::EventType::AnimationChange, update);
 
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();

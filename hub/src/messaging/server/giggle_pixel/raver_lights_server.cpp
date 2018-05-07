@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./messaging/server/protocols/raver_lights_server.h"
+#include "./messaging/server/giggle_pixel/raver_lights_server.h"
 #include "./messaging/broadcast.h"
 #include "./config.h"
 #include "./state.h"
@@ -32,18 +32,11 @@ uint8 numConnectedClients = 0;
 
 bool needsSync = false;
 
+void update();
 void sync();
 
-void update();
-class MessagingServerStateListener : public Event::EventListenerInterface {
- public:
-  void onEvent() {
-    update();
-  }
-};
-
 void init() {
-  Event::on(Codes::EventType::AnimationChange, new MessagingServerStateListener());
+  Event::on(Codes::EventType::AnimationChange, update);
 }
 
 void loop() {
@@ -82,4 +75,3 @@ void sync() {
 }
 
 }  // namespace RaverLightsServer
-

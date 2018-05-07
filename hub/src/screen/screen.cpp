@@ -52,17 +52,11 @@ namespace Screen {
 
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-class ScreenStateListener : public Event::EventListenerInterface {
- public:
-  void onEvent() {
-    update();
-  }
-};
+void update();
 
 void init() {
-  auto listener = new ScreenStateListener();
-  Event::on(Codes::EventType::AnimationChange, listener);
-  Event::on(Codes::EventType::InputChange, listener);
+  Event::on(Codes::EventType::AnimationChange, update);
+  Event::on(Codes::EventType::InputChange, update);
   display.init();
   display.clear();
   display.setFont(ArialMT_Plain_10);

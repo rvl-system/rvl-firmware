@@ -20,15 +20,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EVENT_H_
 #define EVENT_H_
 
+#include <Arduino.h>
+
 namespace Event {
 
-class EventListenerInterface {
- public:
-  virtual void onEvent() = 0;
-};
-
-void on(int eventType, EventListenerInterface* listener);
-void emit(int evenType);
+void on(uint8 eventType, void (*listener)());
+void emit(uint8 eventType);
 
 }  // namespace Event
 

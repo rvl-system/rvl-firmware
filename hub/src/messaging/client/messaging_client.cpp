@@ -38,9 +38,6 @@ void init() {
 }
 
 void loop() {
-  // TODO(nebrius): re-enable and wire into state
-  return;
-
   switch (state) {
     case STATE_DISCONNECTED:
       Serial.print("Connecting to ");

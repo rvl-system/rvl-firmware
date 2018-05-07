@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,29 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <list>
-#include "./event.h"
+#ifndef MESSAGING_SERVER_GIGGLE_PIXEL_CLOCK_SYNC_SERVER_H_
+#define MESSAGING_SERVER_GIGGLE_PIXEL_CLOCK_SYNC_SERVER_H_
 
-namespace Event {
+namespace ClockSyncServer {
 
-struct ListenerEntry {
- public:
-  int eventType;
-  void (*listener)();
-};
-std::list<ListenerEntry> listeners;
+void init();
+void loop();
 
-void on(uint8 eventType, void (*listener)()) {
-  ListenerEntry entry = { eventType, listener };
-  listeners.push_back(entry);
-}
+}  // namespace ClockSyncServer
 
-void emit(uint8 eventType) {
-  for (auto& listener : listeners) {
-    if (listener.eventType == eventType) {
-      listener.listener();
-    }
-  }
-}
-
-}  // namespace Event
+#endif  // MESSAGING_SERVER_GIGGLE_PIXEL_CLOCK_SYNC_SERVER_H_

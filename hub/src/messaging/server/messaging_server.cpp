@@ -20,12 +20,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <Arduino.h>
 #include "./messaging/server/messaging_server.h"
-#include "./messaging/broadcast.h"
+#include "./messaging/server/giggle_pixel/giggle_pixel_server.h"
 #include "./config.h"
 #include "./state.h"
 
-#include "./messaging/server/protocols/clock_sync_server.h"
-#include "./messaging/server/protocols/raver_lights_server.h"
 
 namespace MessagingServer {
 
@@ -52,17 +50,14 @@ void init() {
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
 
-  ClockSyncServer::init();
-  RaverLightsServer::init();
+  GigglePixelServer::init();
 
   Serial.println("Messaging initialized");
 }
 
 void loop() {
   State::setClientsConnected(WiFi.softAPgetStationNum());
-
-  ClockSyncServer::loop();
-  RaverLightsServer::loop();
+  GigglePixelServer::loop();
 }
 
 }  // namespace MessagingServer
