@@ -21,7 +21,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include "./messaging/client/messaging_client.h"
+#include "./messaging/client/giggle_pixel/giggle_pixel_client.h"
 #include "../../config.h"  // Why does this one single file require ".." but none of the others do?
+#include "./messaging/read.h"
 #include "./codes.h"
 #include "./state.h"
 
@@ -35,6 +37,7 @@ byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
 void init() {
+  GigglePixelClient::init();
   Serial.println("Messaging Client initialized");
 }
 
@@ -78,16 +81,11 @@ void loop() {
         ESP.reset();
       }
 
-      uint32 commandTime;
-      udp.read(static_cast<uint8*>(static_cast<void*>(&commandTime)), 4);
-      uint8 brightness = udp.read();
-      uint8 preset = udp.read();
-      uint8 presetValues[NUM_PRESET_VALUES];
-      udp.read(presetValues, NUM_PRESET_VALUES);
+      GigglePixelClient::parsePacket();
 
-      State::setAnimation(commandTime, preset, presetValues);
       break;
   }
+  GigglePixelClient::loop();
 }
 
 }  // namespace MessagingClient
