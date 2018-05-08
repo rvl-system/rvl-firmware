@@ -41,7 +41,10 @@ void loop() {
 void parsePacket() {
   Serial.println("Parsing GigglePixel packet");
   GigglePixel::GigglePixelHeaderDetails headerDetails;
-  GigglePixel::readHeader(headerDetails);
+  if (!GigglePixel::readHeader(headerDetails)) {
+    Serial.println("Received unsupported GigglePixel protocol version packet");
+    return;
+  }
 
   switch (headerDetails.packetType) {
     case Codes::GigglePixelPacketTypes::RaverLights:

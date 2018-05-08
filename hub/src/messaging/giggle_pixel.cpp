@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace GigglePixel {
 
-const uint8 protocolVersion = 1;
+const uint8 protocolVersion = 2;
 uint16 id = 0;
 
 void setClientId(uint16 newId) {
@@ -45,13 +45,17 @@ void broadcastHeader(uint8 packetType, uint8 priority, uint16 length) {
   Broadcast::write8(id & 0xFF);
 }
 
-void readHeader(GigglePixelHeaderDetails& header) {
+bool readHeader(GigglePixelHeaderDetails& header) {
   header.protocolVersion = Read::read8();
+  if (header.protocolVersion != protocolVersion) {
+    return false;
+  }
   header.length = Read::read8() << 8 | Read::read8();
   header.packetType = Read::read8();
   header.priority = Read::read8();
   Read::read8(); // Reserved
   header.sourceId = Read::read8() << 8 | Read::read8();
+  return true;
 }
 
 }  // namespace GigglePixel

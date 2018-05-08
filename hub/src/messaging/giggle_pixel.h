@@ -34,7 +34,7 @@ struct GigglePixelHeaderDetails {
 
 void setClientId(uint16 id);
 void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
-void readHeader(GigglePixelHeaderDetails& header);
+bool readHeader(GigglePixelHeaderDetails& header);
 
 }  // namespace GigglePixel
 
