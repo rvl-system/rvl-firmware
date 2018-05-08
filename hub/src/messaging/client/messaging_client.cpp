@@ -36,6 +36,8 @@ namespace MessagingClient {
 byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
+const uint8 gigglePixelHeader[4] = { 'G', 'L', 'P', 'X' };
+
 void init() {
   GigglePixelClient::init();
   Serial.println("Messaging Client initialized");
@@ -76,12 +78,17 @@ void loop() {
         return;
       }
       Serial.println("Sync packet received");
-      if (packetSize != 16) {
-        Serial.println("Received incorrect packet size, resetting device...");
-        ESP.reset();
-      }
 
-      GigglePixelClient::parsePacket();
+      uint8 signature[4];
+      Read::read(signature, 4);
+      if (
+        signature[0] == gigglePixelHeader[0] &&
+        signature[1] == gigglePixelHeader[1] &&
+        signature[2] == gigglePixelHeader[2] &&
+        signature[3] == gigglePixelHeader[3]
+      ) {
+        GigglePixelClient::parsePacket();
+      }
 
       break;
   }

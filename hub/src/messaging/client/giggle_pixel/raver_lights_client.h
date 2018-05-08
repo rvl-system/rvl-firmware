@@ -25,6 +25,8 @@ namespace RaverLightsClient {
 void init();
 void loop();
 
+void parsePacket();
+
 }  // namespace RaverLightsClient
 
 #endif  // MESSAGING_CLIENT_GIGGLE_PIXEL_RAVER_LIGHTS_CLIENT_H_

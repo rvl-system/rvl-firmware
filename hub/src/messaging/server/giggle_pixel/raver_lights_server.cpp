@@ -19,6 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "./messaging/server/giggle_pixel/raver_lights_server.h"
 #include "./messaging/broadcast.h"
+#include "./messaging/giggle_pixel.h"
 #include "./config.h"
 #include "./state.h"
 #include "./event.h"
@@ -67,11 +68,15 @@ void sync() {
   settings->commandTime = commandTime;
 
   Broadcast::begin();
+  GigglePixel::broadcastHeader(
+    GIGGLE_PIXEL_RAVER_LIGHTS_PACKET_TYPE,
+    GIGGLE_PIXEL_RAVER_LIGHTS_PACKET_PRIORITY,
+    4 + 1 + 1 + NUM_PRESET_VALUES);
   Broadcast::write(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
-  Broadcast::write(settings->brightness);
-  Broadcast::write(settings->preset);
+  Broadcast::write8(settings->brightness);
+  Broadcast::write8(settings->preset);
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    Broadcast::write(settings->presetValues[settings->preset][i]);
+    Broadcast::write8(settings->presetValues[settings->preset][i]);
   }
   Broadcast::end();
 }

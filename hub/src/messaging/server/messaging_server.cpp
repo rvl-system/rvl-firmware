@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "./messaging/server/messaging_server.h"
 #include "./messaging/server/giggle_pixel/giggle_pixel_server.h"
+#include "./messaging/giggle_pixel.h"
 #include "./config.h"
 #include "./state.h"
 
@@ -50,6 +51,7 @@ void init() {
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
 
+  GigglePixel::setClientId(WiFi.softAPIP()[3]);
   GigglePixelServer::init();
 
   Serial.println("Messaging initialized");

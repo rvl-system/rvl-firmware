@@ -22,8 +22,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./messaging/client/giggle_pixel/clock_sync_client.h"
 #include "./messaging/client/giggle_pixel/raver_lights_client.h"
 #include "./messaging/read.h"
+#include "./messaging/giggle_pixel.h"
 #include "../../../config.h"  // Why does this one single file require ".." but none of the others do?
-#include "./state.h"
+#include "./codes.h"
 
 namespace GigglePixelClient {
 
@@ -38,13 +39,18 @@ void loop() {
 }
 
 void parsePacket() {
-  uint32 commandTime;
-  Read::read(static_cast<uint8*>(static_cast<void*>(&commandTime)), 4);
-  uint8 brightness = Read::read();
-  uint8 preset = Read::read();
-  uint8 presetValues[NUM_PRESET_VALUES];
-  Read::read(presetValues, NUM_PRESET_VALUES);
-  State::setAnimation(commandTime, preset, presetValues);
+  Serial.println("Parsing GigglePixel packet");
+  GigglePixel::GigglePixelHeaderDetails headerDetails;
+  GigglePixel::readHeader(headerDetails);
+
+  switch (headerDetails.packetType) {
+    case Codes::GigglePixelPacketTypes::RaverLights:
+      RaverLightsClient::parsePacket();
+      break;
+    default:
+      Serial.print("Unsupported packet type received: ");
+      Serial.println(headerDetails.packetType);
+  }
 }
 
 }  // namespace GigglePixelClient

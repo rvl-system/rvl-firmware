@@ -22,6 +22,13 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Codes {
 
+namespace GigglePixelPacketTypes {
+  enum GigglePixelPacketTypes {
+    ClockSync = 1,
+    RaverLights = 11
+  };
+}
+
 namespace Mode {
   enum Mode {
     Controller = 0,

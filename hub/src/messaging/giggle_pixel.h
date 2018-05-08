@@ -17,21 +17,25 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef MESSAGING_GIGGLE_PIXEL_H_
+#define MESSAGING_GIGGLE_PIXEL_H_
+
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
-#include "./messaging/broadcast.h"
-#include "./messaging/read.h"
-#include "../config.h"
 
-namespace Read {
+namespace GigglePixel {
 
-uint8 read8() {
-  return udp.read();
-}
+struct GigglePixelHeaderDetails {
+  uint8 protocolVersion;
+  uint16 length;
+  uint8 packetType;
+  uint8 priority;
+  uint16 sourceId;
+};
 
-void read(uint8* buffer, int length) {
-  udp.read(buffer, length);
-}
+void setClientId(uint16 id);
+void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
+void readHeader(GigglePixelHeaderDetails& header);
 
-}  // namespace Read
+}  // namespace GigglePixel
+
+#endif  // MESSAGING_GIGGLE_PIXEL_H_

@@ -24,7 +24,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Read {
 
-uint8 read();
+uint8 read8();
 void read(uint8* buffer, int length);
 
 }  // namespace Read

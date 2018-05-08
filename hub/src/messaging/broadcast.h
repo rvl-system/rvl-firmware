@@ -25,9 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Broadcast {
 
 void begin();
-void write(uint8 data);
-void write(uint16 data);
-void write(uint32 data);
+void write8(uint8 data);
 void write(byte* data, uint16 length);
 void end();
 

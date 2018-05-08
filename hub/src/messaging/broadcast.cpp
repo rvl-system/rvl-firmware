@@ -29,15 +29,15 @@ void begin() {
   udp.beginPacket(GATEWAY, SERVER_PORT);
 }
 
-void write(uint8 data) {
+void write8(uint8 data) {
   udp.write(data);
 }
 
-void write(uint16 data) {
+void write16(uint16 data) {
   udp.write(data);
 }
 
-void write(uint32 data) {
+void write32(uint32 data) {
   udp.write(data);
 }
 
