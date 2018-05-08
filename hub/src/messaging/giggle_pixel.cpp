@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace GigglePixel {
 
-const uint8 protocolVersion = 2;
+const uint8 protocolVersion = 1;
 uint16 id = 0;
 
 void setClientId(uint16 newId) {
