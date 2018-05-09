@@ -17,7 +17,4 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-declare module 'oled-font-5x7' {
-  const font: any;
-  export = font;
-}
+require('../dist/index').run();

@@ -38,7 +38,7 @@ namespace MessagingClient {
 byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
-const uint8 clockSyncHeader[4] = { 'R', 'B', 'T', 'S' };
+const uint8 clockSyncHeader[4] = { 'C', 'L', 'K', 'S' };
 const uint8 gigglePixelHeader[4] = { 'G', 'L', 'P', 'X' };
 
 void init() {
@@ -83,7 +83,7 @@ void loop() {
       if (packetSize == 0) {
         return;
       }
-      Serial.println("Sync packet received");
+      Serial.println("Packet received");
 
       uint8 signature[4];
       Read::read(signature, 4);

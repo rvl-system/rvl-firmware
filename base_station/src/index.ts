@@ -17,37 +17,50 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-'use strict';
+import { networkInterfaces } from 'os';
+import { createSocket } from 'dgram';
+import { SERVER_PORT, GATEWAY, CLOCK_SYNC_INTERVAL } from './codes';
 
-import { parallel } from 'async';
-import { Board } from 'johnny-five';
-// tslint:disable-next-line:no-require-imports
-import Raspi = require('raspi-io');
+const clockSyncSignature = [ 'C'.charCodeAt(0), 'L'.charCodeAt(0), 'K'.charCodeAt(0), 'S'.charCodeAt(0) ];
+const addresses = networkInterfaces().wlan0.map((entry) => entry.address);
 
-import screenInit from './screen';
-import inputInit from './input';
-import endpointInit from './endpoint';
-import state from './state';
+export function run() {
+  const startTime = Date.now();
+  const socket = createSocket('udp4');
 
-const board = new Board({
-  io: new Raspi({
-    excludePins: [
-      'MOSI0',
-      'MISO0',
-      'SCLK0',
-      'CE0'
-    ]
-  })
-} as any);
-
-board.on('ready', () => {
-  parallel([
-    (next) => screenInit(board, next),
-    (next) => inputInit(next),
-    (next) => endpointInit(next)
-  ], () => {
-    state.setActive();
-    state.setIdling();
-    console.log('Running');
+  socket.on('error', (err) => {
+    console.error(`server error:\n${err.stack}`);
+    socket.close();
   });
-});
+
+  socket.on('message', (msg, rinfo) => {
+    if (addresses.indexOf(rinfo.address) === -1) {
+      console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+    }
+  });
+
+  socket.on('listening', () => {
+    console.log(`Server listening`);
+    socket.setBroadcast(true);
+    let seq = 0;
+    setInterval(() => {
+      const clockTime = Date.now() - startTime;
+      console.log(`Pinging clock time ${clockTime}`);
+      const msg = new Uint8Array(14);
+      const view = new DataView(msg.buffer);
+
+      // Signature: 4 bytes = "CLKS"
+      for (let i = 0; i < 4; i++) {
+        view.setUint8(i, clockSyncSignature[i]);
+      }
+      view.setUint8(4, 1); // Version: 1 byte = 1
+      view.setUint8(5, 1); // Type: 1 byte = 1:reference, 2:response
+      view.setUint16(6, ++seq); // Sequence: 2 bytes = always incrementing
+      view.setUint32(8, clockTime); // Clock: 4 bytes = running clock, relative to app start
+      view.setUint16(12, 0); // ClientID: 2 bytes = 0 in this case because this is not an LED device/client
+      socket.send(msg as any, SERVER_PORT, GATEWAY);
+    }, CLOCK_SYNC_INTERVAL);
+  });
+
+  socket.bind(SERVER_PORT);
+}

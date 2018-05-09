@@ -23,13 +23,13 @@ const path = require('path');
 
 const DEFINE_REGEX = /^\#define (.*?) (.*?)$/;
 
-const defines = fs.readFileSync(path.join(__dirname, '..', 'common', 'common_config.h'))
+const defines = fs.readFileSync(path.join(__dirname, '..', 'hub', 'src', 'config.h'))
   .toString()
   .split('\n')
   .filter((line) => DEFINE_REGEX.test(line))
   .map((line) => DEFINE_REGEX.exec(line));
 
-let rawCodes = fs.readFileSync(path.join(__dirname, '..', 'common', 'codes.h'))
+let rawCodes = fs.readFileSync(path.join(__dirname, '..', 'hub', 'src', 'codes.h'))
   .toString()
   .replace(/\n/g, ' ')
   .replace(/\s+/g, ' ');
@@ -44,7 +44,7 @@ while(true) {
   enums.push(match[1]);
 }
 
-let rawRuntimeDefines = fs.readFileSync(path.join(__dirname, '..', 'common', 'common_config.cpp'))
+let rawRuntimeDefines = fs.readFileSync(path.join(__dirname, '..', 'hub', 'src', 'config.cpp'))
   .toString()
   .split('\n');
 
@@ -97,6 +97,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+export const LOW = 0;
+export const HIGH = 0;
 
 ${defines.map((line) => `export const ${line[1]} = ${line[2]};`).join('\n')}
 

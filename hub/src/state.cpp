@@ -183,7 +183,9 @@ int32 clockOffset = 0;
 void setClockOffset(int32 newOffset) {
   clockOffset = newOffset;
   Serial.print("Setting clock offset: ");
-  Serial.println(clockOffset);
+  Serial.print(clockOffset);
+  Serial.print(", clock: ");
+  Serial.println(millis() + clockOffset);
 }
 
 void loop() {
