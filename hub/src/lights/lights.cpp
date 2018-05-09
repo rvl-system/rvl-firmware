@@ -38,7 +38,6 @@ Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTST
 colorspace::hsv colors[NUM_PIXELS];
 Codes::Preset::Preset preset = Codes::Preset::Unknown;
 byte brightness = 0;
-uint32 commandTime = 0;
 uint32 lastUpdateTime = 0;
 
 Animation::AnimationBase* animations[NUM_PRESETS];
@@ -77,10 +76,6 @@ void update() {
 
   lastUpdateTime = millis();
 
-  Serial.print("Setting command time to: ");
-  Serial.println(settings->commandTime);
-  commandTime = settings->commandTime + 500;
-
   if (settings->brightness != brightness) {
     Serial.print("Changing brightness to: ");
     Serial.println(settings->brightness);
@@ -104,8 +99,7 @@ void update() {
 
 void updateColors() {
   if (preset != Codes::Preset::Unknown) {
-    uint32 adjustedCommandTime = (millis() - lastUpdateTime) + commandTime;
-    animations[preset]->updateColors(adjustedCommandTime, colors);
+    animations[preset]->updateColors(State::getSettings()->clock, colors);
   }
 }
 

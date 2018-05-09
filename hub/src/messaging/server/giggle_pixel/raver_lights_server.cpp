@@ -60,20 +60,14 @@ void update() {
 }
 
 void sync() {
-  Serial.println("Syncing");
+  Serial.println("Syncing raver lights");
   State::Settings* settings = State::getSettings();
-  uint32 commandTime = static_cast<uint32>(millis() - commandStartTime);
-
-  // TODO(nebrius): Update to set through State object, not modify directly
-  settings->commandTime = commandTime;
 
   Broadcast::begin();
   GigglePixel::broadcastHeader(
     Codes::GigglePixelPacketTypes::RaverLights,
     0,  // Priority
     4 + 1 + 1 + NUM_PRESET_VALUES);
-  Broadcast::write(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
-  Broadcast::write8(settings->brightness);
   Broadcast::write8(settings->preset);
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
     Broadcast::write8(settings->presetValues[settings->preset][i]);

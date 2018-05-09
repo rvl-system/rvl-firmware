@@ -35,13 +35,10 @@ void loop() {
 
 void parsePacket() {
   Serial.println("Parsing Raver Lights sub-packet");
-  uint32 commandTime;
-  Read::read(static_cast<uint8*>(static_cast<void*>(&commandTime)), 4);
-  uint8 brightness = Read::read8();
   uint8 preset = Read::read8();
   uint8 presetValues[NUM_PRESET_VALUES];
   Read::read(presetValues, NUM_PRESET_VALUES);
-  State::setAnimation(commandTime, preset, presetValues);
+  State::setAnimation(preset, presetValues);
 }
 
 }  // namespace RaverLightsClient

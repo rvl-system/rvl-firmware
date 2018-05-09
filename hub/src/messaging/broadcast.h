@@ -26,6 +26,8 @@ namespace Broadcast {
 
 void begin();
 void write8(uint8 data);
+void write16(uint16 data);
+void write32(uint32 data);
 void write(byte* data, uint16 length);
 void end();
 

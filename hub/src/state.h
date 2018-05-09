@@ -38,10 +38,12 @@ struct Settings {
   uint8 currentControl = 0;
   uint8 numClients = 0;
 
-  uint32 commandTime = 0;
+  uint16 id = 0;
+  uint32 clock = millis();
 };
 
 void init();
+void loop();
 
 Settings* getSettings();
 
@@ -51,7 +53,9 @@ void controlDown();
 
 void setClientsConnected(int numConnectedClients);
 
-void setAnimation(uint32 commandTime, uint8 preset, uint8* presetValues);
+void setClientId(uint16 id);
+void setClockOffset(int32 clockOffset);
+void setAnimation(uint8 preset, uint8* presetValues);
 
 }  // namespace State
 

@@ -34,11 +34,15 @@ void write8(uint8 data) {
 }
 
 void write16(uint16 data) {
-  udp.write(data);
+  udp.write(data >> 8);
+  udp.write(data & 0xFF);
 }
 
 void write32(uint32 data) {
-  udp.write(data);
+  udp.write(data >> 24);
+  udp.write(data >> 16 & 0xFF);
+  udp.write(data >> 8 & 0xFF);
+  udp.write(data & 0xFF);
 }
 
 void write(byte* data, uint16 length) {

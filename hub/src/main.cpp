@@ -42,6 +42,7 @@ void setup() {
 
 void loop() {
   uint32 startTime = millis();
+  State::loop();
 #ifdef SERVER
   Input::loop();
   Screen::loop();

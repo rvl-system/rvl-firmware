@@ -86,5 +86,6 @@ extern WiFiUDP udp;
 #define CLIENT_TIMEOUT 5000
 
 #define CLIENT_SYNC_INTERVAL 2000
+#define CLOCK_SYNC_INTERVAL 2000
 
 #endif  // CONFIG_H_

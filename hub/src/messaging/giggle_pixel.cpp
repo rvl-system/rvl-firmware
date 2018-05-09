@@ -36,13 +36,11 @@ void broadcastHeader(uint8 packetType, uint8 priority, uint16 length) {
   uint8* signature = const_cast<uint8*>(reinterpret_cast<const uint8*>("GLPX"));
   Broadcast::write(signature, sizeof(uint8) * 4);
   Broadcast::write8(protocolVersion);
-  Broadcast::write8(length >> 8);
-  Broadcast::write8(length & 0xFF);
+  Broadcast::write16(length);
   Broadcast::write8(packetType);
   Broadcast::write8(priority);
   Broadcast::write8(0);  // reserved
-  Broadcast::write8(id >> 8);
-  Broadcast::write8(id & 0xFF);
+  Broadcast::write16(id);
 }
 
 bool readHeader(GigglePixelHeaderDetails& header) {
@@ -50,11 +48,11 @@ bool readHeader(GigglePixelHeaderDetails& header) {
   if (header.protocolVersion != protocolVersion) {
     return false;
   }
-  header.length = Read::read8() << 8 | Read::read8();
+  header.length = Read::read16();
   header.packetType = Read::read8();
   header.priority = Read::read8();
   Read::read8();  // Reserved
-  header.sourceId = Read::read8() << 8 | Read::read8();
+  header.sourceId = Read::read16();
   return true;
 }
 

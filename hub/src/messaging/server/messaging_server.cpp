@@ -52,7 +52,7 @@ void init() {
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
 
-  GigglePixel::setClientId(WiFi.softAPIP()[3]);
+  State::setClientId(WiFi.softAPIP()[3]);
 
   ClockSyncServer::init();
   GigglePixelServer::init();

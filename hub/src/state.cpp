@@ -156,8 +156,11 @@ void setClientsConnected(int numClients) {
   Event::emit(Codes::EventType::InputChange);
 }
 
-void setAnimation(uint32 commandTime, uint8 preset, uint8* presetValues) {
-  settings.commandTime = commandTime;
+void setClientId(uint16 id) {
+  settings.id = id;
+}
+
+void setAnimation(uint8 preset, uint8* presetValues) {
   settings.preset = preset;
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
     settings.presetValues[preset][i] = presetValues[i];
@@ -174,6 +177,17 @@ void init() {
     }
   }
   Serial.println("State initialized");
+}
+
+int32 clockOffset = 0;
+void setClockOffset(int32 newOffset) {
+  clockOffset = newOffset;
+  Serial.print("Setting clock offset: ");
+  Serial.println(clockOffset);
+}
+
+void loop() {
+  settings.clock = millis() + clockOffset;
 }
 
 }  // namespace State

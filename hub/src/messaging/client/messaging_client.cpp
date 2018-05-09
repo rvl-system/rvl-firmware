@@ -38,8 +38,8 @@ namespace MessagingClient {
 byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
-const uint8 gigglePixelHeader[4] = { 'G', 'L', 'P', 'X' };
 const uint8 clockSyncHeader[4] = { 'R', 'B', 'T', 'S' };
+const uint8 gigglePixelHeader[4] = { 'G', 'L', 'P', 'X' };
 
 void init() {
   ClockSyncClient::init();
@@ -63,7 +63,7 @@ void loop() {
         Serial.println("IP address: ");
         Serial.println(WiFi.localIP());
 
-        GigglePixel::setClientId(WiFi.localIP()[3]);
+        State::setClientId(WiFi.localIP()[3]);
 
         Serial.println("Starting UDP server");
         udp.begin(SERVER_PORT);
@@ -88,6 +88,13 @@ void loop() {
       uint8 signature[4];
       Read::read(signature, 4);
       if (
+        signature[0] == clockSyncHeader[0] &&
+        signature[1] == clockSyncHeader[1] &&
+        signature[2] == clockSyncHeader[2] &&
+        signature[3] == clockSyncHeader[3]
+      ) {
+        ClockSyncClient::parsePacket();
+      } else if (
         signature[0] == gigglePixelHeader[0] &&
         signature[1] == gigglePixelHeader[1] &&
         signature[2] == gigglePixelHeader[2] &&

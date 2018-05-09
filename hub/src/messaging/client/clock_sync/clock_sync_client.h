@@ -25,6 +25,8 @@ namespace ClockSyncClient {
 void init();
 void loop();
 
+bool parsePacket();
+
 }  // namespace ClockSyncClient
 
 #endif  // MESSAGING_CLIENT_CLOCK_SYNC_CLOCK_SYNC_CLIENT_H_

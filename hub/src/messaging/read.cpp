@@ -30,6 +30,22 @@ uint8 read8() {
   return udp.read();
 }
 
+uint16 read16() {
+  uint16 val = 0;
+  val |= udp.read() << 8;
+  val |= udp.read();
+  return val;
+}
+
+uint32 read32() {
+  uint32 val = 0;
+  val |= udp.read() << 24;
+  val |= udp.read() << 16;
+  val |= udp.read() << 8;
+  val |= udp.read();
+  return val;
+}
+
 void read(uint8* buffer, int length) {
   udp.read(buffer, length);
 }
