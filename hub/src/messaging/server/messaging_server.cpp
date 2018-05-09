@@ -20,6 +20,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <Arduino.h>
 #include "./messaging/server/messaging_server.h"
+#include "./messaging/server/clock_sync/clock_sync_server.h"
 #include "./messaging/server/giggle_pixel/giggle_pixel_server.h"
 #include "./messaging/giggle_pixel.h"
 #include "./config.h"
@@ -52,6 +53,8 @@ void init() {
   Serial.println(WiFi.softAPIP());
 
   GigglePixel::setClientId(WiFi.softAPIP()[3]);
+
+  ClockSyncServer::init();
   GigglePixelServer::init();
 
   Serial.println("Messaging initialized");
@@ -59,6 +62,7 @@ void init() {
 
 void loop() {
   State::setClientsConnected(WiFi.softAPgetStationNum());
+  ClockSyncServer::loop();
   GigglePixelServer::loop();
 }
 

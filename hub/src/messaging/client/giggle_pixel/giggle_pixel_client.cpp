@@ -19,7 +19,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./messaging/client/giggle_pixel/giggle_pixel_client.h"
-#include "./messaging/client/giggle_pixel/clock_sync_client.h"
 #include "./messaging/client/giggle_pixel/raver_lights_client.h"
 #include "./messaging/read.h"
 #include "./messaging/giggle_pixel.h"
@@ -29,12 +28,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace GigglePixelClient {
 
 void init() {
-  ClockSyncClient::init();
   RaverLightsClient::init();
 }
 
 void loop() {
-  ClockSyncClient::loop();
   RaverLightsClient::loop();
 }
 

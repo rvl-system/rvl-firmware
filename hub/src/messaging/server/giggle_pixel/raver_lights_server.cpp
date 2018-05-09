@@ -69,8 +69,8 @@ void sync() {
 
   Broadcast::begin();
   GigglePixel::broadcastHeader(
-    GIGGLE_PIXEL_RAVER_LIGHTS_PACKET_TYPE,
-    GIGGLE_PIXEL_RAVER_LIGHTS_PACKET_PRIORITY,
+    Codes::GigglePixelPacketTypes::RaverLights,
+    0,  // Priority
     4 + 1 + 1 + NUM_PRESET_VALUES);
   Broadcast::write(static_cast<byte*>(static_cast<void*>(&commandTime)), 4);
   Broadcast::write8(settings->brightness);

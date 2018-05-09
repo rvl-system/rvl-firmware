@@ -17,14 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_CLIENT_GIGGLE_PIXEL_CLOCK_SYNC_CLIENT_H_
-#define MESSAGING_CLIENT_GIGGLE_PIXEL_CLOCK_SYNC_CLIENT_H_
+#include "./messaging/client/clock_sync/clock_sync_client.h"
 
 namespace ClockSyncClient {
 
-void init();
-void loop();
+void init() {
+  // Not implemented yet
+}
+
+void loop() {
+  // Not implemented yet
+}
 
 }  // namespace ClockSyncClient
-
-#endif  // MESSAGING_CLIENT_GIGGLE_PIXEL_CLOCK_SYNC_CLIENT_H_

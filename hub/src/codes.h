@@ -24,8 +24,9 @@ namespace Codes {
 
 namespace GigglePixelPacketTypes {
   enum GigglePixelPacketTypes {
-    ClockSync = 1,
-    RaverLights = 11
+    PaletteSharing = 1,
+    WaveParameters = 2,
+    RaverLights = 3
   };
 }
 

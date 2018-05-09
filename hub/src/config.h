@@ -36,9 +36,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_PRESET 2
 #define DEFAULT_BRIGHTNESS 25
 
-#define GIGGLE_PIXEL_RAVER_LIGHTS_PACKET_TYPE 11
-#define GIGGLE_PIXEL_RAVER_LIGHTS_PACKET_PRIORITY 1
-
 extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;
 extern IPAddress SUBNET;

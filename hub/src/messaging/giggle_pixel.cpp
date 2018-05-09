@@ -40,7 +40,7 @@ void broadcastHeader(uint8 packetType, uint8 priority, uint16 length) {
   Broadcast::write8(length & 0xFF);
   Broadcast::write8(packetType);
   Broadcast::write8(priority);
-  Broadcast::write8(0); // reserved
+  Broadcast::write8(0);  // reserved
   Broadcast::write8(id >> 8);
   Broadcast::write8(id & 0xFF);
 }
@@ -53,7 +53,7 @@ bool readHeader(GigglePixelHeaderDetails& header) {
   header.length = Read::read8() << 8 | Read::read8();
   header.packetType = Read::read8();
   header.priority = Read::read8();
-  Read::read8(); // Reserved
+  Read::read8();  // Reserved
   header.sourceId = Read::read8() << 8 | Read::read8();
   return true;
 }

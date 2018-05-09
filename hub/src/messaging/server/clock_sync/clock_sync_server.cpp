@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./messaging/server/giggle_pixel/clock_sync_server.h"
+#include "./messaging/server/clock_sync/clock_sync_server.h"
 #include "./messaging/server/messaging_server.h"
 
 namespace ClockSyncServer {

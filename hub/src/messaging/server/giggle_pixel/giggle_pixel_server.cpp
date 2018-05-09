@@ -18,18 +18,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "./messaging/server/giggle_pixel/giggle_pixel_server.h"
-#include "./messaging/server/giggle_pixel/clock_sync_server.h"
 #include "./messaging/server/giggle_pixel/raver_lights_server.h"
 
 namespace GigglePixelServer {
 
 void init() {
-  ClockSyncServer::init();
   RaverLightsServer::init();
 }
 
 void loop() {
-  ClockSyncServer::loop();
   RaverLightsServer::loop();
 }
 

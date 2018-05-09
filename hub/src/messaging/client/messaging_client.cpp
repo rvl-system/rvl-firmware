@@ -21,8 +21,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include "./messaging/client/messaging_client.h"
+#include "./messaging/client/clock_sync/clock_sync_client.h"
 #include "./messaging/client/giggle_pixel/giggle_pixel_client.h"
 #include "../../config.h"  // Why does this one single file require ".." but none of the others do?
+#include "./messaging/giggle_pixel.h"
 #include "./messaging/read.h"
 #include "./codes.h"
 #include "./state.h"
@@ -37,8 +39,10 @@ byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
 const uint8 gigglePixelHeader[4] = { 'G', 'L', 'P', 'X' };
+const uint8 clockSyncHeader[4] = { 'R', 'B', 'T', 'S' };
 
 void init() {
+  ClockSyncClient::init();
   GigglePixelClient::init();
   Serial.println("Messaging Client initialized");
 }
@@ -58,6 +62,8 @@ void loop() {
         Serial.println("WiFi connected");
         Serial.println("IP address: ");
         Serial.println(WiFi.localIP());
+
+        GigglePixel::setClientId(WiFi.localIP()[3]);
 
         Serial.println("Starting UDP server");
         udp.begin(SERVER_PORT);
@@ -92,6 +98,7 @@ void loop() {
 
       break;
   }
+  ClockSyncClient::loop();
   GigglePixelClient::loop();
 }
 
