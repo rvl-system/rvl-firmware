@@ -24,8 +24,8 @@ namespace Codes {
 
 namespace GigglePixelPacketTypes {
   enum GigglePixelPacketTypes {
-    PaletteSharing = 1,
-    WaveParameters = 2,
+    Palette = 1,
+    Wave = 2,
     Preset = 3
   };
 }

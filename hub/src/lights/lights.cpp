@@ -86,14 +86,14 @@ void update() {
     }
   }
 
-  if (preset != settings->preset) {
+  if (preset != settings->presetSettings.preset) {
     Serial.print("Changing preset to: ");
-    Serial.println(settings->preset);
-    preset = (Codes::Preset::Preset)settings->preset;
+    Serial.println(settings->presetSettings.preset);
+    preset = (Codes::Preset::Preset)settings->presetSettings.preset;
   }
 
   if (preset != Codes::Preset::Unknown) {
-    animations[preset]->setValues(settings->presetValues[settings->preset]);
+    animations[preset]->setValues(settings->presetSettings.presetValues[settings->presetSettings.preset]);
   }
 }
 

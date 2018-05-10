@@ -20,21 +20,42 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef STATE_H_
 #define STATE_H_
 
+#include <Arduino.h>
 #include "./codes.h"
 #include "./config.h"
 
 namespace State {
 
-struct Settings {
+struct PaletteEntry {
+  uint8 fraction;
+  uint8 r;
+  uint8 g;
+  uint8 b;
+};
+
+struct PaletteSettings {
+  uint8 paletteEntryCount;
+  PaletteEntry paletteEntries[MAX_PALETTE_ENTRIES];
+};
+
+struct PresetSettings {
   uint8 preset = DEFAULT_PRESET;
-  uint8 brightness = DEFAULT_BRIGHTNESS;
   uint8** presetValues;
+};
+
+struct Settings {
+  Codes::GigglePixelPacketTypes::GigglePixelPacketTypes settingType = Codes::GigglePixelPacketTypes::Preset;
+  PaletteSettings paletteSettings;
+  PresetSettings presetSettings;
+
+  uint8 brightness = DEFAULT_BRIGHTNESS;
 
 #ifdef SERVER
   uint8 mode = 0;
 #else
   uint8 mode = 1;
 #endif
+
   uint8 currentControl = 0;
 
   uint16 id = 0;

@@ -92,11 +92,11 @@ void update() {
     PRESET_WIDTH,
     PRESET_HEIGHT,
     settings->currentControl == Codes::Control::Preset,
-    presetNames[settings->preset]);
+    presetNames[settings->presetSettings.preset]);
 
   // Draw the values
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    const char* label = presetValueLabels[settings->preset][i];
+    const char* label = presetValueLabels[settings->presetSettings.preset][i];
     if (label != NULL) {
       ValueControl::render(
         display,
@@ -106,8 +106,11 @@ void update() {
         VALUE_HEIGHT,
         settings->currentControl == i + 3,
         label,
-        static_cast<double>(settings->presetValues[settings->preset][i] - presetValueMin[settings->preset][i]) /
-          static_cast<double>(presetValueMax[settings->preset][i] - presetValueMin[settings->preset][i]));
+        static_cast<double>(
+          settings->presetSettings.presetValues[settings->presetSettings.preset][i] -
+          presetValueMin[settings->presetSettings.preset][i]) / static_cast<double>(
+          presetValueMax[settings->presetSettings.preset][i] -
+          presetValueMin[settings->presetSettings.preset][i]));
     }
   }
 

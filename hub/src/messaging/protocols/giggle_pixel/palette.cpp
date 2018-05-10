@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging/protocols/giggle_pixel/preset.h"
+#include "./messaging/protocols/giggle_pixel/palette.h"
 #include "./messaging/protocols/giggle_pixel/giggle_pixel.h"
 #include "./messaging/transport.h"
 #include "../../../config.h"  // Why does this one single file require ".." but none of the others do?
@@ -26,49 +26,26 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./event.h"
 #include "./codes.h"
 
-namespace Preset {
+namespace Palette {
 
 uint32 nextSyncTime = millis();
 
 void sync();
 
 void init() {
-  Event::on(Codes::EventType::AnimationChange, sync);
+  // Not implemented yet
 }
 
 void loop() {
-  if (State::getSettings()->mode != Codes::Mode::Controller) {
-    return;
-  }
-  if (millis() < nextSyncTime) {
-    return;
-  }
-  nextSyncTime = millis() + CLIENT_SYNC_INTERVAL;
-  sync();
-}
-
-void sync() {
-  Serial.println("Syncing preset");
-  State::Settings* settings = State::getSettings();
-
-  Transport::beginWrite();
-  GigglePixel::broadcastHeader(
-    Codes::GigglePixelPacketTypes::Preset,
-    0,  // Priority
-    4 + 1 + 1 + NUM_PRESET_VALUES);
-  Transport::write8(settings->presetSettings.preset);
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    Transport::write8(settings->presetSettings.presetValues[settings->presetSettings.preset][i]);
-  }
-  Transport::endWrite();
+  // Not implemented yet
 }
 
 void parsePacket() {
-  Serial.println("Parsing preset packet");
+  Serial.println("Parsing Palette packet");
   uint8 preset = Transport::read8();
   uint8 presetValues[NUM_PRESET_VALUES];
   Transport::read(presetValues, NUM_PRESET_VALUES);
   State::setAnimation(preset, presetValues);
 }
 
-}  // namespace Preset
+}  // namespace Palette

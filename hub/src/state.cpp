@@ -42,7 +42,7 @@ Settings* getSettings() {
 void nextControl() {
   int maxControls = 3;
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    if (presetValueLabels[settings.preset][i] == NULL) {
+    if (presetValueLabels[settings.presetSettings.preset][i] == NULL) {
       break;
     }
     maxControls++;
@@ -60,24 +60,27 @@ void nextControl() {
 int calculateNewValue(byte code, int value, bool direction) {
   if (direction) {
     value++;
-    if (value > presetValueMax[settings.preset][code]) {
-      value = presetValueMax[settings.preset][code];
+    if (value > presetValueMax[settings.presetSettings.preset][code]) {
+      value = presetValueMax[settings.presetSettings.preset][code];
     }
   } else {
     value--;
-    if (value < presetValueMin[settings.preset][code]) {
-      value = presetValueMin[settings.preset][code];
+    if (value < presetValueMin[settings.presetSettings.preset][code]) {
+      value = presetValueMin[settings.presetSettings.preset][code];
     }
   }
   return value;
 }
 
 void handleValueChange(int code, bool direction) {
-  int newValue = calculateNewValue(code, settings.presetValues[settings.preset][code], direction);
-  settings.presetValues[settings.preset][code] = newValue;
+  int newValue = calculateNewValue(
+    code,
+    settings.presetSettings.presetValues[settings.presetSettings.preset][code],
+    direction);
+  settings.presetSettings.presetValues[settings.presetSettings.preset][code] = newValue;
 
   Serial.print("Setting preset ");
-  Serial.print(settings.preset);
+  Serial.print(settings.presetSettings.preset);
   Serial.print(" code ");
   Serial.print(code);
   Serial.print(" to value ");
@@ -99,12 +102,12 @@ void controlUp() {
       }
       break;
     case Codes::Control::Preset:
-      settings.preset++;
-      if (settings.preset == NUM_PRESETS) {
-        settings.preset = 0;
+      settings.presetSettings.preset++;
+      if (settings.presetSettings.preset == NUM_PRESETS) {
+        settings.presetSettings.preset = 0;
       }
       Serial.print("Setting preset ");
-      Serial.println(settings.preset);
+      Serial.println(settings.presetSettings.preset);
       Event::emit(Codes::EventType::AnimationChange);
       break;
     default:
@@ -127,16 +130,16 @@ void controlDown() {
       }
       break;
     case Codes::Control::Preset:
-      switch (settings.preset) {
+      switch (settings.presetSettings.preset) {
         case Codes::Preset::Fade:
-          settings.preset = Codes::Preset::Pulse;
+          settings.presetSettings.preset = Codes::Preset::Pulse;
           break;
         case Codes::Preset::Pulse:
-          settings.preset = Codes::Preset::Fade;
+          settings.presetSettings.preset = Codes::Preset::Fade;
           break;
       }
       Serial.print("Setting preset ");
-      Serial.println(settings.preset);
+      Serial.println(settings.presetSettings.preset);
       Event::emit(Codes::EventType::AnimationChange);
       break;
     default:
@@ -150,19 +153,19 @@ void setClientId(uint16 id) {
 }
 
 void setAnimation(uint8 preset, uint8* presetValues) {
-  settings.preset = preset;
+  settings.presetSettings.preset = preset;
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    settings.presetValues[preset][i] = presetValues[i];
+    settings.presetSettings.presetValues[preset][i] = presetValues[i];
   }
   Event::emit(Codes::EventType::AnimationChange);
 }
 
 void init() {
-  settings.presetValues = new byte*[NUM_PRESETS];
+  settings.presetSettings.presetValues = new byte*[NUM_PRESETS];
   for (int i = 0; i < NUM_PRESETS; i++) {
-    settings.presetValues[i] = new byte[NUM_PRESET_VALUES];
+    settings.presetSettings.presetValues[i] = new byte[NUM_PRESET_VALUES];
     for (int j = 0; j < NUM_PRESET_VALUES; j++) {
-      settings.presetValues[i][j] = presetValueDefaults[i][j];
+      settings.presetSettings.presetValues[i][j] = presetValueDefaults[i][j];
     }
   }
   Serial.println("State initialized");
