@@ -17,17 +17,20 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./messaging/server/giggle_pixel/giggle_pixel_server.h"
-#include "./messaging/server/giggle_pixel/raver_lights_server.h"
+#ifndef MESSAGING_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
+#define MESSAGING_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
 
-namespace GigglePixelServer {
+#include <Arduino.h>
 
-void init() {
-  RaverLightsServer::init();
-}
+namespace ClockSync {
 
-void loop() {
-  RaverLightsServer::loop();
-}
+void init();
+void loop();
 
-}  // namespace GigglePixelServer
+bool parsePacket();
+
+const uint8 signature[4] = { 'C', 'L', 'K', 'S' };
+
+}  // namespace ClockSync
+
+#endif  // MESSAGING_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_

@@ -111,12 +111,6 @@ void update() {
     }
   }
 
-  // Draw the number of connected clients
-  char convertedCount[2];
-  itoa(settings->numClients, convertedCount, 10);
-  convertedCount[1] = 0;
-  display.drawString(COUNT_X, COUNT_Y, convertedCount);
-
   display.display();
 }
 

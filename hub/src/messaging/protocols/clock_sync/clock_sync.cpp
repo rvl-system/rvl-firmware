@@ -18,11 +18,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging/client/clock_sync/clock_sync_client.h"
-#include "./messaging/read.h"
+#include "./messaging/protocols/clock_sync/clock_sync.h"
+#include "./messaging/transport.h"
 #include "./state.h"
 
-namespace ClockSyncClient {
+namespace ClockSync {
 
 const uint8 protocolVersion = 1;
 
@@ -35,28 +35,28 @@ void loop() {
 }
 
 /*
-Signature: 4 - "RBTS"
-Version: 1 - 1
-Type: 1 - 1:broadcast, 2:response
-Sequence: 2 - always incrementing
-Clock: 4 - direct output of millis()
-ClientID: 2 - matches ClientID in GigglePixel
+Signature: 4 bytes = "CLKS"
+Version: 1 byte = 1
+Type: 1 byte = 1:reference, 2:response
+Sequence: 2 bytes = always incrementing
+Clock: 4 bytes = running clock, relative to app start
+ClientID: 2 bytes = matches ClientID in GigglePixel, or 0 for transmitter
 */
 
 bool parsePacket() {
   Serial.println("Parsing Clock Sync packet");
-  uint8 version = Read::read8();
+  uint8 version = Transport::read8();
   if (protocolVersion != version) {
     return false;
   }
-  uint8 type = Read::read8();
-  uint16 seq = Read::read16();
-  uint32 commandTime = Read::read32();
-  uint16 clientId = Read::read16();
+  uint8 type = Transport::read8();
+  uint16 seq = Transport::read16();
+  uint32 commandTime = Transport::read32();
+  uint16 clientId = Transport::read16();
 
   State::setClockOffset(static_cast<int32>(commandTime) - static_cast<int32>(millis()));
 
   return true;
 }
 
-}  // namespace ClockSyncClient
+}  // namespace ClockSync

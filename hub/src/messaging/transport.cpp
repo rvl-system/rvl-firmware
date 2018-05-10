@@ -20,12 +20,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include "./messaging/broadcast.h"
+#include "./messaging/transport.h"
 #include "../config.h"
 
-namespace Broadcast {
+namespace Transport {
 
-void begin() {
+void beginWrite() {
   udp.beginPacket(GATEWAY, SERVER_PORT);
 }
 
@@ -49,8 +49,32 @@ void write(byte* data, uint16 length) {
   udp.write(data, length);
 }
 
-void end() {
+void endWrite() {
   udp.endPacket();
 }
 
-}  // namespace Broadcast
+uint8 read8() {
+  return udp.read();
+}
+
+uint16 read16() {
+  uint16 val = 0;
+  val |= udp.read() << 8;
+  val |= udp.read();
+  return val;
+}
+
+uint32 read32() {
+  uint32 val = 0;
+  val |= udp.read() << 24;
+  val |= udp.read() << 16;
+  val |= udp.read() << 8;
+  val |= udp.read();
+  return val;
+}
+
+void read(uint8* buffer, int length) {
+  udp.read(buffer, length);
+}
+
+}  // namespace Transport

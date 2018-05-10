@@ -17,18 +17,17 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_READ_H_
-#define MESSAGING_READ_H_
+#ifndef MESSAGING_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
+#define MESSAGING_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
 
-#include <Arduino.h>
+namespace GigglePixel {
 
-namespace Read {
+void init();
+void loop();
 
-uint8 read8();
-uint16 read16();
-uint32 read32();
-void read(uint8* buffer, int length);
+void parsePacket();
+void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
 
-}  // namespace Read
+}  // namespace GigglePixel
 
-#endif  // MESSAGING_READ_H_
+#endif  // MESSAGING_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_

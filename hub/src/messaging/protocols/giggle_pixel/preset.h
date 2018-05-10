@@ -17,20 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_BROADCAST_H_
-#define MESSAGING_BROADCAST_H_
+#ifndef MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
+#define MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
 
-#include <arduino.h>
+namespace Preset {
 
-namespace Broadcast {
+void init();
+void loop();
 
-void begin();
-void write8(uint8 data);
-void write16(uint16 data);
-void write32(uint32 data);
-void write(byte* data, uint16 length);
-void end();
+void parsePacket();
 
-}  // namespace Broadcast
+}  // namespace Preset
 
-#endif  // MESSAGING_BROADCAST_H_
+#endif  // MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_

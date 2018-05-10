@@ -17,14 +17,25 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_SERVER_CLOCK_SYNC_CLOCK_SYNC_SERVER_H_
-#define MESSAGING_SERVER_CLOCK_SYNC_CLOCK_SYNC_SERVER_H_
+#ifndef MESSAGING_TRANSPORT_H_
+#define MESSAGING_TRANSPORT_H_
 
-namespace ClockSyncServer {
+#include <Arduino.h>
 
-void init();
-void loop();
+namespace Transport {
 
-}  // namespace ClockSyncServer
+void beginWrite();
+void write8(uint8 data);
+void write16(uint16 data);
+void write32(uint32 data);
+void write(byte* data, uint16 length);
+void endWrite();
 
-#endif  // MESSAGING_SERVER_CLOCK_SYNC_CLOCK_SYNC_SERVER_H_
+uint8 read8();
+uint16 read16();
+uint32 read32();
+void read(uint8* buffer, int length);
+
+}  // namespace Transport
+
+#endif  // MESSAGING_TRANSPORT_H_

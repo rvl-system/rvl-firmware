@@ -17,62 +17,58 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "./messaging/server/giggle_pixel/raver_lights_server.h"
-#include "./messaging/broadcast.h"
-#include "./messaging/giggle_pixel.h"
-#include "./config.h"
+#include <Arduino.h>
+#include "./messaging/protocols/giggle_pixel/preset.h"
+#include "./messaging/protocols/giggle_pixel/giggle_pixel.h"
+#include "./messaging/transport.h"
+#include "../../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./state.h"
 #include "./event.h"
+#include "./codes.h"
 
-namespace RaverLightsServer {
+namespace Preset {
 
-byte currentPreset = Codes::Preset::Unknown;
-uint32 commandStartTime = millis();
 uint32 nextSyncTime = millis();
-uint8 numConnectedClients = 0;
 
-bool needsSync = false;
-
-void update();
 void sync();
 
 void init() {
-  Event::on(Codes::EventType::AnimationChange, update);
+  Event::on(Codes::EventType::AnimationChange, sync);
 }
 
 void loop() {
-  if (millis() < nextSyncTime && !needsSync) {
+  if (State::getSettings()->mode != Codes::Mode::Controller) {
     return;
   }
-  needsSync = false;
-
+  if (millis() < nextSyncTime) {
+    return;
+  }
   nextSyncTime = millis() + CLIENT_SYNC_INTERVAL;
   sync();
-}
-
-void update() {
-  byte newPreset = State::getSettings()->preset;
-  if (newPreset != currentPreset) {
-    currentPreset = newPreset;
-    commandStartTime = millis();
-  }
-  needsSync = true;
 }
 
 void sync() {
   Serial.println("Syncing raver lights");
   State::Settings* settings = State::getSettings();
 
-  Broadcast::begin();
+  Transport::beginWrite();
   GigglePixel::broadcastHeader(
-    Codes::GigglePixelPacketTypes::RaverLights,
+    Codes::GigglePixelPacketTypes::Preset,
     0,  // Priority
     4 + 1 + 1 + NUM_PRESET_VALUES);
-  Broadcast::write8(settings->preset);
+  Transport::write8(settings->preset);
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    Broadcast::write8(settings->presetValues[settings->preset][i]);
+    Transport::write8(settings->presetValues[settings->preset][i]);
   }
-  Broadcast::end();
+  Transport::endWrite();
 }
 
-}  // namespace RaverLightsServer
+void parsePacket() {
+  Serial.println("Parsing Raver Lights packet");
+  uint8 preset = Transport::read8();
+  uint8 presetValues[NUM_PRESET_VALUES];
+  Transport::read(presetValues, NUM_PRESET_VALUES);
+  State::setAnimation(preset, presetValues);
+}
+
+}  // namespace Preset

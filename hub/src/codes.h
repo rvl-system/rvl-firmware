@@ -26,7 +26,7 @@ namespace GigglePixelPacketTypes {
   enum GigglePixelPacketTypes {
     PaletteSharing = 1,
     WaveParameters = 2,
-    RaverLights = 3
+    Preset = 3
   };
 }
 

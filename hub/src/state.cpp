@@ -145,17 +145,6 @@ void controlDown() {
   }
 }
 
-void setClientsConnected(int numClients) {
-  if (numClients == settings.numClients) {
-    return;
-  }
-  settings.numClients = numClients;
-
-  Serial.print("Setting num clients to ");
-  Serial.println(settings.numClients);
-  Event::emit(Codes::EventType::InputChange);
-}
-
 void setClientId(uint16 id) {
   settings.id = id;
 }
