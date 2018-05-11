@@ -17,25 +17,21 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_TRANSPORT_H_
-#define MESSAGING_TRANSPORT_H_
+#ifndef MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
+#define MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
 
-#include <Arduino.h>
+#include "./messaging/stack/transport.h"
 
-namespace Transport {
+namespace GigglePixel {
 
-void beginWrite();
-void write8(uint8 data);
-void write16(uint16 data);
-void write32(uint32 data);
-void write(byte* data, uint16 length);
-void endWrite();
+void init(Transport::TransportInterface& newTransport);
+void loop();
 
-uint8 read8();
-uint16 read16();
-uint32 read32();
-void read(uint8* buffer, int length);
+void parsePacket();
+void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
 
-}  // namespace Transport
+const uint8 signature[4] = { 'G', 'L', 'P', 'X' };
 
-#endif  // MESSAGING_TRANSPORT_H_
+}  // namespace GigglePixel
+
+#endif  // MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_

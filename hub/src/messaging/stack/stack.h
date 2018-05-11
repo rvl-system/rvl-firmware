@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
-#define MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
+#ifndef MESSAGING_STACK_STACK_H_
+#define MESSAGING_STACK_STACK_H_
 
-namespace Preset {
+#include "./messaging/stack/transport.h"
 
-void init();
-void loop();
+namespace Stack {
 
+void init(Transport::TransportInterface& transport);
 void parsePacket();
 
-}  // namespace Preset
+}  // namespace Stack
 
-#endif  // MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
+#endif  // MESSAGING_STACK_STACK_H_

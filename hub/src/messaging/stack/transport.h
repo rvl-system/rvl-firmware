@@ -17,16 +17,28 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PALETTE_H_
-#define MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PALETTE_H_
+#ifndef MESSAGING_STACK_TRANSPORT_H_
+#define MESSAGING_STACK_TRANSPORT_H_
 
-namespace Palette {
+#include <Arduino.h>
 
-void init();
-void loop();
+namespace Transport {
 
-void parsePacket();
+class TransportInterface {
+ public:
+  virtual void beginWrite() = 0;
+  virtual void write8(uint8 data) = 0;
+  virtual void write16(uint16 data) = 0;
+  virtual void write32(uint32 data) = 0;
+  virtual void write(byte* data, uint16 length) = 0;
+  virtual void endWrite() = 0;
 
-}  // namespace Palette
+  virtual uint8 read8() = 0;
+  virtual uint16 read16() = 0;
+  virtual uint32 read32() = 0;
+  virtual void read(uint8* buffer, int length) = 0;
+};
 
-#endif  // MESSAGING_PROTOCOLS_GIGGLE_PIXEL_PALETTE_H_
+}  // namespace Transport
+
+#endif  // MESSAGING_STACK_TRANSPORT_H_

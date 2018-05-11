@@ -18,10 +18,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging/protocols/giggle_pixel/preset.h"
-#include "./messaging/protocols/giggle_pixel/giggle_pixel.h"
-#include "./messaging/transport.h"
-#include "../../../config.h"  // Why does this one single file require ".." but none of the others do?
+#include "./messaging/stack/protocols/giggle_pixel/preset.h"
+#include "./messaging/stack/protocols/giggle_pixel/giggle_pixel.h"
+#include "./messaging/stack/transport.h"
+#include "../../../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./state.h"
 #include "./event.h"
 #include "./codes.h"
@@ -30,9 +30,12 @@ namespace Preset {
 
 uint32 nextSyncTime = millis();
 
+Transport::TransportInterface* transport;
+
 void sync();
 
-void init() {
+void init(Transport::TransportInterface& newTransport) {
+  transport = &newTransport;
   Event::on(Codes::EventType::AnimationChange, sync);
 }
 
@@ -51,23 +54,23 @@ void sync() {
   Serial.println("Syncing preset");
   State::Settings* settings = State::getSettings();
 
-  Transport::beginWrite();
+  transport->beginWrite();
   GigglePixel::broadcastHeader(
     Codes::GigglePixelPacketTypes::Preset,
     0,  // Priority
     4 + 1 + 1 + NUM_PRESET_VALUES);
-  Transport::write8(settings->presetSettings.preset);
+  transport->write8(settings->presetSettings.preset);
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    Transport::write8(settings->presetSettings.presetValues[settings->presetSettings.preset][i]);
+    transport->write8(settings->presetSettings.presetValues[settings->presetSettings.preset][i]);
   }
-  Transport::endWrite();
+  transport->endWrite();
 }
 
 void parsePacket() {
   Serial.println("Parsing preset packet");
-  uint8 preset = Transport::read8();
+  uint8 preset = transport->read8();
   uint8 presetValues[NUM_PRESET_VALUES];
-  Transport::read(presetValues, NUM_PRESET_VALUES);
+  transport->read(presetValues, NUM_PRESET_VALUES);
   State::setAnimation(preset, presetValues);
 }
 

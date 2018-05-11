@@ -18,16 +18,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging/protocols/clock_sync/clock_sync.h"
-#include "./messaging/transport.h"
+#include "./messaging/stack/protocols/clock_sync/clock_sync.h"
+#include "./messaging/stack/transport.h"
 #include "./state.h"
 
 namespace ClockSync {
 
 const uint8 protocolVersion = 1;
 
-void init() {
-  // Not implemented yet
+Transport::TransportInterface* transport;
+
+void init(Transport::TransportInterface& newTransport) {
+  transport = &newTransport;
 }
 
 void loop() {
@@ -45,14 +47,14 @@ ClientID: 2 bytes = matches ClientID in GigglePixel, or 0 for transmitter
 
 bool parsePacket() {
   Serial.println("Parsing Clock Sync packet");
-  uint8 version = Transport::read8();
+  uint8 version = transport->read8();
   if (protocolVersion != version) {
     return false;
   }
-  uint8 type = Transport::read8();
-  uint16 seq = Transport::read16();
-  uint32 commandTime = Transport::read32();
-  uint16 clientId = Transport::read16();
+  uint8 type = transport->read8();
+  uint16 seq = transport->read16();
+  uint32 commandTime = transport->read32();
+  uint16 clientId = transport->read16();
 
   State::setClockOffset(static_cast<int32>(commandTime) - static_cast<int32>(millis()));
 

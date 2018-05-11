@@ -18,10 +18,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging/protocols/giggle_pixel/giggle_pixel.h"
-#include "./messaging/protocols/giggle_pixel/preset.h"
-#include "./messaging/transport.h"
-#include "../../../config.h"  // Why does this one single file require ".." but none of the others do?
+#include "./messaging/stack/protocols/giggle_pixel/giggle_pixel.h"
+#include "./messaging/stack/protocols/giggle_pixel/preset.h"
+#include "./messaging/stack/protocols/giggle_pixel/palette.h"
+#include "./messaging/stack/transport.h"
+#include "../../../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
 #include "./state.h"
 
@@ -29,8 +30,12 @@ namespace GigglePixel {
 
 const uint8 protocolVersion = 1;
 
-void init() {
-  Preset::init();
+Transport::TransportInterface* transport;
+
+void init(Transport::TransportInterface& newTransport) {
+  transport = &newTransport;
+  Preset::init(newTransport);
+  Palette::init(newTransport);
 }
 
 void loop() {
@@ -49,15 +54,15 @@ void setClientId(uint16 id);
 void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
 
 bool readHeader(GigglePixelHeader& header) {
-  header.protocolVersion = Transport::read8();
+  header.protocolVersion = transport->read8();
   if (header.protocolVersion != protocolVersion) {
     return false;
   }
-  header.length = Transport::read16();
-  header.packetType = Transport::read8();
-  header.priority = Transport::read8();
-  Transport::read8();  // Reserved
-  header.sourceId = Transport::read16();
+  header.length = transport->read16();
+  header.packetType = transport->read8();
+  header.priority = transport->read8();
+  transport->read8();  // Reserved
+  header.sourceId = transport->read16();
   return true;
 }
 
@@ -81,13 +86,13 @@ void parsePacket() {
 
 void broadcastHeader(uint8 packetType, uint8 priority, uint16 length) {
   uint8* signature = const_cast<uint8*>(reinterpret_cast<const uint8*>("GLPX"));
-  Transport::write(signature, sizeof(uint8) * 4);
-  Transport::write8(protocolVersion);
-  Transport::write16(length);
-  Transport::write8(packetType);
-  Transport::write8(priority);
-  Transport::write8(0);  // reserved
-  Transport::write16(State::getSettings()->id);
+  transport->write(signature, sizeof(uint8) * 4);
+  transport->write8(protocolVersion);
+  transport->write16(length);
+  transport->write8(packetType);
+  transport->write8(priority);
+  transport->write8(0);  // reserved
+  transport->write16(State::getSettings()->id);
 }
 
 }  // namespace GigglePixel

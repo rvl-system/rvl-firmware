@@ -17,14 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
-#define MESSAGING_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
+#ifndef MESSAGING_STACK_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
+#define MESSAGING_STACK_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
 
 #include <Arduino.h>
+#include "./messaging/stack/transport.h"
 
 namespace ClockSync {
 
-void init();
+void init(Transport::TransportInterface& newTransport);
 void loop();
 
 bool parsePacket();
@@ -33,4 +34,4 @@ const uint8 signature[4] = { 'C', 'L', 'K', 'S' };
 
 }  // namespace ClockSync
 
-#endif  // MESSAGING_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_
+#endif  // MESSAGING_STACK_PROTOCOLS_CLOCK_SYNC_CLOCK_SYNC_H_

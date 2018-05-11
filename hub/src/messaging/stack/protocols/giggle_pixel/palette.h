@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
-#define MESSAGING_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
+#ifndef MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_PALETTE_H_
+#define MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_PALETTE_H_
 
-namespace GigglePixel {
+#include "./messaging/stack/transport.h"
 
-void init();
+namespace Palette {
+
+void init(Transport::TransportInterface& newTransport);
 void loop();
 
 void parsePacket();
-void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
 
-}  // namespace GigglePixel
+}  // namespace Palette
 
-#endif  // MESSAGING_PROTOCOLS_GIGGLE_PIXEL_GIGGLE_PIXEL_H_
+#endif  // MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_PALETTE_H_
