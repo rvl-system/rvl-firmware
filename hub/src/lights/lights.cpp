@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define FASTLED_INTERRUPT_RETRY_COUNT 0  // Helps keep LEDs from flickering
 #define FASTLED_ESP8266_RAW_PIN_ORDER
 
 #include <Arduino.h>

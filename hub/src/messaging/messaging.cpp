@@ -39,6 +39,7 @@ uint32 nextTimeToPrintDot = 0;
 UDPTransport::UDPTransport transport;
 
 void init() {
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);   // Helps keep LEDs from flickering
   Stack::init(&transport);
   Serial.println("Messaging Client initialized");
 }
