@@ -34,8 +34,8 @@ Transport::TransportInterface* transport;
 
 void sync();
 
-void init(Transport::TransportInterface& newTransport) {
-  transport = &newTransport;
+void init(Transport::TransportInterface* newTransport) {
+  transport = newTransport;
 }
 
 void loop() {

@@ -32,8 +32,8 @@ namespace Stack {
 
 Transport::TransportInterface* transport;
 
-void init(Transport::TransportInterface& newTransport) {
-  transport = &newTransport;
+void init(Transport::TransportInterface* newTransport) {
+  transport = newTransport;
   ClockSync::init(newTransport);
   GigglePixel::init(newTransport);
   Serial.println("Messaging Client initialized");

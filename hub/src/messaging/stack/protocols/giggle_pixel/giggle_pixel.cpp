@@ -32,8 +32,8 @@ const uint8 protocolVersion = 1;
 
 Transport::TransportInterface* transport;
 
-void init(Transport::TransportInterface& newTransport) {
-  transport = &newTransport;
+void init(Transport::TransportInterface* newTransport) {
+  transport = newTransport;
   Preset::init(newTransport);
   Palette::init(newTransport);
 }

@@ -39,7 +39,7 @@ uint32 nextTimeToPrintDot = 0;
 UDPTransport::UDPTransport transport;
 
 void init() {
-  Stack::init(transport);
+  Stack::init(&transport);
   Serial.println("Messaging Client initialized");
 }
 
