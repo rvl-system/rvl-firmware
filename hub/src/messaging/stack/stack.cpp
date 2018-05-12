@@ -62,4 +62,4 @@ void parsePacket() {
   GigglePixel::loop();
 }
 
-}  // namespace Messaging
+}  // namespace Stack

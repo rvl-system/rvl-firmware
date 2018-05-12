@@ -19,12 +19,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "./lights/animations/fade.h"
 #include "./lights/colorspace.h"
-#include "./config.h"
+#include "../../config.h"
 #include "./codes.h"
 
 #define COLOR_DIFFERENCE 40
-
-#define NUM_PIXELS 8
 
 namespace Fade {
 

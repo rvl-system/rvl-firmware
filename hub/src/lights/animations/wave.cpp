@@ -20,10 +20,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 #include "./lights/animations/wave.h"
 #include "./lights/colorspace.h"
-#include "./config.h"
+#include "../../config.h"
 #include "./codes.h"
-
-#define NUM_PIXELS 8
 
 namespace Wave {
 

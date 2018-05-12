@@ -74,6 +74,11 @@ void parsePacket() {
     return;
   }
 
+  // Ignore our own broadcast packets
+  if (State::getSettings()->mode == Codes::Mode::Controller) {
+    return;
+  }
+
   switch (headerDetails.packetType) {
     case Codes::GigglePixelPacketTypes::Preset:
       Preset::parsePacket();
