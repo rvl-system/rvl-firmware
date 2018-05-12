@@ -50,9 +50,8 @@ extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
 extern WiFiUDP udp;
 
-#define DATA_PIN 0
-#define CLOCK_PIN 2
-#define NUM_PIXELS 120
+#define DATA_PIN 2
+#define NUM_PIXELS 8
 
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4

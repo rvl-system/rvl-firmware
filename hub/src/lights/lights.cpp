@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define FASTLED_ESP8266_RAW_PIN_ORDER
+
 #include <Arduino.h>
-#include <Adafruit_DotStar.h>
+#include <FastLED.h>
 #include "./lights/colorspace.h"
 #include "./lights/animation.h"
 #include "./lights/lights.h"
@@ -33,7 +35,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Lights {
 
-Adafruit_DotStar strip = Adafruit_DotStar(NUM_PIXELS, DATA_PIN, CLOCK_PIN, DOTSTAR_BRG);
+CRGB leds[NUM_PIXELS];
 
 colorspace::hsv colors[NUM_PIXELS];
 Codes::Preset::Preset preset = Codes::Preset::Unknown;
@@ -48,18 +50,12 @@ void displayColors();
 void update();
 
 void init() {
+  FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_PIXELS);
   Event::on(Codes::EventType::AnimationChange, update);
 
   animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
   animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
-
-  strip.begin();
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
-    colorspace::rgb converted_color = hsv2rgb(colors[i]);
-    strip.setPixelColor(i, 0, 0, 0);
-  }
-  strip.show();
 
   update();
 
@@ -81,7 +77,7 @@ void update() {
     Serial.println(settings->brightness);
     brightness = settings->brightness;
     double scaledBrightness = static_cast<double>(settings->brightness) / 255.0;
-    for (int i = 0; i < NUM_PRESETS; i++) {
+    for (uint8 i = 0; i < NUM_PRESETS; i++) {
       animations[i]->setBrightness(scaledBrightness);
     }
   }
@@ -104,14 +100,13 @@ void updateColors() {
 }
 
 void displayColors() {
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+  for (uint8 i = 0; i < NUM_PIXELS; i++) {
     colorspace::rgb convertedColor = hsv2rgb(colors[i]);
-    strip.setPixelColor(i,
-      static_cast<int>(convertedColor.r * 255),
-      static_cast<int>(convertedColor.g * 255),
-      static_cast<int>(convertedColor.b * 255));
+    leds[i].r = static_cast<int>(convertedColor.r * 255);
+    leds[i].g = static_cast<int>(convertedColor.g * 255);
+    leds[i].b = static_cast<int>(convertedColor.b * 255);
   }
-  strip.show();
+  FastLED.show();
 }
 
 }  // namespace Lights
