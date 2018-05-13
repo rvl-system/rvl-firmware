@@ -47,7 +47,7 @@ void WaveAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
   uint32 period = 2 / step;
   double periodTime = 2 * PI * (commandTime % period) / period;
 
-  for (int i = 0; i < NUM_PIXELS; i++) {
+  for (uint16 i = 0; i < NUM_PIXELS; i++) {
     double alpha = sin(2 * PI * (i % spacing) / spacing + periodTime);
     if (alpha < 0) {
       alpha = 0;

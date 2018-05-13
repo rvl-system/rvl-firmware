@@ -51,7 +51,7 @@ void PulseAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
     currentBrightness = static_cast<double>(period - periodTime) / (static_cast<double>(period) / 2.0);
   }
 
-  for (int i = 0; i < NUM_PIXELS; i++) {
+  for (uint16 i = 0; i < NUM_PIXELS; i++) {
     buffer[i].h = hue;
     buffer[i].s = saturation;
     buffer[i].v = currentBrightness * brightness;

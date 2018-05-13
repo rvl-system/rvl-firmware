@@ -101,11 +101,11 @@ void updateColors() {
 }
 
 void displayColors() {
-  for (uint8 i = 0; i < NUM_PIXELS; i++) {
+  for (uint16 i = 0; i < NUM_PIXELS; i++) {
     colorspace::rgb convertedColor = hsv2rgb(colors[i]);
-    leds[i].r = static_cast<int>(convertedColor.r * 255);
-    leds[i].g = static_cast<int>(convertedColor.g * 255);
-    leds[i].b = static_cast<int>(convertedColor.b * 255);
+    leds[i].r = static_cast<uint8>(convertedColor.r * 255);
+    leds[i].g = static_cast<uint8>(convertedColor.g * 255);
+    leds[i].b = static_cast<uint8>(convertedColor.b * 255);
   }
   FastLED.show();
 }

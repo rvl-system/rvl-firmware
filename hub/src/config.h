@@ -26,7 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define WIFI_SSID "RaverLights"
 #define WIFI_PASSPHRASE "4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}"
 
-#define SERVER_PORT 3000
+#define SERVER_PORT 4978
 
 #define UPDATE_RATE 33
 
@@ -50,9 +50,9 @@ extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
 extern WiFiUDP udp;
 
-#define CLOCK_PIN 0
-#define DATA_PIN 2
-#define NUM_PIXELS 60
+#define CLOCK_PIN 2
+#define DATA_PIN 0
+#define NUM_PIXELS 127
 
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4

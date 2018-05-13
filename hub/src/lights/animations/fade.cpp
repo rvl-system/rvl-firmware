@@ -38,7 +38,7 @@ void FadeAnimation::setValues(byte* values) {
 }
 
 void FadeAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
-  for (unsigned int i = 0; i < NUM_PIXELS; i++) {
+  for (uint16 i = 0; i < NUM_PIXELS; i++) {
     buffer[i].h = (static_cast<int>(commandTime * step) + COLOR_DIFFERENCE * i) % 360;
     buffer[i].s = 1;
     buffer[i].v = brightness;
