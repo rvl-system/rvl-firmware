@@ -1,4 +1,4 @@
-update=Tuesday, March 20, 2018 'AMt' 10:41:21 AM
+update=Saturday, May 12, 2018 'AMt' 11:54:19 AM
 version=1
 last_client=kicad
 [pcbnew]
@@ -62,3 +62,5 @@ LibName30=valves
 LibName31=kicad-components/components/microcontrollers/nebrius-microcontrollers
 LibName32=kicad-components/components/regulators/nebrius-regulators
 LibName33=kicad-components/components/lcd/nebrius-lcd
+LibName34=kicad-components/components/logic/nebrius-logic
+LibName35=switches
