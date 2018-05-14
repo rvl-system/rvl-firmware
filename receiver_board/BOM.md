@@ -13,7 +13,7 @@
 | [SN74LVC1T45DBVR‎](https://www.digikey.com/product-detail/en/texas-instruments/SN74LVC1T45DBVR/296-16843-1-ND/639459) | IC BUS TRANSCVR TRI-ST SOT23-6 | 1 | $0.60 | $0.60 |
 | [M22-2010305‎](https://www.digikey.com/product-detail/en/harwin-inc/M22-2010305/952-2274-ND/3728238) | SIL VERTICAL PC TAIL PIN HEADER | 1 | $0.22 | $0.22 |
 | [MFU0805FF01000P100‎](https://www.digikey.com/product-detail/en/vishay-beyschlag/MFU0805FF01000P100/MFU08051.00CT-ND/1206546) | FUSE BOARD MOUNT 1A 32VDC 0805 | 1 | $0.49 | $0.49 |
-| [PCB Board](https://oshpark.com/shared_projects/7CyOR2JB) | Custom PCB from OSH Park | 1 | $2.20 | $2.20 |
+| [PCB Board](https://oshpark.com/shared_projects/NvMkemS6) | Custom PCB from OSH Park | 1 | $2.20 | $2.20 |
 | | | | | **$13.15** |
 
 &ast; All prices in USD. Prices current as of May 14th, 2018
