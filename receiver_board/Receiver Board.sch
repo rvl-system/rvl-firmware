@@ -34,7 +34,7 @@ LIBS:nebrius-regulators
 LIBS:nebrius-lcd
 LIBS:nebrius-logic
 LIBS:switches
-LIBS:Endpoint Board-cache
+LIBS:Receiver Board-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -58,7 +58,7 @@ F 1 "2.2uH" V 5600 3000 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 6550 3150 50  0001 C CNN
 F 3 "" H 5500 3000 50  0000 C CNN
 	1    5500 3000
-	0    -1   -1   0   
+	0    -1   -1   0
 $EndComp
 $Comp
 L C C2
@@ -69,7 +69,7 @@ F 1 "10uF" H 6050 3450 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 5938 3300 50  0001 C CNN
 F 3 "" H 5900 3450 50  0000 C CNN
 	1    5900 3450
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L C C1
@@ -80,7 +80,7 @@ F 1 "4.7uF" H 3550 3350 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 3800 4200 50  0001 C CNN
 F 3 "" H 3800 3250 50  0000 C CNN
 	1    3800 3250
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L CONN_01X03 P4
@@ -91,7 +91,7 @@ F 1 "SERIAL" V 9450 3750 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" H 9650 3500 50  0001 C CNN
 F 3 "" H 9350 3750 50  0000 C CNN
 	1    9350 3750
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L LM3671 U1
@@ -102,7 +102,7 @@ F 1 "LM3671" H 4650 2800 60  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 4650 3100 60  0001 C CNN
 F 3 "" H 4650 3100 60  0001 C CNN
 	1    4650 3100
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L ESP-01 U2
@@ -113,7 +113,7 @@ F 1 "ESP-01" H 8150 3350 60  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_2x04_Pitch2.54mm" H 8150 3700 60  0001 C CNN
 F 3 "" H 8150 3700 60  0001 C CNN
 	1    8150 3700
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L VCC #PWR6
@@ -124,7 +124,7 @@ F 1 "VCC" H 7350 3100 50  0000 C CNN
 F 2 "" H 7350 2950 50  0001 C CNN
 F 3 "" H 7350 2950 50  0001 C CNN
 	1    7350 2950
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L GND #PWR8
@@ -135,7 +135,7 @@ F 1 "GND" H 8950 3800 50  0000 C CNN
 F 2 "" H 8950 3950 50  0001 C CNN
 F 3 "" H 8950 3950 50  0001 C CNN
 	1    8950 3950
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L SN74LVC1T45 U4
@@ -146,7 +146,7 @@ F 1 "SN74LVC1T45" H 7950 4900 60  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:TSOT-23-6_HandSoldering" H 7950 4600 60  0001 C CNN
 F 3 "" H 7950 4600 60  0001 C CNN
 	1    7950 4600
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L NeoPixel U3
@@ -157,7 +157,7 @@ F 1 "NeoPixel" V 6600 4700 60  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x03_Pitch2.54mm" H 6900 4700 60  0001 C CNN
 F 3 "" H 6900 4700 60  0001 C CNN
 	1    6900 4700
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	5100 3000 5200 3000
@@ -209,7 +209,7 @@ F 1 "+5V" H 3800 3040 50  0000 C CNN
 F 2 "" H 3800 2900 50  0001 C CNN
 F 3 "" H 3800 2900 50  0001 C CNN
 	1    3800 2900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	3800 2900 3800 3100
@@ -223,7 +223,7 @@ F 1 "GND" H 3800 3350 50  0000 C CNN
 F 2 "" H 3800 3500 50  0001 C CNN
 F 3 "" H 3800 3500 50  0001 C CNN
 	1    3800 3500
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	3800 3400 3800 3500
@@ -236,7 +236,7 @@ F 1 "GND" H 4100 3150 50  0000 C CNN
 F 2 "" H 4100 3300 50  0001 C CNN
 F 3 "" H 4100 3300 50  0001 C CNN
 	1    4100 3300
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	4100 3100 4100 3300
@@ -252,7 +252,7 @@ F 1 "GND" H 5900 3550 50  0000 C CNN
 F 2 "" H 5900 3700 50  0001 C CNN
 F 3 "" H 5900 3700 50  0001 C CNN
 	1    5900 3700
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	5900 3600 5900 3700
@@ -265,7 +265,7 @@ F 1 "VCC" H 5900 3050 50  0000 C CNN
 F 2 "" H 5900 2900 50  0001 C CNN
 F 3 "" H 5900 2900 50  0001 C CNN
 	1    5900 2900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Connection ~ 5900 3000
 Wire Wire Line
@@ -281,7 +281,7 @@ F 1 "SW_DPST" H 9600 2900 50  0000 C CNN
 F 2 "nebrius-switch:KMR641NG" H 9600 3100 50  0001 C CNN
 F 3 "" H 9600 3100 50  0001 C CNN
 	1    9600 3100
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 $Comp
 L R R2
@@ -292,7 +292,7 @@ F 1 "1k" V 8750 2950 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 8680 2950 50  0001 C CNN
 F 3 "" H 8750 2950 50  0001 C CNN
 	1    8750 2950
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	8750 3750 8650 3750
@@ -311,7 +311,7 @@ F 1 "VCC" H 8750 2750 50  0000 C CNN
 F 2 "" H 8750 2600 50  0001 C CNN
 F 3 "" H 8750 2600 50  0001 C CNN
 	1    8750 2600
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	8750 2600 8750 2800
@@ -325,7 +325,7 @@ F 1 "GND" H 10000 3150 50  0000 C CNN
 F 2 "" H 10000 3300 50  0001 C CNN
 F 3 "" H 10000 3300 50  0001 C CNN
 	1    10000 3300
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	9800 3200 10000 3200
@@ -340,7 +340,7 @@ F 1 "10k" V 8850 2950 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 8780 2950 50  0001 C CNN
 F 3 "" H 8850 2950 50  0001 C CNN
 	1    8850 2950
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Connection ~ 8850 3650
 Wire Wire Line
@@ -357,7 +357,7 @@ F 1 "10k" V 7450 3300 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 7380 3300 50  0001 C CNN
 F 3 "" H 7450 3300 50  0001 C CNN
 	1    7450 3300
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	7450 3150 7450 3050
@@ -387,7 +387,7 @@ F 1 "+5V" H 7200 4540 50  0000 C CNN
 F 2 "" H 7200 4400 50  0001 C CNN
 F 3 "" H 7200 4400 50  0001 C CNN
 	1    7200 4400
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Connection ~ 7200 4500
 Wire Wire Line
@@ -405,7 +405,7 @@ F 1 "GND" H 7300 4750 50  0000 C CNN
 F 2 "" H 7300 4900 50  0001 C CNN
 F 3 "" H 7300 4900 50  0001 C CNN
 	1    7300 4900
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Connection ~ 7300 4800
 $Comp
@@ -417,7 +417,7 @@ F 1 "GND" H 8600 4650 50  0000 C CNN
 F 2 "" H 8600 4800 50  0001 C CNN
 F 3 "" H 8600 4800 50  0001 C CNN
 	1    8600 4800
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	8500 4600 8600 4600
@@ -432,7 +432,7 @@ F 1 "VCC" H 8600 4550 50  0000 C CNN
 F 2 "" H 8600 4400 50  0001 C CNN
 F 3 "" H 8600 4400 50  0001 C CNN
 	1    8600 4400
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Wire Wire Line
 	8600 4400 8600 4500
