@@ -2,7 +2,7 @@
 
 | Part Number | Description | Quantity | Unit Cost&ast; | Total Cost&ast; |
 |-------------|-------------|----------|------|------|
-| [ESP-12e](https://www.digikey.com/product-detail/en/sparkfun-electronics/WRL-13678/1568-1235-ND/5725944) | ESP-01 WiFi Microcontroller | 1 | $6.95 | $6.95 |
+| [ESP-01](https://www.digikey.com/product-detail/en/sparkfun-electronics/WRL-13678/1568-1235-ND/5725944) | ESP-01 WiFi Microcontroller | 1 | $6.95 | $6.95 |
 | [74479275222‎](https://www.digikey.com/product-detail/en/wurth-electronics-inc/74479275222/732-9708-1-ND/5870862) | FIXED IND 2.2UH 1.3A 176 MOHM | 1 | $1.19 | $1.19 |
 | [PPTC031LGBN-RC](https://www.digikey.com/product-detail/en/sullins-connector-solutions/PPTC031LGBN-RC/S5439-ND/775897) | 	CONN FEMALE 3POS .100" R/A TIN | 1 | $0.50 | $0.50 |
 | [ERA-6AEB102V‎](https://www.digikey.com/product-detail/en/panasonic-electronic-components/ERA-6AEB102V/P1.0KDACT-ND/1465947) | RES SMD 1K OHM 0.1% 1/8W 0805 | 1 | $0.36 | $0.36 |
