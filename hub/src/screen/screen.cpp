@@ -58,6 +58,9 @@ void init() {
   Event::on(Codes::EventType::AnimationChange, update);
   Event::on(Codes::EventType::InputChange, update);
   display.init();
+#ifdef INVERT_DISPLAY
+  display.flipScreenVertically();
+#endif
   display.clear();
   display.setFont(ArialMT_Plain_10);
 

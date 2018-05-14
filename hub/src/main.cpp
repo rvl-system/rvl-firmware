@@ -18,10 +18,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#ifdef HAS_NETWORK
 #include "./messaging/messaging.h"
+#endif
+#ifdef HAS_UI
 #include "./screen/screen.h"
-#include "./lights/lights.h"
 #include "./input/input.h"
+#endif
+#ifdef HAS_LIGHTS
+#include "./lights/lights.h"
+#endif
 #include "./state.h"
 #include "./config.h"
 
@@ -31,23 +37,31 @@ void setup() {
   Serial.println();
   Serial.println("Initializing");
   State::init();
-#ifdef SERVER
+#ifdef HAS_UI
   Input::init();
   Screen::init();
 #endif
+#ifdef HAS_NETWORK
   Messaging::init();
+#endif
+#ifdef HAS_LIGHTS
   Lights::init();
+#endif
   Serial.println("Running");
 }
 
 void loop() {
   uint32 startTime = millis();
   State::loop();
-#ifdef SERVER
+#ifdef HAS_UI
   Input::loop();
   Screen::loop();
 #endif
+#ifdef HAS_NETWORK
   Messaging::loop();
+#endif
+#ifdef HAS_LIGHTS
   Lights::loop();
+#endif
   delay(UPDATE_RATE - (millis() - startTime));
 }
