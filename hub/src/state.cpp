@@ -24,11 +24,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
-#define BRIGHTNESS_STEP 1
-#define MAX_BRIGHTNESS 255
-#define DIM_TIMEOUT 10000
-#define OFF_TIMEOUT 5000
-#define MAX_LISTENERS 255
+#define MAX_LISTENERS 25
 
 bool isActive = false;
 uint32 idleStartTime = millis();
@@ -37,115 +33,6 @@ Settings settings;
 
 Settings* getSettings() {
   return &settings;
-}
-
-void nextControl() {
-  int maxControls = 3;
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    if (presetValueLabels[settings.presetSettings.preset][i] == NULL) {
-      break;
-    }
-    maxControls++;
-  }
-  settings.currentControl++;
-  if (settings.currentControl == maxControls) {
-    settings.currentControl = 0;
-  }
-
-  Serial.print("Setting control ");
-  Serial.println(settings.currentControl);
-  Event::emit(Codes::EventType::InputChange);
-}
-
-int calculateNewValue(byte code, int value, bool direction) {
-  if (direction) {
-    value++;
-    if (value > presetValueMax[settings.presetSettings.preset][code]) {
-      value = presetValueMax[settings.presetSettings.preset][code];
-    }
-  } else {
-    value--;
-    if (value < presetValueMin[settings.presetSettings.preset][code]) {
-      value = presetValueMin[settings.presetSettings.preset][code];
-    }
-  }
-  return value;
-}
-
-void handleValueChange(int code, bool direction) {
-  int newValue = calculateNewValue(
-    code,
-    settings.presetSettings.presetValues[settings.presetSettings.preset][code],
-    direction);
-  settings.presetSettings.presetValues[settings.presetSettings.preset][code] = newValue;
-
-  Serial.print("Setting preset ");
-  Serial.print(settings.presetSettings.preset);
-  Serial.print(" code ");
-  Serial.print(code);
-  Serial.print(" to value ");
-  Serial.println(newValue);
-  Event::emit(Codes::EventType::AnimationChange);
-}
-
-void controlUp() {
-  switch (settings.currentControl) {
-    case Codes::Control::Brightness:
-      if (settings.brightness < MAX_BRIGHTNESS) {
-        settings.brightness += BRIGHTNESS_STEP;
-        if (settings.brightness > MAX_BRIGHTNESS) {
-          settings.brightness = MAX_BRIGHTNESS;
-        }
-        Serial.print("Setting brightness to ");
-        Serial.println(settings.brightness);
-        Event::emit(Codes::EventType::AnimationChange);
-      }
-      break;
-    case Codes::Control::Preset:
-      settings.presetSettings.preset++;
-      if (settings.presetSettings.preset == NUM_PRESETS) {
-        settings.presetSettings.preset = 0;
-      }
-      Serial.print("Setting preset ");
-      Serial.println(settings.presetSettings.preset);
-      Event::emit(Codes::EventType::AnimationChange);
-      break;
-    default:
-      handleValueChange(settings.currentControl - 3, true);
-      break;
-  }
-}
-
-void controlDown() {
-  switch (settings.currentControl) {
-    case Codes::Control::Brightness:
-      if (settings.brightness > 0) {
-        settings.brightness -= BRIGHTNESS_STEP;
-        if (settings.brightness < 0) {
-          settings.brightness = 0;
-        }
-        Serial.print("Setting brightness to ");
-        Serial.println(settings.brightness);
-        Event::emit(Codes::EventType::AnimationChange);
-      }
-      break;
-    case Codes::Control::Preset:
-      switch (settings.presetSettings.preset) {
-        case Codes::Preset::Fade:
-          settings.presetSettings.preset = Codes::Preset::Pulse;
-          break;
-        case Codes::Preset::Pulse:
-          settings.presetSettings.preset = Codes::Preset::Fade;
-          break;
-      }
-      Serial.print("Setting preset ");
-      Serial.println(settings.presetSettings.preset);
-      Event::emit(Codes::EventType::AnimationChange);
-      break;
-    default:
-      handleValueChange(settings.currentControl - 3, false);
-      break;
-  }
 }
 
 void setClientId(uint16 id) {

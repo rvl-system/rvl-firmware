@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,16 +17,20 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCREEN_CONTROLS_PRESET_H_
-#define SCREEN_CONTROLS_PRESET_H_
+#include "./ui/ui.h"
+#include "./ui/input.h"
+#include "./ui/screen.h"
 
-#include <Arduino.h>
-#include <SSD1306Brzo.h>
+namespace UI {
 
-namespace PresetControl {
+void init() {
+  Input::init();
+  Screen::init();
+}
 
-void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset);
+void loop() {
+  Input::loop();
+  Screen::loop();
+}
 
-}  // namespace PresetControl
-
-#endif  // SCREEN_CONTROLS_PRESET_H_
+}  // namespace UI

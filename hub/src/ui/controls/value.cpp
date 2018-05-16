@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCREEN_CONTROLS_VALUE_H_
-#define SCREEN_CONTROLS_VALUE_H_
-
 #include <Arduino.h>
-#include <SSD1306Brzo.h>
+#include "./ui/controls/value.h"
+
+#define CONTENT_PADDING 3
+#define LABEL_WIDTH 32
 
 namespace ValueControl {
 
@@ -33,8 +33,32 @@ void render(
   byte height,
   bool isSelected,
   const char* label,
-  double value);
+  double value
+) {
+  if (isSelected) {
+    display.drawRect(x, y, width, height);
+  }
+
+  display.drawString(x + CONTENT_PADDING, y, label);
+
+  // Calculate the bar parameters
+  int barX = x + CONTENT_PADDING + LABEL_WIDTH;
+  int barY = y + CONTENT_PADDING;
+  int barWidth = width - LABEL_WIDTH - 2 * CONTENT_PADDING;
+  int barHeight = height - 2 * CONTENT_PADDING;
+
+  // Draw the border
+  display.drawRect(barX, barY, barWidth, barHeight);
+
+  // Draw the filled section
+  int fillWidth = (barWidth - 2) * (value);
+  if (fillWidth != 0) {
+    display.fillRect(
+      barX + 1,
+      barY + 1,
+      fillWidth,
+      barHeight - 2);
+  }
+}
 
 }  // namespace ValueControl
-
-#endif  // SCREEN_CONTROLS_VALUE_H_

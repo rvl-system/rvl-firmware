@@ -18,10 +18,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./input/input.h"
-#include "./state.h"
+#include "./ui/input.h"
+#include "./ui/screen.h"
 #include "./codes.h"
-#include "./config.h"
+#include "../config.h"
 
 namespace Input {
 
@@ -77,7 +77,7 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
 void loop() {
   switch (getButtonChangeState(&nextButtonInfo)) {
     case Pressed:
-      State::nextControl();
+      Screen::nextControl();
       break;
     case Holding:
       // Do Nothing
@@ -89,11 +89,11 @@ void loop() {
 
   switch (getButtonChangeState(&upButtonInfo)) {
     case Pressed:
-      State::controlUp();
+      Screen::controlUp();
       break;
     case Holding:
-      if (State::getSettings()->currentControl != Codes::Control::Preset) {
-        State::controlUp();
+      if (Screen::currentControl != Codes::Control::Preset) {
+        Screen::controlUp();
       }
       break;
     case None:
@@ -103,11 +103,11 @@ void loop() {
 
   switch (getButtonChangeState(&downButtonInfo)) {
     case Pressed:
-      State::controlDown();
+      Screen::controlDown();
       break;
     case Holding:
-      if (State::getSettings()->currentControl != Codes::Control::Preset) {
-        State::controlDown();
+      if (Screen::currentControl != Codes::Control::Preset) {
+        Screen::controlDown();
       }
       break;
     case None:

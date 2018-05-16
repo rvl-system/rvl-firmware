@@ -40,8 +40,7 @@ namespace Mode {
 
 namespace EventType {
   enum EventType {
-    AnimationChange,
-    InputChange
+    AnimationChange
   };
 }
 

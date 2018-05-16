@@ -56,8 +56,6 @@ struct Settings {
   uint8 mode = 1;
 #endif
 
-  uint8 currentControl = 0;
-
   uint16 id = 0;
   uint32 clock = millis();
 };
@@ -66,10 +64,6 @@ void init();
 void loop();
 
 Settings* getSettings();
-
-void nextControl();
-void controlUp();
-void controlDown();
 
 void setClientId(uint16 id);
 void setClockOffset(int32 clockOffset);

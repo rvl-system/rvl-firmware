@@ -18,8 +18,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./screen/controls/value.h"
-#include "./screen/controls/brightness.h"
+#include "./ui/controls/value.h"
+#include "./ui/controls/brightness.h"
 
 #define CONTENT_PADDING 3
 

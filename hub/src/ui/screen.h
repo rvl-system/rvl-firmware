@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef UI_SCREEN_H_
+#define UI_SCREEN_H_
+
 #include <Arduino.h>
-#include "./screen/controls/preset.h"
-#include "./screen/controls/value.h"
 
-#define CONTENT_PADDING 3
-#define LABEL_WIDTH 49
+namespace Screen {
 
-namespace PresetControl {
+extern uint8 currentControl;
 
-void render(SSD1306Brzo display, byte x, byte y, byte width, byte height, bool isSelected, const char* preset) {
-  if (isSelected) {
-    display.drawRect(x, y, width, height);
-  }
+void init();
+void loop();
 
-  display.drawString(x + CONTENT_PADDING, y, "PRESET: ");
-  display.drawString(x + CONTENT_PADDING + LABEL_WIDTH, y, preset);
-}
+void nextControl();
+void controlUp();
+void controlDown();
 
-}  // namespace PresetControl
+}  // namespace Screen
+
+#endif  // UI_SCREEN_H_
