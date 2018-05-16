@@ -21,15 +21,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define LIGHTS_ANIMATION_H_
 
 #include <Arduino.h>
-#include "./colorspace.h"
+#include <FastLED.h>
 
 namespace Animation {
 
 class AnimationBase {
  public:
-  virtual void setBrightness(double newBrightness);
-  virtual void setValues(byte* values);
-  virtual void updateColors(uint32 commandTime, colorspace::hsv* buffer);
+  virtual void setBrightness(uint8 newBrightness) = 0;
+  virtual void setValues(uint8* values) = 0;
+  virtual void updateColors(uint32 commandTime, CHSV* buffer) = 0;
 };
 
 }

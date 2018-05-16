@@ -17,30 +17,30 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <FastLED.h>
 #include "./lights/animations/pulse.h"
-#include "./lights/colorspace.h"
 #include "../../config.h"
 #include "./codes.h"
 
 namespace Pulse {
 
 double step = 0;
-double hue = 0;
-double saturation = 0;
+uint8 hue = 0;
+uint8 saturation = 0;
 
-double brightness = 0;
+uint8 brightness = 0;
 
-void PulseAnimation::setBrightness(double newBrightness) {
+void PulseAnimation::setBrightness(uint8 newBrightness) {
   brightness = newBrightness;
 }
 
-void PulseAnimation::setValues(byte* values) {
+void PulseAnimation::setValues(uint8* values) {
   step = (static_cast<double>(values[0]) / 255.0) / 300;
-  hue = static_cast<double>(values[1]) * 360.0 / 255;
-  saturation = static_cast<double>(values[2]) / 255;
+  hue = values[1];
+  saturation = values[2];
 }
 
-void PulseAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
+void PulseAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   uint32 period = 2 / step;
   uint32 periodTime = commandTime % period;
 
@@ -54,7 +54,7 @@ void PulseAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
     buffer[i].h = hue;
     buffer[i].s = saturation;
-    buffer[i].v = currentBrightness * brightness;
+    buffer[i].v = currentBrightness * brightness / 255;
   }
 }
 

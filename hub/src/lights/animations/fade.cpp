@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <FastLED.h>
 #include "./lights/animations/fade.h"
-#include "./lights/colorspace.h"
 #include "../../config.h"
 #include "./codes.h"
 
@@ -27,20 +27,20 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Fade {
 
 double step = 0;
-double brightness = 0;
+uint8 brightness = 0;
 
-void FadeAnimation::setBrightness(double newBrightness) {
+void FadeAnimation::setBrightness(uint8 newBrightness) {
   brightness = newBrightness;
 }
 
-void FadeAnimation::setValues(byte* values) {
+void FadeAnimation::setValues(uint8* values) {
   step = static_cast<double>(values[0]) / 1280.0;
 }
 
-void FadeAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
+void FadeAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    buffer[i].h = (static_cast<int>(commandTime * step) + COLOR_DIFFERENCE * i) % 360;
-    buffer[i].s = 1;
+    buffer[i].h = (static_cast<uint32>(commandTime * step) + COLOR_DIFFERENCE * i) % 255;
+    buffer[i].s = 255;
     buffer[i].v = brightness;
   }
 }

@@ -22,7 +22,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include "./lights/colorspace.h"
 #include "./lights/animation.h"
 #include "./lights/lights.h"
 #include "./codes.h"
@@ -37,16 +36,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Lights {
 
 CRGB leds[NUM_PIXELS];
-
-colorspace::hsv colors[NUM_PIXELS];
+CHSV colors[NUM_PIXELS];
 Codes::Preset::Preset preset = Codes::Preset::Unknown;
 byte brightness = 0;
 uint32 lastUpdateTime = 0;
 
 Animation::AnimationBase* animations[NUM_PRESETS];
-
-void updateColors();
-void displayColors();
 
 void update();
 
@@ -64,8 +59,13 @@ void init() {
 }
 
 void loop() {
-  updateColors();
-  displayColors();
+  if (preset != Codes::Preset::Unknown) {
+    animations[preset]->updateColors(State::getSettings()->clock, colors);
+  }
+  for (uint16 i = 0; i < NUM_PIXELS; i++) {
+    hsv2rgb_spectrum(colors[i], leds[i]);
+  }
+  FastLED.show();
 }
 
 void update() {
@@ -92,22 +92,6 @@ void update() {
   if (preset != Codes::Preset::Unknown) {
     animations[preset]->setValues(settings->presetSettings.presetValues[settings->presetSettings.preset]);
   }
-}
-
-void updateColors() {
-  if (preset != Codes::Preset::Unknown) {
-    animations[preset]->updateColors(State::getSettings()->clock, colors);
-  }
-}
-
-void displayColors() {
-  for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    colorspace::rgb convertedColor = hsv2rgb(colors[i]);
-    leds[i].r = static_cast<uint8>(convertedColor.r * 255);
-    leds[i].g = static_cast<uint8>(convertedColor.g * 255);
-    leds[i].b = static_cast<uint8>(convertedColor.b * 255);
-  }
-  FastLED.show();
 }
 
 }  // namespace Lights

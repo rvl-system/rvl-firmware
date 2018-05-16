@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define LIGHTS_ANIMATIONS_FADE_H_
 
 #include <Arduino.h>
-#include "./lights/colorspace.h"
+#include <FastLED.h>
 #include "./lights/animation.h"
 #include "./codes.h"
 
@@ -29,9 +29,9 @@ namespace Fade {
 
 class FadeAnimation : public Animation::AnimationBase {
  public:
-  void setBrightness(double newBrightness);
+  void setBrightness(uint8 newBrightness);
   void setValues(byte* values);
-  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
+  void updateColors(uint32 commandTime, CHSV* buffer);
 };
 
 }

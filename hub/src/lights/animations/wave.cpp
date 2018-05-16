@@ -17,33 +17,33 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <FastLED.h>
 #include <math.h>
 #include "./lights/animations/wave.h"
-#include "./lights/colorspace.h"
 #include "../../config.h"
 #include "./codes.h"
 
 namespace Wave {
 
 double step = 0;
-byte spacing = 0;
+uint8 spacing = 0;
 double hueForeground = 0;
 double hueBackground = 0;
 
-double brightness = 0;
+uint8 brightness = 0;
 
-void WaveAnimation::setBrightness(double newBrightness) {
+void WaveAnimation::setBrightness(uint8 newBrightness) {
   brightness = newBrightness;
 }
 
-void WaveAnimation::setValues(byte* values) {
+void WaveAnimation::setValues(uint8* values) {
   step = (static_cast<double>(values[0]) / 255.0) / 300;
   spacing = values[1];
   hueForeground = static_cast<double>(values[2]) * 360.0 / 255;
   hueBackground = static_cast<double>(values[3]) * 360.0 / 255;
 }
 
-void WaveAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
+void WaveAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   uint32 period = 2 / step;
   double periodTime = 2 * PI * (commandTime % period) / period;
 
@@ -53,26 +53,17 @@ void WaveAnimation::updateColors(uint32 commandTime, colorspace::hsv* buffer) {
       alpha = 0;
     }
 
-    colorspace::hsv foregroundHSV;
+    CHSV foregroundHSV;
     foregroundHSV.h = hueForeground;
-    foregroundHSV.s = 1;
+    foregroundHSV.s = 255;
     foregroundHSV.v = brightness;
 
-    colorspace::rgb foregroundRGB = colorspace::hsv2rgb(foregroundHSV);
-
-    colorspace::hsv backgroundHSV;
+    CHSV backgroundHSV;
     backgroundHSV.h = hueBackground;
-    backgroundHSV.s = 1;
+    backgroundHSV.s = 255;
     backgroundHSV.v = brightness;
 
-    colorspace::rgb backgroundRGB = colorspace::hsv2rgb(backgroundHSV);
-
-    colorspace::rgb compositedRGB;
-    compositedRGB.r = (foregroundRGB.r * alpha + backgroundRGB.r * (1 - alpha));
-    compositedRGB.g = (foregroundRGB.g * alpha + backgroundRGB.g * (1 - alpha));
-    compositedRGB.b = (foregroundRGB.b * alpha + backgroundRGB.b * (1 - alpha));
-
-    buffer[i] = colorspace::rgb2hsv(compositedRGB);
+    buffer[i] = blend(foregroundHSV, backgroundHSV, alpha);
   }
 }
 

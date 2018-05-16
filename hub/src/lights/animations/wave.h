@@ -21,8 +21,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define LIGHTS_ANIMATIONS_WAVE_H_
 
 #include <Arduino.h>
+#include <FastLED.h>
 
-#include "./lights/colorspace.h"
 #include "./lights/animation.h"
 #include "./codes.h"
 
@@ -30,9 +30,9 @@ namespace Wave {
 
 class WaveAnimation : public Animation::AnimationBase {
  public:
-  void setBrightness(double newBrightness);
-  void setValues(byte* values);
-  void updateColors(uint32 commandTime, colorspace::hsv* buffer);
+  void setBrightness(uint8 newBrightness);
+  void setValues(uint8* values);
+  void updateColors(uint32 commandTime, CHSV* buffer);
 };
 
 }  // namespace Wave
