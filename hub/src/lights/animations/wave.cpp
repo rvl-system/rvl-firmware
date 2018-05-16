@@ -48,6 +48,7 @@ void WaveAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   double periodTime = 2 * PI * (commandTime % period) / period;
 
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
+    // TODO(nebrius): convert to sin8 or other FastLED method
     double alpha = sin(2 * PI * (i % spacing) / spacing + periodTime);
     if (alpha < 0) {
       alpha = 0;
@@ -63,7 +64,7 @@ void WaveAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
     backgroundHSV.s = 255;
     backgroundHSV.v = brightness;
 
-    buffer[i] = blend(foregroundHSV, backgroundHSV, alpha);
+    buffer[i] = blend(foregroundHSV, backgroundHSV, alpha * 255);
   }
 }
 

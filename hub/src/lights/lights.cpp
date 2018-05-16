@@ -37,8 +37,10 @@ namespace Lights {
 
 CRGB leds[NUM_PIXELS];
 CHSV colors[NUM_PIXELS];
+
 Codes::Preset::Preset preset = Codes::Preset::Unknown;
 byte brightness = 0;
+
 uint32 lastUpdateTime = 0;
 
 Animation::AnimationBase* animations[NUM_PRESETS];
@@ -77,9 +79,8 @@ void update() {
     Serial.print("Changing brightness to: ");
     Serial.println(settings->brightness);
     brightness = settings->brightness;
-    double scaledBrightness = static_cast<double>(settings->brightness) / 255.0;
     for (uint8 i = 0; i < NUM_PRESETS; i++) {
-      animations[i]->setBrightness(scaledBrightness);
+      animations[i]->setBrightness(brightness);
     }
   }
 
