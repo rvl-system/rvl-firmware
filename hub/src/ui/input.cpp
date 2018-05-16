@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./ui/input.h"
-#include "./ui/screen.h"
+#include "./ui/ui_state.h"
 #include "./codes.h"
 #include "../config.h"
 
@@ -77,7 +77,7 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
 void loop() {
   switch (getButtonChangeState(&nextButtonInfo)) {
     case Pressed:
-      Screen::nextControl();
+      UIState::nextControl();
       break;
     case Holding:
       // Do Nothing
@@ -89,11 +89,11 @@ void loop() {
 
   switch (getButtonChangeState(&upButtonInfo)) {
     case Pressed:
-      Screen::controlUp();
+      UIState::controlUp();
       break;
     case Holding:
-      if (Screen::currentControl != Codes::Control::Preset) {
-        Screen::controlUp();
+      if (UIState::currentControl != Codes::Control::Preset) {
+        UIState::controlUp();
       }
       break;
     case None:
@@ -103,11 +103,11 @@ void loop() {
 
   switch (getButtonChangeState(&downButtonInfo)) {
     case Pressed:
-      Screen::controlDown();
+      UIState::controlDown();
       break;
     case Holding:
-      if (Screen::currentControl != Codes::Control::Preset) {
-        Screen::controlDown();
+      if (UIState::currentControl != Codes::Control::Preset) {
+        UIState::controlDown();
       }
       break;
     case None:

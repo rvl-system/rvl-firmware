@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,16 +17,39 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_SCREEN_H_
-#define UI_SCREEN_H_
+#ifndef UI_SCREEN_RENDER_H_
+#define UI_SCREEN_RENDER_H_
 
 #include <Arduino.h>
 
-namespace Screen {
+namespace Render {
 
-void init();
-void loop();
+enum class EntryType {
+  Range,
+  List
+};
 
-}  // namespace Screen
+struct RangeEntry {
+  uint8 min;
+  uint8 max;
+  uint8 value;
+};
 
-#endif  // UI_SCREEN_H_
+struct ListEntry {
+  const char** values;
+  uint8 numValues;
+  uint8 selectedValueIndex;
+};
+
+struct Entry {
+  const char* label;
+  EntryType entryType;
+  ListEntry listEntry;
+  RangeEntry rangeEntry;
+};
+
+void render(Entry* entries, uint8 numEntries, uint8 selectedEntry);
+
+}  // namespace Render
+
+#endif  // UI_SCREEN_RENDER_H_

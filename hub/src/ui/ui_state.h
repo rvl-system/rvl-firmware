@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,16 +17,19 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_SCREEN_H_
-#define UI_SCREEN_H_
+#ifndef UI_UI_STATE_H_
+#define UI_UI_STATE_H_
 
 #include <Arduino.h>
 
-namespace Screen {
+namespace UIState {
 
-void init();
-void loop();
+extern uint8 currentControl;
 
-}  // namespace Screen
+void nextControl();
+void controlUp();
+void controlDown();
 
-#endif  // UI_SCREEN_H_
+}  // namespace UIState
+
+#endif  // UI_UI_STATE_H_

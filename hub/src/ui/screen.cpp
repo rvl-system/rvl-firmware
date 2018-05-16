@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <brzo_i2c.h>
 #include <SSD1306Brzo.h>
 #include "./ui/screen.h"
+#include "./ui/ui_state.h"
 #include "../config.h"
 #include "./state.h"
 #include "./codes.h"
@@ -29,9 +30,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/controls/brightness.h"
 #include "./ui/controls/preset.h"
 #include "./ui/controls/value.h"
-
-#define BRIGHTNESS_STEP 1
-#define MAX_BRIGHTNESS 255
 
 #define BRIGHTNESS_X 0
 #define BRIGHTNESS_Y 0
@@ -53,14 +51,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Screen {
 
-uint8 currentControl = 0;
-
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
 void update();
 
 void init() {
-  Event::on(Codes::EventType::AnimationChange, update);
+  Event::on(Codes::EventType::UIStateChange, update);
   display.init();
 #ifdef INVERT_DISPLAY
   display.flipScreenVertically();
@@ -76,121 +72,6 @@ void init() {
 void loop() {
 }
 
-void nextControl() {
-  int maxControls = 3;
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    if (presetValueLabels[State::getSettings()->presetSettings.preset][i] == NULL) {
-      break;
-    }
-    maxControls++;
-  }
-  currentControl++;
-  if (currentControl == maxControls) {
-    currentControl = 0;
-  }
-
-  Serial.print("Setting control ");
-  Serial.println(currentControl);
-  update();
-}
-
-int calculateNewValue(byte code, int value, bool direction) {
-  auto settings = State::getSettings();
-  if (direction) {
-    value++;
-    if (value > presetValueMax[settings->presetSettings.preset][code]) {
-      value = presetValueMax[settings->presetSettings.preset][code];
-    }
-  } else {
-    value--;
-    if (value < presetValueMin[settings->presetSettings.preset][code]) {
-      value = presetValueMin[settings->presetSettings.preset][code];
-    }
-  }
-  return value;
-}
-
-void handleValueChange(int code, bool direction) {
-  auto settings = State::getSettings();
-  int newValue = calculateNewValue(
-    code,
-    settings->presetSettings.presetValues[settings->presetSettings.preset][code],
-    direction);
-  settings->presetSettings.presetValues[settings->presetSettings.preset][code] = newValue;
-
-  Serial.print("Setting preset ");
-  Serial.print(settings->presetSettings.preset);
-  Serial.print(" code ");
-  Serial.print(code);
-  Serial.print(" to value ");
-  Serial.println(newValue);
-  Event::emit(Codes::EventType::AnimationChange);
-}
-
-void controlUp() {
-  auto settings = State::getSettings();
-  switch (currentControl) {
-    case Codes::Control::Brightness:
-      if (settings->brightness < MAX_BRIGHTNESS) {
-        settings->brightness += BRIGHTNESS_STEP;
-        if (settings->brightness > MAX_BRIGHTNESS) {
-          settings->brightness = MAX_BRIGHTNESS;
-        }
-        Serial.print("Setting brightness to ");
-        Serial.println(settings->brightness);
-        Event::emit(Codes::EventType::AnimationChange);
-      }
-      break;
-    case Codes::Control::Preset:
-      settings->presetSettings.preset++;
-      if (settings->presetSettings.preset == NUM_PRESETS) {
-        settings->presetSettings.preset = 0;
-      }
-      Serial.print("Setting preset ");
-      Serial.println(settings->presetSettings.preset);
-      Event::emit(Codes::EventType::AnimationChange);
-      break;
-    default:
-      handleValueChange(currentControl - 3, true);
-      break;
-  }
-  update();
-}
-
-void controlDown() {
-  auto settings = State::getSettings();
-  switch (currentControl) {
-    case Codes::Control::Brightness:
-      if (settings->brightness > 0) {
-        settings->brightness -= BRIGHTNESS_STEP;
-        if (settings->brightness < 0) {
-          settings->brightness = 0;
-        }
-        Serial.print("Setting brightness to ");
-        Serial.println(settings->brightness);
-        Event::emit(Codes::EventType::AnimationChange);
-      }
-      break;
-    case Codes::Control::Preset:
-      switch (settings->presetSettings.preset) {
-        case Codes::Preset::Fade:
-          settings->presetSettings.preset = Codes::Preset::Pulse;
-          break;
-        case Codes::Preset::Pulse:
-          settings->presetSettings.preset = Codes::Preset::Fade;
-          break;
-      }
-      Serial.print("Setting preset ");
-      Serial.println(settings->presetSettings.preset);
-      Event::emit(Codes::EventType::AnimationChange);
-      break;
-    default:
-      handleValueChange(currentControl - 3, false);
-      break;
-  }
-  update();
-}
-
 void update() {
   auto settings = State::getSettings();
   display.clear();
@@ -203,7 +84,7 @@ void update() {
     BRIGHTNESS_Y,
     BRIGHTNESS_WIDTH,
     BRIGHTNESS_HEIGHT,
-    currentControl == Codes::Control::Brightness,
+    UIState::currentControl == Codes::Control::Brightness,
     settings->brightness);
 
   // Draw the preset
@@ -213,7 +94,7 @@ void update() {
     PRESET_Y,
     PRESET_WIDTH,
     PRESET_HEIGHT,
-    currentControl == Codes::Control::Preset,
+    UIState::currentControl == Codes::Control::Preset,
     presetNames[settings->presetSettings.preset]);
 
   // Draw the values
@@ -226,7 +107,7 @@ void update() {
         (i + 1) * VALUE_SPACING,
         VALUE_WIDTH,
         VALUE_HEIGHT,
-        currentControl == i + 3,
+        UIState::currentControl == i + 3,
         label,
         static_cast<double>(
           settings->presetSettings.presetValues[settings->presetSettings.preset][i] -

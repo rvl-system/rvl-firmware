@@ -60,5 +60,13 @@ void loop() {
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
-  delay(UPDATE_RATE - (millis() - startTime));
+  uint32 now = millis();
+  if (now - startTime > UPDATE_RATE) {
+    Serial.print("Warning: system loop took ");
+    Serial.print(now - startTime - UPDATE_RATE);
+    Serial.println(" ms longer than the update rate");
+    delay(1);
+  } else {
+    delay(UPDATE_RATE - (millis() - startTime));
+  }
 }
