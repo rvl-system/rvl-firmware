@@ -24,7 +24,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Preset {
 
-void init(Transport::TransportInterface* newTransport);
+void init(TransportInterface* newTransport);
 void loop();
 
 void parsePacket();

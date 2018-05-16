@@ -33,7 +33,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 void setup() {
   delay(200);
-  Serial.begin(115200);
+  Serial.begin(921600);
   Serial.println();
   Serial.println("Initializing");
   State::init();

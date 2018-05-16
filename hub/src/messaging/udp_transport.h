@@ -25,9 +25,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace UDPTransport {
 
-using namespace Transport;
-
 class UDPTransport : public TransportInterface {
+ public:
+  explicit UDPTransport(WiFiUDP* udp);
   void beginWrite();
   void write8(uint8 data);
   void write16(uint16 data);

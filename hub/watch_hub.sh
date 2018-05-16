@@ -16,4 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-seriallog -p /dev/tty.usbserial-A505WVU9
+seriallog -p /dev/tty.usbserial-A504WNTT -b 921600

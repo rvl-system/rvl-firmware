@@ -22,8 +22,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 
-namespace Transport {
-
 class TransportInterface {
  public:
   virtual void beginWrite() = 0;
@@ -38,7 +36,5 @@ class TransportInterface {
   virtual uint32 read32() = 0;
   virtual void read(uint8* buffer, int length) = 0;
 };
-
-}  // namespace Transport
 
 #endif  // MESSAGING_STACK_TRANSPORT_H_

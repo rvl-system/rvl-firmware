@@ -30,11 +30,11 @@ namespace Preset {
 
 uint32 nextSyncTime = millis();
 
-Transport::TransportInterface* transport;
+TransportInterface* transport;
 
 void sync();
 
-void init(Transport::TransportInterface* newTransport) {
+void init(TransportInterface* newTransport) {
   transport = newTransport;
   Event::on(Codes::EventType::AnimationChange, sync);
 }

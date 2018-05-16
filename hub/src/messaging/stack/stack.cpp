@@ -30,13 +30,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Stack {
 
-Transport::TransportInterface* transport;
+TransportInterface* transport;
 
-void init(Transport::TransportInterface* newTransport) {
+void init(TransportInterface* newTransport) {
   transport = newTransport;
   ClockSync::init(newTransport);
   GigglePixel::init(newTransport);
-  Serial.println("Messaging Client initialized");
 }
 
 void parsePacket() {

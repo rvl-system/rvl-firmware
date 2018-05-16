@@ -36,12 +36,13 @@ namespace Messaging {
 byte state = STATE_DISCONNECTED;
 uint32 nextTimeToPrintDot = 0;
 
-UDPTransport::UDPTransport transport;
+WiFiUDP udp;
+UDPTransport::UDPTransport transport(&udp);
 
 void init() {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);   // Helps keep LEDs from flickering
   Stack::init(&transport);
-  Serial.println("Messaging Client initialized");
+  Serial.println("Messaging initialized");
 }
 
 void loop() {

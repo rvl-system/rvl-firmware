@@ -16,4 +16,5 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-platformio run -e hub && esptool.py -p /dev/tty.usbserial-A505WVU9 -b 921600 write_flash 0x0 .pioenvs/hub/firmware.bin
+./lint.sh
+platformio run -e hub && esptool.py -p /dev/tty.usbserial-A504WNTT -b 921600 write_flash 0x0 .pioenvs/hub/firmware.bin

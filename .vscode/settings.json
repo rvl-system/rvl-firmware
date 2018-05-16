@@ -16,6 +16,7 @@
     "ios": "cpp",
     "initializer_list": "cpp",
     "utility": "cpp",
-    "__locale": "cpp"
+    "__locale": "cpp",
+    "cstddef": "cpp"
   }
 }

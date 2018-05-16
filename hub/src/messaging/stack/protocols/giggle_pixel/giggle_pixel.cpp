@@ -30,9 +30,9 @@ namespace GigglePixel {
 
 const uint8 protocolVersion = 1;
 
-Transport::TransportInterface* transport;
+TransportInterface* transport;
 
-void init(Transport::TransportInterface* newTransport) {
+void init(TransportInterface* newTransport) {
   transport = newTransport;
   Preset::init(newTransport);
   Palette::init(newTransport);
@@ -42,50 +42,34 @@ void loop() {
   Preset::loop();
 }
 
-struct GigglePixelHeader {
-  uint8 protocolVersion;
-  uint16 length;
-  uint8 packetType;
-  uint8 priority;
-  uint16 sourceId;
-};
-
 void setClientId(uint16 id);
 void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
 
-bool readHeader(GigglePixelHeader& header) {
-  header.protocolVersion = transport->read8();
-  if (header.protocolVersion != protocolVersion) {
-    return false;
-  }
-  header.length = transport->read16();
-  header.packetType = transport->read8();
-  header.priority = transport->read8();
-  transport->read8();  // Reserved
-  header.sourceId = transport->read16();
-  return true;
-}
-
 void parsePacket() {
   Serial.println("Parsing GigglePixel packet");
-  GigglePixelHeader headerDetails;
-  if (!readHeader(headerDetails)) {
+  uint8 protocolVersion = transport->read8();
+  if (protocolVersion != protocolVersion) {
     Serial.println("Received unsupported GigglePixel protocol version packet");
     return;
   }
+  uint16 length = transport->read16();
+  uint8 packetType = transport->read8();
+  uint8 priority = transport->read8();
+  transport->read8();  // Reserved
+  uint16 sourceId = transport->read16();
 
   // Ignore our own broadcast packets
   if (State::getSettings()->mode == Codes::Mode::Controller) {
     return;
   }
 
-  switch (headerDetails.packetType) {
+  switch (packetType) {
     case Codes::GigglePixelPacketTypes::Preset:
       Preset::parsePacket();
       break;
     default:
       Serial.print("Unsupported packet type received: ");
-      Serial.println(headerDetails.packetType);
+      Serial.println(packetType);
   }
 }
 

@@ -44,8 +44,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;
 extern IPAddress SUBNET;
-
-extern WiFiUDP udp;
 #endif
 
 extern const char* presetNames[NUM_PRESETS];
@@ -56,7 +54,7 @@ extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
 #define CLOCK_PIN 2
 #define DATA_PIN 0
-#define NUM_PIXELS 127
+#define NUM_PIXELS 180
 
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4

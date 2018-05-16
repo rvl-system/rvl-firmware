@@ -26,9 +26,9 @@ namespace ClockSync {
 
 const uint8 protocolVersion = 1;
 
-Transport::TransportInterface* transport;
+TransportInterface* transport;
 
-void init(Transport::TransportInterface* newTransport) {
+void init(TransportInterface* newTransport) {
   transport = newTransport;
 }
 
