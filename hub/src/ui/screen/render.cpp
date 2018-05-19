@@ -18,13 +18,113 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <brzo_i2c.h>
+#include <SSD1306Brzo.h>
 #include "./ui/screen/render.h"
-#include "./codes.h"
+#include "../../config.h"
 
 namespace Render {
 
-void render(Entry* entries, uint8 numEntries) {
-  // Coming soon
+SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
+
+// All position entries are 0-3
+
+uint8 previousSelectedEntry = 0;  // from 0 to numEntries
+uint8 entryWindowStart = 0; // from 0 to numEntries
+uint8 selectedEntryRow = 0; // from 0 to 3
+
+void init() {
+  display.init();
+#ifdef INVERT_DISPLAY
+  display.flipScreenVertically();
+#endif
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+}
+
+void renderScrollBar(uint8 numEntries, uint8 windowStart) {
+  if (numEntries > 4) {
+    display.fillRect(123, (64 - 24) * windowStart / (numEntries - 4), 5, 24);
+  }
+}
+
+void renderSelectedEntryBox(uint8 row) {
+  display.drawRect(24, row * 16, 95, 15);
+}
+
+void renderEntry(Entry* entry, uint8 row) {
+  uint8 textY = row * 16 + 1;
+  display.drawStringMaxWidth(26, textY, 26, entry->label);
+  switch (entry->entryType) {
+    case Render::EntryType::Enum:
+      // TODO(nebrius): draw lef/right triangles to indicate possibility for scrolling
+      display.drawStringMaxWidth(52, textY, 62, entry->listEntry->values[entry->listEntry->selectedValueIndex]);
+      break;
+    case Render::EntryType::Range:
+      uint8 progress = 100 * entry->rangeEntry->value / 255;
+      display.drawProgressBar(52, row * 16 + 3, 60, 8, progress);
+      break;
+  }
+}
+
+void renderEntrySet(EntrySet& entrySet) {
+  Serial.print(previousSelectedEntry);
+  Serial.print(" => ");
+  Serial.println(entrySet.selectedEntry);
+  if (previousSelectedEntry > entrySet.selectedEntry) {
+    if (selectedEntryRow == 0) {
+      entryWindowStart--;
+    } else {
+      selectedEntryRow--;
+    }
+  } else if (previousSelectedEntry < entrySet.selectedEntry) {
+    if (selectedEntryRow == 3) {
+      entryWindowStart++;
+    } else {
+      selectedEntryRow++;
+    }
+  }
+  previousSelectedEntry = entrySet.selectedEntry;
+  for (uint8 i = 0; i < 4; i++) {
+    renderEntry(entrySet.entries[i + entryWindowStart], i);
+  }
+  renderSelectedEntryBox(selectedEntryRow);
+  renderScrollBar(entrySet.entries.size(), entryWindowStart);
+}
+
+void renderIcon(Icon* icon, uint8 row) {
+  for (uint8 x = 0; x < 16; x++) {
+    for (uint8 y = 0; y < 16; y++) {
+      if (icon->data[y][x]) {
+        display.setPixel(x, y + row * 16);
+      }
+    }
+  }
+}
+
+void renderIconSet(IconSet& iconSet) {
+  uint8 i = 0;
+  for (auto& icon : iconSet.icons) {
+    renderIcon(icon, i);
+    i++;
+  }
+}
+
+void renderBorder() {
+  display.drawLine(20, 0, 20, 63);
+}
+
+void render(EntrySet& entrySet, IconSet& iconSet) {
+  display.clear();
+  display.setColor(BLACK);
+  display.fillRect(0, 0, 128, 64);
+  display.setColor(WHITE);
+
+  renderIconSet(iconSet);
+  renderBorder();
+  renderEntrySet(entrySet);
+
+  display.display();
 }
 
 }  // Render

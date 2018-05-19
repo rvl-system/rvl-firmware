@@ -18,54 +18,43 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <brzo_i2c.h>
-#include <SSD1306Brzo.h>
 #include "./ui/screen.h"
 #include "./ui/ui_state.h"
+#include "./ui/screen/render.h"
 #include "../config.h"
 #include "./state.h"
 #include "./codes.h"
 #include "./event.h"
 
-#include "./ui/controls/brightness.h"
-#include "./ui/controls/preset.h"
-#include "./ui/controls/value.h"
-
-#define BRIGHTNESS_X 0
-#define BRIGHTNESS_Y 0
-#define BRIGHTNESS_WIDTH 15
-#define BRIGHTNESS_HEIGHT 64
-
-#define PRESET_X 17
-#define PRESET_Y 0
-#define PRESET_HEIGHT 13
-#define PRESET_WIDTH 111
-
-#define VALUE_X 17
-#define VALUE_SPACING 13
-#define VALUE_HEIGHT 13
-#define VALUE_WIDTH 96
-
-#define COUNT_X 122
-#define COUNT_Y 40
-
 namespace Screen {
 
-SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
+Render::Icon wifiConnectedIcon = {
+  {
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+  }
+};
 
 void update();
 
 void init() {
   Event::on(Codes::EventType::UIStateChange, update);
-  display.init();
-#ifdef INVERT_DISPLAY
-  display.flipScreenVertically();
-#endif
-  display.clear();
-  display.setFont(ArialMT_Plain_10);
-
+  Render::init();
   Screen::update();
-
   Serial.println("Screen initialized");
 }
 
@@ -73,51 +62,73 @@ void loop() {
 }
 
 void update() {
-  auto settings = State::getSettings();
-  display.clear();
-  display.setColor(WHITE);
+  Serial.println("Updating screen");
 
-  // Draw the brightness icon
-  BrightnessControl::render(
-    display,
-    BRIGHTNESS_X,
-    BRIGHTNESS_Y,
-    BRIGHTNESS_WIDTH,
-    BRIGHTNESS_HEIGHT,
-    UIState::currentControl == Codes::Control::Brightness,
-    settings->brightness);
+  Render::EnumEntry e1Enum = {
+    { "Option 1", "Option 2" },
+    0
+  };
+  Render::Entry e1 = {
+    "One:",
+    Render::EntryType::Enum,
+    &e1Enum,
+    NULL
+  };
 
-  // Draw the preset
-  PresetControl::render(
-    display,
-    PRESET_X,
-    PRESET_Y,
-    PRESET_WIDTH,
-    PRESET_HEIGHT,
-    UIState::currentControl == Codes::Control::Preset,
-    presetNames[settings->presetSettings.preset]);
+  Render::EnumEntry e2Enum = {
+    { "Option 1", "Option 2" },
+    1
+  };
+  Render::Entry e2 = {
+    "Two:",
+    Render::EntryType::Enum,
+    &e1Enum,
+    NULL
+  };
 
-  // Draw the values
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    const char* label = presetValueLabels[settings->presetSettings.preset][i];
-    if (label != NULL) {
-      ValueControl::render(
-        display,
-        VALUE_X,
-        (i + 1) * VALUE_SPACING,
-        VALUE_WIDTH,
-        VALUE_HEIGHT,
-        UIState::currentControl == i + 3,
-        label,
-        static_cast<double>(
-          settings->presetSettings.presetValues[settings->presetSettings.preset][i] -
-          presetValueMin[settings->presetSettings.preset][i]) / static_cast<double>(
-          presetValueMax[settings->presetSettings.preset][i] -
-          presetValueMin[settings->presetSettings.preset][i]));
-    }
-  }
+  Render::RangeEntry e3Range = { 128 };
+  Render::Entry e3 = {
+    "Three:",
+    Render::EntryType::Range,
+    NULL,
+    &e3Range
+  };
 
-  display.display();
+  Render::RangeEntry e4Range = { 50 };
+  Render::Entry e4 = {
+    "Four:",
+    Render::EntryType::Range,
+    NULL,
+    &e4Range
+  };
+
+  Render::RangeEntry e5Range = { 200 };
+  Render::Entry e5 = {
+    "Five:",
+    Render::EntryType::Range,
+    NULL,
+    &e5Range
+  };
+
+  Render::RangeEntry e6Range = { 0 };
+  Render::Entry e6 = {
+    "Six:",
+    Render::EntryType::Range,
+    NULL,
+    &e6Range
+  };
+
+  std::vector<Render::Entry*> entries = {
+    &e1, &e2, &e3, &e4, &e5, &e6
+  };
+  Render::EntrySet entrySet = { entries, UIState::currentControl };
+
+  std::list<Render::Icon*> icons = {
+    &wifiConnectedIcon
+  };
+  Render::IconSet iconSet = { icons };
+
+  Render::render(entrySet, iconSet);
 }
 
 }  // namespace Screen
