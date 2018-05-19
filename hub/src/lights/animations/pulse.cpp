@@ -54,7 +54,7 @@ void PulseAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
     buffer[i].h = hue;
     buffer[i].s = saturation;
-    buffer[i].v = currentBrightness * brightness / 255;
+    buffer[i].v = currentBrightness * brightness;
   }
 }
 
