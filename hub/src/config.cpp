@@ -29,18 +29,6 @@ IPAddress GATEWAY(192, 168, 42, 255);
 IPAddress SUBNET(255, 255, 255, 0);
 #endif
 
-const char* presetNames[NUM_PRESETS] = {
-  "FADE",
-  "PULSE",
-  "WAVE"
-};
-
-const char* presetValueLabels[NUM_PRESETS][NUM_PRESET_VALUES] = {
-  { "RATE", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL },
-  { "RATE", "HUE", "SATR", NULL, NULL, NULL, NULL, NULL, NULL, NULL },
-  { "RATE", "SPAC", "HUEF", "HUEB", NULL, NULL, NULL, NULL, NULL, NULL }
-};
-
 const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

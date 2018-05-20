@@ -18,6 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include "./ui/screen/screen_entries.h"
 #include "./ui/ui_state.h"
 #include "./state.h"
 #include "./event.h"
@@ -31,21 +32,13 @@ namespace UIState {
 uint8 currentControl = 0;
 
 void nextControl() {
-  int maxControls = 3;
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    if (presetValueLabels[State::getSettings()->presetSettings.preset][i] == NULL) {
-      break;
-    }
-    maxControls++;
+  int maxControls = ScreenEntries::numControls[State::getSettings()->presetSettings.preset];
+  if (currentControl < maxControls - 1) {
+    currentControl++;
+    Serial.print("Setting control ");
+    Serial.println(currentControl);
+    Event::emit(Codes::EventType::UIStateChange);
   }
-  currentControl++;
-  if (currentControl == maxControls) {
-    currentControl = 0;
-  }
-
-  Serial.print("Setting control ");
-  Serial.println(currentControl);
-  Event::emit(Codes::EventType::UIStateChange);
 }
 
 int calculateNewValue(byte code, int value, bool direction) {
