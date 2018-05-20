@@ -101,8 +101,9 @@ void update() {
       break;
   }
 
-  std::list<Render::Icon*> icons = {
-    &Icons::wifiConnectedIcon
+  std::list<Icons::StatusIcon*> icons = {
+    &Icons::wifiConnectedIcon,
+    &Icons::wifiDisconnectedIcon
   };
 
   Render::render(&entries, UIState::currentControl, &icons);

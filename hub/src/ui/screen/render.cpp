@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <brzo_i2c.h>
 #include <SSD1306Brzo.h>
 #include "./ui/screen/render.h"
+#include "./ui/screen/icons.h"
 #include "./ui/screen/screen_entries.h"
 #include "../../config.h"
 
@@ -100,7 +101,7 @@ void renderEntrySet(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedE
   renderScrollBar(entries->size(), entryWindowStart);
 }
 
-void renderIcon(Icon* icon, uint8 row) {
+void renderIcon(Icons::StatusIcon* icon, uint8 row) {
   for (uint8 x = 0; x < 16; x++) {
     for (uint8 y = 0; y < 16; y++) {
       if (icon->data[y][x]) {
@@ -110,7 +111,7 @@ void renderIcon(Icon* icon, uint8 row) {
   }
 }
 
-void renderIconSet(std::list<Icon*>* icons) {
+void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
   uint8 i = 0;
   for (auto& icon : *icons) {
     renderIcon(icon, i);
@@ -118,7 +119,7 @@ void renderIconSet(std::list<Icon*>* icons) {
   }
 }
 
-void render(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedEntry, std::list<Icon*>* icons) {
+void render(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);

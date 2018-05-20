@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define UI_SCREEN_SCREEN_ENTRIES_H_
 
 #include <Arduino.h>
-#include <list>
+#include <vector>
 
 namespace ScreenEntries {
 
