@@ -51,7 +51,7 @@ void init() {
   FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_PIXELS);
   Event::on(Codes::EventType::AnimationChange, update);
 
-  animations[Codes::Preset::Fade] = new Fade::FadeAnimation();
+  animations[Codes::Preset::Rainbow] = new Fade::FadeAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
   animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
 

@@ -47,7 +47,7 @@ namespace EventType {
 
 namespace Preset {
   enum Preset {
-    Fade = 0,
+    Rainbow = 0,
     Pulse = 1,
     Wave = 2,
     Unknown = 255

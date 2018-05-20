@@ -68,9 +68,6 @@ void renderEntry(Entry* entry, uint8 row) {
 }
 
 void renderEntrySet(EntrySet* entrySet) {
-  Serial.print(previousSelectedEntry);
-  Serial.print(" => ");
-  Serial.println(entrySet->selectedEntry);
   if (previousSelectedEntry > entrySet->selectedEntry) {
     if (selectedEntryRow == 0) {
       entryWindowStart--;

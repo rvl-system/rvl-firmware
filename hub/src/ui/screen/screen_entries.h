@@ -29,21 +29,17 @@ extern Render::Entry wifiEntry;
 extern Render::Entry modeEntry;
 extern Render::Entry presetEntry;
 
-extern Render::Entry rateEntry;
+extern Render::Entry rainbowRateEntry;
 
-const uint8 numControls[] = {
-  1,  // Rainbow
-  3,  // Pulse
-  5,  // Wave
-};
-
+extern Render::Entry pulseRateEntry;
 extern Render::Entry pulseHueEntry;
 extern Render::Entry pulseSaturationEntry;
 
-extern Render::Entry fadeForegroundHueEntry;
-extern Render::Entry fadeForegroundSaturationEntry;
-extern Render::Entry fadeBackgroundHueEntry;
-extern Render::Entry fadeBackgroundSaturationEntry;
+extern Render::Entry waveRateEntry;
+extern Render::Entry waveForegroundHueEntry;
+extern Render::Entry waveForegroundSaturationEntry;
+extern Render::Entry waveBackgroundHueEntry;
+extern Render::Entry waveBackgroundSaturationEntry;
 
 }  // namespace ScreenEntries
 

@@ -32,7 +32,7 @@ namespace UIState {
 uint8 currentControl = 0;
 
 void nextControl() {
-  int maxControls = ScreenEntries::numControls[State::getSettings()->presetSettings.preset];
+  int maxControls = numControls[State::getSettings()->presetSettings.preset];
   if (currentControl < maxControls - 1) {
     currentControl++;
     Serial.print("Setting control ");
@@ -86,7 +86,7 @@ void handleValueChange(int code, bool direction) {
 void controlIncrease() {
   auto settings = State::getSettings();
   switch (currentControl) {
-    case Codes::Control::Brightness:
+    case 0:
       if (settings->brightness < MAX_BRIGHTNESS) {
         settings->brightness += BRIGHTNESS_STEP;
         if (settings->brightness > MAX_BRIGHTNESS) {
@@ -97,7 +97,8 @@ void controlIncrease() {
         Event::emit(Codes::EventType::AnimationChange);
       }
       break;
-    case Codes::Control::Preset:
+      // TODO(nebrius): handle values 1 and 2
+    case 3:
       settings->presetSettings.preset++;
       if (settings->presetSettings.preset == NUM_PRESETS) {
         settings->presetSettings.preset = 0;
@@ -107,7 +108,7 @@ void controlIncrease() {
       Event::emit(Codes::EventType::AnimationChange);
       break;
     default:
-      handleValueChange(currentControl - 3, true);
+      handleValueChange(currentControl - 4, true);
       break;
   }
   Event::emit(Codes::EventType::UIStateChange);
@@ -116,7 +117,7 @@ void controlIncrease() {
 void controlDecrease() {
   auto settings = State::getSettings();
   switch (currentControl) {
-    case Codes::Control::Brightness:
+    case 0:
       if (settings->brightness > 0) {
         settings->brightness -= BRIGHTNESS_STEP;
         if (settings->brightness < 0) {
@@ -127,21 +128,18 @@ void controlDecrease() {
         Event::emit(Codes::EventType::AnimationChange);
       }
       break;
-    case Codes::Control::Preset:
-      switch (settings->presetSettings.preset) {
-        case Codes::Preset::Fade:
-          settings->presetSettings.preset = Codes::Preset::Pulse;
-          break;
-        case Codes::Preset::Pulse:
-          settings->presetSettings.preset = Codes::Preset::Fade;
-          break;
+      // TODO(nebrius): handle values 1 and 2
+    case 3:
+      settings->presetSettings.preset--;
+      if (settings->presetSettings.preset < 0) {
+        settings->presetSettings.preset = NUM_PRESETS - 1;
       }
       Serial.print("Setting preset ");
       Serial.println(settings->presetSettings.preset);
       Event::emit(Codes::EventType::AnimationChange);
       break;
     default:
-      handleValueChange(currentControl - 3, false);
+      handleValueChange(currentControl - 4, false);
       break;
   }
   Event::emit(Codes::EventType::UIStateChange);

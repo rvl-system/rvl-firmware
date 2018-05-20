@@ -26,6 +26,12 @@ namespace UIState {
 
 extern uint8 currentControl;
 
+const uint8 numControls[] = {
+  5,  // Rainbow
+  7,  // Pulse
+  9,  // Wave
+};
+
 void nextControl();
 void previousControl();
 void controlIncrease();

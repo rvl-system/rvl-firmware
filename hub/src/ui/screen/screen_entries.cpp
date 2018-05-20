@@ -72,7 +72,25 @@ Render::Entry rateEntry = {
   &rateRange
 };
 
+// Rainbow preset entries
+
+Render::RangeEntry rainbowRateRange = { 0 };
+Render::Entry rainbowRateEntry = {
+  "RATE",
+  Render::EntryType::Range,
+  NULL,
+  &rainbowRateRange
+};
+
 // Pulse preset entries
+
+Render::RangeEntry pulseRateRange = { 0 };
+Render::Entry pulseRateEntry = {
+  "RATE",
+  Render::EntryType::Range,
+  NULL,
+  &pulseRateRange
+};
 
 Render::RangeEntry pulseHueRange = { 0 };
 Render::Entry pulseHueEntry = {
@@ -90,7 +108,15 @@ Render::Entry pulseSaturationEntry = {
   &pulseSaturationRange
 };
 
-// Fade preset entries
+// Wave preset entries
+
+Render::RangeEntry waveRateRange = { 0 };
+Render::Entry waveRateEntry = {
+  "RATE",
+  Render::EntryType::Range,
+  NULL,
+  &waveRateRange
+};
 
 Render::RangeEntry waveForegroundHueRange = { 0 };
 Render::Entry waveForegroundHueEntry = {

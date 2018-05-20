@@ -44,14 +44,30 @@ void loop() {
 
 void update() {
   Serial.println("Updating screen");
+  auto settings = State::getSettings();
 
   std::vector<Render::Entry*> entries = {
     &ScreenEntries::brightnessEntry,
     &ScreenEntries::wifiEntry,
     &ScreenEntries::modeEntry,
-    &ScreenEntries::presetEntry,
-    &ScreenEntries::rateEntry
+    &ScreenEntries::presetEntry
   };
+  entries[0]->rangeEntry->value = settings->brightness;
+  entries[3]->listEntry->selectedValueIndex = settings->presetSettings.preset;
+  switch (settings->presetSettings.preset) {
+    case Codes::Preset::Rainbow:
+      ScreenEntries::rainbowRateEntry.rangeEntry->value = settings->presetSettings.presetValues[Codes::Preset::Rainbow][0];
+      entries.push_back(&ScreenEntries::rainbowRateEntry);
+      break;
+    case Codes::Preset::Pulse:
+      ScreenEntries::pulseRateEntry.rangeEntry->value = settings->presetSettings.presetValues[Codes::Preset::Pulse][0];
+      entries.push_back(&ScreenEntries::pulseRateEntry);
+      break;
+    case Codes::Preset::Wave:
+      ScreenEntries::waveRateEntry.rangeEntry->value = settings->presetSettings.presetValues[Codes::Preset::Wave][0];
+      entries.push_back(&ScreenEntries::waveRateEntry);
+      break;
+  }
   Render::EntrySet entrySet = { entries, UIState::currentControl };
 
   std::list<Render::Icon*> icons = {
