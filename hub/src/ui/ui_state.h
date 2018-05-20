@@ -26,10 +26,12 @@ namespace UIState {
 
 extern uint8 currentControl;
 
+#define NUM_COMMON_CONTROLS 4
+
 const uint8 numControls[] = {
-  5,  // Rainbow
-  7,  // Pulse
-  9,  // Wave
+  NUM_COMMON_CONTROLS + 1,  // Rainbow
+  NUM_COMMON_CONTROLS + 3,  // Pulse
+  NUM_COMMON_CONTROLS + 5,  // Wave
 };
 
 void nextControl();

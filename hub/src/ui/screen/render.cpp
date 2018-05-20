@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <brzo_i2c.h>
 #include <SSD1306Brzo.h>
 #include "./ui/screen/render.h"
+#include "./ui/screen/screen_entries.h"
 #include "../../config.h"
 
 namespace Render {
@@ -55,44 +56,48 @@ void renderSelectedEntryBox(uint8 row) {
   display.drawRect(18, row * 16, 105, 15);
 }
 
-void renderEntry(Entry* entry, uint8 row) {
+void renderEntry(ScreenEntries::Entry* entry, uint8 row) {
   uint8 textY = row * 16 + 1;
   display.drawString(21, textY, entry->label);
-  switch (entry->entryType) {
-    case Render::EntryType::Enum:
-      display.drawString(52, textY, "<");
-      display.drawStringMaxWidth(60, textY, 53, entry->listEntry->values[entry->listEntry->selectedValueIndex]);
-      display.drawString(115, textY, ">");
-      break;
-    case Render::EntryType::Range:
-      uint8 progress = 100 * entry->rangeEntry->value / 255;
-      display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
-      break;
+  Serial.print(static_cast<int>(entry->type));
+  Serial.print(" ");
+  Serial.print(entry->type == ScreenEntries::EntryType::List);
+  Serial.print(" ");
+  Serial.println(entry->type == ScreenEntries::EntryType::Range);
+  if (entry->type == ScreenEntries::EntryType::List) {
+    auto listEntry = static_cast<ScreenEntries::ListEntry*>(entry);
+    display.drawString(52, textY, "<");
+    display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
+    display.drawString(115, textY, ">");
+  } else if (entry->type == ScreenEntries::EntryType::Range) {
+    auto rangeEntry = static_cast<ScreenEntries::RangeEntry*>(entry);
+    uint8 progress = 100 * rangeEntry->value / 255;
+    display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   }
 }
 
-void renderEntrySet(EntrySet* entrySet) {
-  if (previousSelectedEntry > entrySet->selectedEntry) {
+void renderEntrySet(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedEntry) {
+  if (previousSelectedEntry > selectedEntry) {
     if (selectedEntryRow == 0) {
       entryWindowStart--;
     } else {
       selectedEntryRow--;
     }
-  } else if (previousSelectedEntry < entrySet->selectedEntry) {
+  } else if (previousSelectedEntry < selectedEntry) {
     if (selectedEntryRow == 3) {
       entryWindowStart++;
     } else {
       selectedEntryRow++;
     }
   }
-  previousSelectedEntry = entrySet->selectedEntry;
+  previousSelectedEntry = selectedEntry;
   for (uint8 i = 0; i < 4; i++) {
-    if (i + entryWindowStart < entrySet->entries.size()) {
-      renderEntry(entrySet->entries[i + entryWindowStart], i);
+    if (i + entryWindowStart < entries->size()) {
+      renderEntry((*entries)[i + entryWindowStart], i);
     }
   }
   renderSelectedEntryBox(selectedEntryRow);
-  renderScrollBar(entrySet->entries.size(), entryWindowStart);
+  renderScrollBar(entries->size(), entryWindowStart);
 }
 
 void renderIcon(Icon* icon, uint8 row) {
@@ -105,22 +110,22 @@ void renderIcon(Icon* icon, uint8 row) {
   }
 }
 
-void renderIconSet(IconSet* iconSet) {
+void renderIconSet(std::list<Icon*>* icons) {
   uint8 i = 0;
-  for (auto& icon : iconSet->icons) {
+  for (auto& icon : *icons) {
     renderIcon(icon, i);
     i++;
   }
 }
 
-void render(EntrySet* entrySet, IconSet* iconSet) {
+void render(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedEntry, std::list<Icon*>* icons) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);
   display.setColor(WHITE);
 
-  renderIconSet(iconSet);
-  renderEntrySet(entrySet);
+  renderIconSet(icons);
+  renderEntrySet(entries, selectedEntry);
 
   display.display();
 }

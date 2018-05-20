@@ -45,69 +45,67 @@ void loop() {
 void update() {
   auto settings = State::getSettings();
 
-  std::vector<Render::Entry*> entries = {
+  std::vector<ScreenEntries::Entry*> entries = {
     &ScreenEntries::brightnessEntry,
     &ScreenEntries::wifiEntry,
     &ScreenEntries::modeEntry,
     &ScreenEntries::presetEntry
   };
-  ScreenEntries::brightnessEntry.rangeEntry->value = settings->brightness;
-  ScreenEntries::presetEntry.listEntry->selectedValueIndex = settings->presetSettings.preset;
+  ScreenEntries::brightnessEntry.value = settings->brightness;
+  ScreenEntries::presetEntry.selectedValueIndex = settings->presetSettings.preset;
 
   switch (settings->presetSettings.preset) {
     case Codes::Preset::Rainbow:
-      ScreenEntries::rainbowRateEntry.rangeEntry->value =
+      ScreenEntries::rainbowRateEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Rainbow][0];
       entries.push_back(&ScreenEntries::rainbowRateEntry);
 
       break;
 
     case Codes::Preset::Pulse:
-      ScreenEntries::pulseRateEntry.rangeEntry->value =
+      ScreenEntries::pulseRateEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Pulse][0];
       entries.push_back(&ScreenEntries::pulseRateEntry);
 
-      ScreenEntries::pulseHueEntry.rangeEntry->value =
+      ScreenEntries::pulseHueEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Pulse][1];
       entries.push_back(&ScreenEntries::pulseHueEntry);
 
-      ScreenEntries::pulseSaturationEntry.rangeEntry->value =
+      ScreenEntries::pulseSaturationEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Pulse][2];
       entries.push_back(&ScreenEntries::pulseSaturationEntry);
 
       break;
 
     case Codes::Preset::Wave:
-      ScreenEntries::waveRateEntry.rangeEntry->value =
+      ScreenEntries::waveRateEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][0];
       entries.push_back(&ScreenEntries::waveRateEntry);
 
-      ScreenEntries::waveForegroundHueEntry.rangeEntry->value =
+      ScreenEntries::waveForegroundHueEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][1];
       entries.push_back(&ScreenEntries::waveForegroundHueEntry);
 
-      ScreenEntries::waveForegroundSaturationEntry.rangeEntry->value =
+      ScreenEntries::waveForegroundSaturationEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][2];
       entries.push_back(&ScreenEntries::waveForegroundSaturationEntry);
 
-      ScreenEntries::waveBackgroundHueEntry.rangeEntry->value =
+      ScreenEntries::waveBackgroundHueEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][3];
       entries.push_back(&ScreenEntries::waveBackgroundHueEntry);
 
-      ScreenEntries::waveBackgroundSaturationEntry.rangeEntry->value =
+      ScreenEntries::waveBackgroundSaturationEntry.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][4];
       entries.push_back(&ScreenEntries::waveBackgroundSaturationEntry);
 
       break;
   }
-  Render::EntrySet entrySet = { entries, UIState::currentControl };
 
   std::list<Render::Icon*> icons = {
     &Icons::wifiConnectedIcon
   };
-  Render::IconSet iconSet = { icons };
 
-  Render::render(&entrySet, &iconSet);
+  Render::render(&entries, UIState::currentControl, &icons);
 }
 
 }  // namespace Screen

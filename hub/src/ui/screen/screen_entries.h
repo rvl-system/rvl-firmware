@@ -20,26 +20,54 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_SCREEN_SCREEN_ENTRIES_H_
 #define UI_SCREEN_SCREEN_ENTRIES_H_
 
-#include "./ui/screen/render.h"
+#include <Arduino.h>
+#include <list>
 
 namespace ScreenEntries {
 
-extern Render::Entry brightnessEntry;
-extern Render::Entry wifiEntry;
-extern Render::Entry modeEntry;
-extern Render::Entry presetEntry;
+enum class EntryType {
+  Range,
+  List,
+  Static
+};
 
-extern Render::Entry rainbowRateEntry;
+// TODO(nebrius): Convert const char* to std::string? Depending on memory size?
 
-extern Render::Entry pulseRateEntry;
-extern Render::Entry pulseHueEntry;
-extern Render::Entry pulseSaturationEntry;
+class Entry {
+ public:
+  const char* label;
+  EntryType type;
+};
 
-extern Render::Entry waveRateEntry;
-extern Render::Entry waveForegroundHueEntry;
-extern Render::Entry waveForegroundSaturationEntry;
-extern Render::Entry waveBackgroundHueEntry;
-extern Render::Entry waveBackgroundSaturationEntry;
+class ListEntry : public Entry {
+ public:
+  ListEntry(const char* listLabel, std::vector<const char*> listValues, uint8 listSelectedValueIndex);
+  std::vector<const char*> values;
+  uint8 selectedValueIndex;
+};
+
+class RangeEntry : public Entry {
+ public:
+  RangeEntry(const char* rangeLabel, uint8 rangeValue);
+  uint8 value;
+};
+
+extern RangeEntry brightnessEntry;
+extern ListEntry wifiEntry;
+extern ListEntry modeEntry;
+extern ListEntry presetEntry;
+
+extern RangeEntry rainbowRateEntry;
+
+extern RangeEntry pulseRateEntry;
+extern RangeEntry pulseHueEntry;
+extern RangeEntry pulseSaturationEntry;
+
+extern RangeEntry waveRateEntry;
+extern RangeEntry waveForegroundHueEntry;
+extern RangeEntry waveForegroundSaturationEntry;
+extern RangeEntry waveBackgroundHueEntry;
+extern RangeEntry waveBackgroundSaturationEntry;
 
 }  // namespace ScreenEntries
 

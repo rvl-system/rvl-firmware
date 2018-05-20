@@ -17,137 +17,46 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
 #include "./ui/screen/screen_entries.h"
-#include "./ui/screen/render.h"
 #include "../../config.h"
 
 namespace ScreenEntries {
 
-Render::RangeEntry brightnessRange = { 0 };
-Render::Entry brightnessEntry = {
-  "BRIT",
-  Render::EntryType::Range,
-  NULL,
-  &brightnessRange
-};
+ListEntry::ListEntry(const char* listLabel, std::vector<const char*> listValues, uint8 listSelectedValueIndex) {
+  this->type = EntryType::List;
+  this->label = listLabel;
+  this->values = listValues;
+  this->selectedValueIndex = listSelectedValueIndex;
+}
 
-Render::EnumEntry wifiEnum = {
-  { "RVL1", "RVL2", "RVL3", "RVL4" },
-  0
-};
-Render::Entry wifiEntry = {
-  "WIFI",
-  Render::EntryType::Enum,
-  &wifiEnum,
-  NULL
-};
+RangeEntry::RangeEntry(const char* rangeLabel, uint8 rangeValue) {
+  this->type = EntryType::Range;
+  this->label = rangeLabel;
+  this->value = rangeValue;
+}
 
-Render::EnumEntry modeEnum = {
-  { "Controller", "Receiver" },
-  0
-};
-Render::Entry modeEntry = {
-  "MODE",
-  Render::EntryType::Enum,
-  &modeEnum,
-  NULL
-};
-
-Render::EnumEntry presetEnum = {
-  { "Rainbow", "Pulse", "Wave" },
-  0
-};
-Render::Entry presetEntry = {
-  "PRST",
-  Render::EntryType::Enum,
-  &presetEnum,
-  NULL
-};
-
-Render::RangeEntry rateRange = { 0 };
-Render::Entry rateEntry = {
-  "RATE",
-  Render::EntryType::Range,
-  NULL,
-  &rateRange
-};
+RangeEntry brightnessEntry("BRT", 0);
+ListEntry wifiEntry("WIFI", { "RVL1", "RVL2", "RVL3", "RVL4" }, 0);
+ListEntry modeEntry("MODE", { "Controller", "Receiver" }, 0);
+ListEntry presetEntry("PRST", { "Rainbow", "Pulse", "Wave" }, 0);
 
 // Rainbow preset entries
 
-Render::RangeEntry rainbowRateRange = { 0 };
-Render::Entry rainbowRateEntry = {
-  "RATE",
-  Render::EntryType::Range,
-  NULL,
-  &rainbowRateRange
-};
+RangeEntry rainbowRateEntry("RATE", 0);
 
 // Pulse preset entries
 
-Render::RangeEntry pulseRateRange = { 0 };
-Render::Entry pulseRateEntry = {
-  "RATE",
-  Render::EntryType::Range,
-  NULL,
-  &pulseRateRange
-};
-
-Render::RangeEntry pulseHueRange = { 0 };
-Render::Entry pulseHueEntry = {
-  "HUE",
-  Render::EntryType::Range,
-  NULL,
-  &pulseHueRange
-};
-
-Render::RangeEntry pulseSaturationRange = { 0 };
-Render::Entry pulseSaturationEntry = {
-  "SATR",
-  Render::EntryType::Range,
-  NULL,
-  &pulseSaturationRange
-};
+RangeEntry pulseRateEntry("RATE", 0);
+RangeEntry pulseHueEntry("HUE", 0);
+RangeEntry pulseSaturationEntry("STR", 0);
 
 // Wave preset entries
 
-Render::RangeEntry waveRateRange = { 0 };
-Render::Entry waveRateEntry = {
-  "RATE",
-  Render::EntryType::Range,
-  NULL,
-  &waveRateRange
-};
-
-Render::RangeEntry waveForegroundHueRange = { 0 };
-Render::Entry waveForegroundHueEntry = {
-  "HUEF",
-  Render::EntryType::Range,
-  NULL,
-  &waveForegroundHueRange
-};
-
-Render::RangeEntry waveForegroundSaturationRange = { 0 };
-Render::Entry waveForegroundSaturationEntry = {
-  "SATF",
-  Render::EntryType::Range,
-  NULL,
-  &waveForegroundSaturationRange
-};
-
-Render::RangeEntry waveBackgroundHueRange = { 0 };
-Render::Entry waveBackgroundHueEntry = {
-  "HUEB",
-  Render::EntryType::Range,
-  NULL,
-  &waveBackgroundHueRange
-};
-
-Render::RangeEntry waveBackgroundSaturationRange = { 0 };
-Render::Entry waveBackgroundSaturationEntry = {
-  "SATB",
-  Render::EntryType::Range,
-  NULL,
-  &waveBackgroundSaturationRange
-};
+RangeEntry waveRateEntry("RATE", 0);
+RangeEntry waveForegroundHueEntry("HUEF", 0);
+RangeEntry waveForegroundSaturationEntry("STRF", 0);
+RangeEntry waveBackgroundHueEntry("HUEB", 0);
+RangeEntry waveBackgroundSaturationEntry("STRB", 0);
 
 }  // namespace ScreenEntries
