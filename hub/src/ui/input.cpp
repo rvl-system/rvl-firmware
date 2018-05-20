@@ -88,6 +88,7 @@ void loop() {
       // Do Nothing
       break;
   }
+
   switch (getButtonChangeState(&previousControlButtonInfo)) {
     case Pressed:
       UIState::previousControl();

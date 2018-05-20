@@ -32,6 +32,7 @@ namespace UIState {
 uint8 currentControl = 0;
 
 void nextControl() {
+  Serial.println("Next control");
   int maxControls = numControls[State::getSettings()->presetSettings.preset];
   if (currentControl < maxControls - 1) {
     currentControl++;
@@ -42,6 +43,7 @@ void nextControl() {
 }
 
 void previousControl() {
+  Serial.println("Previus control");
   if (currentControl > 0) {
     currentControl--;
     Serial.print("Setting control ");

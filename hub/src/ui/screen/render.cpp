@@ -47,25 +47,25 @@ void renderScrollBar(uint8 numEntries, uint8 windowStart) {
     if (y > 64 - scrollBarHeight) {  // Can happen when changing the preset and the last items disappear
       y = 64 - scrollBarHeight;
     }
-    display.fillRect(123, y, 5, 24);
+    display.fillRect(125, y, 3, 24);
   }
 }
 
 void renderSelectedEntryBox(uint8 row) {
-  display.drawRect(24, row * 16, 95, 15);
+  display.drawRect(18, row * 16, 105, 15);
 }
 
 void renderEntry(Entry* entry, uint8 row) {
   uint8 textY = row * 16 + 1;
-  display.drawStringMaxWidth(26, textY, 26, entry->label);
+  display.drawString(20, textY, entry->label);
   switch (entry->entryType) {
     case Render::EntryType::Enum:
       // TODO(nebrius): draw lef/right triangles to indicate possibility for scrolling
-      display.drawStringMaxWidth(52, textY, 62, entry->listEntry->values[entry->listEntry->selectedValueIndex]);
+      display.drawStringMaxWidth(52, textY, 67, entry->listEntry->values[entry->listEntry->selectedValueIndex]);
       break;
     case Render::EntryType::Range:
       uint8 progress = 100 * entry->rangeEntry->value / 255;
-      display.drawProgressBar(52, row * 16 + 3, 60, 8, progress);
+      display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
       break;
   }
 }
@@ -112,10 +112,6 @@ void renderIconSet(IconSet* iconSet) {
   }
 }
 
-void renderBorder() {
-  display.drawLine(20, 0, 20, 63);
-}
-
 void render(EntrySet* entrySet, IconSet* iconSet) {
   display.clear();
   display.setColor(BLACK);
@@ -123,7 +119,6 @@ void render(EntrySet* entrySet, IconSet* iconSet) {
   display.setColor(WHITE);
 
   renderIconSet(iconSet);
-  renderBorder();
   renderEntrySet(entrySet);
 
   display.display();
