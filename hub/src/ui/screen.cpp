@@ -43,7 +43,6 @@ void loop() {
 }
 
 void update() {
-  Serial.println("Updating screen");
   auto settings = State::getSettings();
 
   std::vector<Render::Entry*> entries = {
@@ -52,20 +51,53 @@ void update() {
     &ScreenEntries::modeEntry,
     &ScreenEntries::presetEntry
   };
-  entries[0]->rangeEntry->value = settings->brightness;
-  entries[3]->listEntry->selectedValueIndex = settings->presetSettings.preset;
+  ScreenEntries::brightnessEntry.rangeEntry->value = settings->brightness;
+  ScreenEntries::presetEntry.listEntry->selectedValueIndex = settings->presetSettings.preset;
+
   switch (settings->presetSettings.preset) {
     case Codes::Preset::Rainbow:
-      ScreenEntries::rainbowRateEntry.rangeEntry->value = settings->presetSettings.presetValues[Codes::Preset::Rainbow][0];
+      ScreenEntries::rainbowRateEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Rainbow][0];
       entries.push_back(&ScreenEntries::rainbowRateEntry);
+
       break;
+
     case Codes::Preset::Pulse:
-      ScreenEntries::pulseRateEntry.rangeEntry->value = settings->presetSettings.presetValues[Codes::Preset::Pulse][0];
+      ScreenEntries::pulseRateEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Pulse][0];
       entries.push_back(&ScreenEntries::pulseRateEntry);
+
+      ScreenEntries::pulseHueEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Pulse][1];
+      entries.push_back(&ScreenEntries::pulseHueEntry);
+
+      ScreenEntries::pulseSaturationEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Pulse][2];
+      entries.push_back(&ScreenEntries::pulseSaturationEntry);
+
       break;
+
     case Codes::Preset::Wave:
-      ScreenEntries::waveRateEntry.rangeEntry->value = settings->presetSettings.presetValues[Codes::Preset::Wave][0];
+      ScreenEntries::waveRateEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Wave][0];
       entries.push_back(&ScreenEntries::waveRateEntry);
+
+      ScreenEntries::waveForegroundHueEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Wave][1];
+      entries.push_back(&ScreenEntries::waveForegroundHueEntry);
+
+      ScreenEntries::waveForegroundSaturationEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Wave][2];
+      entries.push_back(&ScreenEntries::waveForegroundSaturationEntry);
+
+      ScreenEntries::waveBackgroundHueEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Wave][3];
+      entries.push_back(&ScreenEntries::waveBackgroundHueEntry);
+
+      ScreenEntries::waveBackgroundSaturationEntry.rangeEntry->value =
+        settings->presetSettings.presetValues[Codes::Preset::Wave][4];
+      entries.push_back(&ScreenEntries::waveBackgroundSaturationEntry);
+
       break;
   }
   Render::EntrySet entrySet = { entries, UIState::currentControl };

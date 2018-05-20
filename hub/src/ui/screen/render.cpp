@@ -27,8 +27,6 @@ namespace Render {
 
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-// All position entries are 0-3
-
 uint8 previousSelectedEntry = 0;  // from 0 to numEntries
 uint8 entryWindowStart = 0;   // from 0 to numEntries
 uint8 selectedEntryRow = 0;  // from 0 to 3
@@ -44,7 +42,12 @@ void init() {
 
 void renderScrollBar(uint8 numEntries, uint8 windowStart) {
   if (numEntries > 4) {
-    display.fillRect(123, (64 - 24) * windowStart / (numEntries - 4), 5, 24);
+    uint8 scrollBarHeight = 24;
+    uint8 y = (64 - scrollBarHeight) * windowStart / (numEntries - 4);
+    if (y > 64 - scrollBarHeight) {  // Can happen when changing the preset and the last items disappear
+      y = 64 - scrollBarHeight;
+    }
+    display.fillRect(123, y, 5, 24);
   }
 }
 
@@ -83,7 +86,9 @@ void renderEntrySet(EntrySet* entrySet) {
   }
   previousSelectedEntry = entrySet->selectedEntry;
   for (uint8 i = 0; i < 4; i++) {
-    renderEntry(entrySet->entries[i + entryWindowStart], i);
+    if (i + entryWindowStart < entrySet->entries.size()) {
+      renderEntry(entrySet->entries[i + entryWindowStart], i);
+    }
   }
   renderSelectedEntryBox(selectedEntryRow);
   renderScrollBar(entrySet->entries.size(), entryWindowStart);
