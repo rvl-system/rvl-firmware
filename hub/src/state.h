@@ -58,6 +58,7 @@ struct Settings {
 
   uint16 id = 0;
   uint32 clock = millis();
+  bool wifiConnected;
 };
 
 void init();
@@ -66,6 +67,7 @@ void loop();
 Settings* getSettings();
 
 void setClientId(uint16 id);
+void setWifiConnected(bool connected);
 void setClockOffset(int32 clockOffset);
 void setAnimation(uint8 preset, uint8* presetValues);
 

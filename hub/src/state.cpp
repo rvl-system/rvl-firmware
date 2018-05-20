@@ -39,6 +39,11 @@ void setClientId(uint16 id) {
   settings.id = id;
 }
 
+void setWifiConnected(bool connected) {
+  settings.wifiConnected = connected;
+  Event::emit(Codes::EventType::ConnectedStateChange);
+}
+
 void setAnimation(uint8 preset, uint8* presetValues) {
   settings.presetSettings.preset = preset;
   for (int i = 0; i < NUM_PRESET_VALUES; i++) {

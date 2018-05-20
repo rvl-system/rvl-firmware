@@ -18,12 +18,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "./ui/ui.h"
+#include "./ui/ui_state.h"
 #include "./ui/input.h"
 #include "./ui/screen.h"
 
 namespace UI {
 
 void init() {
+  UIState::init();
   Input::init();
   Screen::init();
 }

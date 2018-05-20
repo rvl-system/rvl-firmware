@@ -31,6 +31,14 @@ namespace UIState {
 
 uint8 currentControl = 0;
 
+void update() {
+  Event::emit(Codes::EventType::UIStateChange);
+}
+
+void init() {
+  Event::on(Codes::EventType::ConnectedStateChange, update);
+}
+
 void nextControl() {
   int maxControls = numControls[State::getSettings()->presetSettings.preset];
   if (currentControl < maxControls - 1) {
@@ -145,7 +153,7 @@ void controlDecrease() {
   Event::emit(Codes::EventType::UIStateChange);
 }
 
-bool isCurrentControlARange() {
+bool isCurrentControlRange() {
   return true;
 }
 

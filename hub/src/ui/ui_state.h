@@ -34,11 +34,13 @@ const uint8 numControls[] = {
   NUM_COMMON_CONTROLS + 5,  // Wave
 };
 
+void init();
+
 void nextControl();
 void previousControl();
 void controlIncrease();
 void controlDecrease();
-bool isCurrentControlARange();
+bool isCurrentControlRange();
 
 }  // namespace UIState
 

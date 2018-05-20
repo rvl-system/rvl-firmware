@@ -101,10 +101,12 @@ void update() {
       break;
   }
 
-  std::list<Icons::StatusIcon*> icons = {
-    &Icons::wifiConnectedIcon,
-    &Icons::wifiDisconnectedIcon
-  };
+  std::list<Icons::StatusIcon*> icons;
+  if (settings->wifiConnected) {
+    icons.push_back(&Icons::wifiConnectedIcon);
+  } else {
+    icons.push_back(&Icons::wifiDisconnectedIcon);
+  }
 
   Render::render(&entries, UIState::currentControl, &icons);
 }

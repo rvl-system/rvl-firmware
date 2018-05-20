@@ -66,6 +66,7 @@ void loop() {
         Serial.println("Starting UDP server");
         udp.begin(SERVER_PORT);
         state = STATE_CONNECTED;
+        State::setWifiConnected(true);
       } else if (millis() >= nextTimeToPrintDot) {
         Serial.print(".");
         nextTimeToPrintDot = millis() + 500;
@@ -75,6 +76,7 @@ void loop() {
       if (WiFi.status() != WL_CONNECTED) {
         Serial.println("Disconnected from WiFi, retrying");
         state = STATE_DISCONNECTED;
+        State::setWifiConnected(false);
         break;
       }
       int packetSize = udp.parsePacket();

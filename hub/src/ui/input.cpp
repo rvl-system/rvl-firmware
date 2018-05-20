@@ -106,7 +106,7 @@ void loop() {
       UIState::controlIncrease();
       break;
     case Holding:
-      if (UIState::isCurrentControlARange()) {
+      if (UIState::isCurrentControlRange()) {
         UIState::controlIncrease();
       }
       break;
@@ -120,7 +120,7 @@ void loop() {
       UIState::controlDecrease();
       break;
     case Holding:
-      if (UIState::isCurrentControlARange()) {
+      if (UIState::isCurrentControlRange()) {
         UIState::controlDecrease();
       }
       break;
