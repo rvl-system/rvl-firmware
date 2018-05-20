@@ -45,6 +45,6 @@ extern Render::Entry fadeForegroundSaturationEntry;
 extern Render::Entry fadeBackgroundHueEntry;
 extern Render::Entry fadeBackgroundSaturationEntry;
 
-}  // namespace Input
+}  // namespace ScreenEntries
 
 #endif  // UI_SCREEN_SCREEN_ENTRIES_H_

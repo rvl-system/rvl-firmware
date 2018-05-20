@@ -63,7 +63,7 @@ struct IconSet {
 };
 
 void init();
-void render(EntrySet& entrySet, IconSet& iconSet);
+void render(EntrySet* entrySet, IconSet* iconSet);
 
 }  // namespace Render
 

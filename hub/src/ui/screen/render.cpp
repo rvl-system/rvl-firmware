@@ -30,8 +30,8 @@ SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 // All position entries are 0-3
 
 uint8 previousSelectedEntry = 0;  // from 0 to numEntries
-uint8 entryWindowStart = 0; // from 0 to numEntries
-uint8 selectedEntryRow = 0; // from 0 to 3
+uint8 entryWindowStart = 0;   // from 0 to numEntries
+uint8 selectedEntryRow = 0;  // from 0 to 3
 
 void init() {
   display.init();
@@ -67,29 +67,29 @@ void renderEntry(Entry* entry, uint8 row) {
   }
 }
 
-void renderEntrySet(EntrySet& entrySet) {
+void renderEntrySet(EntrySet* entrySet) {
   Serial.print(previousSelectedEntry);
   Serial.print(" => ");
-  Serial.println(entrySet.selectedEntry);
-  if (previousSelectedEntry > entrySet.selectedEntry) {
+  Serial.println(entrySet->selectedEntry);
+  if (previousSelectedEntry > entrySet->selectedEntry) {
     if (selectedEntryRow == 0) {
       entryWindowStart--;
     } else {
       selectedEntryRow--;
     }
-  } else if (previousSelectedEntry < entrySet.selectedEntry) {
+  } else if (previousSelectedEntry < entrySet->selectedEntry) {
     if (selectedEntryRow == 3) {
       entryWindowStart++;
     } else {
       selectedEntryRow++;
     }
   }
-  previousSelectedEntry = entrySet.selectedEntry;
+  previousSelectedEntry = entrySet->selectedEntry;
   for (uint8 i = 0; i < 4; i++) {
-    renderEntry(entrySet.entries[i + entryWindowStart], i);
+    renderEntry(entrySet->entries[i + entryWindowStart], i);
   }
   renderSelectedEntryBox(selectedEntryRow);
-  renderScrollBar(entrySet.entries.size(), entryWindowStart);
+  renderScrollBar(entrySet->entries.size(), entryWindowStart);
 }
 
 void renderIcon(Icon* icon, uint8 row) {
@@ -102,9 +102,9 @@ void renderIcon(Icon* icon, uint8 row) {
   }
 }
 
-void renderIconSet(IconSet& iconSet) {
+void renderIconSet(IconSet* iconSet) {
   uint8 i = 0;
-  for (auto& icon : iconSet.icons) {
+  for (auto& icon : iconSet->icons) {
     renderIcon(icon, i);
     i++;
   }
@@ -114,7 +114,7 @@ void renderBorder() {
   display.drawLine(20, 0, 20, 63);
 }
 
-void render(EntrySet& entrySet, IconSet& iconSet) {
+void render(EntrySet* entrySet, IconSet* iconSet) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);
@@ -127,4 +127,4 @@ void render(EntrySet& entrySet, IconSet& iconSet) {
   display.display();
 }
 
-}  // Render
+}  // namespace Render

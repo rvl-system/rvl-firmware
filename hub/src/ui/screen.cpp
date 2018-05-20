@@ -59,7 +59,7 @@ void update() {
   };
   Render::IconSet iconSet = { icons };
 
-  Render::render(entrySet, iconSet);
+  Render::render(&entrySet, &iconSet);
 }
 
 }  // namespace Screen
