@@ -41,6 +41,15 @@ void nextControl() {
   }
 }
 
+void previousControl() {
+  if (currentControl > 0) {
+    currentControl--;
+    Serial.print("Setting control ");
+    Serial.println(currentControl);
+    Event::emit(Codes::EventType::UIStateChange);
+  }
+}
+
 int calculateNewValue(byte code, int value, bool direction) {
   auto settings = State::getSettings();
   if (direction) {
@@ -74,7 +83,7 @@ void handleValueChange(int code, bool direction) {
   Event::emit(Codes::EventType::AnimationChange);
 }
 
-void controlUp() {
+void controlIncrease() {
   auto settings = State::getSettings();
   switch (currentControl) {
     case Codes::Control::Brightness:
@@ -104,7 +113,7 @@ void controlUp() {
   Event::emit(Codes::EventType::UIStateChange);
 }
 
-void controlDown() {
+void controlDecrease() {
   auto settings = State::getSettings();
   switch (currentControl) {
     case Codes::Control::Brightness:
@@ -136,6 +145,10 @@ void controlDown() {
       break;
   }
   Event::emit(Codes::EventType::UIStateChange);
+}
+
+bool isCurrentControlARange() {
+  return true;
 }
 
 }  // namespace UIState

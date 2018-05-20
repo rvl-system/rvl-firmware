@@ -27,8 +27,10 @@ namespace UIState {
 extern uint8 currentControl;
 
 void nextControl();
-void controlUp();
-void controlDown();
+void previousControl();
+void controlIncrease();
+void controlDecrease();
+bool isCurrentControlARange();
 
 }  // namespace UIState
 

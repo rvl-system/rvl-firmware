@@ -39,14 +39,16 @@ struct ButtonInfo {
   byte off;
 };
 
-ButtonInfo nextButtonInfo = { 5, BUTTON_NEXT_OFF, BUTTON_NEXT, BUTTON_NEXT_ON, BUTTON_NEXT_OFF };
-ButtonInfo upButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF };
-ButtonInfo downButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF };
+ButtonInfo nextControlButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF };
+ButtonInfo previousControlButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF };
+ButtonInfo increaseValueButtonInfo = { 5, BUTTON_RIGHT_OFF, BUTTON_RIGHT, BUTTON_RIGHT_ON, BUTTON_RIGHT_OFF };
+ButtonInfo decreaseValueButtonInfo = { 5, BUTTON_LEFT_OFF, BUTTON_LEFT, BUTTON_LEFT_ON, BUTTON_LEFT_OFF };
 
 void init() {
-  pinMode(nextButtonInfo.gpio, INPUT);
-  pinMode(upButtonInfo.gpio, INPUT);
-  pinMode(downButtonInfo.gpio, INPUT);
+  pinMode(nextControlButtonInfo.gpio, INPUT);
+  pinMode(previousControlButtonInfo.gpio, INPUT);
+  pinMode(increaseValueButtonInfo.gpio, INPUT);
+  pinMode(decreaseValueButtonInfo.gpio, INPUT);
   Serial.println("Input initialized");
 }
 
@@ -75,7 +77,7 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
 }
 
 void loop() {
-  switch (getButtonChangeState(&nextButtonInfo)) {
+  switch (getButtonChangeState(&nextControlButtonInfo)) {
     case Pressed:
       UIState::nextControl();
       break;
@@ -86,14 +88,25 @@ void loop() {
       // Do Nothing
       break;
   }
-
-  switch (getButtonChangeState(&upButtonInfo)) {
+  switch (getButtonChangeState(&previousControlButtonInfo)) {
     case Pressed:
-      UIState::controlUp();
+      UIState::previousControl();
       break;
     case Holding:
-      if (UIState::currentControl != Codes::Control::Preset) {
-        UIState::controlUp();
+      // Do Nothing
+      break;
+    case None:
+      // Do Nothing
+      break;
+  }
+
+  switch (getButtonChangeState(&increaseValueButtonInfo)) {
+    case Pressed:
+      UIState::controlIncrease();
+      break;
+    case Holding:
+      if (UIState::isCurrentControlARange()) {
+        UIState::controlIncrease();
       }
       break;
     case None:
@@ -101,13 +114,13 @@ void loop() {
       break;
   }
 
-  switch (getButtonChangeState(&downButtonInfo)) {
+  switch (getButtonChangeState(&decreaseValueButtonInfo)) {
     case Pressed:
-      UIState::controlDown();
+      UIState::controlDecrease();
       break;
     case Holding:
-      if (UIState::currentControl != Codes::Control::Preset) {
-        UIState::controlDown();
+      if (UIState::isCurrentControlARange()) {
+        UIState::controlDecrease();
       }
       break;
     case None:
