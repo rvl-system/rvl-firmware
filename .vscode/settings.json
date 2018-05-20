@@ -23,6 +23,9 @@
     "exception": "cpp",
     "new": "cpp",
     "stdexcept": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "__functional_base": "cpp",
+    "limits": "cpp",
+    "vector": "cpp"
   }
 }

@@ -57,11 +57,12 @@ void renderSelectedEntryBox(uint8 row) {
 
 void renderEntry(Entry* entry, uint8 row) {
   uint8 textY = row * 16 + 1;
-  display.drawString(20, textY, entry->label);
+  display.drawString(21, textY, entry->label);
   switch (entry->entryType) {
     case Render::EntryType::Enum:
-      // TODO(nebrius): draw lef/right triangles to indicate possibility for scrolling
-      display.drawStringMaxWidth(52, textY, 67, entry->listEntry->values[entry->listEntry->selectedValueIndex]);
+      display.drawString(52, textY, "<");
+      display.drawStringMaxWidth(60, textY, 53, entry->listEntry->values[entry->listEntry->selectedValueIndex]);
+      display.drawString(115, textY, ">");
       break;
     case Render::EntryType::Range:
       uint8 progress = 100 * entry->rangeEntry->value / 255;
