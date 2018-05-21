@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <SSD1306Brzo.h>
 #include "./ui/screen/render.h"
 #include "./ui/screen/icons.h"
-#include "./ui/screen/screen_entries.h"
+#include "./ui/controls/control.h"
 #include "../../config.h"
 
 namespace Render {
@@ -57,27 +57,22 @@ void renderSelectedEntryBox(uint8 row) {
   display.drawRect(18, row * 16, 105, 15);
 }
 
-void renderEntry(ScreenEntries::Entry* entry, uint8 row) {
+void renderEntry(Control::Control* entry, uint8 row) {
   uint8 textY = row * 16 + 1;
   display.drawString(21, textY, entry->label);
-  Serial.print(static_cast<int>(entry->type));
-  Serial.print(" ");
-  Serial.print(entry->type == ScreenEntries::EntryType::List);
-  Serial.print(" ");
-  Serial.println(entry->type == ScreenEntries::EntryType::Range);
-  if (entry->type == ScreenEntries::EntryType::List) {
-    auto listEntry = static_cast<ScreenEntries::ListEntry*>(entry);
+  if (entry->type == Control::ControlType::List) {
+    auto listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(52, textY, "<");
     display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
     display.drawString(115, textY, ">");
-  } else if (entry->type == ScreenEntries::EntryType::Range) {
-    auto rangeEntry = static_cast<ScreenEntries::RangeEntry*>(entry);
+  } else if (entry->type == Control::ControlType::Range) {
+    auto rangeEntry = static_cast<Control::RangeControl*>(entry);
     uint8 progress = 100 * rangeEntry->value / 255;
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   }
 }
 
-void renderEntrySet(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedEntry) {
+void renderEntrySet(std::vector<Control::Control*>* entries, uint8 selectedEntry) {
   if (previousSelectedEntry > selectedEntry) {
     if (selectedEntryRow == 0) {
       entryWindowStart--;
@@ -119,7 +114,7 @@ void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
   }
 }
 
-void render(std::vector<ScreenEntries::Entry*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons) {
+void render(std::vector<Control::Control*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);

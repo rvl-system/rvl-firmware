@@ -17,20 +17,31 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_SCREEN_RENDER_H_
-#define UI_SCREEN_RENDER_H_
-
 #include <Arduino.h>
-#include <list>
 #include <vector>
-#include "./ui/screen/icons.h"
 #include "./ui/controls/control.h"
+#include "./ui/controls/base_controls.h"
 
-namespace Render {
+namespace BaseControls {
 
-void init();
-void render(std::vector<Control::Control*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons);
+void updateBrightnessValue(uint8 newValue) {
+  // TODO(nebrius): implement me
+}
+Control::RangeControl brightnessControl(updateBrightnessValue, "BRT", 0);
 
-}  // namespace Render
+void updateWifiValue(uint8 newValue) {
+  // TODO(nebrius): implement me
+}
+Control::ListControl wifiControl(updateWifiValue, "WIFI", { "RVL1", "RVL2", "RVL3", "RVL4" }, 0);
 
-#endif  // UI_SCREEN_RENDER_H_
+void updateModeValue(uint8 newValue) {
+  // TODO(nebrius): implement me
+}
+Control::ListControl modeControl(updateModeValue, "MODE", { "Controller", "Receiver" }, 0);
+
+void updatePresetValue(uint8 newValue) {
+  // TODO(nebrius): implement me
+}
+Control::ListControl presetControl(updatePresetValue, "PRST", { "Rainbow", "Pulse", "Wave" }, 0);
+
+}  // namespace BaseControls

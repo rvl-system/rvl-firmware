@@ -17,20 +17,33 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_SCREEN_RENDER_H_
-#define UI_SCREEN_RENDER_H_
+#ifndef UI_CONTROLS_PRESET_CONTROLS_H_
+#define UI_CONTROLS_PRESET_CONTROLS_H_
 
 #include <Arduino.h>
-#include <list>
 #include <vector>
-#include "./ui/screen/icons.h"
 #include "./ui/controls/control.h"
 
-namespace Render {
+namespace PresetControls {
 
-void init();
-void render(std::vector<Control::Control*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons);
+// Rainbow preset entries
 
-}  // namespace Render
+extern Control::RangeControl rainbowRateControl;
 
-#endif  // UI_SCREEN_RENDER_H_
+// Pulse preset entries
+
+extern Control::RangeControl pulseRateControl;
+extern Control::RangeControl pulseHueControl;
+extern Control::RangeControl pulseSaturationControl;
+
+// Wave preset entries
+
+extern Control::RangeControl waveRateControl;
+extern Control::RangeControl waveForegroundHueControl;
+extern Control::RangeControl waveForegroundSaturationControl;
+extern Control::RangeControl waveBackgroundHueControl;
+extern Control::RangeControl waveBackgroundSaturationControl;
+
+}  // namespace PresetControls
+
+#endif  // UI_CONTROLS_PRESET_CONTROLS_H_

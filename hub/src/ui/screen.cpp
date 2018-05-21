@@ -22,7 +22,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/ui_state.h"
 #include "./ui/screen/render.h"
 #include "./ui/screen/icons.h"
-#include "./ui/screen/screen_entries.h"
+#include "./ui/controls/control.h"
+#include "./ui/controls/base_controls.h"
+#include "./ui/controls/preset_controls.h"
 #include "../config.h"
 #include "./state.h"
 #include "./codes.h"
@@ -45,58 +47,59 @@ void loop() {
 void update() {
   auto settings = State::getSettings();
 
-  std::vector<ScreenEntries::Entry*> entries = {
-    &ScreenEntries::brightnessEntry,
-    &ScreenEntries::wifiEntry,
-    &ScreenEntries::modeEntry,
-    &ScreenEntries::presetEntry
+  std::vector<Control::Control*> entries = {
+    &BaseControls::brightnessControl,
+    &BaseControls::wifiControl,
+    &BaseControls::modeControl,
+    &BaseControls::presetControl
   };
-  ScreenEntries::brightnessEntry.value = settings->brightness;
-  ScreenEntries::presetEntry.selectedValueIndex = settings->presetSettings.preset;
+  // Uhhh, is this the best way to do this?
+  BaseControls::brightnessControl.value = settings->brightness;
+  BaseControls::presetControl.selectedValueIndex = settings->presetSettings.preset;
 
   switch (settings->presetSettings.preset) {
     case Codes::Preset::Rainbow:
-      ScreenEntries::rainbowRateEntry.value =
+      PresetControls::rainbowRateControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Rainbow][0];
-      entries.push_back(&ScreenEntries::rainbowRateEntry);
+      entries.push_back(&PresetControls::rainbowRateControl);
 
       break;
 
     case Codes::Preset::Pulse:
-      ScreenEntries::pulseRateEntry.value =
+      PresetControls::pulseRateControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Pulse][0];
-      entries.push_back(&ScreenEntries::pulseRateEntry);
+      entries.push_back(&PresetControls::pulseRateControl);
 
-      ScreenEntries::pulseHueEntry.value =
+      PresetControls::pulseHueControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Pulse][1];
-      entries.push_back(&ScreenEntries::pulseHueEntry);
+      entries.push_back(&PresetControls::pulseHueControl);
 
-      ScreenEntries::pulseSaturationEntry.value =
+      PresetControls::pulseSaturationControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Pulse][2];
-      entries.push_back(&ScreenEntries::pulseSaturationEntry);
+      entries.push_back(&PresetControls::pulseSaturationControl);
 
       break;
 
     case Codes::Preset::Wave:
-      ScreenEntries::waveRateEntry.value =
+      PresetControls::waveRateControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][0];
-      entries.push_back(&ScreenEntries::waveRateEntry);
+      entries.push_back(&PresetControls::waveRateControl);
 
-      ScreenEntries::waveForegroundHueEntry.value =
+      PresetControls::waveForegroundHueControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][1];
-      entries.push_back(&ScreenEntries::waveForegroundHueEntry);
+      entries.push_back(&PresetControls::waveForegroundHueControl);
 
-      ScreenEntries::waveForegroundSaturationEntry.value =
+      PresetControls::waveForegroundSaturationControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][2];
-      entries.push_back(&ScreenEntries::waveForegroundSaturationEntry);
+      entries.push_back(&PresetControls::waveForegroundSaturationControl);
 
-      ScreenEntries::waveBackgroundHueEntry.value =
+      PresetControls::waveBackgroundHueControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][3];
-      entries.push_back(&ScreenEntries::waveBackgroundHueEntry);
+      entries.push_back(&PresetControls::waveBackgroundHueControl);
 
-      ScreenEntries::waveBackgroundSaturationEntry.value =
+      PresetControls::waveBackgroundSaturationControl.value =
         settings->presetSettings.presetValues[Codes::Preset::Wave][4];
-      entries.push_back(&ScreenEntries::waveBackgroundSaturationEntry);
+      entries.push_back(&PresetControls::waveBackgroundSaturationControl);
 
       break;
   }

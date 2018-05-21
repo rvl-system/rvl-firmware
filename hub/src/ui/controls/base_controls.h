@@ -17,20 +17,20 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_SCREEN_RENDER_H_
-#define UI_SCREEN_RENDER_H_
+#ifndef UI_CONTROLS_BASE_CONTROLS_H_
+#define UI_CONTROLS_BASE_CONTROLS_H_
 
 #include <Arduino.h>
-#include <list>
 #include <vector>
-#include "./ui/screen/icons.h"
 #include "./ui/controls/control.h"
 
-namespace Render {
+namespace BaseControls {
 
-void init();
-void render(std::vector<Control::Control*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons);
+extern Control::RangeControl brightnessControl;
+extern Control::ListControl wifiControl;
+extern Control::ListControl modeControl;
+extern Control::ListControl presetControl;
 
-}  // namespace Render
+}  // namespace BaseControls
 
-#endif  // UI_SCREEN_RENDER_H_
+#endif  // UI_CONTROLS_BASE_CONTROLS_H_

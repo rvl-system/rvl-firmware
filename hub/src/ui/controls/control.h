@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_SCREEN_SCREEN_ENTRIES_H_
-#define UI_SCREEN_SCREEN_ENTRIES_H_
+#ifndef UI_CONTROLS_CONTROL_H_
+#define UI_CONTROLS_CONTROL_H_
 
 #include <Arduino.h>
 #include <vector>
 
-namespace ScreenEntries {
+namespace Control {
 
-enum class EntryType {
+enum class ControlType {
   Range,
   List,
   Static
@@ -33,42 +33,46 @@ enum class EntryType {
 
 // TODO(nebrius): Convert const char* to std::string? Depending on memory size?
 
-class Entry {
+class Control {
+ protected:
+  void (*updateHandler)(uint8);
  public:
   const char* label;
-  EntryType type;
+  ControlType type;
+  void updateValue(uint8 newValue) {
+    (this->updateHandler)(newValue);
+  }
 };
 
-class ListEntry : public Entry {
+class ListControl : public Control {
  public:
-  ListEntry(const char* listLabel, std::vector<const char*> listValues, uint8 listSelectedValueIndex);
+  ListControl(
+    void (*updateHandler)(uint8),
+    const char* listLabel,
+    std::vector<const char*> listValues,
+    uint8 listSelectedValueIndex
+  ) {
+    this->updateHandler = updateHandler;
+    this->type = ControlType::List;
+    this->label = listLabel;
+    this->values = listValues;
+    this->selectedValueIndex = listSelectedValueIndex;
+  }
   std::vector<const char*> values;
   uint8 selectedValueIndex;
 };
 
-class RangeEntry : public Entry {
+class RangeControl : public Control {
  public:
-  RangeEntry(const char* rangeLabel, uint8 rangeValue);
+  RangeControl(void (*updateHandler)(uint8), const char* rangeLabel, uint8 rangeValue) {
+    this->updateHandler = updateHandler;
+    this->type = ControlType::Range;
+    this->label = rangeLabel;
+    this->value = rangeValue;
+  }
   uint8 value;
 };
 
-extern RangeEntry brightnessEntry;
-extern ListEntry wifiEntry;
-extern ListEntry modeEntry;
-extern ListEntry presetEntry;
+}  // namespace Control
 
-extern RangeEntry rainbowRateEntry;
-
-extern RangeEntry pulseRateEntry;
-extern RangeEntry pulseHueEntry;
-extern RangeEntry pulseSaturationEntry;
-
-extern RangeEntry waveRateEntry;
-extern RangeEntry waveForegroundHueEntry;
-extern RangeEntry waveForegroundSaturationEntry;
-extern RangeEntry waveBackgroundHueEntry;
-extern RangeEntry waveBackgroundSaturationEntry;
-
-}  // namespace ScreenEntries
-
-#endif  // UI_SCREEN_SCREEN_ENTRIES_H_
+#endif  // UI_CONTROLS_CONTROL_H_
