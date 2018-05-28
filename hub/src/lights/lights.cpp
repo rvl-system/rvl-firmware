@@ -29,7 +29,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./event.h"
 
-#include "./lights/animations/fade.h"
+#include "./lights/animations/rainbow.h"
 #include "./lights/animations/pulse.h"
 #include "./lights/animations/wave.h"
 
@@ -51,7 +51,7 @@ void init() {
   FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_PIXELS);
   Event::on(Codes::EventType::AnimationChange, update);
 
-  animations[Codes::Preset::Rainbow] = new Fade::FadeAnimation();
+  animations[Codes::Preset::Rainbow] = new Rainbow::RainbowAnimation();
   animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
   animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
 

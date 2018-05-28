@@ -24,7 +24,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Pulse {
 
-double step = 0;
+double rate = 0;
 uint8 hue = 0;
 uint8 saturation = 0;
 
@@ -35,13 +35,13 @@ void PulseAnimation::setBrightness(uint8 newBrightness) {
 }
 
 void PulseAnimation::setValues(uint8* values) {
-  step = (static_cast<double>(values[0]) / 255.0) / 300;
-  hue = values[1];
-  saturation = values[2];
+  rate = (static_cast<double>(values[Codes::PulsePresetValues::Rate]) / 255.0) / 300;
+  hue = values[Codes::PulsePresetValues::Hue];
+  saturation = values[Codes::PulsePresetValues::Saturation];
 }
 
 void PulseAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
-  uint32 period = 2 / step;
+  uint32 period = 2 / rate;
   uint32 periodTime = commandTime % period;
 
   double currentBrightness;

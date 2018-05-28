@@ -30,8 +30,6 @@ void increaseBrightnessValue() {
   auto settings = State::getSettings();
   if (settings->brightness < 255) {
     settings->brightness++;
-    Serial.print("Setting brightness to ");
-    Serial.println(settings->brightness);
     Event::emit(Codes::EventType::AnimationChange);
   }
 }
@@ -39,8 +37,6 @@ void decreaseBrightnessValue() {
   auto settings = State::getSettings();
   if (settings->brightness > 0) {
     settings->brightness--;
-    Serial.print("Setting brightness to ");
-    Serial.println(settings->brightness);
     Event::emit(Codes::EventType::AnimationChange);
   }
 }
@@ -93,8 +89,6 @@ void increasePresetValue() {
   if (settings->presetSettings.preset == NUM_PRESETS) {
     settings->presetSettings.preset = 0;
   }
-  Serial.print("Setting preset ");
-  Serial.println(settings->presetSettings.preset);
   Event::emit(Codes::EventType::AnimationChange);
 }
 void decreasePresetValue() {
@@ -103,8 +97,6 @@ void decreasePresetValue() {
   if (settings->presetSettings.preset < 0) {
     settings->presetSettings.preset = NUM_PRESETS - 1;
   }
-  Serial.print("Setting preset ");
-  Serial.println(settings->presetSettings.preset);
   Event::emit(Codes::EventType::AnimationChange);
 }
 uint8 getPresetValue() {

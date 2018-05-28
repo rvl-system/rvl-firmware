@@ -25,43 +25,47 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Wave {
 
-double step = 0;
-uint8 spacing = 0;
-double hueForeground = 0;
-double hueBackground = 0;
+double rate = 0;
+uint8 foregroundHue = 0;
+uint8 foregroundSaturation = 0;
+uint8 backgroundHue = 0;
+uint8 backgroundSaturation = 0;
 
 uint8 brightness = 0;
+
+#define SPACING 16
 
 void WaveAnimation::setBrightness(uint8 newBrightness) {
   brightness = newBrightness;
 }
 
 void WaveAnimation::setValues(uint8* values) {
-  step = (static_cast<double>(values[0]) / 255.0) / 300;
-  spacing = values[1];
-  hueForeground = static_cast<double>(values[2]) * 360.0 / 255;
-  hueBackground = static_cast<double>(values[3]) * 360.0 / 255;
+  rate = (static_cast<double>(values[values[Codes::WavePresetValues::Rate]]) / 255.0) / 300;
+  foregroundHue = values[Codes::WavePresetValues::ForegroundHue];
+  foregroundSaturation = values[Codes::WavePresetValues::ForegroundSaturation];
+  backgroundHue = values[Codes::WavePresetValues::BackgroundHue];
+  backgroundSaturation = values[Codes::WavePresetValues::BackgroundSaturation];
 }
 
 void WaveAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
-  uint32 period = 2 / step;
+  uint32 period = 2 / rate;
   double periodTime = 2 * PI * (commandTime % period) / period;
 
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
     // TODO(nebrius): convert to sin8 or other FastLED method
-    double alpha = sin(2 * PI * (i % spacing) / spacing + periodTime);
+    double alpha = sin(2 * PI * (i % SPACING) / SPACING + periodTime);
     if (alpha < 0) {
       alpha = 0;
     }
 
     CHSV foregroundHSV;
-    foregroundHSV.h = hueForeground;
-    foregroundHSV.s = 255;
+    foregroundHSV.h = foregroundHue;
+    foregroundHSV.s = foregroundSaturation;
     foregroundHSV.v = brightness;
 
     CHSV backgroundHSV;
-    backgroundHSV.h = hueBackground;
-    backgroundHSV.s = 255;
+    backgroundHSV.h = backgroundHue;
+    backgroundHSV.s = backgroundSaturation;
     backgroundHSV.v = brightness;
 
     buffer[i] = blend(foregroundHSV, backgroundHSV, alpha * 255);

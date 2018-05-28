@@ -18,31 +18,31 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <FastLED.h>
-#include "./lights/animations/fade.h"
+#include "./lights/animations/rainbow.h"
 #include "../../config.h"
 #include "./codes.h"
 
 #define COLOR_DIFFERENCE 40
 
-namespace Fade {
+namespace Rainbow {
 
-double step = 0;
+double rate = 0;
 uint8 brightness = 0;
 
-void FadeAnimation::setBrightness(uint8 newBrightness) {
+void RainbowAnimation::setBrightness(uint8 newBrightness) {
   brightness = newBrightness;
 }
 
-void FadeAnimation::setValues(uint8* values) {
-  step = static_cast<double>(values[0]) / 1280.0;
+void RainbowAnimation::setValues(uint8* values) {
+  rate = static_cast<double>(values[Codes::RainbowPresetValues::Rate]) / 1280.0;
 }
 
-void FadeAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
+void RainbowAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    buffer[i].h = (static_cast<uint32>(commandTime * step) + COLOR_DIFFERENCE * i) % 255;
+    buffer[i].h = (static_cast<uint32>(commandTime * rate) + COLOR_DIFFERENCE * i) % 255;
     buffer[i].s = 255;
     buffer[i].v = brightness;
   }
 }
 
-}  // namespace Fade
+}  // namespace Rainbow

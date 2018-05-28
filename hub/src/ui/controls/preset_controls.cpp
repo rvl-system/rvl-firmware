@@ -19,22 +19,44 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <vector>
+#include "./state.h"
+#include "./codes.h"
 #include "./ui/controls/control.h"
 #include "./ui/controls/preset_controls.h"
+#include "./event.h"
 
 namespace PresetControls {
 
 // Rainbow preset entries
 
+void increaseValueHelper(uint8 preset, uint8 presetIndex) {
+  uint8* values = State::getSettings()->presetSettings.presetValues[preset];
+  if (values[presetIndex] < 255) {
+    values[presetIndex]++;
+    Event::emit(Codes::EventType::AnimationChange);
+  }
+}
+
+void decreaseValueHelper(uint8 preset, uint8 presetIndex) {
+  uint8* values = State::getSettings()->presetSettings.presetValues[preset];
+  if (values[presetIndex] > 0) {
+    values[presetIndex]--;
+    Event::emit(Codes::EventType::AnimationChange);
+  }
+}
+
+uint8 getValueHelper(uint8 preset, uint8 presetIndex) {
+  return State::getSettings()->presetSettings.presetValues[preset][presetIndex];
+}
+
 void increaseRainbowRateValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
 }
 void decreaseRainbowRateValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
 }
 uint8 getRainbowRateValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
 }
 Control::RangeControl rainbowRateControl(
   increaseRainbowRateValue,
@@ -45,14 +67,13 @@ Control::RangeControl rainbowRateControl(
 // Pulse preset entries
 
 void increasePulseRateValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Rate);
 }
 void decreasePulseRateValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Rate);
 }
 uint8 getPulseRateValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Rate);
 }
 Control::RangeControl pulseRateControl(
   increasePulseRateValue,
@@ -61,14 +82,13 @@ Control::RangeControl pulseRateControl(
   "RATE");
 
 void increasePulseHueValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Hue);
 }
 void decreasePulseHueValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Hue);
 }
 uint8 getPulseHueValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Hue);
 }
 Control::RangeControl pulseHueControl(
   increasePulseHueValue,
@@ -77,14 +97,13 @@ Control::RangeControl pulseHueControl(
   "HUE");
 
 void increasePulseSaturationValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Saturation);
 }
 void decreasePulseSaturationValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Saturation);
 }
 uint8 getPulseSaturationValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Saturation);
 }
 Control::RangeControl pulseSaturationControl(
   increasePulseSaturationValue,
@@ -95,14 +114,13 @@ Control::RangeControl pulseSaturationControl(
 // Wave preset entries
 
 void increaseWaveRateValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::Rate);
 }
 void decreaseWaveRateValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::Rate);
 }
 uint8 getWaveRateValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::Rate);
 }
 Control::RangeControl waveRateControl(
   increaseWaveRateValue,
@@ -111,14 +129,13 @@ Control::RangeControl waveRateControl(
   "RATE");
 
 void increaseWaveForegroundHueValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundHue);
 }
 void decreaseWaveForegroundHueValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundHue);
 }
 uint8 getWaveForegroundHueValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundHue);
 }
 Control::RangeControl waveForegroundHueControl(
   increaseWaveForegroundHueValue,
@@ -127,14 +144,13 @@ Control::RangeControl waveForegroundHueControl(
   "HUEF");
 
 void increaseWaveForegroundSaturationValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundSaturation);
 }
 void decreaseWaveForegroundSaturationValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundSaturation);
 }
 uint8 getWaveForegroundSaturationValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundSaturation);
 }
 Control::RangeControl waveForegroundSaturationControl(
   increaseWaveForegroundSaturationValue,
@@ -143,14 +159,13 @@ Control::RangeControl waveForegroundSaturationControl(
   "STRF");
 
 void increaseWaveBackgroundHueValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundHue);
 }
 void decreaseWaveBackgroundHueValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundHue);
 }
 uint8 getWaveBackgroundHueValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundHue);
 }
 Control::RangeControl waveBackgroundHueControl(
   increaseWaveBackgroundHueValue,
@@ -159,14 +174,13 @@ Control::RangeControl waveBackgroundHueControl(
   "HUEB");
 
 void increaseWaveBackgroundSaturationValue() {
-  // TODO(nebrius): implement me
+  increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundSaturation);
 }
 void decreaseWaveBackgroundSaturationValue() {
-  // TODO(nebrius): implement me
+  decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundSaturation);
 }
 uint8 getWaveBackgroundSaturationValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundSaturation);
 }
 Control::RangeControl waveBackgroundSaturationControl(
   increaseWaveBackgroundSaturationValue,

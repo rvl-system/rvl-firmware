@@ -55,6 +55,30 @@ namespace Preset {
   };
 }
 
+namespace RainbowPresetValues {
+  enum RainbowPresetValues {
+    Rate = 0
+  };
+}
+
+namespace PulsePresetValues {
+  enum PulsePresetValues {
+    Rate = 0,
+    Hue = 1,
+    Saturation = 2
+  };
+}
+
+namespace WavePresetValues {
+  enum WavePresetValues {
+    Rate = 0,
+    ForegroundHue = 1,
+    ForegroundSaturation = 2,
+    BackgroundHue = 3,
+    BackgroundSaturation = 4
+  };
+}
+
 namespace Control {
   enum Control {
     None = 0,
