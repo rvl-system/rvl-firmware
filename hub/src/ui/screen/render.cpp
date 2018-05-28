@@ -63,11 +63,11 @@ void renderEntry(Control::Control* entry, uint8 row) {
   if (entry->type == Control::ControlType::List) {
     auto listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(52, textY, "<");
-    display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
+    display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->getValue()]);
     display.drawString(115, textY, ">");
   } else if (entry->type == Control::ControlType::Range) {
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
-    uint8 progress = 100 * rangeEntry->value / 255;
+    uint8 progress = 100 * rangeEntry->getValue() / 255;
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   }
 }

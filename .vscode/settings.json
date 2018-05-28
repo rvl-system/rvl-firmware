@@ -26,6 +26,10 @@
     "typeinfo": "cpp",
     "__functional_base": "cpp",
     "limits": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "__functional_base_03": "cpp",
+    "__tuple": "cpp",
+    "__split_buffer": "cpp",
+    "list": "cpp"
   }
 }

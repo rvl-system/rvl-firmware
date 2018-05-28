@@ -21,18 +21,13 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define UI_UI_STATE_H_
 
 #include <Arduino.h>
+#include <vector>
+#include "./ui/controls/control.h"
 
 namespace UIState {
 
 extern uint8 currentControl;
-
-#define NUM_COMMON_CONTROLS 4
-
-const uint8 numControls[] = {
-  NUM_COMMON_CONTROLS + 1,  // Rainbow
-  NUM_COMMON_CONTROLS + 3,  // Pulse
-  NUM_COMMON_CONTROLS + 5,  // Wave
-};
+extern std::vector<Control::Control*> controls;
 
 void init();
 
@@ -40,6 +35,7 @@ void nextControl();
 void previousControl();
 void controlIncrease();
 void controlDecrease();
+
 bool isCurrentControlRange();
 
 }  // namespace UIState

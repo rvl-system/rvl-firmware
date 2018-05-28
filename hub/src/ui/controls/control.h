@@ -35,28 +35,38 @@ enum class ControlType {
 
 class Control {
  protected:
-  void (*updateHandler)(uint8);
+  void (*increaseValueHandler)();
+  void (*decreaseValueHandler)();
+  uint8 (*getValueHandler)();
  public:
   const char* label;
   ControlType type;
-  void updateValue(uint8 newValue) {
-    (this->updateHandler)(newValue);
+  void increaseValue() {
+    (this->increaseValueHandler)();
+  }
+  void decreaseValue() {
+    (this->decreaseValueHandler)();
+  }
+  uint8 getValue() {
+    (this->getValueHandler)();
   }
 };
 
 class ListControl : public Control {
  public:
   ListControl(
-    void (*updateHandler)(uint8),
+    void (*increaseValueHandler)(),
+    void (*decreaseValueHandler)(),
+    uint8 (*getValueHandler)(),
     const char* listLabel,
-    std::vector<const char*> listValues,
-    uint8 listSelectedValueIndex
+    std::vector<const char*> listValues
   ) {
-    this->updateHandler = updateHandler;
+    this->increaseValueHandler = increaseValueHandler;
+    this->decreaseValueHandler = decreaseValueHandler;
+    this->getValueHandler = getValueHandler;
     this->type = ControlType::List;
     this->label = listLabel;
     this->values = listValues;
-    this->selectedValueIndex = listSelectedValueIndex;
   }
   std::vector<const char*> values;
   uint8 selectedValueIndex;
@@ -64,11 +74,17 @@ class ListControl : public Control {
 
 class RangeControl : public Control {
  public:
-  RangeControl(void (*updateHandler)(uint8), const char* rangeLabel, uint8 rangeValue) {
-    this->updateHandler = updateHandler;
+  RangeControl(
+    void (*increaseValueHandler)(),
+    void (*decreaseValueHandler)(),
+    uint8 (*getValueHandler)(),
+    const char* rangeLabel
+  ) {
+    this->increaseValueHandler = increaseValueHandler;
+    this->decreaseValueHandler = decreaseValueHandler;
+    this->getValueHandler = getValueHandler;
     this->type = ControlType::Range;
     this->label = rangeLabel;
-    this->value = rangeValue;
   }
   uint8 value;
 };

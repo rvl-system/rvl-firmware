@@ -21,27 +21,100 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "./ui/controls/control.h"
 #include "./ui/controls/base_controls.h"
+#include "./state.h"
+#include "./event.h"
 
 namespace BaseControls {
 
-void updateBrightnessValue(uint8 newValue) {
-  // TODO(nebrius): implement me
+void increaseBrightnessValue() {
+  auto settings = State::getSettings();
+  if (settings->brightness < 255) {
+    settings->brightness++;
+    Serial.print("Setting brightness to ");
+    Serial.println(settings->brightness);
+    Event::emit(Codes::EventType::AnimationChange);
+  }
 }
-Control::RangeControl brightnessControl(updateBrightnessValue, "BRT", 0);
+void decreaseBrightnessValue() {
+  auto settings = State::getSettings();
+  if (settings->brightness > 0) {
+    settings->brightness--;
+    Serial.print("Setting brightness to ");
+    Serial.println(settings->brightness);
+    Event::emit(Codes::EventType::AnimationChange);
+  }
+}
+uint8 getBrightnessValue() {
+  return State::getSettings()->brightness;
+}
+Control::RangeControl brightnessControl(
+  increaseBrightnessValue,
+  decreaseBrightnessValue,
+  getBrightnessValue,
+  "BRT");
 
-void updateWifiValue(uint8 newValue) {
+void increaseWifiValue() {
   // TODO(nebrius): implement me
 }
-Control::ListControl wifiControl(updateWifiValue, "WIFI", { "RVL1", "RVL2", "RVL3", "RVL4" }, 0);
+void decreaseWifiValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getWifiValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::ListControl wifiControl(
+  increaseWifiValue,
+  decreaseWifiValue,
+  getWifiValue,
+  "WIFI",
+  { "RVL1", "RVL2", "RVL3", "RVL4" });
 
-void updateModeValue(uint8 newValue) {
+void increaseModeValue() {
   // TODO(nebrius): implement me
 }
-Control::ListControl modeControl(updateModeValue, "MODE", { "Controller", "Receiver" }, 0);
+void decreaseModeValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getModeValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::ListControl modeControl(
+  increaseModeValue,
+  decreaseModeValue,
+  getModeValue,
+  "MODE",
+  { "Controller", "Receiver" });
 
-void updatePresetValue(uint8 newValue) {
-  // TODO(nebrius): implement me
+void increasePresetValue() {
+  auto settings = State::getSettings();
+  settings->presetSettings.preset++;
+  if (settings->presetSettings.preset == NUM_PRESETS) {
+    settings->presetSettings.preset = 0;
+  }
+  Serial.print("Setting preset ");
+  Serial.println(settings->presetSettings.preset);
+  Event::emit(Codes::EventType::AnimationChange);
 }
-Control::ListControl presetControl(updatePresetValue, "PRST", { "Rainbow", "Pulse", "Wave" }, 0);
+void decreasePresetValue() {
+  auto settings = State::getSettings();
+  settings->presetSettings.preset--;
+  if (settings->presetSettings.preset < 0) {
+    settings->presetSettings.preset = NUM_PRESETS - 1;
+  }
+  Serial.print("Setting preset ");
+  Serial.println(settings->presetSettings.preset);
+  Event::emit(Codes::EventType::AnimationChange);
+}
+uint8 getPresetValue() {
+  return State::getSettings()->presetSettings.preset;
+}
+Control::ListControl presetControl(
+  increasePresetValue,
+  decreasePresetValue,
+  getPresetValue,
+  "PRST",
+  { "Rainbow", "Pulse", "Wave" });
 
 }  // namespace BaseControls

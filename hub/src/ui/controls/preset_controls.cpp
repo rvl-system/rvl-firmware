@@ -26,53 +26,152 @@ namespace PresetControls {
 
 // Rainbow preset entries
 
-void updateRainbowRateValue(uint8 newValue) {
+void increaseRainbowRateValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl rainbowRateControl(updateRainbowRateValue, "RATE", 0);
+void decreaseRainbowRateValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getRainbowRateValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl rainbowRateControl(
+  increaseRainbowRateValue,
+  decreaseRainbowRateValue,
+  getRainbowRateValue,
+  "RATE");
 
 // Pulse preset entries
 
-void updatePulseRateValue(uint8 newValue) {
+void increasePulseRateValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl pulseRateControl(updatePulseRateValue, "RATE", 0);
+void decreasePulseRateValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getPulseRateValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl pulseRateControl(
+  increasePulseRateValue,
+  decreasePulseRateValue,
+  getPulseRateValue,
+  "RATE");
 
-void updatePulseHueValue(uint8 newValue) {
+void increasePulseHueValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl pulseHueControl(updatePulseHueValue, "HUE", 0);
+void decreasePulseHueValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getPulseHueValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl pulseHueControl(
+  increasePulseHueValue,
+  decreasePulseHueValue,
+  getPulseHueValue,
+  "HUE");
 
-void updatePulseSaturationValue(uint8 newValue) {
+void increasePulseSaturationValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl pulseSaturationControl(updatePulseSaturationValue, "STR", 0);
+void decreasePulseSaturationValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getPulseSaturationValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl pulseSaturationControl(
+  increasePulseSaturationValue,
+  decreasePulseSaturationValue,
+  getPulseSaturationValue,
+  "STR");
 
 // Wave preset entries
 
-void updateWaveRateValue(uint8 newValue) {
+void increaseWaveRateValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl waveRateControl(updateWaveRateValue, "RATE", 0);
+void decreaseWaveRateValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getWaveRateValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl waveRateControl(
+  increaseWaveRateValue,
+  decreaseWaveRateValue,
+  getWaveRateValue,
+  "RATE");
 
-void updateWaveForegroundHueValue(uint8 newValue) {
+void increaseWaveForegroundHueValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl waveForegroundHueControl(updateWaveForegroundHueValue, "HUEF", 0);
+void decreaseWaveForegroundHueValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getWaveForegroundHueValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl waveForegroundHueControl(
+  increaseWaveForegroundHueValue,
+  decreaseWaveForegroundHueValue,
+  getWaveForegroundHueValue,
+  "HUEF");
 
-void updateWaveForegroundSaturationValue(uint8 newValue) {
+void increaseWaveForegroundSaturationValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl waveForegroundSaturationControl(updateWaveForegroundSaturationValue, "STRF", 0);
+void decreaseWaveForegroundSaturationValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getWaveForegroundSaturationValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl waveForegroundSaturationControl(
+  increaseWaveForegroundSaturationValue,
+  decreaseWaveForegroundSaturationValue,
+  getWaveForegroundSaturationValue,
+  "STRF");
 
-void updateWaveBackgroundHueValue(uint8 newValue) {
+void increaseWaveBackgroundHueValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl waveBackgroundHueControl(updateWaveBackgroundHueValue, "HUEB", 0);
+void decreaseWaveBackgroundHueValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getWaveBackgroundHueValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl waveBackgroundHueControl(
+  increaseWaveBackgroundHueValue,
+  decreaseWaveBackgroundHueValue,
+  getWaveBackgroundHueValue,
+  "HUEB");
 
-void updateWaveBackgroundSaturationValue(uint8 newValue) {
+void increaseWaveBackgroundSaturationValue() {
   // TODO(nebrius): implement me
 }
-Control::RangeControl waveBackgroundSaturationControl(updateWaveBackgroundSaturationValue, "STRB", 0);
+void decreaseWaveBackgroundSaturationValue() {
+  // TODO(nebrius): implement me
+}
+uint8 getWaveBackgroundSaturationValue() {
+  // TODO(nebrius): implement me
+  return 0;
+}
+Control::RangeControl waveBackgroundSaturationControl(
+  increaseWaveBackgroundSaturationValue,
+  decreaseWaveBackgroundSaturationValue,
+  getWaveBackgroundSaturationValue,
+  "STRB");
 
 }  // namespace PresetControls

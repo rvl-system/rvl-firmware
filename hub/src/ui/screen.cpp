@@ -22,9 +22,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/ui_state.h"
 #include "./ui/screen/render.h"
 #include "./ui/screen/icons.h"
-#include "./ui/controls/control.h"
-#include "./ui/controls/base_controls.h"
-#include "./ui/controls/preset_controls.h"
 #include "../config.h"
 #include "./state.h"
 #include "./codes.h"
@@ -32,7 +29,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Screen {
 
-void update();
+void update() {
+  auto settings = State::getSettings();
+  std::list<Icons::StatusIcon*> icons;
+  if (settings->wifiConnected) {
+    icons.push_back(&Icons::wifiConnectedIcon);
+  } else {
+    icons.push_back(&Icons::wifiDisconnectedIcon);
+  }
+  Render::render(&(UIState::controls), UIState::currentControl, &icons);
+}
 
 void init() {
   Event::on(Codes::EventType::UIStateChange, update);
@@ -42,76 +48,6 @@ void init() {
 }
 
 void loop() {
-}
-
-void update() {
-  auto settings = State::getSettings();
-
-  std::vector<Control::Control*> entries = {
-    &BaseControls::brightnessControl,
-    &BaseControls::wifiControl,
-    &BaseControls::modeControl,
-    &BaseControls::presetControl
-  };
-  // Uhhh, is this the best way to do this?
-  BaseControls::brightnessControl.value = settings->brightness;
-  BaseControls::presetControl.selectedValueIndex = settings->presetSettings.preset;
-
-  switch (settings->presetSettings.preset) {
-    case Codes::Preset::Rainbow:
-      PresetControls::rainbowRateControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Rainbow][0];
-      entries.push_back(&PresetControls::rainbowRateControl);
-
-      break;
-
-    case Codes::Preset::Pulse:
-      PresetControls::pulseRateControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Pulse][0];
-      entries.push_back(&PresetControls::pulseRateControl);
-
-      PresetControls::pulseHueControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Pulse][1];
-      entries.push_back(&PresetControls::pulseHueControl);
-
-      PresetControls::pulseSaturationControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Pulse][2];
-      entries.push_back(&PresetControls::pulseSaturationControl);
-
-      break;
-
-    case Codes::Preset::Wave:
-      PresetControls::waveRateControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Wave][0];
-      entries.push_back(&PresetControls::waveRateControl);
-
-      PresetControls::waveForegroundHueControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Wave][1];
-      entries.push_back(&PresetControls::waveForegroundHueControl);
-
-      PresetControls::waveForegroundSaturationControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Wave][2];
-      entries.push_back(&PresetControls::waveForegroundSaturationControl);
-
-      PresetControls::waveBackgroundHueControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Wave][3];
-      entries.push_back(&PresetControls::waveBackgroundHueControl);
-
-      PresetControls::waveBackgroundSaturationControl.value =
-        settings->presetSettings.presetValues[Codes::Preset::Wave][4];
-      entries.push_back(&PresetControls::waveBackgroundSaturationControl);
-
-      break;
-  }
-
-  std::list<Icons::StatusIcon*> icons;
-  if (settings->wifiConnected) {
-    icons.push_back(&Icons::wifiConnectedIcon);
-  } else {
-    icons.push_back(&Icons::wifiDisconnectedIcon);
-  }
-
-  Render::render(&entries, UIState::currentControl, &icons);
 }
 
 }  // namespace Screen
