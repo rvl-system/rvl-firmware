@@ -48,7 +48,7 @@ class Control {
     (this->decreaseValueHandler)();
   }
   uint8 getValue() {
-    (this->getValueHandler)();
+    return (this->getValueHandler)();
   }
 };
 
