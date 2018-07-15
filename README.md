@@ -10,6 +10,10 @@ In the mean time, check out this tech demo video of the hardware (as of August 2
   <img src="http://img.youtube.com/vi/c0nkdtS_-Bg/0.jpg" alt="Video of a tech demonstration of Raver Lights" width="240" height="180" border="10" />
 </a>
 
+And a photo of the system on my bike at Burning Man 2017:
+
+![Photo of Raver Lights on a bike at Burning Man 2017](https://nebri.us/static/bm2017-bike.jpg)
+
 # License
 
 All schematics, layouts, software, and other documentation for raver-lights is released under the General Public License.
