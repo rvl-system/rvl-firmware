@@ -17,4 +17,10 @@
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 ./lint.sh
-platformio run -e hub && esptool.py -p /dev/tty.usbserial-A504WNTT -b 921600 write_flash 0x0 .pioenvs/hub/firmware.bin
+
+re='^[0-9]$'
+if ! [[ $1 =~ $re ]] ; then
+   echo "Please supply a COM port between 0 and 9" >&2; exit 1
+fi
+
+platformio run -e hub && esptool.py -p COM$1 -b 921600 write_flash 0x0 .pioenvs/hub/firmware.bin

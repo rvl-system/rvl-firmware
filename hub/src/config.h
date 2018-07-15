@@ -50,8 +50,8 @@ extern const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES];
 extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
-#define CLOCK_PIN 2
-#define DATA_PIN 0
+#define CLOCK_PIN 0
+#define DATA_PIN 2
 #define NUM_PIXELS 180
 
 #define LCD_ADDRESS 0x3C

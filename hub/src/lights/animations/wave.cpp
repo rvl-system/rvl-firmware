@@ -33,7 +33,7 @@ uint8 backgroundSaturation = 0;
 
 uint8 brightness = 0;
 
-#define SPACING 16
+#define PERIOD 16
 
 void WaveAnimation::setBrightness(uint8 newBrightness) {
   brightness = newBrightness;
@@ -49,15 +49,7 @@ void WaveAnimation::setValues(uint8* values) {
 
 void WaveAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
   uint32 period = 2 / rate;
-  double periodTime = 2 * PI * (commandTime % period) / period;
-
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    // TODO(nebrius): convert to sin8 or other FastLED method
-    double alpha = sin(2 * PI * (i % SPACING) / SPACING + periodTime);
-    if (alpha < 0) {
-      alpha = 0;
-    }
-
     CHSV foregroundHSV;
     foregroundHSV.h = foregroundHue;
     foregroundHSV.s = foregroundSaturation;
@@ -68,6 +60,8 @@ void WaveAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
     backgroundHSV.s = backgroundSaturation;
     backgroundHSV.v = brightness;
 
+
+    uint8 alpha = sin8(255 * (static_cast<uint32>(i + commandTime * rate) % PERIOD) / PERIOD);
     buffer[i] = blend(foregroundHSV, backgroundHSV, alpha * 255);
   }
 }
