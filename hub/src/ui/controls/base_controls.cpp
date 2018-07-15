@@ -67,14 +67,23 @@ Control::ListControl wifiControl(
   { "RVL1", "RVL2", "RVL3", "RVL4" });
 
 void increaseModeValue() {
-  // TODO(nebrius): implement me
+  auto settings = State::getSettings();
+  if (settings->mode == Codes::Mode::Controller) {
+    State::setMode(Codes::Mode::Receiver);
+  } else {
+    State::setMode(Codes::Mode::Controller);
+  }
 }
 void decreaseModeValue() {
-  // TODO(nebrius): implement me
+  auto settings = State::getSettings();
+  if (settings->mode == Codes::Mode::Controller) {
+    State::setMode(Codes::Mode::Receiver);
+  } else {
+    State::setMode(Codes::Mode::Controller);
+  }
 }
 uint8 getModeValue() {
-  // TODO(nebrius): implement me
-  return 0;
+  return State::getSettings()->mode;
 }
 Control::ListControl modeControl(
   increaseModeValue,

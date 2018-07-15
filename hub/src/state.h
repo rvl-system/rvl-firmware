@@ -50,11 +50,7 @@ struct Settings {
 
   uint8 brightness = DEFAULT_BRIGHTNESS;
 
-#ifdef SERVER
-  uint8 mode = 0;
-#else
-  uint8 mode = 1;
-#endif
+  uint8 mode = Codes::Mode::Controller;
 
   uint16 id = 0;
   uint32 clock = millis();
@@ -66,6 +62,7 @@ void loop();
 
 Settings* getSettings();
 
+void setMode(Codes::Mode::Mode mode);
 void setClientId(uint16 id);
 void setWifiConnected(bool connected);
 void setClockOffset(int32 clockOffset);

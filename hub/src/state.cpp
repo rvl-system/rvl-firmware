@@ -63,6 +63,22 @@ void init() {
   Serial.println("State initialized");
 }
 
+void setMode(Codes::Mode::Mode newMode) {
+  switch (newMode) {
+    case Codes::Mode::Controller:
+      Serial.println("Changing to controller mode");
+      settings.mode = newMode;
+      break;
+    case Codes::Mode::Receiver:
+      Serial.println("Changing to receiver mode");
+      settings.mode = newMode;
+      break;
+    default:
+      Serial.print("Error: tried to set unknown mode ");
+      Serial.println(newMode);
+  }
+}
+
 int32 clockOffset = 0;
 void setClockOffset(int32 newOffset) {
   clockOffset = newOffset;
