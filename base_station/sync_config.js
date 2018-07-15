@@ -41,7 +41,9 @@ while(true) {
   rawCodes = rawCodes.substr(rawCodes.indexOf('enum'));
   const match = /(enum [a-zA-Z0-9_]* \{ .*? \})/.exec(rawCodes);
   rawCodes = rawCodes.substr(rawCodes.indexOf('}'));
-  enums.push(match[1]);
+  const enumLine = match[1].replace(/\, /g, ',\n  ').replace(/\{ /, '{\n  ').replace(/ \}/, '\n}');
+
+  enums.push(enumLine);
 }
 
 let rawRuntimeDefines = fs.readFileSync(path.join(__dirname, '..', 'hub', 'src', 'config.cpp'))

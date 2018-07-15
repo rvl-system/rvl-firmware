@@ -56,7 +56,7 @@ function run() {
             socket.send(msg, codes_1.SERVER_PORT, codes_1.GATEWAY);
         }, codes_1.CLOCK_SYNC_INTERVAL);
     });
-    socket.bind(codes_1.SERVER_PORT);
+    socket.bind(codes_1.SERVER_PORT, codes_1.SERVER_IP);
 }
 exports.run = run;
 //# sourceMappingURL=index.js.map
