@@ -24,10 +24,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "./ui/controls/control.h"
 
+#define NUM_BASE_CONTROLS 3
+
 namespace BaseControls {
 
 extern Control::RangeControl brightnessControl;
-extern Control::ListControl wifiControl;
+// extern Control::ListControl wifiControl;
 extern Control::ListControl modeControl;
 extern Control::ListControl presetControl;
 

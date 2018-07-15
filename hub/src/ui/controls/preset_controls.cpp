@@ -30,6 +30,9 @@ namespace PresetControls {
 // Rainbow preset entries
 
 void increaseValueHelper(uint8 preset, uint8 presetIndex) {
+  if (State::getSettings()->mode != Codes::Mode::Controller) {
+    return;
+  }
   uint8* values = State::getSettings()->presetSettings.presetValues[preset];
   if (values[presetIndex] < 255) {
     values[presetIndex]++;
@@ -38,6 +41,9 @@ void increaseValueHelper(uint8 preset, uint8 presetIndex) {
 }
 
 void decreaseValueHelper(uint8 preset, uint8 presetIndex) {
+  if (State::getSettings()->mode != Codes::Mode::Controller) {
+    return;
+  }
   uint8* values = State::getSettings()->presetSettings.presetValues[preset];
   if (values[presetIndex] > 0) {
     values[presetIndex]--;

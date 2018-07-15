@@ -49,22 +49,22 @@ Control::RangeControl brightnessControl(
   getBrightnessValue,
   "BRT");
 
-void increaseWifiValue() {
-  // TODO(nebrius): implement me
-}
-void decreaseWifiValue() {
-  // TODO(nebrius): implement me
-}
-uint8 getWifiValue() {
-  // TODO(nebrius): implement me
-  return 0;
-}
-Control::ListControl wifiControl(
-  increaseWifiValue,
-  decreaseWifiValue,
-  getWifiValue,
-  "WIFI",
-  { "RVL1", "RVL2", "RVL3", "RVL4" });
+// void increaseWifiValue() {
+//   // TODO(nebrius): implement me
+// }
+// void decreaseWifiValue() {
+//   // TODO(nebrius): implement me
+// }
+// uint8 getWifiValue() {
+//   // TODO(nebrius): implement me
+//   return 0;
+// }
+// Control::ListControl wifiControl(
+//   increaseWifiValue,
+//   decreaseWifiValue,
+//   getWifiValue,
+//   "WIFI",
+//   { "RVL1", "RVL2", "RVL3", "RVL4" });
 
 void increaseModeValue() {
   auto settings = State::getSettings();
@@ -94,17 +94,25 @@ Control::ListControl modeControl(
 
 void increasePresetValue() {
   auto settings = State::getSettings();
-  settings->presetSettings.preset++;
-  if (settings->presetSettings.preset == NUM_PRESETS) {
+  if (settings->mode != Codes::Mode::Controller) {
+    return;
+  }
+  if (settings->presetSettings.preset == NUM_PRESETS - 1) {
     settings->presetSettings.preset = 0;
+  } else {
+    settings->presetSettings.preset++;
   }
   Event::emit(Codes::EventType::AnimationChange);
 }
 void decreasePresetValue() {
   auto settings = State::getSettings();
-  settings->presetSettings.preset--;
-  if (settings->presetSettings.preset < 0) {
+  if (settings->mode != Codes::Mode::Controller) {
+    return;
+  }
+  if (settings->presetSettings.preset == 0) {
     settings->presetSettings.preset = NUM_PRESETS - 1;
+  } else {
+    settings->presetSettings.preset--;
   }
   Event::emit(Codes::EventType::AnimationChange);
 }

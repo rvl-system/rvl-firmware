@@ -25,8 +25,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./event.h"
 #include "./codes.h"
 
-#define NUM_BASE_CONTROLS 4
-
 namespace UIState {
 
 uint8 currentControl = 0;
@@ -34,7 +32,7 @@ uint8 currentPreset = 255;
 
 std::vector<Control::Control*> controls = {
   &BaseControls::brightnessControl,
-  &BaseControls::wifiControl,
+  // &BaseControls::wifiControl,
   &BaseControls::modeControl,
   &BaseControls::presetControl
 };

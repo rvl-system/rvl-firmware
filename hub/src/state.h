@@ -50,7 +50,7 @@ struct Settings {
 
   uint8 brightness = DEFAULT_BRIGHTNESS;
 
-  uint8 mode = Codes::Mode::Controller;
+  uint8 mode = Codes::Mode::Receiver;
 
   uint16 id = 0;
   uint32 clock = millis();
