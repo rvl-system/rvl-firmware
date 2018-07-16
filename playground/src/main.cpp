@@ -37,9 +37,9 @@ CRGB leds[NUM_LEDS];
 struct Wave {
   uint8 a;
   uint8 b;
-  uint8 w_t;
-  uint8 w_x;
-  uint8 phi;
+  int8 w_t;
+  int8 w_x;
+  int8 phi;
 };
 
 struct Waves {
@@ -62,25 +62,25 @@ void setup() {
   waves[0].h.a = 0;
   waves[0].h.b = 180;
   waves[0].h.w_t = 8;
-  waves[0].h.w_x = 2;
+  waves[0].h.w_x = -2;
   waves[0].h.phi = 0;
 
   waves[0].s.a = 0;
   waves[0].s.b = 255;
   waves[0].s.w_t = 8;
-  waves[0].s.w_x = 2;
+  waves[0].s.w_x = -2;
   waves[0].s.phi = 0;
 
   waves[0].v.a = 0;
   waves[0].v.b = 255;
   waves[0].v.w_t = 8;
-  waves[0].v.w_x = 2;
+  waves[0].v.w_x = -2;
   waves[0].v.phi = 0;
 
   waves[0].a.a = 255;
   waves[0].a.b = 0;
   waves[0].a.w_t = 8;
-  waves[0].a.w_x = 2;
+  waves[0].a.w_x = -2;
   waves[0].a.phi = 0;
 
   // Wave 2 init
