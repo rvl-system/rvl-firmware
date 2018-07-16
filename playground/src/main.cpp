@@ -50,6 +50,8 @@ struct Waves {
 };
 
 Waves waves[NUM_WAVES];
+uint8 timePeriod = 255; // in ms, I think?
+uint8 distancePeriod = 32;
 
 void setup() {
   Serial.begin(115200);
@@ -137,11 +139,11 @@ void setup() {
 }
 
 void loop() {
-  uint32 t = millis() % 25500;
+  uint32 t = millis() % (timePeriod * 100) * 255 / timePeriod;
   Serial.println("Loop");
   Serial.println(t);
   for (uint16 i = 0; i < NUM_LEDS; i++) {
-    uint8 x = 255 * i / NUM_LEDS;
+    uint8 x = 255 * (i % distancePeriod) / distancePeriod;
 
     CHSV waveHSV[NUM_WAVES];
     CRGB waveRGB[NUM_WAVES];
