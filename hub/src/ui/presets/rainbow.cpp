@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,32 +17,22 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <FastLED.h>
-#include "./lights/animations/rainbow.h"
-#include "../../config.h"
+#include <Arduino.h>
 #include "./codes.h"
-
-#define COLOR_DIFFERENCE 40
+#include "./ui/ui_state.h"
+#include "./state.h"
 
 namespace Rainbow {
 
-double rate = 0;
-uint8 brightness = 0;
-
-void RainbowAnimation::setBrightness(uint8 newBrightness) {
-  brightness = newBrightness;
-}
-
-void RainbowAnimation::setValues(uint8* values) {
-  rate = static_cast<double>(values[Codes::RainbowPresetValues::Rate]) / 1280.0;
-}
-
-void RainbowAnimation::updateColors(uint32 commandTime, CHSV* buffer) {
-  for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    buffer[i].h = (static_cast<uint32>(commandTime * rate) + COLOR_DIFFERENCE * i) % 255;
-    buffer[i].s = 255;
-    buffer[i].v = brightness;
-  }
+void calculateWaveParameters() {
+  State::WaveSettings newSettings;
+  newSettings.waves[0].h.a = 255;
+  newSettings.waves[0].h.w_t = UIState::presetValues[Codes::Preset::Rainbow][Codes::RainbowPresetValues::Rate];
+  newSettings.waves[0].h.w_x = 2;
+  newSettings.waves[0].s.b = 255;
+  newSettings.waves[0].v.b = 255;
+  newSettings.waves[0].a.b = 255;
+  State::setWaveParameters(&newSettings);
 }
 
 }  // namespace Rainbow

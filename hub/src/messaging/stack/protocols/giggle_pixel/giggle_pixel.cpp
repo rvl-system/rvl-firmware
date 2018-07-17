@@ -19,8 +19,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./messaging/stack/protocols/giggle_pixel/giggle_pixel.h"
-#include "./messaging/stack/protocols/giggle_pixel/preset.h"
 #include "./messaging/stack/protocols/giggle_pixel/palette.h"
+#include "./messaging/stack/protocols/giggle_pixel/wave.h"
 #include "./messaging/stack/transport.h"
 #include "../../../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
@@ -34,12 +34,12 @@ TransportInterface* transport;
 
 void init(TransportInterface* newTransport) {
   transport = newTransport;
-  Preset::init(newTransport);
+  Wave::init(newTransport);
   Palette::init(newTransport);
 }
 
 void loop() {
-  Preset::loop();
+  Wave::loop();
 }
 
 void setClientId(uint16 id);
@@ -52,11 +52,11 @@ void parsePacket() {
     Serial.println("Received unsupported GigglePixel protocol version packet");
     return;
   }
-  uint16 length = transport->read16();
+  transport->read16();  // length
   uint8 packetType = transport->read8();
-  uint8 priority = transport->read8();
+  transport->read8();  // priority
   transport->read8();  // Reserved
-  uint16 sourceId = transport->read16();
+  transport->read16();  // sourceId
 
   // Ignore our own broadcast packets
   if (State::getSettings()->mode == Codes::Mode::Controller) {
@@ -64,8 +64,8 @@ void parsePacket() {
   }
 
   switch (packetType) {
-    case Codes::GigglePixelPacketTypes::Preset:
-      Preset::parsePacket();
+    case Codes::GigglePixelPacketTypes::Wave:
+      Wave::parsePacket();
       break;
     default:
       Serial.print("Unsupported packet type received: ");

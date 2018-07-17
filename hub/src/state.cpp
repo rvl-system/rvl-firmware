@@ -44,34 +44,31 @@ void setWifiConnected(bool connected) {
   Event::emit(Codes::EventType::ConnectedStateChange);
 }
 
-void setAnimation(uint8 preset, uint8* presetValues) {
-  settings.presetSettings.preset = preset;
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    settings.presetSettings.presetValues[preset][i] = presetValues[i];
-  }
+void setWaveParameters(WaveSettings *waveSettings) {
+  memcpy(&settings.waveSettings, waveSettings, sizeof(WaveSettings));
   Event::emit(Codes::EventType::AnimationChange);
 }
 
 void init() {
-  settings.presetSettings.presetValues = new byte*[NUM_PRESETS];
-  for (int i = 0; i < NUM_PRESETS; i++) {
-    settings.presetSettings.presetValues[i] = new byte[NUM_PRESET_VALUES];
-    for (int j = 0; j < NUM_PRESET_VALUES; j++) {
-      settings.presetSettings.presetValues[i][j] = presetValueDefaults[i][j];
-    }
-  }
+  settings.waveSettings.timePeriod = 255;
+  // TODO(nebrius): set wave setting defaults?
   Serial.println("State initialized");
 }
 
 void setMode(Codes::Mode::Mode newMode) {
+  if (settings.mode == newMode) {
+    return;
+  }
   switch (newMode) {
     case Codes::Mode::Controller:
       Serial.println("Changing to controller mode");
       settings.mode = newMode;
+      Event::emit(Codes::EventType::ModeChange);
       break;
     case Codes::Mode::Receiver:
       Serial.println("Changing to receiver mode");
       settings.mode = newMode;
+      Event::emit(Codes::EventType::ModeChange);
       break;
     default:
       Serial.print("Error: tried to set unknown mode ");

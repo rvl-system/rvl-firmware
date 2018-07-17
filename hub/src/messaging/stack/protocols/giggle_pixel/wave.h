@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,23 +17,25 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIGHTS_ANIMATIONS_RAINBOW_H_
-#define LIGHTS_ANIMATIONS_RAINBOW_H_
+#ifndef MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_WAVE_H_
+#define MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_WAVE_H_
 
-#include <Arduino.h>
-#include <FastLED.h>
-#include "./lights/animation.h"
-#include "./codes.h"
+#include "./messaging/stack/transport.h"
 
-namespace Rainbow {
+// Packet:
+// h: a b w_t w_x phi
+// s: a b w_t w_x phi
+// v: a b w_t w_x phi
+// a: a b w_t w_x phi
+// 20 bytes per wave, 4 waves total for 80 bytes
 
-class RainbowAnimation : public Animation::AnimationBase {
- public:
-  void setBrightness(uint8 newBrightness);
-  void setValues(byte* values);
-  void updateColors(uint32 commandTime, CHSV* buffer);
-};
+namespace Wave {
 
-}  // namespace Rainbow
+void init(TransportInterface* newTransport);
+void loop();
 
-#endif  // LIGHTS_ANIMATIONS_RAINBOW_H_
+void parsePacket();
+
+}  // namespace Wave
+
+#endif  // MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_WAVE_H_

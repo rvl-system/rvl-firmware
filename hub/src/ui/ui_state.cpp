@@ -28,23 +28,23 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace UIState {
 
 uint8 currentControl = 0;
-uint8 currentPreset = 255;
+uint8 preset = DEFAULT_PRESET;
+uint8** presetValues;
 
 std::vector<Control::Control*> controls = {
   &BaseControls::brightnessControl,
   // &BaseControls::wifiControl,
-  &BaseControls::modeControl,
-  &BaseControls::presetControl
+  &BaseControls::modeControl
 };
 
 void update() {
   auto settings = State::getSettings();
-  if (settings->presetSettings.preset != currentPreset) {
-    currentPreset = settings->presetSettings.preset;
-    while (controls.size() > NUM_BASE_CONTROLS) {
-      controls.pop_back();
-    }
-    switch (settings->presetSettings.preset) {
+  while (controls.size() > 2) {
+    controls.pop_back();
+  }
+  if (settings->mode == Codes::Mode::Controller) {
+    controls.push_back(&BaseControls::presetControl);
+    switch (preset) {
       case Codes::Preset::Rainbow:
         controls.push_back(&PresetControls::rainbowRateControl);
         break;
@@ -68,6 +68,14 @@ void update() {
 void init() {
   Event::on(Codes::EventType::ConnectedStateChange, update);
   Event::on(Codes::EventType::AnimationChange, update);
+  Event::on(Codes::EventType::ModeChange, update);
+  presetValues = new byte*[NUM_PRESETS];
+  for (int i = 0; i < NUM_PRESETS; i++) {
+    presetValues[i] = new byte[NUM_PRESET_VALUES];
+    for (int j = 0; j < NUM_PRESET_VALUES; j++) {
+      presetValues[i][j] = presetValueDefaults[i][j];
+    }
+  }
   update();
   controls.reserve(10);
 }

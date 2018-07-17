@@ -17,18 +17,22 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
-#define MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
+#include <Arduino.h>
+#include "./codes.h"
+#include "./ui/ui_state.h"
+#include "./state.h"
 
-#include "./messaging/stack/transport.h"
+namespace Pulse {
 
-namespace Preset {
+void calculateWaveParameters() {
+  Serial.println("Updating Pulse settings");
+  State::WaveSettings newSettings;
+  newSettings.waves[0].h.b = UIState::presetValues[Codes::Preset::Pulse][Codes::PulsePresetValues::Hue];
+  newSettings.waves[0].s.b = UIState::presetValues[Codes::Preset::Pulse][Codes::PulsePresetValues::Saturation];
+  newSettings.waves[0].v.a = 255;
+  newSettings.waves[0].v.w_t = UIState::presetValues[Codes::Preset::Pulse][Codes::PulsePresetValues::Rate];
+  newSettings.waves[0].a.b = 255;
+  State::setWaveParameters(&newSettings);
+}
 
-void init(TransportInterface* newTransport);
-void loop();
-
-void parsePacket();
-
-}  // namespace Preset
-
-#endif  // MESSAGING_STACK_PROTOCOLS_GIGGLE_PIXEL_PRESET_H_
+}  // namespace Pulse

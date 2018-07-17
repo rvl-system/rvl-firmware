@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging/stack/protocols/giggle_pixel/preset.h"
+#include "./messaging/stack/protocols/giggle_pixel/wave.h"
 #include "./messaging/stack/protocols/giggle_pixel/giggle_pixel.h"
 #include "./messaging/stack/transport.h"
 #include "../../../../config.h"  // Why does this one single file require ".." but none of the others do?
@@ -26,7 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./event.h"
 #include "./codes.h"
 
-namespace Preset {
+namespace Wave {
 
 uint32 nextSyncTime = millis();
 
@@ -36,7 +36,6 @@ void sync();
 
 void init(TransportInterface* newTransport) {
   transport = newTransport;
-  Event::on(Codes::EventType::AnimationChange, sync);
 }
 
 void loop() {
@@ -52,26 +51,26 @@ void loop() {
 
 void sync() {
   Serial.println("Syncing preset");
-  State::Settings* settings = State::getSettings();
-
+  auto settings = State::getSettings();
+  uint16 length = sizeof(State::Wave) * NUM_WAVES;
   transport->beginWrite();
   GigglePixel::broadcastHeader(
-    Codes::GigglePixelPacketTypes::Preset,
+    Codes::GigglePixelPacketTypes::Wave,
     0,  // Priority
-    4 + 1 + 1 + NUM_PRESET_VALUES);
-  transport->write8(settings->presetSettings.preset);
-  for (int i = 0; i < NUM_PRESET_VALUES; i++) {
-    transport->write8(settings->presetSettings.presetValues[settings->presetSettings.preset][i]);
-  }
+    2 + length);
+  transport->write8(settings->waveSettings.timePeriod);
+  transport->write8(settings->waveSettings.distancePeriod);
+  transport->write(reinterpret_cast<uint8*>(&settings->waveSettings.waves), length);
   transport->endWrite();
 }
 
 void parsePacket() {
-  Serial.println("Parsing preset packet");
-  uint8 preset = transport->read8();
-  uint8 presetValues[NUM_PRESET_VALUES];
-  transport->read(presetValues, NUM_PRESET_VALUES);
-  State::setAnimation(preset, presetValues);
+  Serial.println("Parsing Wave packet");
+  State::WaveSettings newWaveSettings;
+  newWaveSettings.timePeriod = transport->read8();
+  newWaveSettings.distancePeriod = transport->read8();
+  transport->read(reinterpret_cast<uint8*>(&newWaveSettings.waves), sizeof(State::Wave) * NUM_WAVES);
+  State::setWaveParameters(&newWaveSettings);
 }
 
-}  // namespace Preset
+}  // namespace Wave

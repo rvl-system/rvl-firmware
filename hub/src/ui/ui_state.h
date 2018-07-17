@@ -23,11 +23,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <vector>
 #include "./ui/controls/control.h"
+#include "./config.h"
 
 namespace UIState {
 
 extern uint8 currentControl;
 extern std::vector<Control::Control*> controls;
+
+extern uint8 preset;
+extern uint8** presetValues;
 
 void init();
 

@@ -51,10 +51,10 @@ bool parsePacket() {
   if (protocolVersion != version) {
     return false;
   }
-  uint8 type = transport->read8();
-  uint16 seq = transport->read16();
+  transport->read8();  // type
+  transport->read16();  // seq
   uint32 commandTime = transport->read32();
-  uint16 clientId = transport->read16();
+  transport->read16();  // clientId
 
   State::setClockOffset(static_cast<int32>(commandTime) - static_cast<int32>(millis()));
 

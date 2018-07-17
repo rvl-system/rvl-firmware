@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,24 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIGHTS_ANIMATIONS_WAVE_H_
-#define LIGHTS_ANIMATIONS_WAVE_H_
+#ifndef UI_PRESETS_RAINBOW_H_
+#define UI_PRESETS_RAINBOW_H_
 
 #include <Arduino.h>
-#include <FastLED.h>
 
-#include "./lights/animation.h"
-#include "./codes.h"
+namespace Rainbow {
 
-namespace Wave {
+void calculateWaveParameters();
 
-class WaveAnimation : public Animation::AnimationBase {
- public:
-  void setBrightness(uint8 newBrightness);
-  void setValues(uint8* values);
-  void updateColors(uint32 commandTime, CHSV* buffer);
-};
+}  // namespace Rainbow
 
-}  // namespace Wave
-
-#endif  // LIGHTS_ANIMATIONS_WAVE_H_
+#endif  // UI_PRESETS_RAINBOW_H_

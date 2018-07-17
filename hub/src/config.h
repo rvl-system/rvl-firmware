@@ -38,7 +38,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define MAX_PALETTE_ENTRIES 10
 
 #define DEFAULT_PRESET 2
-#define DEFAULT_BRIGHTNESS 25
+#define DEFAULT_BRIGHTNESS 50
 
 #ifdef HAS_NETWORK
 extern IPAddress SERVER_IP;
@@ -53,6 +53,8 @@ extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 #define CLOCK_PIN 0
 #define DATA_PIN 2
 #define NUM_PIXELS 180
+
+#define NUM_WAVES 4
 
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4

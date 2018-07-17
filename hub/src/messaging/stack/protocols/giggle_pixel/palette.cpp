@@ -28,8 +28,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Palette {
 
-uint32 nextSyncTime = millis();
-
 TransportInterface* transport;
 
 void sync();
@@ -43,11 +41,7 @@ void loop() {
 }
 
 void parsePacket() {
-  Serial.println("Parsing Palette packet");
-  uint8 preset = transport->read8();
-  uint8 presetValues[NUM_PRESET_VALUES];
-  transport->read(presetValues, NUM_PRESET_VALUES);
-  State::setAnimation(preset, presetValues);
+  // Not implemented yet
 }
 
 }  // namespace Palette

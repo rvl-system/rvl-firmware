@@ -21,19 +21,20 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "./state.h"
 #include "./codes.h"
+#include "./ui/ui_state.h"
 #include "./ui/controls/control.h"
 #include "./ui/controls/preset_controls.h"
+#include "./ui/presets/rainbow.h"
+#include "./ui/presets/pulse.h"
 #include "./event.h"
 
 namespace PresetControls {
-
-// Rainbow preset entries
 
 void increaseValueHelper(uint8 preset, uint8 presetIndex) {
   if (State::getSettings()->mode != Codes::Mode::Controller) {
     return;
   }
-  uint8* values = State::getSettings()->presetSettings.presetValues[preset];
+  uint8* values = UIState::presetValues[preset];
   if (values[presetIndex] < 255) {
     values[presetIndex]++;
     Event::emit(Codes::EventType::AnimationChange);
@@ -44,7 +45,7 @@ void decreaseValueHelper(uint8 preset, uint8 presetIndex) {
   if (State::getSettings()->mode != Codes::Mode::Controller) {
     return;
   }
-  uint8* values = State::getSettings()->presetSettings.presetValues[preset];
+  uint8* values = UIState::presetValues[preset];
   if (values[presetIndex] > 0) {
     values[presetIndex]--;
     Event::emit(Codes::EventType::AnimationChange);
@@ -52,14 +53,18 @@ void decreaseValueHelper(uint8 preset, uint8 presetIndex) {
 }
 
 uint8 getValueHelper(uint8 preset, uint8 presetIndex) {
-  return State::getSettings()->presetSettings.presetValues[preset][presetIndex];
+  return UIState::presetValues[preset][presetIndex];
 }
+
+// Rainbow preset entries
 
 void increaseRainbowRateValue() {
   increaseValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
+  Rainbow::calculateWaveParameters();
 }
 void decreaseRainbowRateValue() {
   decreaseValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
+  Rainbow::calculateWaveParameters();
 }
 uint8 getRainbowRateValue() {
   return getValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
@@ -74,9 +79,11 @@ Control::RangeControl rainbowRateControl(
 
 void increasePulseRateValue() {
   increaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Rate);
+  Pulse::calculateWaveParameters();
 }
 void decreasePulseRateValue() {
   decreaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Rate);
+  Pulse::calculateWaveParameters();
 }
 uint8 getPulseRateValue() {
   return getValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Rate);
@@ -89,9 +96,11 @@ Control::RangeControl pulseRateControl(
 
 void increasePulseHueValue() {
   increaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Hue);
+  Pulse::calculateWaveParameters();
 }
 void decreasePulseHueValue() {
   decreaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Hue);
+  Pulse::calculateWaveParameters();
 }
 uint8 getPulseHueValue() {
   return getValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Hue);
@@ -104,9 +113,11 @@ Control::RangeControl pulseHueControl(
 
 void increasePulseSaturationValue() {
   increaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Saturation);
+  Pulse::calculateWaveParameters();
 }
 void decreasePulseSaturationValue() {
   decreaseValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Saturation);
+  Pulse::calculateWaveParameters();
 }
 uint8 getPulseSaturationValue() {
   return getValueHelper(Codes::Preset::Pulse, Codes::PulsePresetValues::Saturation);

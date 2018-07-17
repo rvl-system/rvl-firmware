@@ -22,77 +22,50 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include "./lights/animation.h"
 #include "./lights/lights.h"
 #include "./codes.h"
-#include "./config.h"
+#include "../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./state.h"
 #include "./event.h"
-
-#include "./lights/animations/rainbow.h"
-#include "./lights/animations/pulse.h"
-#include "./lights/animations/wave.h"
 
 namespace Lights {
 
 CRGB leds[NUM_PIXELS];
 CHSV colors[NUM_PIXELS];
 
-Codes::Preset::Preset preset = Codes::Preset::Unknown;
-byte brightness = 0;
-
-uint32 lastUpdateTime = 0;
-
-Animation::AnimationBase* animations[NUM_PRESETS];
-
-void update();
-
 void init() {
   FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_PIXELS);
-  Event::on(Codes::EventType::AnimationChange, update);
-
-  animations[Codes::Preset::Rainbow] = new Rainbow::RainbowAnimation();
-  animations[Codes::Preset::Pulse] = new Pulse::PulseAnimation();
-  animations[Codes::Preset::Wave] = new Wave::WaveAnimation();
-
-  update();
-
   Serial.println("Lights initialized");
 }
 
-void loop() {
-  if (preset != Codes::Preset::Unknown) {
-    animations[preset]->updateColors(State::getSettings()->clock, colors);
-  }
-  for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    hsv2rgb_spectrum(colors[i], leds[i]);
-  }
-  FastLED.show();
+uint8 calculatePixelValue(State::WaveChannel *wave, uint32 t, uint8 x) {
+  return sin8(wave->w_t * t / 100 + wave->w_x * x + wave->phi) * wave->a / 255 + wave->b;
 }
 
-void update() {
-  State::Settings* settings = State::getSettings();
+void loop() {
+  auto settings = State::getSettings();
+  FastLED.setBrightness(settings->brightness);
+  uint32 t = millis() % (settings->waveSettings.timePeriod * 100) * 255 / settings->waveSettings.timePeriod;
+  for (uint16 i = 0; i < NUM_PIXELS; i++) {
+    uint8 x = 255 * (i % settings->waveSettings.distancePeriod) / settings->waveSettings.distancePeriod;
 
-  lastUpdateTime = millis();
+    CHSV waveHSV[NUM_WAVES];
+    CRGB waveRGB[NUM_WAVES];
+    uint8 alphaValues[NUM_WAVES];
 
-  if (settings->brightness != brightness) {
-    Serial.print("Changing brightness to: ");
-    Serial.println(settings->brightness);
-    brightness = settings->brightness;
-    for (uint8 i = 0; i < NUM_PRESETS; i++) {
-      animations[i]->setBrightness(brightness);
+    for (uint8 j = 0; j < NUM_WAVES; j++) {
+      waveHSV[j].h = calculatePixelValue(&(settings->waveSettings.waves[j].h), t, x);
+      waveHSV[j].s = calculatePixelValue(&(settings->waveSettings.waves[j].s), t, x);
+      waveHSV[j].v = calculatePixelValue(&(settings->waveSettings.waves[j].v), t, x);
+      alphaValues[j] = calculatePixelValue(&(settings->waveSettings.waves[j].a), t, x);
+      hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
+    }
+    leds[i] = waveRGB[NUM_WAVES - 1];
+    for (int8 j = NUM_WAVES - 2; j >= 0; j--) {
+      leds[i] = blend(leds[i], waveRGB[j], alphaValues[j]);
     }
   }
-
-  if (preset != settings->presetSettings.preset) {
-    Serial.print("Changing preset to: ");
-    Serial.println(settings->presetSettings.preset);
-    preset = (Codes::Preset::Preset)settings->presetSettings.preset;
-  }
-
-  if (preset != Codes::Preset::Unknown) {
-    animations[preset]->setValues(settings->presetSettings.presetValues[settings->presetSettings.preset]);
-  }
+  FastLED.show();
 }
 
 }  // namespace Lights

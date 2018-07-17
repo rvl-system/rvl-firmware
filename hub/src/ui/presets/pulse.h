@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,21 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIGHTS_ANIMATION_H_
-#define LIGHTS_ANIMATION_H_
+#ifndef UI_PRESETS_PULSE_H_
+#define UI_PRESETS_PULSE_H_
 
 #include <Arduino.h>
-#include <FastLED.h>
 
-namespace Animation {
+namespace Pulse {
 
-class AnimationBase {
- public:
-  virtual void setBrightness(uint8 newBrightness) = 0;
-  virtual void setValues(uint8* values) = 0;
-  virtual void updateColors(uint32 commandTime, CHSV* buffer) = 0;
-};
+void calculateWaveParameters();
 
-}
+}  // namespace Pulse
 
-#endif  // LIGHTS_ANIMATION_H_
+#endif  // UI_PRESETS_PULSE_H_

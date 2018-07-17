@@ -19,8 +19,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <vector>
+#include "./ui/ui_state.h"
 #include "./ui/controls/control.h"
 #include "./ui/controls/base_controls.h"
+#include "./ui/presets/rainbow.h"
+#include "./ui/presets/pulse.h"
 #include "./state.h"
 #include "./event.h"
 
@@ -92,32 +95,43 @@ Control::ListControl modeControl(
   "MODE",
   { "Controller", "Receiver" });
 
+void setWaveParameters() {
+  switch (UIState::preset) {
+    case Codes::Preset::Rainbow:
+      Rainbow::calculateWaveParameters();
+      break;
+    case Codes::Preset::Pulse:
+      Pulse::calculateWaveParameters();
+      break;
+  }
+}
+
 void increasePresetValue() {
   auto settings = State::getSettings();
   if (settings->mode != Codes::Mode::Controller) {
     return;
   }
-  if (settings->presetSettings.preset == NUM_PRESETS - 1) {
-    settings->presetSettings.preset = 0;
+  if (UIState::preset == NUM_PRESETS - 1) {
+    UIState::preset = 0;
   } else {
-    settings->presetSettings.preset++;
+    UIState::preset++;
   }
-  Event::emit(Codes::EventType::AnimationChange);
+  setWaveParameters();
 }
 void decreasePresetValue() {
   auto settings = State::getSettings();
   if (settings->mode != Codes::Mode::Controller) {
     return;
   }
-  if (settings->presetSettings.preset == 0) {
-    settings->presetSettings.preset = NUM_PRESETS - 1;
+  if (UIState::preset == 0) {
+    UIState::preset = NUM_PRESETS - 1;
   } else {
-    settings->presetSettings.preset--;
+    UIState::preset--;
   }
-  Event::emit(Codes::EventType::AnimationChange);
+  setWaveParameters();
 }
 uint8 getPresetValue() {
-  return State::getSettings()->presetSettings.preset;
+  return UIState::preset;
 }
 Control::ListControl presetControl(
   increasePresetValue,

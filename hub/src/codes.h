@@ -25,8 +25,7 @@ namespace Codes {
 namespace GigglePixelPacketTypes {
   enum GigglePixelPacketTypes {
     Palette = 1,
-    Wave = 2,
-    Preset = 3
+    Wave = 2
   };
 }
 
@@ -42,7 +41,8 @@ namespace EventType {
   enum EventType {
     AnimationChange,
     UIStateChange,
-    ConnectedStateChange
+    ConnectedStateChange,
+    ModeChange
   };
 }
 

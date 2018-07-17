@@ -16,4 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-seriallog -p /dev/tty.usbserial-A504WNTT -b 921600
+
+re='^[0-9]$'
+if ! [[ $1 =~ $re ]] ; then
+   echo "Please supply a COM port between 0 and 9" >&2; exit 1
+fi
+
+seriallog -p COM$1 -b 921600
