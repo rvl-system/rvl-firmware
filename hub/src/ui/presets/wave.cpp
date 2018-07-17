@@ -18,6 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include "./ui/presets/wave.h"
 #include "./codes.h"
 #include "./ui/ui_state.h"
 #include "./state.h"

@@ -45,7 +45,7 @@ uint8 calculatePixelValue(State::WaveChannel *wave, uint32 t, uint8 x) {
 void loop() {
   auto settings = State::getSettings();
   FastLED.setBrightness(settings->brightness);
-  uint32 t = millis() % (settings->waveSettings.timePeriod * 100) * 255 / settings->waveSettings.timePeriod;
+  uint32 t = settings->clock % (settings->waveSettings.timePeriod * 100) * 255 / settings->waveSettings.timePeriod;
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
     uint8 x = 255 * (i % settings->waveSettings.distancePeriod) / settings->waveSettings.distancePeriod;
 

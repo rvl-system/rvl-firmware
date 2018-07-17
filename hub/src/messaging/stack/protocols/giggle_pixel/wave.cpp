@@ -36,6 +36,7 @@ void sync();
 
 void init(TransportInterface* newTransport) {
   transport = newTransport;
+  Event::on(Codes::EventType::AnimationChange, sync);
 }
 
 void loop() {
