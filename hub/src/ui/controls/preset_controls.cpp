@@ -26,6 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/controls/preset_controls.h"
 #include "./ui/presets/rainbow.h"
 #include "./ui/presets/pulse.h"
+#include "./ui/presets/wave.h"
 #include "./event.h"
 
 namespace PresetControls {
@@ -132,9 +133,11 @@ Control::RangeControl pulseSaturationControl(
 
 void increaseWaveRateValue() {
   increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::Rate);
+  Wave::calculateWaveParameters();
 }
 void decreaseWaveRateValue() {
   decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::Rate);
+  Wave::calculateWaveParameters();
 }
 uint8 getWaveRateValue() {
   return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::Rate);
@@ -147,9 +150,11 @@ Control::RangeControl waveRateControl(
 
 void increaseWaveForegroundHueValue() {
   increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundHue);
+  Wave::calculateWaveParameters();
 }
 void decreaseWaveForegroundHueValue() {
   decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundHue);
+  Wave::calculateWaveParameters();
 }
 uint8 getWaveForegroundHueValue() {
   return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundHue);
@@ -162,9 +167,11 @@ Control::RangeControl waveForegroundHueControl(
 
 void increaseWaveForegroundSaturationValue() {
   increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundSaturation);
+  Wave::calculateWaveParameters();
 }
 void decreaseWaveForegroundSaturationValue() {
   decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundSaturation);
+  Wave::calculateWaveParameters();
 }
 uint8 getWaveForegroundSaturationValue() {
   return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::ForegroundSaturation);
@@ -177,9 +184,11 @@ Control::RangeControl waveForegroundSaturationControl(
 
 void increaseWaveBackgroundHueValue() {
   increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundHue);
+  Wave::calculateWaveParameters();
 }
 void decreaseWaveBackgroundHueValue() {
   decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundHue);
+  Wave::calculateWaveParameters();
 }
 uint8 getWaveBackgroundHueValue() {
   return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundHue);
@@ -192,9 +201,11 @@ Control::RangeControl waveBackgroundHueControl(
 
 void increaseWaveBackgroundSaturationValue() {
   increaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundSaturation);
+  Wave::calculateWaveParameters();
 }
 void decreaseWaveBackgroundSaturationValue() {
   decreaseValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundSaturation);
+  Wave::calculateWaveParameters();
 }
 uint8 getWaveBackgroundSaturationValue() {
   return getValueHelper(Codes::Preset::Wave, Codes::WavePresetValues::BackgroundSaturation);

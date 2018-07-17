@@ -44,5 +44,5 @@ const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES] = {
 const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES] = {
   { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 16, 120, 255, 0, 0, 0, 0, 0, 0, 0 },
-  { 85, 120, 255, 160, 255, 0, 0, 0, 0, 0 }
+  { 12, 120, 255, 160, 255, 0, 0, 0, 0, 0 }
 };
