@@ -22,27 +22,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/ui_state.h"
 #include "./ui/controls/control.h"
 #include "./ui/controls/base_controls.h"
-#include "./ui/presets/rainbow.h"
-#include "./ui/presets/pulse.h"
-#include "./ui/presets/wave.h"
+#include "./ui/wave_parameters.h"
 #include "./state.h"
 #include "./event.h"
 
 namespace BaseControls {
-
-void setWaveParameters() {
-  switch (UIState::preset) {
-    case Codes::Preset::Rainbow:
-      Rainbow::calculateWaveParameters();
-      break;
-    case Codes::Preset::Pulse:
-      Pulse::calculateWaveParameters();
-      break;
-    case Codes::Preset::Wave:
-      Wave::calculateWaveParameters();
-      break;
-  }
-}
 
 void increaseBrightnessValue() {
   auto settings = State::getSettings();
@@ -90,7 +74,7 @@ void increaseModeValue() {
     State::setMode(Codes::Mode::Receiver);
   } else {
     State::setMode(Codes::Mode::Controller);
-    setWaveParameters();
+    WaveParameters::setWaveParameters();
   }
 }
 void decreaseModeValue() {
@@ -99,7 +83,7 @@ void decreaseModeValue() {
     State::setMode(Codes::Mode::Receiver);
   } else {
     State::setMode(Codes::Mode::Controller);
-    setWaveParameters();
+    WaveParameters::setWaveParameters();
   }
 }
 uint8 getModeValue() {
@@ -122,7 +106,7 @@ void increasePresetValue() {
   } else {
     UIState::preset++;
   }
-  setWaveParameters();
+  WaveParameters::setWaveParameters();
 }
 void decreasePresetValue() {
   auto settings = State::getSettings();
@@ -134,7 +118,7 @@ void decreasePresetValue() {
   } else {
     UIState::preset--;
   }
-  setWaveParameters();
+  WaveParameters::setWaveParameters();
 }
 uint8 getPresetValue() {
   return UIState::preset;

@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_PRESETS_RAINBOW_H_
-#define UI_PRESETS_RAINBOW_H_
+#ifndef UI_WAVE_PARAMETERS_H_
+#define UI_WAVE_PARAMETERS_H_
 
 #include <Arduino.h>
 
-namespace Rainbow {
+namespace WaveParameters {
 
-void calculateWaveParameters();
+void setWaveParameters();
 
-}  // namespace Rainbow
+}  // namespace WaveParameters
 
-#endif  // UI_PRESETS_RAINBOW_H_
+#endif  // UI_WAVE_PARAMETERS_H_
