@@ -60,6 +60,9 @@ void update() {
         controls.push_back(&PresetControls::waveBackgroundHueControl);
         controls.push_back(&PresetControls::waveBackgroundSaturationControl);
         break;
+      case Codes::Preset::ColorCycle:
+        controls.push_back(&PresetControls::colorCycleRateControl);
+        break;
     }
   }
   Event::emit(Codes::EventType::UIStateChange);

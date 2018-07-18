@@ -29,6 +29,19 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PresetControls {
 
+// TODO(nebrius): add support for presetValueMin and presetValueMax in these methods
+// Also cleanup all stuff from codes.h, config.h, and config.cpp and get them into UI
+// Also, create a unified class or something for each preset so stuff isn't scatered
+// across a bunch of files, which I believe are:
+// src/codes.h
+// src/config.cpp
+// src/config.h
+// src/ui/controls/base_controls.cpp
+// src/ui/controls/preset_controls.cpp
+// src/ui/controls/preset_controls.h
+// src/ui/ui_state.cpp
+// src/ui/wave_parameters.cpp
+
 void increaseValueHelper(uint8 preset, uint8 presetIndex) {
   if (State::getSettings()->mode != Codes::Mode::Controller) {
     return;
@@ -213,5 +226,24 @@ Control::RangeControl waveBackgroundSaturationControl(
   decreaseWaveBackgroundSaturationValue,
   getWaveBackgroundSaturationValue,
   "STRB");
+
+// Color Cycle preset entries
+
+void increaseColorCycleRateValue() {
+  increaseValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
+  WaveParameters::setWaveParameters();
+}
+void decreaseColorCycleRateValue() {
+  decreaseValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
+  WaveParameters::setWaveParameters();
+}
+uint8 getColorCycleRateValue() {
+  return getValueHelper(Codes::Preset::Rainbow, Codes::RainbowPresetValues::Rate);
+}
+Control::RangeControl colorCycleRateControl(
+  increaseColorCycleRateValue,
+  decreaseColorCycleRateValue,
+  getColorCycleRateValue,
+  "RATE");
 
 }  // namespace PresetControls

@@ -32,7 +32,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define UPDATE_RATE 33
 
-#define NUM_PRESETS 3
+#define NUM_PRESETS 4
 #define NUM_PRESET_VALUES 10
 
 #define MAX_PALETTE_ENTRIES 10

@@ -128,6 +128,6 @@ Control::ListControl presetControl(
   decreasePresetValue,
   getPresetValue,
   "PRST",
-  { "Rainbow", "Pulse", "Wave" });
+  { "Rainbow", "Pulse", "Wave", "Color Cycle" });
 
 }  // namespace BaseControls

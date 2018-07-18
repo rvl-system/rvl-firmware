@@ -44,6 +44,10 @@ extern Control::RangeControl waveForegroundSaturationControl;
 extern Control::RangeControl waveBackgroundHueControl;
 extern Control::RangeControl waveBackgroundSaturationControl;
 
+// ColorCycle preset entries
+
+extern Control::RangeControl colorCycleRateControl;
+
 }  // namespace PresetControls
 
 #endif  // UI_CONTROLS_PRESET_CONTROLS_H_

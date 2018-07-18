@@ -51,6 +51,7 @@ namespace Preset {
     Rainbow = 0,
     Pulse = 1,
     Wave = 2,
+    ColorCycle = 3,
     Unknown = 255
   };
 }
@@ -79,14 +80,9 @@ namespace WavePresetValues {
   };
 }
 
-namespace Control {
-  enum Control {
-    None = 0,
-    Brightness = 1,
-    Preset = 2,
-    Value1 = 3,
-    Value2 = 4,
-    Value3 = 5
+namespace ColorCyclePresetValues {
+  enum ColorCyclePresetValues {
+    Rate = 0
   };
 }
 

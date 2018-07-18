@@ -28,6 +28,7 @@ namespace WaveParameters {
 void calculateRainbow();
 void calculatePulse();
 void calculateWave();
+void calculateColorCycle();
 
 void setWaveParameters() {
   switch (UIState::preset) {
@@ -39,6 +40,9 @@ void setWaveParameters() {
       break;
     case Codes::Preset::Wave:
       calculateWave();
+      break;
+    case Codes::Preset::ColorCycle:
+      calculateColorCycle();
       break;
   }
 }
@@ -82,6 +86,17 @@ void calculateWave() {
   newSettings.waves[1].v.b = 255;
   newSettings.waves[1].a.a = 255;
 
+  State::setWaveParameters(&newSettings);
+}
+
+void calculateColorCycle() {
+  State::WaveSettings newSettings;
+  newSettings.waves[0].h.a = 255;
+  newSettings.waves[0].h.w_t = UIState::presetValues[Codes::Preset::ColorCycle][Codes::ColorCyclePresetValues::Rate];
+  newSettings.waves[0].h.w_x = 0;
+  newSettings.waves[0].s.b = 255;
+  newSettings.waves[0].v.b = 255;
+  newSettings.waves[0].a.b = 255;
   State::setWaveParameters(&newSettings);
 }
 
