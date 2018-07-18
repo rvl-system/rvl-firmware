@@ -30,18 +30,16 @@ namespace Palette {
 
 TransportInterface* transport;
 
-void sync();
-
 void init(TransportInterface* newTransport) {
   transport = newTransport;
 }
 
 void loop() {
-  // Not implemented yet
+  // Nothing to do
 }
 
 void parsePacket() {
-  // Not implemented yet
+  // TODO(nebrius)
 }
 
 }  // namespace Palette

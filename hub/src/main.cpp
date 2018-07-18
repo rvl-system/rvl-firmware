@@ -48,6 +48,10 @@ void setup() {
   Serial.println("Running");
 }
 
+#define NUM_LOOP_SAMPLES 60
+uint8 loopTimes[NUM_LOOP_SAMPLES];
+uint8 loopIndex = 0;
+
 void loop() {
   uint32 startTime = millis();
   State::loop();
@@ -61,6 +65,17 @@ void loop() {
   Lights::loop();
 #endif
   uint32 now = millis();
+  loopTimes[loopIndex++] = now - startTime;
+  if (loopIndex == NUM_LOOP_SAMPLES) {
+    loopIndex = 0;
+    uint16 sum = 0;
+    for (uint8 i = 0; i < NUM_LOOP_SAMPLES; i++) {
+      sum += loopTimes[i];
+    }
+    Serial.print("Average loop time: ");
+    Serial.print(sum / NUM_LOOP_SAMPLES);
+    Serial.println("ms");
+  }
   if (now - startTime > UPDATE_RATE) {
     Serial.print("Warning: system loop took ");
     Serial.print(now - startTime - UPDATE_RATE);
