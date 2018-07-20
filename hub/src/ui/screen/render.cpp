@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <SSD1306Brzo.h>
 #include "./ui/screen/render.h"
 #include "./ui/screen/icons.h"
-#include "./ui/controls/control.h"
+#include "./ui/control.h"
 #include "../../config.h"
 
 namespace Render {
@@ -63,11 +63,11 @@ void renderEntry(Control::Control* entry, uint8 row) {
   if (entry->type == Control::ControlType::List) {
     auto listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(52, textY, "<");
-    display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->getValue()]);
+    display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
     display.drawString(115, textY, ">");
   } else if (entry->type == Control::ControlType::Range) {
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
-    uint8 progress = 100 * rangeEntry->getValue() / 255;
+    uint8 progress = 100 * rangeEntry->value / 255;
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   }
 }

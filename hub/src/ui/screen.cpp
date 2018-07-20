@@ -30,6 +30,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Screen {
 
 void update() {
+  Serial.println("Updating screen");
   auto settings = State::getSettings();
   std::list<Icons::StatusIcon*> icons;
   if (settings->wifiConnected) {

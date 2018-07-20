@@ -17,31 +17,44 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_UI_STATE_H_
-#define UI_UI_STATE_H_
-
 #include <Arduino.h>
 #include <vector>
-#include "./ui/control.h"
-#include "./config.h"
+#include "./ui/presets/rainbow.h"
+#include "./state.h"
 
-namespace UIState {
+namespace Rainbow {
 
-extern uint8 currentControl;
-extern std::vector<Control::Control*> controls;
+uint8 rate = 4;
 
-extern uint8 preset;
-extern uint8** presetValues;
+void updateWaveParameters() {
+  State::WaveSettings newSettings;
+  newSettings.waves[0].h.a = 255;
+  newSettings.waves[0].h.w_t = rate;
+  newSettings.waves[0].h.w_x = 2;
+  newSettings.waves[0].s.b = 255;
+  newSettings.waves[0].v.b = 255;
+  newSettings.waves[0].a.b = 255;
+  State::setWaveParameters(&newSettings);
+}
 
-void init();
+void updateRateValue(uint8 newValue) {
+  rate = newValue;
+  updateWaveParameters();
+}
 
-void nextControl();
-void previousControl();
-void controlIncrease();
-void controlDecrease();
+Rainbow::Rainbow() {
+  this->controls.push_back(new Control::RangeControl(
+    "RATE",
+    0,
+    32,
+    rate,
+    updateRateValue));
+}
 
-bool isCurrentControlRange();
+void Rainbow::updateWave() {
+  updateWaveParameters();
+}
 
-}  // namespace UIState
+Rainbow rainbow;
 
-#endif  // UI_UI_STATE_H_
+}  // namespace Rainbow

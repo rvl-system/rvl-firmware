@@ -39,6 +39,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEFAULT_PRESET 2
 #define DEFAULT_BRIGHTNESS 50
+#define MAX_BRIGHTNESS 128
 
 #ifdef HAS_NETWORK
 extern IPAddress SERVER_IP;

@@ -17,15 +17,23 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_WAVE_PARAMETERS_H_
-#define UI_WAVE_PARAMETERS_H_
+#ifndef UI_PRESETS_WAVE_H_
+#define UI_PRESETS_WAVE_H_
 
 #include <Arduino.h>
+#include <vector>
+#include "./ui/presets/preset_control_set.h"
 
-namespace WaveParameters {
+namespace Wave {
 
-void setWaveParameters();
+class Wave : public PresetControlSet {
+ public:
+  Wave();
+  void updateWave();
+};
 
-}  // namespace WaveParameters
+extern Wave wave;
 
-#endif  // UI_WAVE_PARAMETERS_H_
+}  // namespace Wave
+
+#endif  // UI_PRESETS_WAVE_H_

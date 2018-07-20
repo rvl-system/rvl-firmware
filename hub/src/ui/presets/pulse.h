@@ -17,20 +17,23 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_CONTROLS_BASE_CONTROLS_H_
-#define UI_CONTROLS_BASE_CONTROLS_H_
+#ifndef UI_PRESETS_PULSE_H_
+#define UI_PRESETS_PULSE_H_
 
 #include <Arduino.h>
 #include <vector>
-#include "./ui/controls/control.h"
+#include "./ui/presets/preset_control_set.h"
 
-namespace BaseControls {
+namespace Pulse {
 
-extern Control::RangeControl brightnessControl;
-// extern Control::ListControl wifiControl;
-extern Control::ListControl modeControl;
-extern Control::ListControl presetControl;
+class Pulse : public PresetControlSet {
+ public:
+  Pulse();
+  void updateWave();
+};
 
-}  // namespace BaseControls
+extern Pulse pulse;
 
-#endif  // UI_CONTROLS_BASE_CONTROLS_H_
+}  // namespace Pulse
+
+#endif  // UI_PRESETS_PULSE_H_

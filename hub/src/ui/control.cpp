@@ -17,31 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UI_UI_STATE_H_
-#define UI_UI_STATE_H_
-
 #include <Arduino.h>
 #include <vector>
+#include "./ui/ui_state.h"
 #include "./ui/control.h"
-#include "./config.h"
+#include "./state.h"
+#include "./event.h"
 
-namespace UIState {
+namespace Control {
 
-extern uint8 currentControl;
-extern std::vector<Control::Control*> controls;
 
-extern uint8 preset;
-extern uint8** presetValues;
 
-void init();
-
-void nextControl();
-void previousControl();
-void controlIncrease();
-void controlDecrease();
-
-bool isCurrentControlRange();
-
-}  // namespace UIState
-
-#endif  // UI_UI_STATE_H_
+}  // namespace Control

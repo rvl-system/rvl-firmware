@@ -6,8 +6,8 @@ This project is still under heavy development, documentation coming soon once th
 
 In the mean time, check out this tech demo video of the hardware (as of August 2017).
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=c0nkdtS_-Bg" target="_blank">
-  <img src="http://img.youtube.com/vi/c0nkdtS_-Bg/0.jpg" alt="Video of a tech demonstration of Raver Lights" width="240" height="180" border="10" />
+<a href="https://www.youtube.com/watch?v=nYG6840g4mw" target="_blank">
+  <img src="https://img.youtube.com/vi/nYG6840g4mw/0.jpg" alt="Video of a tech demonstration of Raver Lights version 3" width="240" height="180" border="10" />
 </a>
 
 And a photo of the system on my bike at Burning Man 2017:

@@ -24,7 +24,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <list>
 #include <vector>
 #include "./ui/screen/icons.h"
-#include "./ui/controls/control.h"
+#include "./ui/control.h"
 
 namespace Render {
 

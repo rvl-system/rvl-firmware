@@ -19,22 +19,72 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./ui/ui_state.h"
-#include "./ui/controls/base_controls.h"
-#include "./ui/controls/preset_controls.h"
 #include "./state.h"
 #include "./event.h"
 #include "./codes.h"
+#include "./presets/preset_control_set.h"
+#include "./presets/rainbow.h"
+#include "./presets/pulse.h"
+#include "./presets/wave.h"
+#include "./presets/color_cycle.h"
 
 namespace UIState {
 
 uint8 currentControl = 0;
 uint8 preset = DEFAULT_PRESET;
-uint8** presetValues;
+
+PresetControlSet* presets[] = {
+  &Rainbow::rainbow,
+  &Pulse::pulse,
+  &Wave::wave,
+  &ColorCycle::colorCycle
+};
+
+void updateBrightnessValue(uint8 newValue) {
+  State::getSettings()->brightness = newValue;
+  Event::emit(Codes::EventType::AnimationChange);
+}
+Control::RangeControl brightnessControl(
+  "BRT",
+  0,
+  MAX_BRIGHTNESS,
+  DEFAULT_BRIGHTNESS,
+  updateBrightnessValue);
+
+void updateModeValue(uint8 selectedValueIndex) {
+  if (State::getSettings()->mode != selectedValueIndex) {
+    switch (selectedValueIndex) {
+      case Codes::Mode::Controller:
+        State::setMode(Codes::Mode::Controller);
+        presets[preset]->updateWave();
+        break;
+      case Codes::Mode::Receiver:
+        State::setMode(Codes::Mode::Receiver);
+        break;
+    }
+  }
+}
+Control::ListControl modeControl(
+  "MODE",
+  { "Controller", "Receiver" },
+  1,
+  updateModeValue);
+
+void updatePresetValue(uint8 selectedValueIndex) {
+  if (UIState::preset != selectedValueIndex) {
+    UIState::preset = selectedValueIndex;
+    presets[preset]->updateWave();
+  }
+}
+Control::ListControl presetControl(
+  "PRST",
+  { "Rainbow", "Pulse", "Wave", "Color Cycle" },
+  0,
+  updatePresetValue);
 
 std::vector<Control::Control*> controls = {
-  &BaseControls::brightnessControl,
-  // &BaseControls::wifiControl,
-  &BaseControls::modeControl
+  &brightnessControl,
+  &modeControl
 };
 
 void update() {
@@ -43,26 +93,9 @@ void update() {
     controls.pop_back();
   }
   if (settings->mode == Codes::Mode::Controller) {
-    controls.push_back(&BaseControls::presetControl);
-    switch (preset) {
-      case Codes::Preset::Rainbow:
-        controls.push_back(&PresetControls::rainbowRateControl);
-        break;
-      case Codes::Preset::Pulse:
-        controls.push_back(&PresetControls::pulseRateControl);
-        controls.push_back(&PresetControls::pulseHueControl);
-        controls.push_back(&PresetControls::pulseSaturationControl);
-        break;
-      case Codes::Preset::Wave:
-        controls.push_back(&PresetControls::waveRateControl);
-        controls.push_back(&PresetControls::waveForegroundHueControl);
-        controls.push_back(&PresetControls::waveForegroundSaturationControl);
-        controls.push_back(&PresetControls::waveBackgroundHueControl);
-        controls.push_back(&PresetControls::waveBackgroundSaturationControl);
-        break;
-      case Codes::Preset::ColorCycle:
-        controls.push_back(&PresetControls::colorCycleRateControl);
-        break;
+    controls.push_back(&presetControl);
+    for (auto& control : presets[preset]->controls) {
+      controls.push_back(control);
     }
   }
   Event::emit(Codes::EventType::UIStateChange);
@@ -72,13 +105,6 @@ void init() {
   Event::on(Codes::EventType::ConnectedStateChange, update);
   Event::on(Codes::EventType::AnimationChange, update);
   Event::on(Codes::EventType::ModeChange, update);
-  presetValues = new byte*[NUM_PRESETS];
-  for (int i = 0; i < NUM_PRESETS; i++) {
-    presetValues[i] = new byte[NUM_PRESET_VALUES];
-    for (int j = 0; j < NUM_PRESET_VALUES; j++) {
-      presetValues[i][j] = presetValueDefaults[i][j];
-    }
-  }
   update();
   controls.reserve(10);
 }
