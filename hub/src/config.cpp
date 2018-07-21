@@ -28,24 +28,3 @@ IPAddress SERVER_IP(192, 168, 42, 1);
 IPAddress GATEWAY(192, 168, 42, 255);
 IPAddress SUBNET(255, 255, 255, 0);
 #endif
-
-const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES] = {
-  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 0, 4, 0, 0, 0, 0, 0, 0, 0, 0 }
-};
-
-const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES] = {
-  { 32, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 32, 255, 255, 0, 0, 0, 0, 0, 0, 0 },
-  { 32, 32, 255, 255, 0, 0, 0, 0, 0, 0 },
-  { 32, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-};
-
-const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES] = {
-  { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 16, 120, 255, 0, 0, 0, 0, 0, 0, 0 },
-  { 12, 120, 255, 160, 255, 0, 0, 0, 0, 0 },
-  { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-};

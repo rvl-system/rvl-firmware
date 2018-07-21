@@ -32,9 +32,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define UPDATE_RATE 33
 
-#define NUM_PRESETS 4
-#define NUM_PRESET_VALUES 10
-
 #define MAX_PALETTE_ENTRIES 10
 
 #define DEFAULT_PRESET 2
@@ -46,10 +43,6 @@ extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;
 extern IPAddress SUBNET;
 #endif
-
-extern const byte presetValueMin[NUM_PRESETS][NUM_PRESET_VALUES];
-extern const byte presetValueMax[NUM_PRESETS][NUM_PRESET_VALUES];
-extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 
 #define CLOCK_PIN 0
 #define DATA_PIN 2
@@ -88,9 +81,6 @@ extern const byte presetValueDefaults[NUM_PRESETS][NUM_PRESET_VALUES];
 #define BUTTON_PRESS_ENGAGE_TIME 50
 #define BUTTON_HOLD_ENGAGE_TIME 2000
 
-#define CLIENT_TIMEOUT 5000
-
 #define CLIENT_SYNC_INTERVAL 2000
-#define CLOCK_SYNC_INTERVAL 2000
 
 #endif  // CONFIG_H_
