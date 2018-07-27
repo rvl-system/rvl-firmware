@@ -25,6 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./event.h"
 #include "./codes.h"
+#include "./util/logging.h"
 
 namespace Wave {
 
@@ -51,7 +52,7 @@ void loop() {
 }
 
 void sync() {
-  Serial.println("Syncing preset");
+  Logging::debug("Syncing preset");
   auto settings = State::getSettings();
   uint16 length = sizeof(State::Wave) * NUM_WAVES;
   transport->beginWrite();
@@ -66,7 +67,7 @@ void sync() {
 }
 
 void parsePacket() {
-  Serial.println("Parsing Wave packet");
+  Logging::debug("Parsing Wave packet");
   State::WaveSettings newWaveSettings;
   newWaveSettings.timePeriod = transport->read8();
   newWaveSettings.distancePeriod = transport->read8();

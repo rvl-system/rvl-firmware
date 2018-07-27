@@ -27,6 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./state.h"
 #include "./event.h"
+#include "./util/logging.h"
 
 namespace Lights {
 
@@ -35,7 +36,7 @@ CHSV colors[NUM_PIXELS];
 
 void init() {
   FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_PIXELS);
-  Serial.println("Lights initialized");
+  Logging::info("Lights initialized");
 }
 
 uint8 calculatePixelValue(State::WaveChannel *wave, uint32 t, uint8 x) {

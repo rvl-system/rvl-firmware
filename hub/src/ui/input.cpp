@@ -49,7 +49,6 @@ void init() {
   pinMode(previousControlButtonInfo.gpio, INPUT);
   pinMode(increaseValueButtonInfo.gpio, INPUT);
   pinMode(decreaseValueButtonInfo.gpio, INPUT);
-  Serial.println("Input initialized");
 }
 
 ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {

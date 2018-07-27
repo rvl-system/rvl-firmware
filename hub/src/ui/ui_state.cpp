@@ -27,6 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/pulse.h"
 #include "./presets/wave.h"
 #include "./presets/color_cycle.h"
+#include "./util/logging.h"
 
 namespace UIState {
 
@@ -42,6 +43,7 @@ PresetControlSet* presets[] = {
 
 void updateBrightnessValue(uint8 newValue) {
   State::getSettings()->brightness = newValue;
+  Logging::info("Changing brightness to %d", newValue);
   Event::emit(Codes::EventType::AnimationChange);
 }
 Control::RangeControl brightnessControl(
@@ -112,8 +114,7 @@ void init() {
 void nextControl() {
   if (currentControl < controls.size() - 1) {
     currentControl++;
-    Serial.print("Setting control ");
-    Serial.println(currentControl);
+    Logging::debug("Setting control to %d", currentControl);
     Event::emit(Codes::EventType::UIStateChange);
   }
 }
@@ -121,8 +122,7 @@ void nextControl() {
 void previousControl() {
   if (currentControl > 0) {
     currentControl--;
-    Serial.print("Setting control ");
-    Serial.println(currentControl);
+    Logging::debug("Setting control to %d", currentControl);
     Event::emit(Codes::EventType::UIStateChange);
   }
 }

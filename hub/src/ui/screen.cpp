@@ -26,11 +26,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./codes.h"
 #include "./event.h"
+#include "./util/logging.h"
 
 namespace Screen {
 
 void update() {
-  Serial.println("Updating screen");
+  Logging::debug("Updating screen");
   auto settings = State::getSettings();
   std::list<Icons::StatusIcon*> icons;
   if (settings->wifiConnected) {
@@ -45,7 +46,6 @@ void init() {
   Event::on(Codes::EventType::UIStateChange, update);
   Render::init();
   Screen::update();
-  Serial.println("Screen initialized");
 }
 
 void loop() {

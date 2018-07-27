@@ -26,6 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
 #include "./state.h"
+#include "./util/logging.h"
 
 namespace Messaging {
 
@@ -34,7 +35,6 @@ namespace Messaging {
 #define STATE_CONNECTED 2
 
 byte state = STATE_DISCONNECTED;
-uint32 nextTimeToPrintDot = 0;
 
 WiFiUDP udp;
 UDPTransport::UDPTransport transport(&udp);
@@ -42,39 +42,28 @@ UDPTransport::UDPTransport transport(&udp);
 void init() {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);   // Helps keep LEDs from flickering
   Stack::init(&transport);
-  Serial.println("Messaging initialized");
+  Logging::info("Messaging initialized");
 }
 
 void loop() {
   switch (state) {
     case STATE_DISCONNECTED:
-      Serial.print("Connecting to ");
-      Serial.print(WIFI_SSID);
+      Logging::info("Connecting to %s", WIFI_SSID);
       WiFi.begin(WIFI_SSID, WIFI_PASSPHRASE);
       state = STATE_CONNECTING;
-      nextTimeToPrintDot = millis() + 500;
       // Fall through here instead of breaking
     case STATE_CONNECTING:
       if (WiFi.status() == WL_CONNECTED) {
-        Serial.println();
-        Serial.println("WiFi connected");
-        Serial.println("IP address: ");
-        Serial.println(WiFi.localIP());
-
+        Logging::info("Connected to WiFi with address %s", WiFi.localIP());
         State::setClientId(WiFi.localIP()[3]);
-
-        Serial.println("Starting UDP server");
         udp.begin(SERVER_PORT);
         state = STATE_CONNECTED;
         State::setWifiConnected(true);
-      } else if (millis() >= nextTimeToPrintDot) {
-        Serial.print(".");
-        nextTimeToPrintDot = millis() + 500;
       }
       break;
     case STATE_CONNECTED:
       if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("Disconnected from WiFi, retrying");
+        Logging::info("Disconnected from WiFi, retrying");
         state = STATE_DISCONNECTED;
         State::setWifiConnected(false);
         break;
@@ -83,7 +72,7 @@ void loop() {
       if (packetSize == 0) {
         return;
       }
-      Serial.println("Packet received");
+      Logging::debug("Packet received of length %d", packetSize);
       Stack::parsePacket();
       break;
   }

@@ -33,6 +33,8 @@
     "list": "cpp",
     "xtr1common": "cpp",
     "iosfwd": "cpp",
-    "xstring": "cpp"
+    "xstring": "cpp",
+    "cmath": "cpp",
+    "xlocale": "cpp"
   }
 }

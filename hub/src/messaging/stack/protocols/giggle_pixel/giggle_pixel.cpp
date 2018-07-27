@@ -25,6 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
 #include "./state.h"
+#include "./util/logging.h"
 
 namespace GigglePixel {
 
@@ -46,10 +47,10 @@ void setClientId(uint16 id);
 void broadcastHeader(uint8 packetType, uint8 priority, uint16 length);
 
 void parsePacket() {
-  Serial.println("Parsing GigglePixel packet");
+  Logging::debug("Parsing GigglePixel packet");
   uint8 protocolVersion = transport->read8();
   if (protocolVersion != protocolVersion) {
-    Serial.println("Received unsupported GigglePixel protocol version packet");
+    Logging::error("Received unsupported GigglePixel protocol version packet");
     return;
   }
   transport->read16();  // length
@@ -68,8 +69,7 @@ void parsePacket() {
       Wave::parsePacket();
       break;
     default:
-      Serial.print("Unsupported packet type received: ");
-      Serial.println(packetType);
+      Logging::error("Unsupported packet type received: %d", packetType);
   }
 }
 
