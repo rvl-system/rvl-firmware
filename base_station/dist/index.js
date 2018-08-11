@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = require("os");
 const dgram_1 = require("dgram");
 const codes_1 = require("./codes");
+const CLOCK_SYNC_INTERVAL = 2000;
 const clockSyncSignature = ['C'.charCodeAt(0), 'L'.charCodeAt(0), 'K'.charCodeAt(0), 'S'.charCodeAt(0)];
 const addresses = os_1.networkInterfaces().wlan0.map((entry) => entry.address);
 function run() {
@@ -54,7 +55,7 @@ function run() {
             view.setUint32(8, clockTime); // Clock: 4 bytes = running clock, relative to app start
             view.setUint16(12, 0); // ClientID: 2 bytes = 0 in this case because this is not an LED device/client
             socket.send(msg, codes_1.SERVER_PORT, codes_1.GATEWAY);
-        }, codes_1.CLOCK_SYNC_INTERVAL);
+        }, CLOCK_SYNC_INTERVAL);
     });
     socket.bind(codes_1.SERVER_PORT, codes_1.SERVER_IP);
 }

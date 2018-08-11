@@ -19,7 +19,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 import { networkInterfaces } from 'os';
 import { createSocket } from 'dgram';
-import { SERVER_IP, SERVER_PORT, GATEWAY, CLOCK_SYNC_INTERVAL } from './codes';
+import { SERVER_IP, SERVER_PORT, GATEWAY } from './codes';
+
+const CLOCK_SYNC_INTERVAL = 2000;
 
 const clockSyncSignature = [ 'C'.charCodeAt(0), 'L'.charCodeAt(0), 'K'.charCodeAt(0), 'S'.charCodeAt(0) ];
 const addresses = networkInterfaces().wlan0.map((entry) => entry.address);

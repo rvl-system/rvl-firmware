@@ -22,16 +22,17 @@ export const HIGH = 0;
 
 export const WIFI_SSID = 'RaverLights';
 export const WIFI_PASSPHRASE = '4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}';
+export const SERIAL_BAUDRATE = 921600;
 export const SERVER_PORT = 4978;
 export const UPDATE_RATE = 33;
-export const NUM_PRESETS = 3;
-export const NUM_PRESET_VALUES = 10;
 export const MAX_PALETTE_ENTRIES = 10;
 export const DEFAULT_PRESET = 2;
-export const DEFAULT_BRIGHTNESS = 25;
+export const DEFAULT_BRIGHTNESS = 50;
+export const MAX_BRIGHTNESS = 128;
 export const CLOCK_PIN = 0;
 export const DATA_PIN = 2;
 export const NUM_PIXELS = 180;
+export const NUM_WAVES = 4;
 export const LCD_ADDRESS = 0x3C;
 export const LCD_SDA = 4;
 export const LCD_SCL = 5;
@@ -56,18 +57,15 @@ export const BUTTON_RIGHT_ON = LOW;
 export const BUTTON_RIGHT_OFF = HIGH;
 export const BUTTON_PRESS_ENGAGE_TIME = 50;
 export const BUTTON_HOLD_ENGAGE_TIME = 2000;
-export const CLIENT_TIMEOUT = 5000;
 export const CLIENT_SYNC_INTERVAL = 2000;
-export const CLOCK_SYNC_INTERVAL = 2000;
 
-export const SERVER_IP = '192.168.42.1';
+export const SERVER_IP = '192.168.42.10';
 export const GATEWAY = '192.168.42.255';
 export const SUBNET = '255.255.255.0';
 
 export enum GigglePixelPacketTypes {
   Palette = 1,
-  Wave = 2,
-  Preset = 3
+  Wave = 2
 }
 export enum Mode {
   Controller = 0,
@@ -77,12 +75,14 @@ export enum Mode {
 export enum EventType {
   AnimationChange,
   UIStateChange,
-  ConnectedStateChange
+  ConnectedStateChange,
+  ModeChange
 }
 export enum Preset {
   Rainbow = 0,
   Pulse = 1,
   Wave = 2,
+  ColorCycle = 3,
   Unknown = 255
 }
 export enum RainbowPresetValues {
@@ -100,29 +100,6 @@ export enum WavePresetValues {
   BackgroundHue = 3,
   BackgroundSaturation = 4
 }
-export enum Control {
-  None = 0,
-  Brightness = 1,
-  Preset = 2,
-  Value1 = 3,
-  Value2 = 4,
-  Value3 = 5
+export enum ColorCyclePresetValues {
+  Rate = 0
 }
-
-export const presetValueMin = [
-  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-  [ 0, 4, 0, 0, 0, 0, 0, 0, 0, 0 ]
-];
-
-export const presetValueMax = [
-  [ 255, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-  [ 255, 255, 255, 0, 0, 0, 0, 0, 0, 0 ],
-  [ 255, 32, 255, 255, 0, 0, 0, 0, 0, 0 ]
-];
-
-export const presetValueDefaults = [
-  [ 125, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-  [ 125, 120, 255, 0, 0, 0, 0, 0, 0, 0 ],
-  [ 85, 120, 255, 160, 255, 0, 0, 0, 0, 0 ]
-];
