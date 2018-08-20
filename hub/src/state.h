@@ -65,7 +65,7 @@ struct Settings {
   WaveSettings waveSettings;
 
   uint8 brightness = DEFAULT_BRIGHTNESS;
-  uint8 mode = Codes::Mode::Receiver;
+  uint8 mode = Codes::Mode::Controller;
 
   uint16 id = 0;
   uint32 clock = millis();

@@ -67,7 +67,7 @@ void renderEntry(Control::Control* entry, uint8 row) {
     display.drawString(115, textY, ">");
   } else if (entry->type == Control::ControlType::Range) {
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
-    uint8 progress = 100 * rangeEntry->value / 255;
+    uint8 progress = 100 * (rangeEntry->value - rangeEntry->min) / (rangeEntry->max - rangeEntry->min);
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   }
 }

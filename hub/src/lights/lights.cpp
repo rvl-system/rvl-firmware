@@ -31,6 +31,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Lights {
 
+#define MAX_SCALED_BRIGHTNESS 196
+#define BRIGHTNESS_SCALING_FACTOR MAX_SCALED_BRIGHTNESS / MAX_BRIGHTNESS
+
 CRGB leds[NUM_PIXELS];
 CHSV colors[NUM_PIXELS];
 
@@ -45,7 +48,7 @@ uint8 calculatePixelValue(State::WaveChannel *wave, uint32 t, uint8 x) {
 
 void loop() {
   auto settings = State::getSettings();
-  FastLED.setBrightness(settings->brightness);
+  FastLED.setBrightness(settings->brightness * BRIGHTNESS_SCALING_FACTOR);
   uint32 t = settings->clock % (settings->waveSettings.timePeriod * 100) * 255 / settings->waveSettings.timePeriod;
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
     uint8 x = 255 * (i % settings->waveSettings.distancePeriod) / settings->waveSettings.distancePeriod;

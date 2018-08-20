@@ -69,7 +69,7 @@ void updateModeValue(uint8 selectedValueIndex) {
 Control::ListControl modeControl(
   "MODE",
   { "Controller", "Receiver" },
-  1,
+  0,
   updateModeValue);
 
 void updatePresetValue(uint8 selectedValueIndex) {
@@ -81,7 +81,7 @@ void updatePresetValue(uint8 selectedValueIndex) {
 Control::ListControl presetControl(
   "PRST",
   { "Rainbow", "Pulse", "Wave", "Color Cycle" },
-  0,
+  2,
   updatePresetValue);
 
 std::vector<Control::Control*> controls = {
@@ -109,6 +109,7 @@ void init() {
   Event::on(Codes::EventType::ModeChange, update);
   update();
   controls.reserve(10);
+  presets[preset]->updateWave();
 }
 
 void nextControl() {

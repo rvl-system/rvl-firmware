@@ -77,12 +77,10 @@ class ListControl : public Control {
 };
 
 class RangeControl : public Control {
- private:
-  uint8 min;
-  uint8 max;
-
  public:
   uint8 value;
+  uint8 min;
+  uint8 max;
 
   RangeControl(
     const char* rangeLabel,
