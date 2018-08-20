@@ -25,31 +25,44 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Wave {
 
 uint8 rate = 8;
-uint8 foregroundHue = 120;
-uint8 backgroundHue = 160;
+uint8 waveHue = 0;
+uint8 foregroundHue = 170;
+uint8 backgroundHue = 85;
 
 void updateWaveParameters() {
   State::WaveSettings newSettings;
 
-  // Foreground wave
-  newSettings.waves[0].h.b = foregroundHue;
+  // Wave wave
+  newSettings.waves[0].h.b = waveHue;
   newSettings.waves[0].s.b = 255;
   newSettings.waves[0].v.b = 255;
   newSettings.waves[0].a.a = 255;
   newSettings.waves[0].a.w_t = rate;
   newSettings.waves[0].a.w_x = 2;
 
-  // Background wave
-  newSettings.waves[1].h.b = backgroundHue;
+  // Foreground wave
+  newSettings.waves[1].h.b = foregroundHue;
   newSettings.waves[1].s.b = 255;
   newSettings.waves[1].v.b = 255;
+  newSettings.waves[1].a.w_t = rate;
   newSettings.waves[1].a.a = 255;
+
+  // Background wave
+  newSettings.waves[2].h.b = backgroundHue;
+  newSettings.waves[2].s.b = 255;
+  newSettings.waves[2].v.b = 255;
+  newSettings.waves[2].a.a = 255;
 
   State::setWaveParameters(&newSettings);
 }
 
 void updateRateValue(uint8 newValue) {
   rate = newValue;
+  updateWaveParameters();
+}
+
+void updateWaveHueValue(uint8 newValue) {
+  waveHue = newValue;
   updateWaveParameters();
 }
 
@@ -70,6 +83,12 @@ Wave::Wave() {
     32,
     rate,
     updateRateValue));
+  this->controls.push_back(new Control::RangeControl(
+    "WHUE",
+    0,
+    255,
+    waveHue,
+    updateWaveHueValue));
   this->controls.push_back(new Control::RangeControl(
     "FHUE",
     0,
