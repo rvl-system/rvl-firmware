@@ -4,3 +4,6 @@
 [submodule "endpoint_board/kicad-components"]
 	path = receiver_board/kicad-components
 	url = https://github.com/nebrius/kicad-components
+[submodule "powered_receiver_board/kicad-components"]
+	path = powered_receiver_board/kicad-components
+	url = git@github.com:nebrius/kicad-components.git
