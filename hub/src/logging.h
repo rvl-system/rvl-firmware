@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UTIL_LOGGING_H_
-#define UTIL_LOGGING_H_
+#ifndef LOGGING_H_
+#define LOGGING_H_
 
 #include <Arduino.h>
 
@@ -99,4 +99,4 @@ inline void debug(const char *s, T value, Args... args) {
 
 }  // namespace Logging
 
-#endif  // UTIL_LOGGING_H_
+#endif  // LOGGING_H_

@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./codes.h"
 #include "./event.h"
-#include "./util/logging.h"
+#include "./logging.h"
 
 namespace State {
 

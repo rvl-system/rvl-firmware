@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./messaging/stack/protocols/clock_sync/clock_sync.h"
 #include "./messaging/stack/transport.h"
 #include "./state.h"
-#include "./util/logging.h"
+#include "./logging.h"
 
 namespace ClockSync {
 

@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <list>
 #include "./event.h"
-#include "./util/logging.h"
+#include "./logging.h"
 
 namespace Event {
 

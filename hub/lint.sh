@@ -16,5 +16,5 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=$(dirname "${pwd}")
 cpplint --quiet --linelength=120 --recursive --repository=$DIR/src src/*

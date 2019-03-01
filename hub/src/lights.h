@@ -17,11 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIGHTS_LIGHTS_H_
-#define LIGHTS_LIGHTS_H_
+#ifndef LIGHTS_H_
+#define LIGHTS_H_
 
 #include <Arduino.h>
-#include "./codes.h"
 
 namespace Lights {
 
@@ -30,4 +29,4 @@ void loop();
 
 }  // namespace Lights
 
-#endif  // LIGHTS_LIGHTS_H_
+#endif  // LIGHTS_H_

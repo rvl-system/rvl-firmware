@@ -22,12 +22,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include "./lights/lights.h"
+#include "./lights.h"
 #include "./codes.h"
-#include "../config.h"  // Why does this one single file require ".." but none of the others do?
+#include "./config.h"
 #include "./state.h"
 #include "./event.h"
-#include "./util/logging.h"
+#include "./logging.h"
 
 namespace Lights {
 

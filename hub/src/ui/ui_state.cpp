@@ -27,7 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/pulse.h"
 #include "./presets/wave.h"
 #include "./presets/color_cycle.h"
-#include "./util/logging.h"
+#include "./logging.h"
 
 namespace UIState {
 

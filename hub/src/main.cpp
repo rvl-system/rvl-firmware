@@ -25,9 +25,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/ui.h"
 #endif
 #ifdef HAS_LIGHTS
-#include "./lights/lights.h"
+#include "./lights.h"
 #endif
-#include "./util/logging.h"
+#include "./logging.h"
 #include "./state.h"
 #include "./config.h"
 

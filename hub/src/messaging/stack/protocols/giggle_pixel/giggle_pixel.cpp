@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../../../config.h"  // Why does this one single file require ".." but none of the others do?
 #include "./codes.h"
 #include "./state.h"
-#include "./util/logging.h"
+#include "./logging.h"
 
 namespace GigglePixel {
 
