@@ -20,10 +20,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#ifdef HAS_NETWORK
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#endif
 
 #define WIFI_SSID "RaverLights"
 #define WIFI_PASSPHRASE "4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}"
@@ -41,11 +39,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_BRIGHTNESS 12
 #define MAX_BRIGHTNESS 16
 
-#ifdef HAS_NETWORK
 extern IPAddress SERVER_IP;
 extern IPAddress GATEWAY;
 extern IPAddress SUBNET;
-#endif
 
 #define CLOCK_PIN 0
 #define DATA_PIN 2

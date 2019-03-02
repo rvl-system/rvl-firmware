@@ -19,6 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./state.h"
+// #include "./arduino_platform.h"
 #include "./codes.h"
 #include "./event.h"
 #include "./logging.h"
@@ -80,8 +81,34 @@ void setClockOffset(int32 newOffset) {
   Logging::debug("Setting clock offset: %d, clock: ", clockOffset, millis() + clockOffset);
 }
 
+uint32 clock = millis();
+bool wifiConnected = false;
+uint8 brightness = 0;
+
 void loop() {
+  // clock = millis() + ArduinoPlatform::platform.getClockOffset();
   settings.clock = millis() + clockOffset;
+}
+
+uint32 getAnimationClock() {
+  return clock;
+}
+
+uint8 getBrightness() {
+  return brightness;
+}
+
+void setBrightness(uint8 newBrightness) {
+  brightness = newBrightness;
+}
+
+bool isWifiConnected() {
+  return wifiConnected;
+}
+
+void setWifiConnectedState(bool connected) {
+  wifiConnected = connected;
+  Event::emit(Codes::EventType::ConnectedStateChange);
 }
 
 }  // namespace State

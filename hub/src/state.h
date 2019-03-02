@@ -72,8 +72,20 @@ struct Settings {
   bool wifiConnected;
 };
 
+// ---- New stuff
+
 void init();
 void loop();
+
+uint32 getAnimationClock();
+
+uint8 getBrightness();
+void setBrightness(uint8 brightness);
+
+bool isWifiConnected();
+void setWifiConnectedState(bool connected);
+
+// ---- Old stuff
 
 Settings* getSettings();
 

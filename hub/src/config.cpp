@@ -18,13 +18,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#ifdef HAS_NETWORK
 #include <WiFiUdp.h>
-#endif
 #include "./config.h"
 
-#ifdef HAS_NETWORK
 IPAddress SERVER_IP(192, 168, 42, 10);
 IPAddress GATEWAY(192, 168, 42, 255);
 IPAddress SUBNET(255, 255, 255, 0);
-#endif
