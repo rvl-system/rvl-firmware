@@ -69,7 +69,6 @@ struct Settings {
 
   uint16 id = 0;
   uint32 clock = millis();
-  bool wifiConnected;
 };
 
 // ---- New stuff
@@ -91,7 +90,6 @@ Settings* getSettings();
 
 void setMode(Codes::Mode::Mode mode);
 void setClientId(uint16 id);
-void setWifiConnected(bool connected);
 void setClockOffset(int32 clockOffset);
 void setWaveParameters(WaveSettings *waveSettings);
 

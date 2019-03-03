@@ -32,9 +32,8 @@ namespace Screen {
 
 void update() {
   Logging::debug("Updating screen");
-  auto settings = State::getSettings();
   std::list<Icons::StatusIcon*> icons;
-  if (settings->wifiConnected) {
+  if (State::isWifiConnected()) {
     icons.push_back(&Icons::wifiConnectedIcon);
   } else {
     icons.push_back(&Icons::wifiDisconnectedIcon);

@@ -41,11 +41,6 @@ void setClientId(uint16 id) {
   settings.id = id;
 }
 
-void setWifiConnected(bool connected) {
-  settings.wifiConnected = connected;
-  Event::emit(Codes::EventType::ConnectedStateChange);
-}
-
 void setWaveParameters(WaveSettings *waveSettings) {
   memcpy(&settings.waveSettings, waveSettings, sizeof(WaveSettings));
   Event::emit(Codes::EventType::AnimationChange);

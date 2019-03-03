@@ -18,9 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#ifdef HAS_NETWORK
-#include "./messaging/messaging.h"
-#endif
+#include "./messaging.h"
 #ifdef HAS_UI
 #include "./ui/ui.h"
 #endif
@@ -39,9 +37,7 @@ void setup() {
 #ifdef HAS_UI
   UI::init();
 #endif
-#ifdef HAS_NETWORK
   Messaging::init();
-#endif
 #ifdef HAS_LIGHTS
   Lights::init();
 #endif
@@ -58,9 +54,7 @@ void loop() {
 #ifdef HAS_UI
   UI::loop();
 #endif
-#ifdef HAS_NETWORK
   Messaging::loop();
-#endif
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
