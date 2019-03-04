@@ -36,5 +36,11 @@
     "xstring": "cpp",
     "cmath": "cpp",
     "xlocale": "cpp"
+  },
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#550080",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#550080",
+    "titleBar.inactiveForeground": "#e7e7e7"
   }
 }

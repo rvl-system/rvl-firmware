@@ -18,9 +18,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <RaverLightsMessaging.h>
 #include <vector>
 #include "./ui/presets/wave.h"
-#include "./state.h"
+#include "./arduino_platform.h"
 
 namespace Wave {
 
@@ -30,7 +31,7 @@ uint8 foregroundHue = 170;
 uint8 backgroundHue = 85;
 
 void updateWaveParameters() {
-  State::WaveSettings newSettings;
+  RVLWaveSettings newSettings;
 
   // Wave wave
   newSettings.waves[0].h.b = waveHue;
@@ -53,7 +54,7 @@ void updateWaveParameters() {
   newSettings.waves[2].v.b = 255;
   newSettings.waves[2].a.a = 255;
 
-  State::setWaveParameters(&newSettings);
+  ArduinoPlatform::platform.setWaveSettings(&newSettings);
 }
 
 void updateRateValue(uint8 newValue) {

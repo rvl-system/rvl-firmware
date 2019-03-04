@@ -22,6 +22,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
+#include <RaverLightsMessaging.h>
+#include "./arduino_platform.h"
 #include "./lights.h"
 #include "./codes.h"
 #include "./config.h"
@@ -42,26 +44,26 @@ void init() {
   Logging::info("Lights initialized");
 }
 
-uint8 calculatePixelValue(State::WaveChannel *wave, uint32 t, uint8 x) {
+uint8 calculatePixelValue(RVLWaveChannel *wave, uint32 t, uint8 x) {
   return sin8(wave->w_t * t / 100 + wave->w_x * x + wave->phi) * wave->a / 255 + wave->b;
 }
 
 void loop() {
-  auto settings = State::getSettings();
-  FastLED.setBrightness(settings->brightness * BRIGHTNESS_SCALING_FACTOR);
-  uint32 t = settings->clock % (settings->waveSettings.timePeriod * 100) * 255 / settings->waveSettings.timePeriod;
+  auto waveSettings = ArduinoPlatform::platform.getWaveSettings();
+  FastLED.setBrightness(State::getBrightness() * BRIGHTNESS_SCALING_FACTOR);
+  uint32 t = State::getAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
   for (uint16 i = 0; i < NUM_PIXELS; i++) {
-    uint8 x = 255 * (i % settings->waveSettings.distancePeriod) / settings->waveSettings.distancePeriod;
+    uint8 x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
 
     CHSV waveHSV[NUM_WAVES];
     CRGB waveRGB[NUM_WAVES];
     uint8 alphaValues[NUM_WAVES];
 
     for (uint8 j = 0; j < NUM_WAVES; j++) {
-      waveHSV[j].h = calculatePixelValue(&(settings->waveSettings.waves[j].h), t, x);
-      waveHSV[j].s = calculatePixelValue(&(settings->waveSettings.waves[j].s), t, x);
-      waveHSV[j].v = calculatePixelValue(&(settings->waveSettings.waves[j].v), t, x);
-      alphaValues[j] = calculatePixelValue(&(settings->waveSettings.waves[j].a), t, x);
+      waveHSV[j].h = calculatePixelValue(&(waveSettings->waves[j].h), t, x);
+      waveHSV[j].s = calculatePixelValue(&(waveSettings->waves[j].s), t, x);
+      waveHSV[j].v = calculatePixelValue(&(waveSettings->waves[j].v), t, x);
+      alphaValues[j] = calculatePixelValue(&(waveSettings->waves[j].a), t, x);
       hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
     }
     leds[i] = waveRGB[NUM_WAVES - 1];

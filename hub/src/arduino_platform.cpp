@@ -108,6 +108,7 @@ RVLWaveSettings* ArduinoPlatform::getWaveSettings() {
 
 void ArduinoPlatform::setWaveSettings(RVLWaveSettings* newWaveSettings) {
   memcpy(&(this->waveSettings), newWaveSettings, sizeof(RVLWaveSettings));
+  Event::emit(Codes::EventType::AnimationChange);
 }
 
 }  // namespace ArduinoPlatform

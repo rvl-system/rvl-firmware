@@ -18,23 +18,24 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <RaverLightsMessaging.h>
 #include <vector>
 #include "./ui/presets/color_cycle.h"
-#include "./state.h"
+#include "./arduino_platform.h"
 
 namespace ColorCycle {
 
 uint8 rate = 4;
 
 void updateWaveParameters() {
-  State::WaveSettings newSettings;
+  RVLWaveSettings newSettings;
   newSettings.waves[0].h.a = 255;
   newSettings.waves[0].h.w_t = rate;
   newSettings.waves[0].h.w_x = 0;
   newSettings.waves[0].s.b = 255;
   newSettings.waves[0].v.b = 255;
   newSettings.waves[0].a.b = 255;
-  State::setWaveParameters(&newSettings);
+  ArduinoPlatform::platform.setWaveSettings(&newSettings);
 }
 
 void updateRateValue(uint8 newValue) {

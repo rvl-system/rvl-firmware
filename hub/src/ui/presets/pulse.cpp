@@ -18,9 +18,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <RaverLightsMessaging.h>
 #include <vector>
 #include "./ui/presets/pulse.h"
-#include "./state.h"
+#include "./arduino_platform.h"
 
 namespace Pulse {
 
@@ -29,13 +30,13 @@ uint8 hue = 120;
 uint8 saturation = 255;
 
 void updateWaveParameters() {
-  State::WaveSettings newSettings;
+  RVLWaveSettings newSettings;
   newSettings.waves[0].h.b = hue;
   newSettings.waves[0].s.b = saturation;
   newSettings.waves[0].v.a = 255;
   newSettings.waves[0].v.w_t = rate;
   newSettings.waves[0].a.b = 255;
-  State::setWaveParameters(&newSettings);
+  ArduinoPlatform::platform.setWaveSettings(&newSettings);
 }
 
 void updateRateValue(uint8 newValue) {

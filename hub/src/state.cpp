@@ -26,64 +26,17 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
-#define MAX_LISTENERS 25
-
-bool isActive = false;
-uint32 idleStartTime = millis();
-
-Settings settings;
-
-Settings* getSettings() {
-  return &settings;
-}
-
-void setClientId(uint16 id) {
-  settings.id = id;
-}
-
-void setWaveParameters(WaveSettings *waveSettings) {
-  memcpy(&settings.waveSettings, waveSettings, sizeof(WaveSettings));
-  Event::emit(Codes::EventType::AnimationChange);
-}
+uint8 brightness = DEFAULT_BRIGHTNESS;
+bool wifiConnected = false;
+uint32_t clock = millis();
 
 void init() {
   ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Controller);
   Logging::info("State initialized");
 }
 
-void setMode(Codes::Mode::Mode newMode) {
-  if (settings.mode == newMode) {
-    return;
-  }
-  switch (newMode) {
-    case Codes::Mode::Controller:
-      Logging::info("Changing to controller mode");
-      settings.mode = newMode;
-      Event::emit(Codes::EventType::ModeChange);
-      break;
-    case Codes::Mode::Receiver:
-      Logging::info("Changing to receiver mode");
-      settings.mode = newMode;
-      Event::emit(Codes::EventType::ModeChange);
-      break;
-    default:
-      Logging::error("Tried to set unknown mode %d", newMode);
-  }
-}
-
-int32 clockOffset = 0;
-void setClockOffset(int32 newOffset) {
-  clockOffset = newOffset;
-  Logging::debug("Setting clock offset: %d, clock: ", clockOffset, millis() + clockOffset);
-}
-
-uint32 clock = millis();
-bool wifiConnected = false;
-uint8 brightness = 0;
-
 void loop() {
   clock = millis() + ArduinoPlatform::platform.getClockOffset();
-  settings.clock = millis() + clockOffset;
 }
 
 uint32 getAnimationClock() {

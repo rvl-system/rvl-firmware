@@ -19,6 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./ui/ui_state.h"
+#include "./arduino_platform.h"
 #include "./state.h"
 #include "./event.h"
 #include "./codes.h"
@@ -42,7 +43,7 @@ PresetControlSet* presets[] = {
 };
 
 void updateBrightnessValue(uint8 newValue) {
-  State::getSettings()->brightness = newValue;
+  State::setBrightness(newValue);
   Logging::info("Changing brightness to %d", newValue);
   Event::emit(Codes::EventType::AnimationChange);
 }
@@ -54,14 +55,14 @@ Control::RangeControl brightnessControl(
   updateBrightnessValue);
 
 void updateModeValue(uint8 selectedValueIndex) {
-  if (State::getSettings()->mode != selectedValueIndex) {
-    switch (selectedValueIndex) {
-      case Codes::Mode::Controller:
-        State::setMode(Codes::Mode::Controller);
+  if (ArduinoPlatform::platform.getDeviceMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
+    switch (static_cast<RVLDeviceMode>(selectedValueIndex)) {
+      case RVLDeviceMode::Controller:
+        ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Controller);
         presets[preset]->updateWave();
         break;
-      case Codes::Mode::Receiver:
-        State::setMode(Codes::Mode::Receiver);
+      case RVLDeviceMode::Receiver:
+        ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Receiver);
         break;
     }
   }
@@ -90,11 +91,10 @@ std::vector<Control::Control*> controls = {
 };
 
 void update() {
-  auto settings = State::getSettings();
   while (controls.size() > 2) {
     controls.pop_back();
   }
-  if (settings->mode == Codes::Mode::Controller) {
+  if (ArduinoPlatform::platform.getDeviceMode() == RVLDeviceMode::Controller) {
     controls.push_back(&presetControl);
     for (auto& control : presets[preset]->controls) {
       controls.push_back(control);
