@@ -41,6 +41,7 @@ UDPTransport transport;
 
 void init() {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);   // Helps keep LEDs from flickering
+  RVLMessagingInit(&ArduinoPlatform::platform, &transport, &ArduinoPlatform::logging);
   Logging::info("Messaging initialized");
 }
 
@@ -67,7 +68,7 @@ void loop() {
         State::setWifiConnectedState(false);
         break;
       }
-      // RVLMessagingLoop();
+      RVLMessagingLoop();
       break;
   }
 }

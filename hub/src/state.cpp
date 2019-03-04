@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./state.h"
-// #include "./arduino_platform.h"
+#include "./arduino_platform.h"
 #include "./codes.h"
 #include "./event.h"
 #include "./logging.h"
@@ -47,6 +47,7 @@ void setWaveParameters(WaveSettings *waveSettings) {
 }
 
 void init() {
+  ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Controller);
   Logging::info("State initialized");
 }
 
@@ -81,7 +82,7 @@ bool wifiConnected = false;
 uint8 brightness = 0;
 
 void loop() {
-  // clock = millis() + ArduinoPlatform::platform.getClockOffset();
+  clock = millis() + ArduinoPlatform::platform.getClockOffset();
   settings.clock = millis() + clockOffset;
 }
 
