@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <ESP8266WiFi.h>
 #include <RaverLightsMessaging.h>
 #include "./arduino_platform.h"
+#include "./state.h"
 #include "./codes.h"
 #include "./logging.h"
 #include "./event.h"
@@ -108,6 +109,9 @@ RVLWaveSettings* ArduinoPlatform::getWaveSettings() {
 
 void ArduinoPlatform::setWaveSettings(RVLWaveSettings* newWaveSettings) {
   memcpy(&(this->waveSettings), newWaveSettings, sizeof(RVLWaveSettings));
+  if (State::isWifiConnected()) {
+    this->onWaveSettingsUpdated();
+  }
   Event::emit(Codes::EventType::AnimationChange);
 }
 
