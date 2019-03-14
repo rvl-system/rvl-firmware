@@ -1,32 +1,23 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "Win32",
             "includePath": [
-                "${env:HOME}/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/",
-                "${env:HOME}/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include/",
-                "${env:HOME}/.platformio/packages/toolchain-atmelavr/avr/include/",
-                "${env:HOME}/.platformio/packages/framework-arduinoespressif8266/variants/nodemcu/",
-                "${env:HOME}/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src/",
-                "${workspaceFolder}/hub/.piolibdeps/Brzo I2C_ID335",
-                "${workspaceFolder}/hub/.piolibdeps/ESP8266_SSD1306_ID562",
-                "${workspaceFolder}/hub/.piolibdeps/FastLED_ID126",
-                "${workspaceFolder}/hub/src"
+              "${env:HOME}/.platformio/packages/**",
+              "${workspaceFolder}/hub/.piolibdeps/**",
+              "${workspaceFolder}/hub/lib/**",
+              "${workspaceFolder}/hub/src/**"
             ],
-            "defines": [],
-            "intelliSenseMode": "clang-x64",
-            "browse": {
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include",
-                    "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "compilerPath": "/usr/bin/clang",
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17134.0",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.15.26726/bin/Hostx64/x64/cl.exe",
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64"
         }
     ],
     "version": 4
