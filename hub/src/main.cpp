@@ -28,15 +28,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./config.h"
 
-RVLLogging logger;
-
 void setup() {
   delay(200);
 
-  logger = RVLESPInitLogging(RVLLoggingLevel::Debug, SERIAL_BAUDRATE);
+  Serial.begin(SERIAL_BAUDRATE);
+  State::setLogger(RVLESPInitLogging(RVLLogLevel::Debug));
   RVLESPInitNetwork(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
 
-  logger->info("Initializing");
+  State::getLogger()->info("Initializing");
   State::init();
 #ifdef HAS_UI
   UI::init();
@@ -44,7 +43,7 @@ void setup() {
 #ifdef HAS_LIGHTS
   Lights::init();
 #endif
-  logger->info("Running");
+  State::getLogger()->info("Running");
 }
 
 #define NUM_LOOP_SAMPLES 60
@@ -77,10 +76,11 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    logger->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
+    State::getLogger()->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
   }
   if (now - startTime > UPDATE_RATE) {
-    logger->info("Warning: system loop took %dms longer than the update rate", now - startTime - UPDATE_RATE);
+    State::getLogger()->info("Warning: system loop took %dms longer than the update rate",
+      now - startTime - UPDATE_RATE);
     delay(1);
   } else {
     delay(UPDATE_RATE - (millis() - startTime));

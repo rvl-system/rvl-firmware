@@ -22,14 +22,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include <RaverLightsMessaging.h>
-#include "./arduino_platform.h"
+#include <RVL-ESP.h>
 #include "./lights.h"
 #include "./codes.h"
 #include "./config.h"
 #include "./state.h"
 #include "./event.h"
-#include "./logging.h"
 
 namespace Lights {
 
@@ -41,7 +39,7 @@ CHSV colors[NUM_PIXELS];
 
 void init() {
   FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_PIXELS);
-  Logging::info("Lights initialized");
+  State::getLogger()->info("Lights initialized");
 }
 
 uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
@@ -49,9 +47,9 @@ uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
 }
 
 void loop() {
-  auto waveSettings = ArduinoPlatform::platform.getWaveSettings();
+  auto waveSettings = State::getWaveSettings();
   FastLED.setBrightness(State::getBrightness() * BRIGHTNESS_SCALING_FACTOR);
-  uint32_t t = State::getAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
+  uint32_t t = RVLESPGetAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
   for (uint16_t i = 0; i < NUM_PIXELS; i++) {
     uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
 

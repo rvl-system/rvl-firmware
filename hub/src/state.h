@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define STATE_H_
 
 #include <Arduino.h>
+#include <RVL-ESP.h>
 #include "./codes.h"
 #include "./config.h"
 
@@ -34,6 +35,11 @@ void setBrightness(uint8_t brightness);
 
 bool isWifiConnected();
 void setWifiConnectedState(bool connected);
+
+RVLLogging* getLogger();
+void setLogger(RVLLogging* logger);
+
+RVLWaveSettings* getWaveSettings();
 
 }  // namespace State
 

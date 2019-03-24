@@ -19,24 +19,34 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include "./state.h"
-#include "./arduino_platform.h"
 #include "./codes.h"
 #include "./event.h"
-#include "./logging.h"
 
 namespace State {
 
 uint8_t brightness = DEFAULT_BRIGHTNESS;
 bool wifiConnected = false;
-uint32_t clock = millis();
+RVLLogging* logger;
+RVLWaveSettings* waveSettings;
+
+void onWaveSettingsUpdated(RVLWaveSettings* settings) {
+  waveSettings = settings;
+  Event::emit(Codes::EventType::AnimationChange);
+}
+
+void onConnectionStateChanged(bool connected) {
+  wifiConnected = connected;
+  Event::emit(Codes::EventType::ConnectedStateChange);
+}
 
 void init() {
-  ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Controller);
-  Logging::info("State initialized");
+  RVLESPSetMode(RVLDeviceMode::Receiver);
+  State::getLogger()->info("State initialized");
+  RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
+  RVLESPOnConnectionStateChanged(onConnectionStateChanged);
 }
 
 void loop() {
-  clock = millis() + ArduinoPlatform::platform.getClockOffset();
 }
 
 uint8_t getBrightness() {
@@ -54,6 +64,18 @@ bool isWifiConnected() {
 void setWifiConnectedState(bool connected) {
   wifiConnected = connected;
   Event::emit(Codes::EventType::ConnectedStateChange);
+}
+
+RVLLogging* getLogger() {
+  return logger;
+}
+
+void setLogger(RVLLogging* newLogger) {
+  logger = newLogger;
+}
+
+RVLWaveSettings* getWaveSettings() {
+  return waveSettings;
 }
 
 }  // namespace State

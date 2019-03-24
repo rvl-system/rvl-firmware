@@ -26,12 +26,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./codes.h"
 #include "./event.h"
-#include "./logging.h"
 
 namespace Screen {
 
 void update() {
-  Logging::debug("Updating screen");
+  State::getLogger()->debug("Updating screen");
   std::list<Icons::StatusIcon*> icons;
   if (State::isWifiConnected()) {
     icons.push_back(&Icons::wifiConnectedIcon);

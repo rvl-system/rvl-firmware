@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <list>
 #include "./event.h"
-#include "./logging.h"
+#include "./state.h"
 
 namespace Event {
 
@@ -36,7 +36,7 @@ void on(uint8_t eventType, void (*listener)()) {
 }
 
 void emit(uint8_t eventType) {
-  Logging::debug("Emitting event %d", eventType);
+  State::getLogger()->debug("Emitting event %d", eventType);
   for (auto& listener : listeners) {
     if (listener.eventType == eventType) {
       listener.listener();

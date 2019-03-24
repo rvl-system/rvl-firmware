@@ -18,8 +18,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#include <RVL-ESP.h>
 #include "./ui/ui_state.h"
-#include "./arduino_platform.h"
 #include "./state.h"
 #include "./event.h"
 #include "./codes.h"
@@ -28,7 +28,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/pulse.h"
 #include "./presets/wave.h"
 #include "./presets/color_cycle.h"
-#include "./logging.h"
 
 namespace UIState {
 
@@ -44,7 +43,7 @@ PresetControlSet* presets[] = {
 
 void updateBrightnessValue(uint8_t newValue) {
   State::setBrightness(newValue);
-  Logging::info("Changing brightness to %d", newValue);
+  State::getLogger()->info("Changing brightness to %d", newValue);
   Event::emit(Codes::EventType::AnimationChange);
 }
 Control::RangeControl brightnessControl(
@@ -55,14 +54,14 @@ Control::RangeControl brightnessControl(
   updateBrightnessValue);
 
 void updateModeValue(uint8_t selectedValueIndex) {
-  if (ArduinoPlatform::platform.getDeviceMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
+  if (RVLESPGetMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
     switch (static_cast<RVLDeviceMode>(selectedValueIndex)) {
       case RVLDeviceMode::Controller:
-        ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Controller);
+        RVLESPSetMode(RVLDeviceMode::Controller);
         presets[preset]->updateWave();
         break;
       case RVLDeviceMode::Receiver:
-        ArduinoPlatform::platform.setDeviceMode(RVLDeviceMode::Receiver);
+        RVLESPSetMode(RVLDeviceMode::Receiver);
         break;
     }
   }
@@ -94,7 +93,7 @@ void update() {
   while (controls.size() > 2) {
     controls.pop_back();
   }
-  if (ArduinoPlatform::platform.getDeviceMode() == RVLDeviceMode::Controller) {
+  if (RVLESPGetMode() == RVLDeviceMode::Controller) {
     controls.push_back(&presetControl);
     for (auto& control : presets[preset]->controls) {
       controls.push_back(control);
@@ -115,7 +114,7 @@ void init() {
 void nextControl() {
   if (currentControl < controls.size() - 1) {
     currentControl++;
-    Logging::debug("Setting control to %d", currentControl);
+    State::getLogger()->debug("Setting control to %d", currentControl);
     Event::emit(Codes::EventType::UIStateChange);
   }
 }
@@ -123,7 +122,7 @@ void nextControl() {
 void previousControl() {
   if (currentControl > 0) {
     currentControl--;
-    Logging::debug("Setting control to %d", currentControl);
+    State::getLogger()->debug("Setting control to %d", currentControl);
     Event::emit(Codes::EventType::UIStateChange);
   }
 }
