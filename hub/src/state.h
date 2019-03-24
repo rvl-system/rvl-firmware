@@ -29,8 +29,6 @@ namespace State {
 void init();
 void loop();
 
-uint32 getAnimationClock();
-
 uint8 getBrightness();
 void setBrightness(uint8 brightness);
 

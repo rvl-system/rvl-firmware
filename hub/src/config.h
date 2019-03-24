@@ -20,34 +20,22 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
-
 #define WIFI_SSID "RaverLights"
 #define WIFI_PASSPHRASE "4&7EWf7p3h222;$+wg9]&4dN,dGh4^@}"
-
-#define SERIAL_BAUDRATE 921600
-
 #define SERVER_PORT 4978
 
-#define UPDATE_RATE 33
+#define SERIAL_BAUDRATE 115200
 
-#define MAX_PALETTE_ENTRIES 10
+#define UPDATE_RATE 33
 
 #define DEFAULT_PRESET 2
 
 #define DEFAULT_BRIGHTNESS 12
 #define MAX_BRIGHTNESS 16
 
-extern IPAddress SERVER_IP;
-extern IPAddress GATEWAY;
-extern IPAddress SUBNET;
-
 #define CLOCK_PIN 0
 #define DATA_PIN 2
 #define NUM_PIXELS 180
-
-#define NUM_WAVES 4
 
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4
@@ -79,7 +67,5 @@ extern IPAddress SUBNET;
 
 #define BUTTON_PRESS_ENGAGE_TIME 50
 #define BUTTON_HOLD_ENGAGE_TIME 2000
-
-#define CLIENT_SYNC_INTERVAL 2000
 
 #endif  // CONFIG_H_

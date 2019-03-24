@@ -39,10 +39,6 @@ void loop() {
   clock = millis() + ArduinoPlatform::platform.getClockOffset();
 }
 
-uint32 getAnimationClock() {
-  return clock;
-}
-
 uint8 getBrightness() {
   return brightness;
 }

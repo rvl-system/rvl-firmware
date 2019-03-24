@@ -18,30 +18,33 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include "./messaging.h"
+#include <RVL-ESP.h>
 #ifdef HAS_UI
 #include "./ui/ui.h"
 #endif
 #ifdef HAS_LIGHTS
 #include "./lights.h"
 #endif
-#include "./logging.h"
 #include "./state.h"
 #include "./config.h"
 
+RVLLogging logger;
+
 void setup() {
   delay(200);
-  Logging::init(SERIAL_BAUDRATE);
-  Logging::info("Initializing");
+
+  logger = RVLESPInitLogging(RVLLoggingLevel::Debug, SERIAL_BAUDRATE);
+  RVLESPInitNetwork(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
+
+  logger->info("Initializing");
   State::init();
 #ifdef HAS_UI
   UI::init();
 #endif
-  Messaging::init();
 #ifdef HAS_LIGHTS
   Lights::init();
 #endif
-  Logging::info("Running");
+  logger->info("Running");
 }
 
 #define NUM_LOOP_SAMPLES 60
@@ -54,7 +57,7 @@ void loop() {
 #ifdef HAS_UI
   UI::loop();
 #endif
-  Messaging::loop();
+  RVLESPLoop();
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
@@ -74,10 +77,10 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    Logging::info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
+    logger->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
   }
   if (now - startTime > UPDATE_RATE) {
-    Logging::info("Warning: system loop took %dms longer than the update rate", now - startTime - UPDATE_RATE);
+    logger->info("Warning: system loop took %dms longer than the update rate", now - startTime - UPDATE_RATE);
     delay(1);
   } else {
     delay(UPDATE_RATE - (millis() - startTime));

@@ -7,3 +7,12 @@
 [submodule "powered_receiver_board/kicad-components"]
 	path = powered_receiver_board/kicad-components
 	url = git@github.com:nebrius/kicad-components.git
+[submodule "hub/lib/RVL-ESP"]
+	path = hub/lib/RVL-ESP
+	url = https://github.com/nebrius/RVL-ESP.git
+[submodule "hub/lib/RVLMessaging"]
+	path = hub/lib/RVLMessaging
+	url = https://github.com/nebrius/RVLMessaging.git
+[submodule "hub/lib/RVLLogging"]
+	path = hub/lib/RVLLogging
+	url = https://github.com/nebrius/RVLLogging.git

@@ -22,21 +22,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Codes {
 
-namespace GigglePixelPacketTypes {
-  enum GigglePixelPacketTypes {
-    Palette = 1,
-    Wave = 2
-  };
-}
-
-namespace Mode {
-  enum Mode {
-    Controller = 0,
-    Receiver = 1,
-    Standalone = 2
-  };
-}
-
 namespace EventType {
   enum EventType {
     AnimationChange,
