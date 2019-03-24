@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Rainbow {
 
-uint8 rate = 4;
+uint8_t rate = 4;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -38,7 +38,7 @@ void updateWaveParameters() {
   ArduinoPlatform::platform.setWaveSettings(&newSettings);
 }
 
-void updateRateValue(uint8 newValue) {
+void updateRateValue(uint8_t newValue) {
   rate = newValue;
   updateWaveParameters();
 }

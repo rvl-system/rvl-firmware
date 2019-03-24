@@ -48,11 +48,11 @@ void setup() {
 }
 
 #define NUM_LOOP_SAMPLES 60
-uint8 loopTimes[NUM_LOOP_SAMPLES];
-uint8 loopIndex = 0;
+uint8_t loopTimes[NUM_LOOP_SAMPLES];
+uint8_t loopIndex = 0;
 
 void loop() {
-  uint32 startTime = millis();
+  uint32_t startTime = millis();
   State::loop();
 #ifdef HAS_UI
   UI::loop();
@@ -61,14 +61,14 @@ void loop() {
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
-  uint32 now = millis();
+  uint32_t now = millis();
   loopTimes[loopIndex++] = now - startTime;
   if (loopIndex == NUM_LOOP_SAMPLES) {
     loopIndex = 0;
-    uint16 sum = 0;
-    uint8 min = 255;
-    uint8 max = 0;
-    for (uint8 i = 0; i < NUM_LOOP_SAMPLES; i++) {
+    uint16_t sum = 0;
+    uint8_t min = 255;
+    uint8_t max = 0;
+    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
       sum += loopTimes[i];
       if (loopTimes[i] < min) {
         min = loopTimes[i];

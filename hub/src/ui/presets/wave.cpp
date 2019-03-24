@@ -25,10 +25,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Wave {
 
-uint8 rate = 8;
-uint8 waveHue = 0;
-uint8 foregroundHue = 170;
-uint8 backgroundHue = 85;
+uint8_t rate = 8;
+uint8_t waveHue = 0;
+uint8_t foregroundHue = 170;
+uint8_t backgroundHue = 85;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -57,22 +57,22 @@ void updateWaveParameters() {
   ArduinoPlatform::platform.setWaveSettings(&newSettings);
 }
 
-void updateRateValue(uint8 newValue) {
+void updateRateValue(uint8_t newValue) {
   rate = newValue;
   updateWaveParameters();
 }
 
-void updateWaveHueValue(uint8 newValue) {
+void updateWaveHueValue(uint8_t newValue) {
   waveHue = newValue;
   updateWaveParameters();
 }
 
-void updateForegroundHueValue(uint8 newValue) {
+void updateForegroundHueValue(uint8_t newValue) {
   foregroundHue = newValue;
   updateWaveParameters();
 }
 
-void updateBackgroundHueValue(uint8 newValue) {
+void updateBackgroundHueValue(uint8_t newValue) {
   backgroundHue = newValue;
   updateWaveParameters();
 }

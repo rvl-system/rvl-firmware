@@ -27,7 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Icons {
 
 struct StatusIcon {
-  uint8 data[16][16];
+  uint8_t data[16][16];
 };
 
 extern StatusIcon wifiConnectedIcon;

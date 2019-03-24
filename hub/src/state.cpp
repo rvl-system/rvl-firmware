@@ -26,7 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
-uint8 brightness = DEFAULT_BRIGHTNESS;
+uint8_t brightness = DEFAULT_BRIGHTNESS;
 bool wifiConnected = false;
 uint32_t clock = millis();
 
@@ -39,11 +39,11 @@ void loop() {
   clock = millis() + ArduinoPlatform::platform.getClockOffset();
 }
 
-uint8 getBrightness() {
+uint8_t getBrightness() {
   return brightness;
 }
 
-void setBrightness(uint8 newBrightness) {
+void setBrightness(uint8_t newBrightness) {
   brightness = newBrightness;
 }
 

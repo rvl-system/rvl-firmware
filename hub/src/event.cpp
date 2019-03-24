@@ -30,12 +30,12 @@ struct ListenerEntry {
 };
 std::list<ListenerEntry> listeners;
 
-void on(uint8 eventType, void (*listener)()) {
+void on(uint8_t eventType, void (*listener)()) {
   ListenerEntry entry = { eventType, listener };
   listeners.push_back(entry);
 }
 
-void emit(uint8 eventType) {
+void emit(uint8_t eventType) {
   Logging::debug("Emitting event %d", eventType);
   for (auto& listener : listeners) {
     if (listener.eventType == eventType) {

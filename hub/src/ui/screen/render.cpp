@@ -29,9 +29,9 @@ namespace Render {
 
 SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-uint8 previousSelectedEntry = 0;  // from 0 to numEntries
-uint8 entryWindowStart = 0;   // from 0 to numEntries
-uint8 selectedEntryRow = 0;  // from 0 to 3
+uint8_t previousSelectedEntry = 0;  // from 0 to numEntries
+uint8_t entryWindowStart = 0;   // from 0 to numEntries
+uint8_t selectedEntryRow = 0;  // from 0 to 3
 
 void init() {
   display.init();
@@ -42,10 +42,10 @@ void init() {
   display.setFont(ArialMT_Plain_10);
 }
 
-void renderScrollBar(uint8 numEntries, uint8 windowStart) {
+void renderScrollBar(uint8_t numEntries, uint8_t windowStart) {
   if (numEntries > 4) {
-    uint8 scrollBarHeight = 24;
-    uint8 y = (64 - scrollBarHeight) * windowStart / (numEntries - 4);
+    uint8_t scrollBarHeight = 24;
+    uint8_t y = (64 - scrollBarHeight) * windowStart / (numEntries - 4);
     if (y > 64 - scrollBarHeight) {  // Can happen when changing the preset and the last items disappear
       y = 64 - scrollBarHeight;
     }
@@ -53,12 +53,12 @@ void renderScrollBar(uint8 numEntries, uint8 windowStart) {
   }
 }
 
-void renderSelectedEntryBox(uint8 row) {
+void renderSelectedEntryBox(uint8_t row) {
   display.drawRect(18, row * 16, 105, 15);
 }
 
-void renderEntry(Control::Control* entry, uint8 row) {
-  uint8 textY = row * 16 + 1;
+void renderEntry(Control::Control* entry, uint8_t row) {
+  uint8_t textY = row * 16 + 1;
   display.drawString(21, textY, entry->label);
   if (entry->type == Control::ControlType::List) {
     auto listEntry = static_cast<Control::ListControl*>(entry);
@@ -67,12 +67,12 @@ void renderEntry(Control::Control* entry, uint8 row) {
     display.drawString(115, textY, ">");
   } else if (entry->type == Control::ControlType::Range) {
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
-    uint8 progress = 100 * (rangeEntry->value - rangeEntry->min) / (rangeEntry->max - rangeEntry->min);
+    uint8_t progress = 100 * (rangeEntry->value - rangeEntry->min) / (rangeEntry->max - rangeEntry->min);
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   }
 }
 
-void renderEntrySet(std::vector<Control::Control*>* entries, uint8 selectedEntry) {
+void renderEntrySet(std::vector<Control::Control*>* entries, uint8_t selectedEntry) {
   if (previousSelectedEntry > selectedEntry) {
     if (selectedEntryRow == 0) {
       entryWindowStart--;
@@ -87,7 +87,7 @@ void renderEntrySet(std::vector<Control::Control*>* entries, uint8 selectedEntry
     }
   }
   previousSelectedEntry = selectedEntry;
-  for (uint8 i = 0; i < 4; i++) {
+  for (uint8_t i = 0; i < 4; i++) {
     if (i + entryWindowStart < entries->size()) {
       renderEntry((*entries)[i + entryWindowStart], i);
     }
@@ -96,9 +96,9 @@ void renderEntrySet(std::vector<Control::Control*>* entries, uint8 selectedEntry
   renderScrollBar(entries->size(), entryWindowStart);
 }
 
-void renderIcon(Icons::StatusIcon* icon, uint8 row) {
-  for (uint8 x = 0; x < 16; x++) {
-    for (uint8 y = 0; y < 16; y++) {
+void renderIcon(Icons::StatusIcon* icon, uint8_t row) {
+  for (uint8_t x = 0; x < 16; x++) {
+    for (uint8_t y = 0; y < 16; y++) {
       if (icon->data[y][x]) {
         display.setPixel(x, y + row * 16);
       }
@@ -107,14 +107,14 @@ void renderIcon(Icons::StatusIcon* icon, uint8 row) {
 }
 
 void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
-  uint8 i = 0;
+  uint8_t i = 0;
   for (auto& icon : *icons) {
     renderIcon(icon, i);
     i++;
   }
 }
 
-void render(std::vector<Control::Control*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons) {
+void render(std::vector<Control::Control*>* entries, uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);

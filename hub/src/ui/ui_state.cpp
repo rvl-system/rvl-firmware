@@ -32,8 +32,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace UIState {
 
-uint8 currentControl = 0;
-uint8 preset = DEFAULT_PRESET;
+uint8_t currentControl = 0;
+uint8_t preset = DEFAULT_PRESET;
 
 PresetControlSet* presets[] = {
   &Rainbow::rainbow,
@@ -42,7 +42,7 @@ PresetControlSet* presets[] = {
   &ColorCycle::colorCycle
 };
 
-void updateBrightnessValue(uint8 newValue) {
+void updateBrightnessValue(uint8_t newValue) {
   State::setBrightness(newValue);
   Logging::info("Changing brightness to %d", newValue);
   Event::emit(Codes::EventType::AnimationChange);
@@ -54,7 +54,7 @@ Control::RangeControl brightnessControl(
   DEFAULT_BRIGHTNESS,
   updateBrightnessValue);
 
-void updateModeValue(uint8 selectedValueIndex) {
+void updateModeValue(uint8_t selectedValueIndex) {
   if (ArduinoPlatform::platform.getDeviceMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
     switch (static_cast<RVLDeviceMode>(selectedValueIndex)) {
       case RVLDeviceMode::Controller:
@@ -73,7 +73,7 @@ Control::ListControl modeControl(
   0,
   updateModeValue);
 
-void updatePresetValue(uint8 selectedValueIndex) {
+void updatePresetValue(uint8_t selectedValueIndex) {
   if (UIState::preset != selectedValueIndex) {
     UIState::preset = selectedValueIndex;
     presets[preset]->updateWave();

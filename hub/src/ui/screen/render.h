@@ -29,7 +29,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Render {
 
 void init();
-void render(std::vector<Control::Control*>* entries, uint8 selectedEntry, std::list<Icons::StatusIcon*>* icons);
+void render(std::vector<Control::Control*>* entries, uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons);
 
 }  // namespace Render
 

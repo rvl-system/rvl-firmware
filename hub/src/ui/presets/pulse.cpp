@@ -25,9 +25,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Pulse {
 
-uint8 rate = 16;
-uint8 hue = 120;
-uint8 saturation = 255;
+uint8_t rate = 16;
+uint8_t hue = 120;
+uint8_t saturation = 255;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -39,17 +39,17 @@ void updateWaveParameters() {
   ArduinoPlatform::platform.setWaveSettings(&newSettings);
 }
 
-void updateRateValue(uint8 newValue) {
+void updateRateValue(uint8_t newValue) {
   rate = newValue;
   updateWaveParameters();
 }
 
-void updateHueValue(uint8 newValue) {
+void updateHueValue(uint8_t newValue) {
   hue = newValue;
   updateWaveParameters();
 }
 
-void updateSaturationValue(uint8 newValue) {
+void updateSaturationValue(uint8_t newValue) {
   saturation = newValue;
   updateWaveParameters();
 }

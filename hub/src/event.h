@@ -24,8 +24,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Event {
 
-void on(uint8 eventType, void (*listener)());
-void emit(uint8 eventType);
+void on(uint8_t eventType, void (*listener)());
+void emit(uint8_t eventType);
 
 }  // namespace Event
 

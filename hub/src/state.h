@@ -29,8 +29,8 @@ namespace State {
 void init();
 void loop();
 
-uint8 getBrightness();
-void setBrightness(uint8 brightness);
+uint8_t getBrightness();
+void setBrightness(uint8_t brightness);
 
 bool isWifiConnected();
 void setWifiConnectedState(bool connected);

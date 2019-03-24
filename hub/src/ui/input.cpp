@@ -32,7 +32,7 @@ enum ButtonChangeState {
 };
 
 struct ButtonInfo {
-  uint32 holdStartTime;
+  uint32_t holdStartTime;
   byte state;
   byte gpio;
   byte on;
@@ -55,11 +55,11 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
   ButtonChangeState returnValue = None;
   byte state = digitalRead(buttonInfo->gpio);
   if (state == buttonInfo->on) {
-    uint32 now = millis();
+    uint32_t now = millis();
     if (buttonInfo->holdStartTime == -1) {
       buttonInfo->holdStartTime = now;
     }
-    uint32 holdTime = now - buttonInfo->holdStartTime;
+    uint32_t holdTime = now - buttonInfo->holdStartTime;
     if (buttonInfo->state == buttonInfo->off) {
       if (holdTime > BUTTON_PRESS_ENGAGE_TIME) {
         buttonInfo->state = buttonInfo->on;

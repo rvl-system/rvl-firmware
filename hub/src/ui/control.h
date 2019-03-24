@@ -34,7 +34,7 @@ class Control {
  public:
   const char* label;
   ControlType type;
-  void (*updateValue)(uint8 newValue);
+  void (*updateValue)(uint8_t newValue);
   virtual void increaseValue() {}
   virtual void decreaseValue() {}
 };
@@ -42,13 +42,13 @@ class Control {
 class ListControl : public Control {
  public:
   std::vector<const char*> values;
-  uint8 selectedValueIndex = 0;
+  uint8_t selectedValueIndex = 0;
 
   ListControl(
     const char* listLabel,
     std::vector<const char*> listValues,
-    uint8 defaultValueIndex,
-    void (*updateValueCallback)(uint8 newValue)
+    uint8_t defaultValueIndex,
+    void (*updateValueCallback)(uint8_t newValue)
   ) {
     this->type = ControlType::List;
     this->label = listLabel;
@@ -78,16 +78,16 @@ class ListControl : public Control {
 
 class RangeControl : public Control {
  public:
-  uint8 value;
-  uint8 min;
-  uint8 max;
+  uint8_t value;
+  uint8_t min;
+  uint8_t max;
 
   RangeControl(
     const char* rangeLabel,
-    uint8 rangeMin,
-    uint8 rangeMax,
-    uint8 defaultValue,
-    void (*updateValueCallback)(uint8 newValue)
+    uint8_t rangeMin,
+    uint8_t rangeMax,
+    uint8_t defaultValue,
+    void (*updateValueCallback)(uint8_t newValue)
   ) {
     this->type = ControlType::Range;
     this->label = rangeLabel;
