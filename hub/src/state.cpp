@@ -39,11 +39,16 @@ void onConnectionStateChanged(bool connected) {
   Event::emit(Codes::EventType::ConnectedStateChange);
 }
 
+void onModeChanged(RVLDeviceMode newMode) {
+  Event::emit(Codes::EventType::ModeChange);
+}
+
 void init() {
   RVLESPSetMode(RVLDeviceMode::Receiver);
   State::getLogger()->info("State initialized");
   RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
   RVLESPOnConnectionStateChanged(onConnectionStateChanged);
+  RVLESPOnModeChanged(onModeChanged);
 }
 
 void loop() {
