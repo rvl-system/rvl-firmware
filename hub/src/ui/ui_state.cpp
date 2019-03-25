@@ -69,7 +69,7 @@ void updateModeValue(uint8_t selectedValueIndex) {
 Control::ListControl modeControl(
   "MODE",
   { "Controller", "Receiver" },
-  0,
+  1,
   updateModeValue);
 
 void updatePresetValue(uint8_t selectedValueIndex) {
