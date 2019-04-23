@@ -16,3 +16,6 @@
 [submodule "hub/lib/RVLLogging"]
 	path = hub/lib/RVLLogging
 	url = https://github.com/nebrius/RVLLogging.git
+[submodule "configurable_receiver_board/kicad-components"]
+	path = configurable_receiver_board/kicad-components
+	url = https://github.com/nebrius/kicad-components.git

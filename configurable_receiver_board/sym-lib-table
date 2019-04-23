@@ -1,0 +1,8 @@
+(sym_lib_table
+  (lib (name ESP8266)(type Legacy)(uri ${KIPRJMOD}/external-components/ESP8266/ESP8266.lib)(options "")(descr ""))
+  (lib (name nebrius-lcd)(type Legacy)(uri ${KIPRJMOD}/kicad-components/components/lcd/nebrius-lcd.lib)(options "")(descr ""))
+  (lib (name nebrius-regulators)(type Legacy)(uri ${KIPRJMOD}/kicad-components/components/regulators/nebrius-regulators.lib)(options "")(descr ""))
+  (lib (name nebrius-switch)(type Legacy)(uri ${KIPRJMOD}/kicad-components/components/switch/nebrius-switch.lib)(options "")(descr ""))
+  (lib (name nebrius-conn)(type Legacy)(uri ${KIPRJMOD}/kicad-components/components/conn/nebrius-conn.lib)(options "")(descr ""))
+  (lib (name nebrius-logic)(type Legacy)(uri ${KIPRJMOD}/kicad-components/components/logic/nebrius-logic.lib)(options "")(descr ""))
+)
