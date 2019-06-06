@@ -258,25 +258,14 @@ NoConn ~ 6600 3750
 NoConn ~ 6500 3750
 NoConn ~ 6400 3750
 $Comp
-L Configurable-Receiver-Board-rescue:Conn_01x03 J5
-U 1 1 5AB1617F
-P 9600 4850
-F 0 "J5" H 9600 5050 50  0000 C CNN
-F 1 "Sensor" H 9600 4650 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.00mm" H 9600 4850 50  0001 C CNN
-F 3 "" H 9600 4850 50  0001 C CNN
-	1    9600 4850
-	1    0    0    -1  
-$EndComp
-$Comp
 L Configurable-Receiver-Board-rescue:GND #PWR013
 U 1 1 5AB174D5
-P 9300 5050
-F 0 "#PWR013" H 9300 4800 50  0001 C CNN
-F 1 "GND" H 9300 4900 50  0000 C CNN
-F 2 "" H 9300 5050 50  0001 C CNN
-F 3 "" H 9300 5050 50  0001 C CNN
-	1    9300 5050
+P 9550 5100
+F 0 "#PWR013" H 9550 4850 50  0001 C CNN
+F 1 "GND" H 9550 4950 50  0000 C CNN
+F 2 "" H 9550 5100 50  0001 C CNN
+F 3 "" H 9550 5100 50  0001 C CNN
+	1    9550 5100
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -288,17 +277,6 @@ F 1 "VCC" H 3850 4750 50  0000 C CNN
 F 2 "" H 3850 4600 50  0001 C CNN
 F 3 "" H 3850 4600 50  0001 C CNN
 	1    3850 4600
-	1    0    0    -1  
-$EndComp
-$Comp
-L Configurable-Receiver-Board-rescue:VCC #PWR018
-U 1 1 5AB1B5C4
-P 9300 4650
-F 0 "#PWR018" H 9300 4500 50  0001 C CNN
-F 1 "VCC" H 9300 4800 50  0000 C CNN
-F 2 "" H 9300 4650 50  0001 C CNN
-F 3 "" H 9300 4650 50  0001 C CNN
-	1    9300 4650
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -337,38 +315,38 @@ $EndComp
 $Comp
 L Configurable-Receiver-Board-rescue:VCC #PWR021
 U 1 1 5AB1C417
-P 6050 3200
-F 0 "#PWR021" H 6050 3050 50  0001 C CNN
-F 1 "VCC" H 6050 3350 50  0000 C CNN
-F 2 "" H 6050 3200 50  0001 C CNN
-F 3 "" H 6050 3200 50  0001 C CNN
-	1    6050 3200
+P 6950 3050
+F 0 "#PWR021" H 6950 2900 50  0001 C CNN
+F 1 "VCC" H 6950 3200 50  0000 C CNN
+F 2 "" H 6950 3050 50  0001 C CNN
+F 3 "" H 6950 3050 50  0001 C CNN
+	1    6950 3050
 	1    0    0    -1  
 $EndComp
 $Comp
 L Configurable-Receiver-Board-rescue:R R1
 U 1 1 5AB1D5D2
-P 5500 4000
-F 0 "R1" V 5580 4000 50  0000 C CNN
-F 1 "1k" V 5500 4000 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 5430 4000 50  0001 C CNN
-F 3 "" H 5500 4000 50  0001 C CNN
-	1    5500 4000
+P 5400 4000
+F 0 "R1" V 5480 4000 50  0000 C CNN
+F 1 "1k" V 5400 4000 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 5330 4000 50  0001 C CNN
+F 3 "" H 5400 4000 50  0001 C CNN
+	1    5400 4000
 	1    0    0    -1  
 $EndComp
 $Comp
 L Configurable-Receiver-Board-rescue:VCC #PWR022
 U 1 1 5AB1D659
-P 5500 3750
-F 0 "#PWR022" H 5500 3600 50  0001 C CNN
-F 1 "VCC" H 5500 3900 50  0000 C CNN
-F 2 "" H 5500 3750 50  0001 C CNN
-F 3 "" H 5500 3750 50  0001 C CNN
-	1    5500 3750
+P 5400 3750
+F 0 "#PWR022" H 5400 3600 50  0001 C CNN
+F 1 "VCC" H 5400 3900 50  0000 C CNN
+F 2 "" H 5400 3750 50  0001 C CNN
+F 3 "" H 5400 3750 50  0001 C CNN
+	1    5400 3750
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5650 3650 5650 4450
+	5550 3550 5550 4450
 Wire Wire Line
 	2000 4350 2000 4700
 Wire Wire Line
@@ -413,13 +391,13 @@ Wire Wire Line
 	7650 4250 7550 4250
 Wire Wire Line
 	5000 4250 5750 4250
-Connection ~ 5500 4550
+Connection ~ 5400 4550
 Wire Wire Line
 	5100 3950 5100 4550
 Wire Wire Line
 	5000 4250 5000 4650
 Wire Wire Line
-	5500 4550 5500 4150
+	5400 4550 5400 4150
 Wire Wire Line
 	4550 4850 4550 5750
 Wire Wire Line
@@ -454,31 +432,11 @@ Wire Wire Line
 	2000 4700 2050 4700
 Wire Wire Line
 	2850 4150 3000 4150
-Connection ~ 5650 4450
-Wire Wire Line
-	9400 4950 9300 4950
-Wire Wire Line
-	9300 4950 9300 5050
-Wire Wire Line
-	9400 4750 9300 4750
-Wire Wire Line
-	9300 4750 9300 4650
-Wire Wire Line
-	6400 3050 6400 3000
-Wire Wire Line
-	6200 3000 6400 3000
-Wire Wire Line
-	6200 3000 6200 3300
-Wire Wire Line
-	6200 3300 6050 3300
-Wire Wire Line
-	6050 3300 6050 3200
+Connection ~ 5550 4450
 Wire Wire Line
 	6500 3000 6500 3050
-Connection ~ 6400 3000
 Wire Wire Line
 	6600 3000 6600 3050
-Connection ~ 6500 3000
 Wire Wire Line
 	6700 3000 6700 3050
 Connection ~ 6600 3000
@@ -491,11 +449,7 @@ Wire Wire Line
 Wire Wire Line
 	6700 3550 6700 3450
 Wire Wire Line
-	6500 3450 6500 3650
-Wire Wire Line
-	6500 3650 5650 3650
-Wire Wire Line
-	5500 3750 5500 3850
+	5400 3750 5400 3850
 Wire Wire Line
 	5700 2500 5700 2600
 Wire Wire Line
@@ -503,7 +457,7 @@ Wire Wire Line
 Wire Wire Line
 	7000 2600 6900 2600
 Wire Wire Line
-	4600 4450 5650 4450
+	4600 4450 5550 4450
 Wire Wire Line
 	4600 4450 4600 2800
 Wire Wire Line
@@ -524,7 +478,7 @@ F 3 "" H 6350 2700 60  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	5100 4550 5500 4550
+	5100 4550 5400 4550
 Wire Wire Line
 	5600 2700 5600 2900
 Wire Wire Line
@@ -541,8 +495,6 @@ F 3 "" H 9150 1650 60  0001 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	9050 1950 9050 1850
-Wire Wire Line
 	9600 2050 9600 1350
 Wire Wire Line
 	9250 2050 9250 1850
@@ -553,7 +505,7 @@ Wire Wire Line
 Wire Wire Line
 	3000 4150 3000 4350
 Wire Wire Line
-	5500 4550 5750 4550
+	5400 4550 5750 4550
 Wire Wire Line
 	3850 4700 3850 4900
 Wire Wire Line
@@ -563,50 +515,281 @@ Wire Wire Line
 Wire Wire Line
 	2000 4700 2000 4900
 Wire Wire Line
-	5650 4450 5750 4450
-Wire Wire Line
-	6400 3000 6500 3000
+	5550 4450 5750 4450
 Wire Wire Line
 	6500 3000 6600 3000
 Wire Wire Line
 	6600 3000 6700 3000
 Wire Wire Line
-	9050 1950 9050 2050
-Wire Wire Line
 	9250 2050 9600 2050
-$Comp
-L Switch:SW_DIP_x03 SW?
-U 1 1 5CC0B1FA
-P 6400 5900
-F 0 "SW?" H 6400 6367 50  0000 C CNN
-F 1 "SW_DIP_x03" H 6400 6276 50  0000 C CNN
-F 2 "" H 6400 5900 50  0001 C CNN
-F 3 "~" H 6400 5900 50  0001 C CNN
-	1    6400 5900
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	6900 2800 9150 2800
 $Comp
-L Switch:SW_DIP_x02 SW?
-U 1 1 5CC0923C
-P 5550 5900
-F 0 "SW?" V 5504 6130 50  0000 L CNN
-F 1 "SW_DIP_x02" V 5595 6130 50  0000 L CNN
-F 2 "" H 5550 5900 50  0001 C CNN
-F 3 "~" H 5550 5900 50  0001 C CNN
-	1    5550 5900
-	0    1    1    0   
+L Configurable-Receiver-Board-rescue:R_PACK4 RP1
+U 1 1 5CC0A048
+P 8250 5500
+F 0 "RP1" H 8250 5950 50  0000 C CNN
+F 1 "10k" H 8250 5450 50  0000 C CNN
+F 2 "nebrius-discrete:R_Array_Concave_4x2012.kicad_mod" V 8250 4200 50  0000 C CNN
+F 3 "" H 8250 5500 50  0000 C CNN
+	1    8250 5500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9050 1850 9050 2050
+$Comp
+L Device:R_POT RV1
+U 1 1 5CFA55BA
+P 9550 4850
+F 0 "RV1" H 9480 4804 50  0000 R CNN
+F 1 "R_POT" H 9480 4895 50  0000 R CNN
+F 2 "" H 9550 4850 50  0001 C CNN
+F 3 "~" H 9550 4850 50  0001 C CNN
+	1    9550 4850
+	-1   0    0    1   
 $EndComp
 $Comp
-L Configurable-Receiver-Board-rescue:R_PACK4 RP?
-U 1 1 5CC0A048
-P 7950 5800
-F 0 "RP?" H 7950 6250 50  0000 C CNN
-F 1 "10k" H 7950 5750 50  0000 C CNN
-F 2 "nebrius-discrete:R_Array_Concave_4x2012.kicad_mod" V 7950 4500 50  0000 C CNN
-F 3 "" H 7950 5800 50  0000 C CNN
-	1    7950 5800
+L Configurable-Receiver-Board-rescue:VCC #PWR018
+U 1 1 5AB1B5C4
+P 9550 4600
+F 0 "#PWR018" H 9550 4450 50  0001 C CNN
+F 1 "VCC" H 9550 4750 50  0000 C CNN
+F 2 "" H 9550 4600 50  0001 C CNN
+F 3 "" H 9550 4600 50  0001 C CNN
+	1    9550 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9550 4600 9550 4700
+Wire Wire Line
+	9550 5000 9550 5100
+Wire Wire Line
+	5650 3650 5650 4350
+Wire Wire Line
+	5650 4350 5750 4350
+Wire Wire Line
+	5650 3650 6400 3650
+Wire Wire Line
+	6400 3650 6400 3450
+Wire Wire Line
+	5550 3550 6500 3550
+Wire Wire Line
+	6500 3550 6500 3450
+Wire Wire Line
+	6700 3000 6850 3000
+Wire Wire Line
+	6850 3000 6850 3150
+Wire Wire Line
+	6850 3150 6950 3150
+Wire Wire Line
+	6950 3150 6950 3050
+Connection ~ 6700 3000
+$Comp
+L Configurable-Receiver-Board-rescue:GND #PWR014
+U 1 1 5CFC66E8
+P 6150 3050
+F 0 "#PWR014" H 6150 2800 50  0001 C CNN
+F 1 "GND" H 6155 2877 50  0000 C CNN
+F 2 "" H 6150 3050 50  0001 C CNN
+F 3 "" H 6150 3050 50  0001 C CNN
+	1    6150 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6400 3050 6400 3000
+Wire Wire Line
+	6400 3000 6150 3000
+Wire Wire Line
+	6150 3000 6150 3050
+Wire Wire Line
+	7750 5550 7750 5250
+Wire Wire Line
+	7750 4550 7550 4550
+Wire Wire Line
+	7550 4450 7850 4450
+Wire Wire Line
+	7850 4450 7850 5350
+Wire Wire Line
+	7550 4350 7950 4350
+Wire Wire Line
+	7950 4350 7950 5450
+$Comp
+L Configurable-Receiver-Board-rescue:VCC #PWR016
+U 1 1 5D0124E2
+P 7450 6150
+F 0 "#PWR016" H 7450 6000 50  0001 C CNN
+F 1 "VCC" H 7467 6323 50  0000 C CNN
+F 2 "" H 7450 6150 50  0001 C CNN
+F 3 "" H 7450 6150 50  0001 C CNN
+	1    7450 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Configurable-Receiver-Board-rescue:GND #PWR017
+U 1 1 5D0138A9
+P 8550 5550
+F 0 "#PWR017" H 8550 5300 50  0001 C CNN
+F 1 "GND" H 8555 5377 50  0000 C CNN
+F 2 "" H 8550 5550 50  0001 C CNN
+F 3 "" H 8550 5550 50  0001 C CNN
+	1    8550 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8550 5550 8550 5450
+Wire Wire Line
+	8550 5450 8450 5450
+Wire Wire Line
+	8550 5450 8550 5350
+Wire Wire Line
+	8550 5350 8450 5350
+Connection ~ 8550 5450
+Wire Wire Line
+	8550 5350 8550 5250
+Wire Wire Line
+	8550 5250 8450 5250
+Connection ~ 8550 5350
+Wire Wire Line
+	8050 5450 7950 5450
+Connection ~ 7950 5450
+Wire Wire Line
+	7950 5450 7950 5550
+Wire Wire Line
+	8050 5350 7850 5350
+Connection ~ 7850 5350
+Wire Wire Line
+	7850 5350 7850 5550
+Wire Wire Line
+	8050 5250 7750 5250
+Connection ~ 7750 5250
+Wire Wire Line
+	7750 5250 7750 4550
+Wire Wire Line
+	7450 6150 7450 6250
+Wire Wire Line
+	7450 6250 7650 6250
+Wire Wire Line
+	7750 6250 7750 6150
+Wire Wire Line
+	7750 6250 7850 6250
+Wire Wire Line
+	7850 6250 7850 6150
+Connection ~ 7750 6250
+Wire Wire Line
+	7850 6250 7950 6250
+Wire Wire Line
+	7950 6250 7950 6150
+Connection ~ 7850 6250
+$Comp
+L Device:LED D1
+U 1 1 5D0CA042
+P 5300 5500
+F 0 "D1" V 5339 5383 50  0000 R CNN
+F 1 "LED" V 5248 5383 50  0000 R CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 5300 5500 50  0001 C CNN
+F 3 "~" H 5300 5500 50  0001 C CNN
+	1    5300 5500
 	0    -1   -1   0   
 $EndComp
+$Comp
+L Device:LED D2
+U 1 1 5D0CB0A1
+P 5650 5500
+F 0 "D2" V 5689 5383 50  0000 R CNN
+F 1 "LED" V 5598 5383 50  0000 R CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 5650 5500 50  0001 C CNN
+F 3 "~" H 5650 5500 50  0001 C CNN
+	1    5650 5500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Configurable-Receiver-Board-rescue:R R2
+U 1 1 5D0CC208
+P 5300 5900
+F 0 "R2" H 5370 5946 50  0000 L CNN
+F 1 "68" V 5300 5850 50  0000 L CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 5230 5900 50  0001 C CNN
+F 3 "" H 5300 5900 50  0001 C CNN
+	1    5300 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Configurable-Receiver-Board-rescue:R R3
+U 1 1 5D0CC9E1
+P 5650 5900
+F 0 "R3" H 5720 5946 50  0000 L CNN
+F 1 "68" V 5650 5850 50  0000 L CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 5580 5900 50  0001 C CNN
+F 3 "" H 5650 5900 50  0001 C CNN
+	1    5650 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 5350 5300 4650
+Wire Wire Line
+	5300 4650 5750 4650
+Wire Wire Line
+	5650 5350 5650 4750
+Wire Wire Line
+	5650 4750 5750 4750
+Wire Wire Line
+	5300 5650 5300 5750
+Wire Wire Line
+	5650 5650 5650 5750
+$Comp
+L Configurable-Receiver-Board-rescue:GND #PWR05
+U 1 1 5D0DBA88
+P 5300 6150
+F 0 "#PWR05" H 5300 5900 50  0001 C CNN
+F 1 "GND" H 5305 5977 50  0000 C CNN
+F 2 "" H 5300 6150 50  0001 C CNN
+F 3 "" H 5300 6150 50  0001 C CNN
+	1    5300 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Configurable-Receiver-Board-rescue:GND #PWR023
+U 1 1 5D0DC46C
+P 5650 6150
+F 0 "#PWR023" H 5650 5900 50  0001 C CNN
+F 1 "GND" H 5655 5977 50  0000 C CNN
+F 2 "" H 5650 6150 50  0001 C CNN
+F 3 "" H 5650 6150 50  0001 C CNN
+	1    5650 6150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 6050 5300 6150
+Wire Wire Line
+	5650 6050 5650 6150
+Wire Wire Line
+	7550 4650 7650 4650
+Wire Wire Line
+	7650 4650 7650 5150
+Wire Wire Line
+	7650 5150 8050 5150
+Wire Wire Line
+	8450 5150 8550 5150
+Wire Wire Line
+	8550 5150 8550 5250
+Connection ~ 8550 5250
+$Comp
+L Switch:SW_DIP_x04 SW?
+U 1 1 5D0FDBCE
+P 7750 5850
+F 0 "SW?" V 7704 6180 50  0000 L CNN
+F 1 "SW_DIP_x04" V 7795 6180 50  0000 L CNN
+F 2 "" H 7750 5850 50  0001 C CNN
+F 3 "~" H 7750 5850 50  0001 C CNN
+	1    7750 5850
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7650 5150 7650 5550
+Connection ~ 7650 5150
+Wire Wire Line
+	7650 6150 7650 6250
+Connection ~ 7650 6250
+Wire Wire Line
+	7650 6250 7750 6250
 $EndSCHEMATC
