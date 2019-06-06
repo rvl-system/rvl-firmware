@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name Configurable-Receiver-Board-rescue)(type Legacy)(uri "${KIPRJMOD}/Configurable Receiver Board-rescue.lib")(options "")(descr ""))
+)

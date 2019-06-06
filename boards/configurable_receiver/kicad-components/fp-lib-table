@@ -1,0 +1,6 @@
+(fp_lib_table
+  (lib (name nebrius-switch)(type KiCad)(uri "$(KIPRJMOD)/footprints/nebrius-switch.pretty")(options "")(descr ""))
+  (lib (name nebrius-conn)(type KiCad)(uri "$(KIPRJMOD)/footprints/nebrius-conn.pretty")(options "")(descr ""))
+  (lib (name nebrius-lcd)(type KiCad)(uri "$(KIPRJMOD)/footprints/nebrius-lcd.pretty")(options "")(descr ""))
+  (lib (name nebrius-discrete)(type KiCad)(uri "$(KIPRJMOD)/footprints/nebrius-discrete.pretty")(options "")(descr ""))
+)

@@ -1,20 +1,20 @@
 [submodule "kicad-components"]
-	path = hub_board/kicad-components
+	path = boards/hub/kicad-components
 	url = git@github.com:nebrius/kicad-components.git
 [submodule "endpoint_board/kicad-components"]
-	path = receiver_board/kicad-components
+	path = boards/receiver/kicad-components
 	url = https://github.com/nebrius/kicad-components
 [submodule "powered_receiver_board/kicad-components"]
-	path = powered_receiver_board/kicad-components
+	path = boards/powered_receiver/kicad-components
 	url = git@github.com:nebrius/kicad-components.git
 [submodule "hub/lib/RVL-ESP"]
-	path = hub/lib/RVL-ESP
+	path = firmware/lib/RVL-ESP
 	url = https://github.com/nebrius/RVL-ESP.git
 [submodule "hub/lib/RVLMessaging"]
-	path = hub/lib/RVLMessaging
+	path = firmware/lib/RVLMessaging
 	url = https://github.com/nebrius/RVLMessaging.git
 [submodule "hub/lib/RVLLogging"]
-	path = hub/lib/RVLLogging
+	path = firmware/lib/RVLLogging
 	url = https://github.com/nebrius/RVLLogging.git
 [submodule "configurable_receiver_board/kicad-components"]
 	path = configurable_receiver_board/kicad-components

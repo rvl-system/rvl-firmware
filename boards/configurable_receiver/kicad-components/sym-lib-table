@@ -1,0 +1,8 @@
+(sym_lib_table
+  (lib (name nebrius-conn)(type Legacy)(uri C:/Users/nebri/Projects/kicad-components/components/conn/nebrius-conn.lib)(options "")(descr ""))
+  (lib (name nebrius-lcd)(type Legacy)(uri C:/Users/nebri/Projects/kicad-components/components/lcd/nebrius-lcd.lib)(options "")(descr ""))
+  (lib (name nebrius-logic)(type Legacy)(uri C:/Users/nebri/Projects/kicad-components/components/logic/nebrius-logic.lib)(options "")(descr ""))
+  (lib (name nebrius-microcontrollers)(type Legacy)(uri C:/Users/nebri/Projects/kicad-components/components/microcontrollers/nebrius-microcontrollers.lib)(options "")(descr ""))
+  (lib (name nebrius-regulators)(type Legacy)(uri C:/Users/nebri/Projects/kicad-components/components/regulators/nebrius-regulators.lib)(options "")(descr ""))
+  (lib (name nebrius-switch)(type Legacy)(uri C:/Users/nebri/Projects/kicad-components/components/switch/nebrius-switch.lib)(options "")(descr ""))
+)
