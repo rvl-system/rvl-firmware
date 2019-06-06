@@ -75,11 +75,11 @@ X P3 3 -200 -100 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Configurable-Receiver-Board-rescue_ESP-12E
+# Configurable-Receiver-Board-rescue_ESP-12F
 #
-DEF Configurable-Receiver-Board-rescue_ESP-12E U 0 40 Y Y 1 F N
+DEF Configurable-Receiver-Board-rescue_ESP-12F U 0 40 Y Y 1 F N
 F0 "U" 0 -100 50 H V C CNN
-F1 "Configurable-Receiver-Board-rescue_ESP-12E" 0 100 50 H V C CNN
+F1 "Configurable-Receiver-Board-rescue_ESP-12F" 0 100 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -96,13 +96,7 @@ X GPIO4 13 900 0 300 L 50 50 1 1 B
 X GPIO5 14 900 100 300 L 50 50 1 1 B
 X RXD 15 900 200 300 L 50 50 1 1 I
 X TXD 16 900 300 300 L 50 50 1 1 O
-X CS0 17 -250 -900 300 U 50 50 1 1 B
-X MISO 18 -150 -900 300 U 50 50 1 1 B
-X GPIO9 19 -50 -900 300 U 50 50 1 1 B
 X ADC 2 -900 200 300 R 50 50 1 1 P
-X GPIO10 20 50 -900 300 U 50 50 1 1 B
-X MOSI 21 150 -900 300 U 50 50 1 1 B
-X SCLK 22 250 -900 300 U 50 50 1 1 B
 X CH_PD 3 -900 100 300 R 50 50 1 1 I
 X GPIO16 4 -900 0 300 R 50 50 1 1 B
 X GPIO14 5 -900 -100 300 R 50 50 1 1 B
