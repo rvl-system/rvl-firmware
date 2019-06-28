@@ -45,6 +45,7 @@ void onModeChanged(RVLDeviceMode newMode) {
 
 void init() {
   RVLESPSetMode(RVLDeviceMode::Receiver);
+  RVLESPSetChannel(1);
   State::getLogger()->info("State initialized");
   RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
   RVLESPOnConnectionStateChanged(onConnectionStateChanged);

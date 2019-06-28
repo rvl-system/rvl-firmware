@@ -27,6 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/rainbow.h"
 #include "./presets/pulse.h"
 #include "./presets/wave.h"
+#include "./presets/solid.h"
 #include "./presets/color_cycle.h"
 
 namespace UIState {
@@ -38,7 +39,8 @@ PresetControlSet* presets[] = {
   &Rainbow::rainbow,
   &Pulse::pulse,
   &Wave::wave,
-  &ColorCycle::colorCycle
+  &ColorCycle::colorCycle,
+  &Solid::solid
 };
 
 void updateBrightnessValue(uint8_t newValue) {
@@ -52,6 +54,17 @@ Control::RangeControl brightnessControl(
   MAX_BRIGHTNESS,
   DEFAULT_BRIGHTNESS,
   updateBrightnessValue);
+
+void updateChannelValue(uint8_t selectedValueIndex) {
+  if (RVLESPGetChannel() != selectedValueIndex) {
+    RVLESPSetChannel(selectedValueIndex);
+  }
+}
+Control::ListControl channelControl(
+  "CHNL",
+  { "0", "1", "2", "3", "4", "5", "6", "7" },
+  1,
+  updateChannelValue);
 
 void updateModeValue(uint8_t selectedValueIndex) {
   if (RVLESPGetMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
@@ -80,17 +93,18 @@ void updatePresetValue(uint8_t selectedValueIndex) {
 }
 Control::ListControl presetControl(
   "PRST",
-  { "Rainbow", "Pulse", "Wave", "Color Cycle" },
+  { "Rainbow", "Pulse", "Wave", "Color Cycle", "Solid" },
   2,
   updatePresetValue);
 
 std::vector<Control::Control*> controls = {
   &brightnessControl,
+  &channelControl,
   &modeControl
 };
 
 void update() {
-  while (controls.size() > 2) {
+  while (controls.size() > controls.size()) {
     controls.pop_back();
   }
   if (RVLESPGetMode() == RVLDeviceMode::Controller) {
