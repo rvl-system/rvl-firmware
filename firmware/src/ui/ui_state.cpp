@@ -63,7 +63,7 @@ void updateChannelValue(uint8_t selectedValueIndex) {
 Control::ListControl channelControl(
   "CHNL",
   { "0", "1", "2", "3", "4", "5", "6", "7" },
-  1,
+  DEFAULT_CHANNEL,
   updateChannelValue);
 
 void updateModeValue(uint8_t selectedValueIndex) {
@@ -104,7 +104,7 @@ std::vector<Control::Control*> controls = {
 };
 
 void update() {
-  while (controls.size() > controls.size()) {
+  while (controls.size() > 3) {
     controls.pop_back();
   }
   if (RVLESPGetMode() == RVLDeviceMode::Controller) {
