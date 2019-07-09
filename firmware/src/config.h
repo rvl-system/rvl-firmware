@@ -41,7 +41,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEFAULT_PRESET 2
 
-#define DEFAULT_BRIGHTNESS 12
+#define DEFAULT_BRIGHTNESS 4
 #define MAX_BRIGHTNESS 16
 
 #define LED_DATA_PIN 2
