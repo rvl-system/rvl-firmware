@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <FastLED.h>
 
-// You'll probably want to modify these three settings
+/**** You'll probably want to modify these settings ****/
 
 #define WIFI_SSID "RaverLights"
 #define WIFI_PASSPHRASE "PhkNbBQ3NsFuUPFRZXkJyo6iXipyVczL"
@@ -30,27 +30,28 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_COLOR_MODE GRB
 #define LED_NUM_PIXELS 180
 
-// You *may* want to modify these settings, but it's not likely
+/**** You *may* want to modify these settings, but it's not likely ****/
 
 #define SERVER_PORT 4978
 #define SERIAL_BAUDRATE 115200
 
-// You most likely should *not* modify these settings
-
-#define UPDATE_RATE 33
-
 #define DEFAULT_PRESET 2
-
 #define DEFAULT_BRIGHTNESS 4
 #define MAX_BRIGHTNESS 16
 
+/**** You most likely should *not* modify these settings ****/
+
+// Common parameters
+#define UPDATE_RATE 33
 #define LED_DATA_PIN 2
 
+// Control parameters
 #define CONTROL_DIGIT_1 13
 #define CONTROL_DIGIT_2 12
 #define CONTROL_DIGIT_3 14
 #define CONTROL_DIGIT_4 16
 
+// UI parameters
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4
 #define LCD_SCL 5
