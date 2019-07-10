@@ -43,6 +43,33 @@ void setup() {
 #ifdef HAS_LIGHTS
   Lights::init();
 #endif
+
+  // Create a default animation
+  RVLWaveSettings newSettings;
+
+  // Wave wave
+  newSettings.waves[0].h.b = 0;
+  newSettings.waves[0].s.b = 255;
+  newSettings.waves[0].v.b = 255;
+  newSettings.waves[0].a.a = 255;
+  newSettings.waves[0].a.w_t = 8;
+  newSettings.waves[0].a.w_x = 2;
+
+  // Foreground wave
+  newSettings.waves[1].h.b = 170;
+  newSettings.waves[1].s.b = 255;
+  newSettings.waves[1].v.b = 255;
+  newSettings.waves[1].a.w_t = 8;
+  newSettings.waves[1].a.a = 255;
+
+  // Background wave
+  newSettings.waves[2].h.b = 85;
+  newSettings.waves[2].s.b = 255;
+  newSettings.waves[2].v.b = 255;
+  newSettings.waves[2].a.a = 255;
+
+  RVLESPSetWaveSettings(&newSettings);
+
   State::getLogger()->info("Running");
 }
 
@@ -55,6 +82,7 @@ void loop() {
   State::loop();
 #ifdef HAS_UI
   UI::loop();
+  // UI::loop();
 #endif
   RVLESPLoop();
 #ifdef HAS_LIGHTS

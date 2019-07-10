@@ -16,11 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-./lint.sh
-
-re='^[0-9]$'
-if ! [[ $1 =~ $re ]] ; then
-   echo "Please supply a COM port between 0 and 9" >&2; exit 1
-fi
-
-platformio run -e hub && esptool.py -p COM$1 -b 921600 write_flash 0x0 .pioenvs/hub/firmware.bin
+platformio run -e hub && esptool.py -p /dev/ttyS3 -b 921600 write_flash 0x0 .pioenvs/hub/firmware.bin

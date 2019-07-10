@@ -12,8 +12,8 @@
   (page A)
   (layers
     (0 F.Cu signal)
-    (1 Ground.Plane power)
-    (2 Power.Plane power)
+    (1 Ground.Plane power hide)
+    (2 Power.Plane power hide)
     (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
@@ -36,7 +36,7 @@
   )
 
   (setup
-    (last_trace_width 0.3048)
+    (last_trace_width 0.1524)
     (user_trace_width 0.1524)
     (user_trace_width 0.3048)
     (user_trace_width 0.6096)
@@ -987,10 +987,10 @@
   (gr_text "Raver Lights\nReceiver v4.0\nCopyright\nBryan Hughes 2018" (at 106.366 127.925) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (gr_text + (at 120.59 125.639 90) (layer F.SilkS) (tstamp 5CF9F91C)
+  (gr_text + (at 120.59 130.592 90) (layer F.SilkS) (tstamp 5CF9F91C)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (gr_text - (at 120.717 130.465 90) (layer F.SilkS) (tstamp 5CF9F918)
+  (gr_text - (at 120.59 125.639 90) (layer F.SilkS) (tstamp 5CF9F918)
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (gr_text RX (at 132.147 111.034 90) (layer F.SilkS) (tstamp 5CF9F5AE)

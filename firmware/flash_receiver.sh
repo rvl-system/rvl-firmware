@@ -16,5 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-./lint.sh
-platformio run -e receiver && esptool.py -p /dev/tty.usbserial-A504WNTT -b 921600 write_flash 0x0 .pioenvs/receiver/firmware.bin
+platformio run -e receiver && esptool.py -p /dev/ttyS3 -b 921600 write_flash 0x0 .pioenvs/receiver/firmware.bin
