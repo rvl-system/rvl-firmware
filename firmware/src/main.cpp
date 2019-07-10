@@ -22,6 +22,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_UI
 #include "./ui/ui.h"
 #endif
+#ifdef HAS_CONTROLS
+#include "./controls/controls.h"
+#endif
 #ifdef HAS_LIGHTS
 #include "./lights.h"
 #endif
@@ -39,6 +42,9 @@ void setup() {
   State::init();
 #ifdef HAS_UI
   UI::init();
+#endif
+#ifdef HAS_CONTROLS
+  Controls::init();
 #endif
 #ifdef HAS_LIGHTS
   Lights::init();
@@ -82,6 +88,9 @@ void loop() {
   State::loop();
 #ifdef HAS_UI
   UI::loop();
+#endif
+#ifdef HAS_CONTROLS
+  Controls::loop();
 #endif
   RVLESPLoop();
 #ifdef HAS_LIGHTS

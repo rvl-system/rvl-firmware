@@ -46,6 +46,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define LED_DATA_PIN 2
 
+#define CONTROL_DIGIT_1 13
+#define CONTROL_DIGIT_2 12
+#define CONTROL_DIGIT_3 14
+#define CONTROL_DIGIT_4 16
+
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 4
 #define LCD_SCL 5
