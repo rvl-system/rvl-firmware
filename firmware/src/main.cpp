@@ -82,7 +82,6 @@ void loop() {
   State::loop();
 #ifdef HAS_UI
   UI::loop();
-  // UI::loop();
 #endif
   RVLESPLoop();
 #ifdef HAS_LIGHTS
