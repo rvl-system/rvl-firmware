@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <RVL-ESP.h>
+#include <rvl-esp.h>
 #include <vector>
 #include "./ui/presets/solid.h"
 

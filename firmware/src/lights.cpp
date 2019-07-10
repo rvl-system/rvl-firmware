@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include <RVL-ESP.h>
+#include <rvl-esp.h>
 #include "./lights.h"
 #include "./codes.h"
 #include "./config.h"
