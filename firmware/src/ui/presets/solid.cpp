@@ -61,19 +61,22 @@ Solid::Solid() {
     0,
     255,
     hue,
-    updateHueValue));
+    updateHueValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "SAT",
     0,
     255,
     saturation,
-    updateSaturationValue));
+    updateSaturationValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "VAL",
     0,
     255,
     value,
-    updateValueValue));
+    updateValueValue,
+    NULL));
 }
 
 void Solid::updateWave() {

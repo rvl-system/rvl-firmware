@@ -59,19 +59,22 @@ Pulse::Pulse() {
     0,
     32,
     rate,
-    updateRateValue));
+    updateRateValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "HUE",
     0,
     255,
     hue,
-    updateHueValue));
+    updateHueValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "SATR",
     0,
     255,
     saturation,
-    updateSaturationValue));
+    updateSaturationValue,
+    NULL));
 }
 
 void Pulse::updateWave() {

@@ -37,7 +37,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEFAULT_PRESET 2
 #define DEFAULT_BRIGHTNESS 4
-#define MAX_BRIGHTNESS 16
+#define MIN_BRIGHTNESS 25
+#define MAX_BRIGHTNESS 200
 
 /**** You most likely should *not* modify these settings ****/
 

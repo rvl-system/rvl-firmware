@@ -43,17 +43,22 @@ PresetControlSet* presets[] = {
   &Solid::solid
 };
 
+uint8_t getBrightnessValue() {
+  return 16 * (State::getBrightness() - MIN_BRIGHTNESS) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
+}
 void updateBrightnessValue(uint8_t newValue) {
-  State::setBrightness(newValue);
-  State::getLogger()->info("Changing brightness to %d", newValue);
+  uint16_t adjustedBrightness = (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
+  State::setBrightness(adjustedBrightness);
+  State::getLogger()->info("Changing brightness to %d", adjustedBrightness);
   Event::emit(Codes::EventType::AnimationChange);
 }
 Control::RangeControl brightnessControl(
   "BRT",
   0,
-  MAX_BRIGHTNESS,
+  16,
   DEFAULT_BRIGHTNESS,
-  updateBrightnessValue);
+  updateBrightnessValue,
+  getBrightnessValue);
 
 void updateChannelValue(uint8_t selectedValueIndex) {
   if (RVLESPGetChannel() != selectedValueIndex) {
@@ -120,6 +125,7 @@ void init() {
   Event::on(Codes::EventType::ConnectedStateChange, update);
   Event::on(Codes::EventType::AnimationChange, update);
   Event::on(Codes::EventType::ModeChange, update);
+  Event::on(Codes::EventType::BrightnessChange, update);
   update();
   controls.reserve(10);
   presets[preset]->updateWave();

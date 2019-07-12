@@ -35,7 +35,10 @@
     "iosfwd": "cpp",
     "xstring": "cpp",
     "cmath": "cpp",
-    "xlocale": "cpp"
+    "xlocale": "cpp",
+    "istream": "cpp",
+    "optional": "cpp",
+    "ostream": "cpp"
   },
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#550080",

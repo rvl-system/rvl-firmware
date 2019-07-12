@@ -81,13 +81,15 @@ class RangeControl : public Control {
   uint8_t value;
   uint8_t min;
   uint8_t max;
+  uint8_t (*getValue)();
 
   RangeControl(
     const char* rangeLabel,
     uint8_t rangeMin,
     uint8_t rangeMax,
     uint8_t defaultValue,
-    void (*updateValueCallback)(uint8_t newValue)
+    void (*updateValueCallback)(uint8_t newValue),
+    uint8_t (*getValueMethod)()
   ) {
     this->type = ControlType::Range;
     this->label = rangeLabel;
@@ -95,6 +97,7 @@ class RangeControl : public Control {
     this->min = rangeMin;
     this->max = rangeMax;
     this->value = defaultValue;
+    this->getValue = getValueMethod;
   }
 
   void increaseValue() {

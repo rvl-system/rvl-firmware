@@ -24,7 +24,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
-uint8_t brightness = DEFAULT_BRIGHTNESS;
 bool wifiConnected = false;
 RVLLogging* logger;
 RVLWaveSettings* waveSettings;
@@ -43,24 +42,51 @@ void onModeChanged(RVLDeviceMode newMode) {
   Event::emit(Codes::EventType::ModeChange);
 }
 
+void onPowerStateChanged(bool powerState) {
+  Event::emit(Codes::EventType::PowerStateChange);
+}
+
+void onBrightnessChanged(uint8_t brightness) {
+  Event::emit(Codes::EventType::BrightnessChange);
+}
+
 void init() {
   RVLESPSetMode(RVLDeviceMode::Receiver);
   RVLESPSetChannel(DEFAULT_CHANNEL);
-  State::getLogger()->info("State initialized");
+  RVLESPSetBrightness(DEFAULT_BRIGHTNESS);
+  RVLESPSetPowerState(true);
   RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
   RVLESPOnConnectionStateChanged(onConnectionStateChanged);
   RVLESPOnModeChanged(onModeChanged);
+  RVLESPOnPowerStateChanged(onPowerStateChanged);
+  RVLESPOnBrightnessChanged(onBrightnessChanged);
+  State::getLogger()->info("State initialized");
 }
 
 void loop() {
 }
 
+bool getPowerState() {
+  return RVLESPGetPowerState();
+}
+
+void setPowerState(bool powerState) {
+  RVLESPSetPowerState(powerState);
+}
+
 uint8_t getBrightness() {
+  uint8_t brightness =  RVLESPGetBrightness();
+  if (brightness > MAX_BRIGHTNESS) {
+    brightness = MAX_BRIGHTNESS;
+  }
+  if (brightness < MIN_BRIGHTNESS) {
+    brightness = MIN_BRIGHTNESS;
+  }
   return brightness;
 }
 
 void setBrightness(uint8_t newBrightness) {
-  brightness = newBrightness;
+  RVLESPSetBrightness(newBrightness);
 }
 
 bool isWifiConnected() {

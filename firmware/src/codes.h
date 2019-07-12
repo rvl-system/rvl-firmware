@@ -27,7 +27,9 @@ namespace EventType {
     AnimationChange,
     UIStateChange,
     ConnectedStateChange,
-    ModeChange
+    ModeChange,
+    BrightnessChange,
+    PowerStateChange
   };
 }
 

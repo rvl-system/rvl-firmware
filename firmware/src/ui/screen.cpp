@@ -42,6 +42,7 @@ void update() {
 
 void init() {
   Event::on(Codes::EventType::UIStateChange, update);
+  Event::on(Codes::EventType::BrightnessChange, update);
   Render::init();
   Screen::update();
 }

@@ -82,25 +82,29 @@ Wave::Wave() {
     0,
     32,
     rate,
-    updateRateValue));
+    updateRateValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "WHUE",
     0,
     255,
     waveHue,
-    updateWaveHueValue));
+    updateWaveHueValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "FHUE",
     0,
     255,
     foregroundHue,
-    updateForegroundHueValue));
+    updateForegroundHueValue,
+    NULL));
   this->controls.push_back(new Control::RangeControl(
     "BHUE",
     0,
     255,
     backgroundHue,
-    updateBackgroundHueValue));
+    updateBackgroundHueValue,
+    NULL));
 }
 
 void Wave::updateWave() {

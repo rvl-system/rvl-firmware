@@ -31,11 +31,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Lights {
 
-#define MAX_SCALED_BRIGHTNESS 196
-#define BRIGHTNESS_SCALING_FACTOR MAX_SCALED_BRIGHTNESS / MAX_BRIGHTNESS
-
 CRGB leds[LED_NUM_PIXELS];
-CHSV colors[LED_NUM_PIXELS];
 
 void init() {
   FastLED.addLeds<WS2812B, LED_DATA_PIN, LED_COLOR_MODE>(leds, LED_NUM_PIXELS);
@@ -47,8 +43,14 @@ uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
 }
 
 void loop() {
+  if (!State::getPowerState()) {
+    FastLED.setBrightness(0);
+    FastLED.show();
+    return;
+  }
+
   auto waveSettings = State::getWaveSettings();
-  FastLED.setBrightness(State::getBrightness() * BRIGHTNESS_SCALING_FACTOR);
+  FastLED.setBrightness(State::getBrightness());
   uint32_t t = RVLESPGetAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
   for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
     uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;

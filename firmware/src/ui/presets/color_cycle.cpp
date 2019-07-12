@@ -48,7 +48,8 @@ ColorCycle::ColorCycle() {
     0,
     32,
     rate,
-    updateRateValue));
+    updateRateValue,
+    NULL));
 }
 
 void ColorCycle::updateWave() {
