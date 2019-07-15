@@ -51,6 +51,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define CONTROL_DIGIT_2 12
 #define CONTROL_DIGIT_3 14
 #define CONTROL_DIGIT_4 16
+#define GREEN_LED 4
+#define RED_LED 5
 
 // UI parameters
 #define LCD_ADDRESS 0x3C

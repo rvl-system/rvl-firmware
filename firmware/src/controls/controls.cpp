@@ -24,15 +24,37 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Controls {
 
+#define NETWORK_FLASH_RATE 500
+
+bool connectedLEDState = false;
+uint32_t nextConnectedLEDFlashTime = 0;
+
 void init() {
   pinMode(CONTROL_DIGIT_1, INPUT);
   pinMode(CONTROL_DIGIT_2, INPUT);
   pinMode(CONTROL_DIGIT_3, INPUT);
   pinMode(CONTROL_DIGIT_4, INPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
   State::getLogger()->info("Controls initialized");
 }
 
 void loop() {
+  if (State::isWifiConnected()) {
+    digitalWrite(GREEN_LED, HIGH);
+  } else {
+    uint32_t now = millis();
+    if (now >= nextConnectedLEDFlashTime) {
+      if (connectedLEDState) {
+        digitalWrite(GREEN_LED, HIGH);
+      } else {
+        digitalWrite(GREEN_LED, LOW);
+      }
+      nextConnectedLEDFlashTime = now + NETWORK_FLASH_RATE;
+      connectedLEDState = !connectedLEDState;
+    }
+  }
+
   int digit1 = digitalRead(CONTROL_DIGIT_1);
   int digit2 = digitalRead(CONTROL_DIGIT_2);
   int digit3 = digitalRead(CONTROL_DIGIT_3);
