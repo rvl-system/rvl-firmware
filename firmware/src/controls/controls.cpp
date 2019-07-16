@@ -55,14 +55,13 @@ void loop() {
     }
   }
 
-  int digit1 = digitalRead(CONTROL_DIGIT_1);
   int digit2 = digitalRead(CONTROL_DIGIT_2);
   int digit3 = digitalRead(CONTROL_DIGIT_3);
   int digit4 = digitalRead(CONTROL_DIGIT_4);
-  int value = digit1 * 8 + digit2 * 4 + digit3 * 2 + digit4;
-  if (RVLESPGetChannel() != value) {
-    State::getLogger()->info("Channel changed to %d", value);
-    RVLESPSetChannel(value);
+  int channel = digit2 * 4 + digit3 * 2 + digit4;
+  if (RVLESPGetChannel() != channel) {
+    State::getLogger()->info("Channel changed to %d", channel);
+    RVLESPSetChannel(channel);
   }
 }
 
