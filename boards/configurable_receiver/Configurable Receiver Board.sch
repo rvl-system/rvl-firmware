@@ -160,17 +160,6 @@ F 3 "" H 3000 3800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Configurable-Receiver-Board-rescue:+5V #PWR08
-U 1 1 5A47E6D7
-P 8150 2400
-F 0 "#PWR08" H 8150 2250 50  0001 C CNN
-F 1 "+5V" H 8150 2540 50  0000 C CNN
-F 2 "" H 8150 2400 50  0001 C CNN
-F 3 "" H 8150 2400 50  0001 C CNN
-	1    8150 2400
-	1    0    0    -1  
-$EndComp
-$Comp
 L Configurable-Receiver-Board-rescue:10118194 U0
 U 1 1 5A5AABAF
 P 1000 4900
@@ -561,10 +550,6 @@ Wire Wire Line
 Wire Wire Line
 	7750 4550 7550 4550
 Wire Wire Line
-	7550 4450 7850 4450
-Wire Wire Line
-	7850 4450 7850 5450
-Wire Wire Line
 	7550 4350 7950 4350
 Wire Wire Line
 	7950 4350 7950 5050
@@ -678,10 +663,6 @@ Wire Wire Line
 	5300 6050 5300 6150
 Wire Wire Line
 	5650 6050 5650 6150
-Wire Wire Line
-	7550 4650 7650 4650
-Wire Wire Line
-	7650 4650 7650 5250
 Wire Wire Line
 	7650 5250 7650 5550
 Connection ~ 7650 5250
@@ -813,4 +794,23 @@ Wire Wire Line
 	9500 4950 9600 4950
 Wire Wire Line
 	9500 4950 9500 5050
+$Comp
+L Configurable-Receiver-Board-rescue:+5V #PWR08
+U 1 1 5A47E6D7
+P 8150 2400
+F 0 "#PWR08" H 8150 2250 50  0001 C CNN
+F 1 "+5V" H 8150 2540 50  0000 C CNN
+F 2 "" H 8150 2400 50  0001 C CNN
+F 3 "" H 8150 2400 50  0001 C CNN
+	1    8150 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7650 4450 7550 4450
+Wire Wire Line
+	7650 4450 7650 5250
+Wire Wire Line
+	7550 4650 7850 4650
+Wire Wire Line
+	7850 4650 7850 5450
 $EndSCHEMATC
