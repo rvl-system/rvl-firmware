@@ -56,7 +56,7 @@ void onBrightnessChanged(uint8_t brightness) {
 void init() {
   RVLESPSetMode(RVLDeviceMode::Receiver);
   RVLESPSetChannel(DEFAULT_CHANNEL);
-  RVLESPSetBrightness(DEFAULT_BRIGHTNESS);
+  RVLESPSetBrightness((DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS);
   RVLESPSetPowerState(true);
   RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
   RVLESPOnConnectionStateChanged(onConnectionStateChanged);
