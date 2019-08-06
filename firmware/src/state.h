@@ -39,6 +39,11 @@ void setPowerState(bool powerState);
 bool isWifiConnected();
 void setWifiConnectedState(bool connected);
 
+uint8_t getHour();
+uint8_t getMinute();
+uint8_t getsecond();
+void setTime(uint8_t hour, uint8_t minute);
+
 RVLLogging* getLogger();
 void setLogger(RVLLogging* logger);
 

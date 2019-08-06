@@ -27,7 +27,8 @@ namespace Control {
 
 enum class ControlType {
   Range,
-  List
+  List,
+  Label
 };
 
 class Control {
@@ -112,6 +113,26 @@ class RangeControl : public Control {
       this->value--;
       this->updateValue(this->value);
     }
+  }
+};
+
+class LabelControl : public Control {
+ public:
+  void (*getValue)(char* buffer);
+
+  LabelControl(
+    void (*getValueMethod)(char* buffer)
+  ) {
+    this->type = ControlType::Label;
+    this->getValue = getValueMethod;
+  }
+
+  void increaseValue() {
+    // Do nothing
+  }
+
+  void decreaseValue() {
+    // Do nothing
   }
 };
 

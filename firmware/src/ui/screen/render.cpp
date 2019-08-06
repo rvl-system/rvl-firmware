@@ -59,13 +59,14 @@ void renderSelectedEntryBox(uint8_t row) {
 
 void renderEntry(Control::Control* entry, uint8_t row) {
   uint8_t textY = row * 16 + 1;
-  display.drawString(21, textY, entry->label);
   if (entry->type == Control::ControlType::List) {
+    display.drawString(21, textY, entry->label);
     auto listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(52, textY, "<");
     display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
     display.drawString(115, textY, ">");
   } else if (entry->type == Control::ControlType::Range) {
+    display.drawString(21, textY, entry->label);
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
     uint8_t rangeValue = rangeEntry->value;
     if (rangeEntry->getValue != NULL) {
@@ -73,6 +74,15 @@ void renderEntry(Control::Control* entry, uint8_t row) {
     }
     uint8_t progress = 100 * (rangeValue - rangeEntry->min) / (rangeEntry->max - rangeEntry->min);
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
+  } else if (entry->type == Control::ControlType::Label) {
+    auto labelEntry = static_cast<Control::LabelControl*>(entry);
+    if (labelEntry->getValue != NULL) {
+      char labelBuffer[] = "                  ";
+      labelEntry->getValue(labelBuffer);
+      display.drawString(21, textY, labelBuffer);
+    } else {
+      display.drawString(21, textY, "LABEL ERROR");
+    }
   }
 }
 

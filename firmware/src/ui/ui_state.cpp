@@ -32,8 +32,25 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace UIState {
 
+#ifdef HAS_CLOCK
+uint8_t currentControl = 1;
+#else
 uint8_t currentControl = 0;
+#endif
 uint8_t preset = DEFAULT_PRESET;
+
+#ifdef HAS_CLOCK
+#define NUM_GLOBAL_CONTROLS 4
+#else
+#define NUM_GLOBAL_CONTROLS 3
+#endif
+
+#ifdef HAS_CLOCK
+void getTimeValue(char* timeString) {
+  snprintf(timeString, strlen(timeString), "%02d:%02d", State::getHour(), State::getMinute());
+}
+Control::LabelControl timeControl(getTimeValue);
+#endif
 
 PresetControlSet* presets[] = {
   &Rainbow::rainbow,
@@ -103,13 +120,16 @@ Control::ListControl presetControl(
   updatePresetValue);
 
 std::vector<Control::Control*> controls = {
+#ifdef HAS_CLOCK
+  &timeControl,
+#endif
   &brightnessControl,
   &channelControl,
   &modeControl
 };
 
 void update() {
-  while (controls.size() > 3) {
+  while (controls.size() > NUM_GLOBAL_CONTROLS) {
     controls.pop_back();
   }
   if (RVLESPGetMode() == RVLDeviceMode::Controller) {
@@ -126,6 +146,7 @@ void init() {
   Event::on(Codes::EventType::AnimationChange, update);
   Event::on(Codes::EventType::ModeChange, update);
   Event::on(Codes::EventType::BrightnessChange, update);
+  Event::on(Codes::EventType::TimeChange, update);
   update();
   controls.reserve(10);
   presets[preset]->updateWave();

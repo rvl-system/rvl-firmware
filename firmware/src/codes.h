@@ -29,9 +29,10 @@ namespace EventType {
     ConnectedStateChange,
     ModeChange,
     BrightnessChange,
-    PowerStateChange
+    PowerStateChange,
+    TimeChange
   };
-}
+}  // namespace EventType
 
 namespace Preset {
   enum Preset {
@@ -41,13 +42,13 @@ namespace Preset {
     ColorCycle = 3,
     Unknown = 255
   };
-}
+}  // namespace Preset
 
 namespace RainbowPresetValues {
   enum RainbowPresetValues {
     Rate = 0
   };
-}
+}  // namespace RainbowPresetValues
 
 namespace PulsePresetValues {
   enum PulsePresetValues {
@@ -55,7 +56,7 @@ namespace PulsePresetValues {
     Hue = 1,
     Saturation = 2
   };
-}
+}  // namespace PulsePresetValues
 
 namespace WavePresetValues {
   enum WavePresetValues {
@@ -65,13 +66,13 @@ namespace WavePresetValues {
     BackgroundHue = 3,
     BackgroundSaturation = 4
   };
-}
+}  // namespace WavePresetValues
 
 namespace ColorCyclePresetValues {
   enum ColorCyclePresetValues {
     Rate = 0
   };
-}
+}  // namespace ColorCyclePresetValues
 
 }  // namespace Codes
 

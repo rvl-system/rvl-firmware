@@ -24,6 +24,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
+uint8_t hour;
+uint8_t minute;
+
 bool wifiConnected = false;
 RVLLogging* logger;
 RVLWaveSettings* waveSettings;
@@ -97,6 +100,21 @@ void setWifiConnectedState(bool connected) {
   wifiConnected = connected;
   Event::emit(Codes::EventType::ConnectedStateChange);
 }
+
+uint8_t getHour() {
+  return hour;
+}
+
+uint8_t getMinute() {
+  return minute;
+}
+
+void setTime(uint8_t newHour, uint8_t newMinute) {
+  hour = newHour;
+  minute = newMinute;
+  Event::emit(Codes::EventType::TimeChange);
+}
+
 
 RVLLogging* getLogger() {
   return logger;
