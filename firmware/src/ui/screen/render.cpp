@@ -18,8 +18,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <brzo_i2c.h>
-#include <SSD1306Brzo.h>
+#include <Wire.h>
+#include "SSD1306Wire.h"
 #include "./ui/screen/render.h"
 #include "./ui/screen/icons.h"
 #include "./ui/control.h"
@@ -27,7 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Render {
 
-SSD1306Brzo display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
+SSD1306Wire display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
 uint8_t previousSelectedEntry = 0;  // from 0 to numEntries
 uint8_t entryWindowStart = 0;   // from 0 to numEntries

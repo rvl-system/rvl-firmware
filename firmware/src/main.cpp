@@ -28,6 +28,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_LIGHTS
 #include "./lights.h"
 #endif
+#ifdef HAS_CLOCK
+#include "./clock.h"
+#endif
 #include "./state.h"
 #include "./config.h"
 
@@ -48,6 +51,9 @@ void setup() {
 #endif
 #ifdef HAS_LIGHTS
   Lights::init();
+#endif
+#ifdef HAS_CLOCK
+  Clock::init();
 #endif
 
   // Create a default animation
@@ -95,6 +101,9 @@ void loop() {
   RVLESPLoop();
 #ifdef HAS_LIGHTS
   Lights::loop();
+#endif
+#ifdef HAS_CLOCK
+  Clock::loop();
 #endif
   uint32_t now = millis();
   loopTimes[loopIndex++] = now - startTime;
