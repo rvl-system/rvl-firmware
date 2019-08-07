@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 /**** You'll probably want to modify these settings ****/
 
 #define WIFI_SSID "RaverLights"
-#define WIFI_PASSPHRASE "PhkNbBQ3NsFuUPFRZXkJyo6iXipyVczL"
+#define WIFI_PASSPHRASE "RaverLights"
 #define DEFAULT_CHANNEL 0
 #define LED_COLOR_MODE GRB
 #define LED_NUM_PIXELS 180
