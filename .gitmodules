@@ -7,3 +7,6 @@
 [submodule "firmware/lib/rvl-esp"]
 	path = firmware/lib/rvl-esp
 	url = https://github.com/nebrius/rvl-esp
+[submodule "boards/signal_converter/kicad-components"]
+	path = boards/signal_converter/kicad-components
+	url = https://github.com/nebrius/kicad-components.git
