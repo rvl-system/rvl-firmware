@@ -24,6 +24,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
+#define SUNRISE_HOUR 10
+#define SUNRISE_MINUTE 41
+
+#define SUNSET_HOUR 20
+#define SUNSET_MINUTE 0
+
 uint8_t hour;
 uint8_t minute;
 
@@ -115,6 +121,24 @@ void setTime(uint8_t newHour, uint8_t newMinute) {
   Event::emit(Codes::EventType::TimeChange);
 }
 
+bool getTimerState() {
+  bool timerState = false;
+  if (hour < SUNRISE_HOUR) {
+    timerState = true;
+  } else if (hour == SUNRISE_HOUR) {
+    if (minute < SUNRISE_MINUTE) {
+      timerState = true;
+    }
+  } else if (hour == SUNSET_HOUR) {
+    if (minute >= SUNSET_MINUTE) {
+      timerState = true;
+    }
+  } else if (hour > SUNSET_HOUR) {
+    timerState = true;
+  }
+
+  return timerState;
+}
 
 RVLLogging* getLogger() {
   return logger;

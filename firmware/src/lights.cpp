@@ -43,11 +43,19 @@ uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
 }
 
 void loop() {
+#ifdef HAS_CLOCK
+  if (!State::getTimerState()) {
+    FastLED.setBrightness(0);
+    FastLED.show();
+    return;
+  }
+#else
   if (!State::getPowerState()) {
     FastLED.setBrightness(0);
     FastLED.show();
     return;
   }
+#endif
 
   auto waveSettings = State::getWaveSettings();
   FastLED.setBrightness(State::getBrightness());

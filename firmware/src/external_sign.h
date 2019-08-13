@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,40 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATE_H_
-#define STATE_H_
+#ifndef EXTERNAL_SIGN_H_
+#define EXTERNAL_SIGN_H_
 
-#include <Arduino.h>
-#include <rvl-esp.h>
-#include "./codes.h"
-#include "./config.h"
-
-namespace State {
+namespace ExternalSign {
 
 void init();
 void loop();
 
-uint8_t getBrightness();
-void setBrightness(uint8_t brightness);
+}  // namespace ExternalSign
 
-bool getPowerState();
-void setPowerState(bool powerState);
-
-bool isWifiConnected();
-void setWifiConnectedState(bool connected);
-
-uint8_t getHour();
-uint8_t getMinute();
-uint8_t getsecond();
-void setTime(uint8_t hour, uint8_t minute);
-
-bool getTimerState();
-
-RVLLogging* getLogger();
-void setLogger(RVLLogging* logger);
-
-RVLWaveSettings* getWaveSettings();
-
-}  // namespace State
-
-#endif  // STATE_H_
+#endif  // EXTERNAL_SIGN_H_

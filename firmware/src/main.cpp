@@ -31,6 +31,9 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_CLOCK
 #include "./clock.h"
 #endif
+#ifdef HAS_EXTERNAL_SIGN
+#include "./external_sign.h"
+#endif
 #include "./state.h"
 #include "./config.h"
 
@@ -54,6 +57,9 @@ void setup() {
 #endif
 #ifdef HAS_CLOCK
   Clock::init();
+#endif
+#ifdef HAS_EXTERNAL_SIGN
+  ExternalSign::init();
 #endif
 
   // Create a default animation
@@ -104,6 +110,9 @@ void loop() {
 #endif
 #ifdef HAS_CLOCK
   Clock::loop();
+#endif
+#ifdef HAS_EXTERNAL_SIGN
+  ExternalSign::loop();
 #endif
   uint32_t now = millis();
   loopTimes[loopIndex++] = now - startTime;
