@@ -25,7 +25,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace State {
 
 #define SUNRISE_HOUR 10
-#define SUNRISE_MINUTE 41
+#define SUNRISE_MINUTE 0
 
 #define SUNSET_HOUR 20
 #define SUNSET_MINUTE 0
