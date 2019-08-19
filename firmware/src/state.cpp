@@ -32,6 +32,7 @@ namespace State {
 
 uint8_t hour;
 uint8_t minute;
+uint8_t brightness;
 
 bool wifiConnected = false;
 RVLLogging* logger;
@@ -60,15 +61,24 @@ void onBrightnessChanged(uint8_t brightness) {
 }
 
 void init() {
+#ifdef DEFAULT_MODE_CONTROLLER
+  RVLESPSetMode(RVLDeviceMode::Controller);
+#else
   RVLESPSetMode(RVLDeviceMode::Receiver);
+#endif
   RVLESPSetChannel(DEFAULT_CHANNEL);
-  RVLESPSetBrightness((DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS);
+  brightness = (DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
+#ifdef REMOTE_BRIGHTNESS
+  RVLESPSetBrightness(brightness);
+#endif
   RVLESPSetPowerState(true);
   RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
   RVLESPOnConnectionStateChanged(onConnectionStateChanged);
   RVLESPOnModeChanged(onModeChanged);
   RVLESPOnPowerStateChanged(onPowerStateChanged);
+#ifdef REMOTE_BRIGHTNESS
   RVLESPOnBrightnessChanged(onBrightnessChanged);
+#endif
   State::getLogger()->info("State initialized");
 }
 
@@ -84,18 +94,23 @@ void setPowerState(bool powerState) {
 }
 
 uint8_t getBrightness() {
-  uint8_t brightness =  RVLESPGetBrightness();
+#ifdef REMOTE_BRIGHTNESS
+  brightness =  RVLESPGetBrightness();
   if (brightness > MAX_BRIGHTNESS) {
     brightness = MAX_BRIGHTNESS;
   }
   if (brightness < MIN_BRIGHTNESS) {
     brightness = MIN_BRIGHTNESS;
   }
+#endif
   return brightness;
 }
 
 void setBrightness(uint8_t newBrightness) {
+  brightness = newBrightness;
+#ifdef REMOTE_BRIGHTNESS
   RVLESPSetBrightness(newBrightness);
+#endif
 }
 
 bool isWifiConnected() {

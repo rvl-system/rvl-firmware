@@ -104,7 +104,11 @@ void updateModeValue(uint8_t selectedValueIndex) {
 Control::ListControl modeControl(
   "MODE",
   { "Controller", "Receiver" },
+#ifdef DEFAULT_MODE_CONTROLLER
+  0,
+#else
   1,
+#endif
   updateModeValue);
 
 void updatePresetValue(uint8_t selectedValueIndex) {
