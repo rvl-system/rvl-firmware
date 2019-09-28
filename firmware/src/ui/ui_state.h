@@ -31,7 +31,7 @@ extern uint8_t currentControl;
 extern std::vector<Control::Control*> controls;
 
 extern uint8_t preset;
-extern uint8** presetValues;
+extern uint8_t** presetValues;
 
 void init();
 
