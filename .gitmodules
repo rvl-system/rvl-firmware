@@ -4,3 +4,6 @@
 [submodule "boards/signal_converter/kicad-components"]
 	path = boards/signal_converter/kicad-components
 	url = https://github.com/nebrius/kicad-components.git
+[submodule "firmware/lib/rvl-arduino"]
+	path = firmware/lib/rvl-arduino
+	url = https://github.com/nebrius/rvl-arduino.git
