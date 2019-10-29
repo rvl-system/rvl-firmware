@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #include "./ui/ui_state.h"
 #include "./state.h"
 #include "./event.h"
@@ -78,8 +78,8 @@ Control::RangeControl brightnessControl(
   getBrightnessValue);
 
 void updateChannelValue(uint8_t selectedValueIndex) {
-  if (RVLESPGetChannel() != selectedValueIndex) {
-    RVLESPSetChannel(selectedValueIndex);
+  if (RVLGetChannel() != selectedValueIndex) {
+    RVLSetChannel(selectedValueIndex);
   }
 }
 Control::ListControl channelControl(
@@ -89,14 +89,14 @@ Control::ListControl channelControl(
   updateChannelValue);
 
 void updateModeValue(uint8_t selectedValueIndex) {
-  if (RVLESPGetMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
+  if (RVLGetMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
     switch (static_cast<RVLDeviceMode>(selectedValueIndex)) {
       case RVLDeviceMode::Controller:
-        RVLESPSetMode(RVLDeviceMode::Controller);
+        RVLSetMode(RVLDeviceMode::Controller);
         presets[preset]->updateWave();
         break;
       case RVLDeviceMode::Receiver:
-        RVLESPSetMode(RVLDeviceMode::Receiver);
+        RVLSetMode(RVLDeviceMode::Receiver);
         break;
     }
   }
@@ -136,7 +136,7 @@ void update() {
   while (controls.size() > NUM_GLOBAL_CONTROLS) {
     controls.pop_back();
   }
-  if (RVLESPGetMode() == RVLDeviceMode::Controller) {
+  if (RVLGetMode() == RVLDeviceMode::Controller) {
     controls.push_back(&presetControl);
     for (auto& control : presets[preset]->controls) {
       controls.push_back(control);

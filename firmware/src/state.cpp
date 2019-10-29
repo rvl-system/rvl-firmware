@@ -62,22 +62,22 @@ void onBrightnessChanged(uint8_t brightness) {
 
 void init() {
 #ifdef DEFAULT_MODE_CONTROLLER
-  RVLESPSetMode(RVLDeviceMode::Controller);
+  RVLSetMode(RVLDeviceMode::Controller);
 #else
-  RVLESPSetMode(RVLDeviceMode::Receiver);
+  RVLSetMode(RVLDeviceMode::Receiver);
 #endif
-  RVLESPSetChannel(DEFAULT_CHANNEL);
+  RVLSetChannel(DEFAULT_CHANNEL);
   brightness = (DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
 #ifdef REMOTE_BRIGHTNESS
-  RVLESPSetBrightness(brightness);
+  RVLSetBrightness(brightness);
 #endif
-  RVLESPSetPowerState(true);
-  RVLESPOnWaveSettingsUpdate(onWaveSettingsUpdated);
-  RVLESPOnConnectionStateChanged(onConnectionStateChanged);
-  RVLESPOnModeChanged(onModeChanged);
-  RVLESPOnPowerStateChanged(onPowerStateChanged);
+  RVLSetPowerState(true);
+  RVLOnWaveSettingsUpdate(onWaveSettingsUpdated);
+  RVLOnConnectionStateChanged(onConnectionStateChanged);
+  RVLOnModeChanged(onModeChanged);
+  RVLOnPowerStateChanged(onPowerStateChanged);
 #ifdef REMOTE_BRIGHTNESS
-  RVLESPOnBrightnessChanged(onBrightnessChanged);
+  RVLOnBrightnessChanged(onBrightnessChanged);
 #endif
   State::getLogger()->info("State initialized");
 }
@@ -86,16 +86,16 @@ void loop() {
 }
 
 bool getPowerState() {
-  return RVLESPGetPowerState();
+  return RVLGetPowerState();
 }
 
 void setPowerState(bool powerState) {
-  RVLESPSetPowerState(powerState);
+  RVLSetPowerState(powerState);
 }
 
 uint8_t getBrightness() {
 #ifdef REMOTE_BRIGHTNESS
-  brightness =  RVLESPGetBrightness();
+  brightness =  RVLGetBrightness();
   if (brightness > MAX_BRIGHTNESS) {
     brightness = MAX_BRIGHTNESS;
   }
@@ -109,7 +109,7 @@ uint8_t getBrightness() {
 void setBrightness(uint8_t newBrightness) {
   brightness = newBrightness;
 #ifdef REMOTE_BRIGHTNESS
-  RVLESPSetBrightness(newBrightness);
+  RVLSetBrightness(newBrightness);
 #endif
 }
 

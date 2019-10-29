@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #include "./lights.h"
 #include "./codes.h"
 #include "./config.h"
@@ -59,7 +59,7 @@ void loop() {
 
   auto waveSettings = State::getWaveSettings();
   FastLED.setBrightness(State::getBrightness());
-  uint32_t t = RVLESPGetAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
+  uint32_t t = RVLGetAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
   for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
     uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
 
