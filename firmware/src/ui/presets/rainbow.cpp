@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #include <vector>
 #include "./ui/presets/rainbow.h"
 
@@ -34,7 +34,7 @@ void updateWaveParameters() {
   newSettings.waves[0].s.b = 255;
   newSettings.waves[0].v.b = 255;
   newSettings.waves[0].a.b = 255;
-  RVLESPSetWaveSettings(&newSettings);
+  RVLSetWaveSettings(&newSettings);
 }
 
 void updateRateValue(uint8_t newValue) {

@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #include <vector>
 #include "./ui/presets/pulse.h"
 
@@ -35,7 +35,7 @@ void updateWaveParameters() {
   newSettings.waves[0].v.a = 255;
   newSettings.waves[0].v.w_t = rate;
   newSettings.waves[0].a.b = 255;
-  RVLESPSetWaveSettings(&newSettings);
+  RVLSetWaveSettings(&newSettings);
 }
 
 void updateRateValue(uint8_t newValue) {

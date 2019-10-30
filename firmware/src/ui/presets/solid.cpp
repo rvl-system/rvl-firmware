@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #include <vector>
 #include "./ui/presets/solid.h"
 
@@ -37,7 +37,7 @@ void updateWaveParameters() {
   newSettings.waves[0].v.b = value;
   newSettings.waves[0].a.b = 255;
 
-  RVLESPSetWaveSettings(&newSettings);
+  RVLSetWaveSettings(&newSettings);
 }
 
 void updateHueValue(uint8_t newValue) {

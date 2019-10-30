@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #include "./controls/controls.h"
 #include "./state.h"
 
@@ -59,9 +59,9 @@ void loop() {
   int digit3 = digitalRead(CONTROL_DIGIT_3);
   int digit4 = digitalRead(CONTROL_DIGIT_4);
   int channel = digit2 * 4 + digit3 * 2 + digit4;
-  if (RVLESPGetChannel() != channel) {
+  if (RVLGetChannel() != channel) {
     State::getLogger()->info("Channel changed to %d", channel);
-    RVLESPSetChannel(channel);
+    RVLSetChannel(channel);
   }
 }
 

@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-esp.h>
+#include <rvl-arduino.h>
 #ifdef HAS_UI
 #include "./ui/ui.h"
 #endif
@@ -41,8 +41,8 @@ void setup() {
   delay(200);
 
   Serial.begin(SERIAL_BAUDRATE);
-  State::setLogger(RVLESPInitLogging(RVLLogLevel::Debug));
-  RVLESPInitNetwork(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
+  State::setLogger(RVLInitLogging(RVLLogLevel::Debug));
+  RVLInitNetwork(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
 
   State::getLogger()->info("Initializing");
   State::init();
@@ -86,7 +86,7 @@ void setup() {
   newSettings.waves[2].v.b = 255;
   newSettings.waves[2].a.a = 255;
 
-  RVLESPSetWaveSettings(&newSettings);
+  RVLSetWaveSettings(&newSettings);
 
   State::getLogger()->info("Running");
 }
@@ -104,7 +104,7 @@ void loop() {
 #ifdef HAS_CONTROLS
   Controls::loop();
 #endif
-  RVLESPLoop();
+  RVLLoop();
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
