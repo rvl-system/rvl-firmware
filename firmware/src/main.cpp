@@ -130,7 +130,7 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    State::getLogger()->debug("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
+    State::getLogger()->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
   }
   if (now - startTime > UPDATE_RATE) {
     State::getLogger()->info("Warning: system loop took %dms longer than the update rate",

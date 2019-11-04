@@ -20,8 +20,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#include <FastLED.h>
-
 /**** You'll probably want to modify these settings ****/
 
 #define WIFI_SSID "RaverLights"
