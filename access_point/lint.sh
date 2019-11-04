@@ -16,15 +16,5 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
-serialDevicePrefix=/dev/ttyS
-
-./lint.sh && platformio run -e hub
-
-if [ $? -eq 0 ]
-then
-  for port in "$@"
-  do
-    echo "\nProgramming device at $serialDevicePrefix$port"
-    esptool.py -p $serialDevicePrefix$port -b 921600 write_flash 0x0 .pio/build/hub/firmware.bin
-  done
-fi
+DIR=$(dirname "${pwd}")
+cpplint --quiet --linelength=120 --recursive --repository=$DIR/src src/*

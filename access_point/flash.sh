@@ -18,13 +18,4 @@
 
 serialDevicePrefix=/dev/ttyS
 
-./lint.sh && platformio run -e hub
-
-if [ $? -eq 0 ]
-then
-  for port in "$@"
-  do
-    echo "\nProgramming device at $serialDevicePrefix$port"
-    esptool.py -p $serialDevicePrefix$port -b 921600 write_flash 0x0 .pio/build/hub/firmware.bin
-  done
-fi
+./lint.sh && platformio run --target upload --upload-port $serialDevicePrefix$1
