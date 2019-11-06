@@ -39,6 +39,12 @@
     "istream": "cpp",
     "optional": "cpp",
     "ostream": "cpp",
-    "unordered_map": "cpp"
+    "unordered_map": "cpp",
+    "xhash": "cpp",
+    "*.rh": "cpp",
+    "*.tcc": "cpp",
+    "random": "cpp",
+    "fstream": "cpp",
+    "streambuf": "cpp"
   }
 }

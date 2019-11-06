@@ -114,7 +114,7 @@ void renderIcon(Icons::StatusIcon* icon, uint8_t row) {
   for (uint8_t x = 0; x < 16; x++) {
     for (uint8_t y = 0; y < 16; y++) {
       if (icon->data[y][x]) {
-        display.setPixel(x, y + row * 16);
+        display.setPixel(x, y + row * 20);
       }
     }
   }

@@ -30,12 +30,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Screen {
 
 void update() {
-  State::getLogger()->debug("Updating screen");
   std::list<Icons::StatusIcon*> icons;
   if (State::isWifiConnected()) {
     icons.push_back(&Icons::wifiConnectedIcon);
   } else {
     icons.push_back(&Icons::wifiDisconnectedIcon);
+  }
+  if (State::isSynchronized()) {
+    icons.push_back(&Icons::synchronizedIcon);
+  } else {
+    icons.push_back(&Icons::notSynchronizedIcon);
   }
   Render::render(&(UIState::controls), UIState::currentControl, &icons);
 }
@@ -48,6 +52,7 @@ void init() {
 }
 
 void loop() {
+  Screen::update();
 }
 
 }  // namespace Screen

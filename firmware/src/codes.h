@@ -30,7 +30,8 @@ namespace EventType {
     ModeChange,
     BrightnessChange,
     PowerStateChange,
-    TimeChange
+    TimeChange,
+    SynchronizationChange
   };
 }  // namespace EventType
 

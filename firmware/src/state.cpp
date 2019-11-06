@@ -60,6 +60,15 @@ void onBrightnessChanged(uint8_t brightness) {
   Event::emit(Codes::EventType::BrightnessChange);
 }
 
+void onSynchronizationStateChanged(bool synchronized) {
+  if (synchronized) {
+    State::getLogger()->debug("System is synchronized");
+  } else {
+    State::getLogger()->debug("System is not synchronized");
+  }
+  Event::emit(Codes::EventType::SynchronizationChange);
+}
+
 void init() {
 #ifdef DEFAULT_MODE_CONTROLLER
   RVLSetMode(RVLDeviceMode::Controller);
@@ -76,6 +85,7 @@ void init() {
   RVLOnConnectionStateChanged(onConnectionStateChanged);
   RVLOnModeChanged(onModeChanged);
   RVLOnPowerStateChanged(onPowerStateChanged);
+  RVLOnSynchronizationStateChage(onSynchronizationStateChanged);
 #ifdef REMOTE_BRIGHTNESS
   RVLOnBrightnessChanged(onBrightnessChanged);
 #endif
@@ -91,6 +101,10 @@ bool getPowerState() {
 
 void setPowerState(bool powerState) {
   RVLSetPowerState(powerState);
+}
+
+bool isSynchronized() {
+  return RVLGetSynchronizationState();
 }
 
 uint8_t getBrightness() {

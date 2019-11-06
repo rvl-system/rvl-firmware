@@ -33,6 +33,9 @@ struct StatusIcon {
 extern StatusIcon wifiConnectedIcon;
 extern StatusIcon wifiDisconnectedIcon;
 
+extern StatusIcon synchronizedIcon;
+extern StatusIcon notSynchronizedIcon;
+
 }  // namespace Icons
 
 #endif  // UI_SCREEN_ICONS_H_
