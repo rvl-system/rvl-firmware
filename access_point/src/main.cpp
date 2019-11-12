@@ -79,32 +79,4 @@ void setup() {
 }
 
 void loop() {
-  if (millis() < nextSyncTime) {
-    return;
-  }
-  Serial.print("Sending reference broadcast set starting with ID ");
-  Serial.println(syncId);
-  nextSyncTime = millis() + CLIENT_SYNC_INTERVAL;
-
-  for (uint8_t i = 1; i <= NUM_REFERENCE_BROADCASTS; i++) {
-    // Write the packet header
-    beginWrite();
-    write(signature, 4);
-    write8(PROTOCOL_VERSION);
-    write8(255);  // Broadcast
-    write8(nodeId);
-    write8(3);  // Clock sync packet type
-    write16(0);
-
-    // Write the packet body
-    write8(1);  // Packet type = Reference broadcast
-    write16(syncId++);  // Sync ID
-    write8(0);  // reserved
-    write8(i == 1);  // Whether or not this is the start of the set
-    write8(0);  // reserved
-    endWrite();
-
-    // Wait to send the next one
-    delay(REFERENCE_BROADCAST_DELAY);
-  }
 }

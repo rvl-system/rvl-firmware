@@ -45,6 +45,27 @@
     "*.tcc": "cpp",
     "random": "cpp",
     "fstream": "cpp",
-    "streambuf": "cpp"
+    "streambuf": "cpp",
+    "concepts": "cpp",
+    "cstdint": "cpp",
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cstring": "cpp",
+    "cwchar": "cpp",
+    "xmemory": "cpp",
+    "xstddef": "cpp",
+    "xutility": "cpp",
+    "array": "cpp",
+    "cctype": "cpp",
+    "clocale": "cpp",
+    "cstdarg": "cpp",
+    "cwctype": "cpp",
+    "deque": "cpp",
+    "numeric": "cpp",
+    "sstream": "cpp",
+    "cinttypes": "cpp",
+    "map": "cpp",
+    "memory_resource": "cpp",
+    "string_view": "cpp"
   }
 }
