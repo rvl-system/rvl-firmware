@@ -7,3 +7,6 @@
 [submodule "firmware/lib/rvl-arduino-wifi"]
 	path = firmware/lib/rvl-wifi
 	url = https://github.com/nebrius/rvl-arduino-wifi.git
+[submodule "firmware/lib/rvl"]
+	path = firmware/lib/rvl
+	url = https://github.com/nebrius/rvl.git

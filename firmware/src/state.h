@@ -21,7 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define STATE_H_
 
 #include <Arduino.h>
-#include <rvl-arduino.h>
+#include <rvl-wifi.h>
 #include "./codes.h"
 #include "./config.h"
 

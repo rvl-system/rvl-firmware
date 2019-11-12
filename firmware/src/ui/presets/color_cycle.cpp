@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-arduino.h>
+#include <rvl-wifi.h>
 #include <vector>
 #include "./ui/presets/color_cycle.h"
 

@@ -18,7 +18,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl-arduino.h>
+#include <rvl-wifi.h>
 #ifdef HAS_UI
 #include "./ui/ui.h"
 #endif

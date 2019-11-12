@@ -17,4 +17,6 @@
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 DIR=$(dirname "${pwd}")
+cpplint --quiet --linelength=120 --recursive --repository=$DIR/lib/rvl/src lib/rvl/src/*
+cpplint --quiet --linelength=120 --recursive --repository=$DIR/lib/rvl-wifi/src lib/rvl-wifi/src/*
 cpplint --quiet --linelength=120 --recursive --repository=$DIR/src src/*
