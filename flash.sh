@@ -16,15 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
+target=$1
+shift;
+echo "Flashing $target target to ports $@\n"
+
 serialDevicePrefix=/dev/ttyS
 
-./lint.sh && platformio run -e hub
+./lint.sh && platformio run -e $target
 
 if [ $? -eq 0 ]
 then
   for port in "$@"
   do
     echo "\nProgramming device at $serialDevicePrefix$port"
-    esptool.py -p $serialDevicePrefix$port -b 921600 write_flash 0x0 .pio/build/hub/firmware.bin
+    esptool.py -p $serialDevicePrefix$port -b 921600 write_flash 0x0 .pio/build/$firmware/firmware.bin
   done
 fi
