@@ -1,12 +1,6 @@
-[submodule "boards/kicad-components"]
-	path = boards/kicad-components
-	url = https://github.com/nebrius/kicad-components.git
-[submodule "boards/signal_converter/kicad-components"]
-	path = boards/signal_converter/kicad-components
-	url = https://github.com/nebrius/kicad-components.git
 [submodule "firmware/lib/rvl-arduino-wifi"]
 	path = firmware/lib/rvl-wifi
-	url = https://github.com/nebrius/rvl-arduino-wifi.git
+	url = https://github.com/rvl-system/rvl-arduino-wifi.git
 [submodule "firmware/lib/rvl"]
 	path = firmware/lib/rvl
-	url = https://github.com/nebrius/rvl.git
+	url = https://github.com/rvl-system/rvl.git

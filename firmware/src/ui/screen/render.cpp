@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <rvl-wifi.h>
 #include <Arduino.h>
 #include <Wire.h>
 #include "SSD1306Wire.h"
@@ -136,6 +137,18 @@ void render(std::vector<Control::Control*>* entries, uint8_t selectedEntry, std:
 
   renderIconSet(icons);
   renderEntrySet(entries, selectedEntry);
+
+  display.setColor(BLACK);
+  display.fillRect(0, 0, 50, 16);
+  display.setColor(WHITE);
+
+  uint32_t localTime = RVLGetAnimationClock();
+  uint16_t ms = localTime % 1000;
+  uint8_t s = (localTime / 1000) % 60;
+  uint8_t m = (localTime / 1000 / 60) % 60;
+  char timeString[9];
+  snprintf(timeString, strlen(timeString), "%02d:%02d:%02d", m, s, ms);
+  display.drawString(0, 0, timeString);
 
   display.display();
 }

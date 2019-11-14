@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name nebrius-switch)(type KiCad)(uri "$(KIPRJMOD)/kicad-components/footprints/nebrius-switch.pretty")(options "")(descr ""))
-)
