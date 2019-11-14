@@ -18,13 +18,19 @@
 
 target=$1
 shift;
-echo "Flashing $target target to ports $@\n"
+
+if [ $# -eq 0 ]
+then
+  echo "Compiling $target target\n"
+else
+  echo "Flashing $target target to ports $@\n"
+fi
 
 serialDevicePrefix=/dev/ttyS
 
 ./lint.sh && platformio run -e $target
 
-if [ $? -eq 0 ]
+if [ $# -eq 0 ]
 then
   for port in "$@"
   do
