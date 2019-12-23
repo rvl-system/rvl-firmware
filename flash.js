@@ -43,7 +43,9 @@ OPTIONS:
   -f  --no-flash  do not flash the firmware after building the target
   -j  --jtag      flash the firmware using a JTAG adapter
   -p  --port      the TTY port to use, can be supplied multiple times to flash
-                  multiple boards simultaneously. Cannot be used with --jtag
+                  multiple boards simultaneously. If this parameter is not
+                  supplied, this script will attempt to guess the port.
+                  Cannot be used with --jtag
       --help      display this help and exit
 `);
 }
@@ -54,6 +56,7 @@ let ports = [];
 let build = true;
 let flash = true;
 let target;
+
 while (i < args.length) {
   switch (args[i]) {
     case '--help':
@@ -95,6 +98,19 @@ if (typeof target !== 'string') {
 const targetUrl = join(__dirname, '.pio', 'build', target, 'firmware.bin');
 if (!existsSync(targetUrl)) {
   error(`unknown or unbuilt target "${target}".\n`);
+}
+
+// If neither useJTAG was supplied and a port wasn't supplied, let's try and
+// autodetect the port
+if (!useJTAG && !ports.length) {
+  for (const prefix of [ '/dev/ttyUSB', '/dev/ttyACM' ]) {
+    for (let port = 0; port < 10; port++) {
+      if (existsSync(prefix + port)) {
+        ports.push(prefix + port);
+        break;
+      }
+    }
+  }
 }
 
 // Make sure we don't have conflicting arguments
