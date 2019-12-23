@@ -44,7 +44,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 // Common parameters
 #define UPDATE_RATE 33
+#ifdef ESP8266
 #define LED_DATA_PIN 2
+#else
+#define LED_DATA_PIN 18
+#endif
 
 // Control parameters
 #define CONTROL_DIGIT_1 13
@@ -56,28 +60,53 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 // UI parameters
 #define LCD_ADDRESS 0x3C
+#ifdef ESP8266
 #define LCD_SDA 4
 #define LCD_SCL 5
+#else
+#define LCD_SDA 22
+#define LCD_SCL 21
+#endif
 #define LCD_WIDTH 128
 #define LCD_HEIGHT 64
 
+#ifdef ESP8266
 #define BUTTON_PRESS 12
+#else
+#define BUTTON_PRESS 4
+#endif
 #define BUTTON_PRESS_ON LOW
 #define BUTTON_PRESS_OFF HIGH
 
+#ifdef ESP8266
 #define BUTTON_UP 15
+#else
+#define BUTTON_UP 5
+#endif
 #define BUTTON_UP_ON LOW
 #define BUTTON_UP_OFF HIGH
 
+#ifdef ESP8266
 #define BUTTON_DOWN 16
+#else
+#define BUTTON_DOWN 19
+#endif
 #define BUTTON_DOWN_ON HIGH
 #define BUTTON_DOWN_OFF LOW
 
+#ifdef ESP8266
 #define BUTTON_LEFT 14
+#else
+#define BUTTON_LEFT 35
+#endif
 #define BUTTON_LEFT_ON LOW
 #define BUTTON_LEFT_OFF HIGH
 
+#ifdef ESP8266
 #define BUTTON_RIGHT 13
+#else
+#define BUTTON_RIGHT 34
+#endif
 #define BUTTON_RIGHT_ON LOW
 #define BUTTON_RIGHT_OFF HIGH
 
