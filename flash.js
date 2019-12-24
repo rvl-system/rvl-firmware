@@ -39,50 +39,36 @@ the name of the requested target as specified in an [env:TARGET] section of
 platformio.ini.
 
 OPTIONS:
-  -b  --no-build  do not build the firmware before flashing the target
-  -f  --no-flash  do not flash the firmware after building the target
-  -j  --jtag      flash the firmware using a JTAG adapter
-  -p  --port      the TTY port to use, can be supplied multiple times to flash
-                  multiple boards simultaneously. If this parameter is not
-                  supplied, this script will attempt to guess the port.
-                  Cannot be used with --jtag
+  -b  --build  build the firmware before flashing the target
+  -f  --flash  flash the firmware after building the target
+  -d  --debug  spin up OpenOCD to allow GDN connections
       --help      display this help and exit
 `);
 }
 
-let i = 0;
-let useJTAG = false;
-let ports = [];
-let build = true;
-let flash = true;
+let build = false;
+let flash = false;
+let debug = false;
 let target;
 
+let i = 0;
 while (i < args.length) {
   switch (args[i]) {
     case '--help':
       showHelp();
       process.exit(0);
     case '-b':
-    case '--no-build':
-      build = false;
+    case '--build':
+      build = true;
       break;
     case '-f':
-    case '--no-flash':
-      flash = false;
+    case '--flash':
+      flash = true;
       break;
-    case '-j':
-    case '--jtag':
-      useJTAG = true;
+    case '-d':
+    case '--debug':
+      debug = true;
       break;
-    case '-p':
-    case '--port': {
-      const port = args[++i];
-      if (!existsSync(port)) {
-        error(`unknown port ${port}`);
-      }
-      ports.push(port);
-      break;
-    }
     default:
       target = args[i];
       break;
@@ -98,29 +84,6 @@ if (typeof target !== 'string') {
 const targetUrl = join(__dirname, '.pio', 'build', target, 'firmware.bin');
 if (!existsSync(targetUrl)) {
   error(`unknown or unbuilt target "${target}".\n`);
-}
-
-// If neither useJTAG was supplied and a port wasn't supplied, let's try and
-// autodetect the port
-if (!useJTAG && !ports.length) {
-  for (const prefix of [ '/dev/ttyUSB', '/dev/ttyACM' ]) {
-    for (let port = 0; port < 10; port++) {
-      if (existsSync(prefix + port)) {
-        ports.push(prefix + port);
-        break;
-      }
-    }
-  }
-}
-
-// Make sure we don't have conflicting arguments
-if (useJTAG && ports.length) {
-  error('--jtag and --port cannot be used together');
-}
-
-// Make sure we have a way to flash, if we are flashing
-if (flash && (!useJTAG && ports.length === 0)) {
-  error('no port supplied or JTAG use specified');
 }
 
 function exec(command) {
@@ -141,18 +104,13 @@ if (build) {
   }
   exec(`platformio run -e ${target}`);
 }
+
 if (flash) {
-  if (useJTAG) {
-    console.log(`\nFlashing target ${target} using JTAG\n`);
-    exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp .pio/build/${target}/firmware.bin 0x10000 verify exit"`);
-  } else {
-    if (ports.length === 1) {
-      console.log(`Flashing target ${target} using serial on port ${ports[0]}`);
-    } else {
-      console.log(`Flashing target ${target} using serial on ports ${ports}`);
-    }
-    for (const port of ports) {
-      exec(`esptool.py --chip esp32 -p ${port} -b 921600 write_flash 0x10000 .pio/build/${target}/firmware.bin`);
-    }
-  }
+  console.log(`\nFlashing target ${target} using JTAG\n`);
+  exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+}
+
+if (debug) {
+  console.log(`\nCreating debug connection using JTAG\n`);
+  exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg`);
 }

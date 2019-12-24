@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "gdb",
+      "request": "launch",
+      "name": "Launch Program",
+      "target": "${workspaceFolder}/.pio/build/controller/firmware.elf",
+      "cwd": "${workspaceFolder}",
+      "gdbpath": "/home/bryan/.espressif/tools/xtensa-esp32-elf/esp-2019r2-8.2.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gdb",
+      "autorun": [
+        "target remote :3333",
+        "mon reset halt",
+        "flushregs",
+        "thb app_main",
+        "c"
+      ]
+    }
+  ]
+}
