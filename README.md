@@ -1,6 +1,6 @@
-# Raver Lights
+# RVL Firmware
 
-Source code for my raver lights system. Written using [PlatformIO](http://platformio.org/).
+Source code for my RVL system, meant to be run on [RVL Controller Boards](https://github.com/rvl-system/rvl-controller-board). Written using [PlatformIO](http://platformio.org/).
 
 This project is still under heavy development, documentation coming soon once things have settled!
 
