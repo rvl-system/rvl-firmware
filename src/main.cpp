@@ -28,12 +28,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_LIGHTS
 #include "./lights.h"
 #endif
-#ifdef HAS_CLOCK
-#include "./clock.h"
-#endif
-#ifdef HAS_EXTERNAL_SIGN
-#include "./external_sign.h"
-#endif
 #include "./state.h"
 #include "./config.h"
 
@@ -54,12 +48,6 @@ void setup() {
 #endif
 #ifdef HAS_LIGHTS
   Lights::init();
-#endif
-#ifdef HAS_CLOCK
-  Clock::init();
-#endif
-#ifdef HAS_EXTERNAL_SIGN
-  ExternalSign::init();
 #endif
 
   // Create a default animation
@@ -91,12 +79,9 @@ void setup() {
   State::getLogger()->info("Running");
 }
 
-#define NUM_LOOP_SAMPLES 60
-uint8_t loopTimes[NUM_LOOP_SAMPLES];
-uint8_t loopIndex = 0;
+bool animationLoopStarted = false;
 
 void loop() {
-  uint32_t startTime = millis();
   State::loop();
 #ifdef HAS_UI
   UI::loop();
@@ -106,37 +91,10 @@ void loop() {
 #endif
   RVLLoop();
 #ifdef HAS_LIGHTS
+  if (!animationLoopStarted) {
+    animationLoopStarted = true;
+    Lights::startAnimationLoop();
+  }
   Lights::loop();
 #endif
-#ifdef HAS_CLOCK
-  Clock::loop();
-#endif
-#ifdef HAS_EXTERNAL_SIGN
-  ExternalSign::loop();
-#endif
-  uint32_t now = millis();
-  loopTimes[loopIndex++] = now - startTime;
-  if (loopIndex == NUM_LOOP_SAMPLES) {
-    loopIndex = 0;
-    uint16_t sum = 0;
-    uint8_t min = 255;
-    uint8_t max = 0;
-    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
-      sum += loopTimes[i];
-      if (loopTimes[i] < min) {
-        min = loopTimes[i];
-      }
-      if (loopTimes[i] > max) {
-        max = loopTimes[i];
-      }
-    }
-    State::getLogger()->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
-  }
-  if (now - startTime > UPDATE_RATE) {
-    State::getLogger()->info("Warning: system loop took %dms longer than the update rate",
-      now - startTime - UPDATE_RATE);
-    delay(1);
-  } else {
-    delay(UPDATE_RATE - (millis() - startTime));
-  }
 }

@@ -49,7 +49,7 @@ OPTIONS:
 let build = false;
 let flash = false;
 let debug = false;
-let target;
+let target = 'controller';
 
 let i = 0;
 while (i < args.length) {
@@ -80,11 +80,7 @@ while (i < args.length) {
 if (typeof target !== 'string') {
   error(`no value for TARGET was supplied.\n`);
 }
-// TODO: this will fail on first build always
 const targetUrl = join(__dirname, '.pio', 'build', target, 'firmware.bin');
-if (!existsSync(targetUrl)) {
-  error(`unknown or unbuilt target "${target}".\n`);
-}
 
 function exec(command) {
   try {
@@ -106,6 +102,9 @@ if (build) {
 }
 
 if (flash) {
+  if (!existsSync(targetUrl)) {
+    error(`unknown or unbuilt target "${target}".\n`);
+  }
   console.log(`\nFlashing target ${target} using JTAG\n`);
   exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
 }
