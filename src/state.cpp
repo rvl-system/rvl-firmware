@@ -136,39 +136,6 @@ void setWifiConnectedState(bool connected) {
   Event::emit(Codes::EventType::ConnectedStateChange);
 }
 
-uint8_t getHour() {
-  return hour;
-}
-
-uint8_t getMinute() {
-  return minute;
-}
-
-void setTime(uint8_t newHour, uint8_t newMinute) {
-  hour = newHour;
-  minute = newMinute;
-  Event::emit(Codes::EventType::TimeChange);
-}
-
-bool getTimerState() {
-  bool timerState = false;
-  if (hour < SUNRISE_HOUR) {
-    timerState = true;
-  } else if (hour == SUNRISE_HOUR) {
-    if (minute < SUNRISE_MINUTE) {
-      timerState = true;
-    }
-  } else if (hour == SUNSET_HOUR) {
-    if (minute >= SUNSET_MINUTE) {
-      timerState = true;
-    }
-  } else if (hour > SUNSET_HOUR) {
-    timerState = true;
-  }
-
-  return timerState;
-}
-
 RVLLogging* getLogger() {
   return logger;
 }
