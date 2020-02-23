@@ -104,6 +104,22 @@ void startAnimationLoop() {
 }
 
 void loop() {
+  if (loopIndex == NUM_LOOP_SAMPLES) {
+    loopIndex = 0;
+    uint16_t sum = 0;
+    uint8_t min = 255;
+    uint8_t max = 0;
+    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
+      sum += loopTimes[i];
+      if (loopTimes[i] < min) {
+        min = loopTimes[i];
+      }
+      if (loopTimes[i] > max) {
+        max = loopTimes[i];
+      }
+    }
+    State::getLogger()->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
+  }
 }
 
 }  // namespace Lights
