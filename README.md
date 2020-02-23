@@ -18,7 +18,7 @@ And a photo of the system on my bike at Burning Man 2017:
 
 All schematics, layouts, software, and other documentation for raver-lights is released under the General Public License.
 
-Copyright (c) 2016-2018 Bryan Hughes <bryan@nebri.us>
+Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 Raver Lights is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
