@@ -20,7 +20,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include "./state.h"
 #include "./codes.h"
-#include "./event.h"
 
 namespace State {
 
@@ -39,24 +38,24 @@ RVLWaveSettings* waveSettings;
 
 void onWaveSettingsUpdated(RVLWaveSettings* settings) {
   waveSettings = settings;
-  Event::emit(Codes::EventType::AnimationChange);
+  rvl::emit(Codes::EventType::AnimationChange);
 }
 
 void onConnectionStateChanged(bool connected) {
   wifiConnected = connected;
-  Event::emit(Codes::EventType::ConnectedStateChange);
+  rvl::emit(Codes::EventType::ConnectedStateChange);
 }
 
 void onModeChanged(RVLDeviceMode newMode) {
-  Event::emit(Codes::EventType::ModeChange);
+  rvl::emit(Codes::EventType::ModeChange);
 }
 
 void onPowerStateChanged(bool powerState) {
-  Event::emit(Codes::EventType::PowerStateChange);
+  rvl::emit(Codes::EventType::PowerStateChange);
 }
 
 void onBrightnessChanged(uint8_t brightness) {
-  Event::emit(Codes::EventType::BrightnessChange);
+  rvl::emit(Codes::EventType::BrightnessChange);
 }
 
 void onSynchronizationStateChanged(bool synchronized) {
@@ -65,7 +64,7 @@ void onSynchronizationStateChanged(bool synchronized) {
   } else {
     rvl::debug("System is not synchronized");
   }
-  Event::emit(Codes::EventType::SynchronizationChange);
+  rvl::emit(Codes::EventType::SynchronizationChange);
 }
 
 void init() {
@@ -132,7 +131,7 @@ bool isWifiConnected() {
 
 void setWifiConnectedState(bool connected) {
   wifiConnected = connected;
-  Event::emit(Codes::EventType::ConnectedStateChange);
+  rvl::emit(Codes::EventType::ConnectedStateChange);
 }
 
 RVLWaveSettings* getWaveSettings() {

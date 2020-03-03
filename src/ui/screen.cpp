@@ -25,7 +25,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "../config.h"
 #include "./state.h"
 #include "./codes.h"
-#include "./event.h"
 
 namespace Screen {
 
@@ -45,8 +44,8 @@ void update() {
 }
 
 void init() {
-  Event::on(Codes::EventType::UIStateChange, update);
-  Event::on(Codes::EventType::BrightnessChange, update);
+  rvl::on(Codes::EventType::UIStateChange, update);
+  rvl::on(Codes::EventType::BrightnessChange, update);
   Render::init();
   Screen::update();
 }

@@ -27,7 +27,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./codes.h"
 #include "./config.h"
 #include "./state.h"
-#include "./event.h"
 
 namespace Lights {
 

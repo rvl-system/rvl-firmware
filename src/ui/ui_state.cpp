@@ -21,7 +21,6 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <rvl-wifi.h>
 #include "./ui/ui_state.h"
 #include "./state.h"
-#include "./event.h"
 #include "./codes.h"
 #include "./presets/preset_control_set.h"
 #include "./presets/rainbow.h"
@@ -52,7 +51,7 @@ void updateBrightnessValue(uint8_t newValue) {
   uint16_t adjustedBrightness = (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
   State::setBrightness(adjustedBrightness);
   rvl::info("Changing brightness to %d", adjustedBrightness);
-  Event::emit(Codes::EventType::AnimationChange);
+  rvl::emit(Codes::EventType::AnimationChange);
 }
 Control::RangeControl brightnessControl(
   "BRT",
@@ -124,15 +123,15 @@ void update() {
       controls.push_back(control);
     }
   }
-  Event::emit(Codes::EventType::UIStateChange);
+  rvl::emit(Codes::EventType::UIStateChange);
 }
 
 void init() {
-  Event::on(Codes::EventType::ConnectedStateChange, update);
-  Event::on(Codes::EventType::AnimationChange, update);
-  Event::on(Codes::EventType::ModeChange, update);
-  Event::on(Codes::EventType::BrightnessChange, update);
-  Event::on(Codes::EventType::TimeChange, update);
+  rvl::on(Codes::EventType::ConnectedStateChange, update);
+  rvl::on(Codes::EventType::AnimationChange, update);
+  rvl::on(Codes::EventType::ModeChange, update);
+  rvl::on(Codes::EventType::BrightnessChange, update);
+  rvl::on(Codes::EventType::TimeChange, update);
   update();
   controls.reserve(10);
   presets[preset]->updateWave();
@@ -142,7 +141,7 @@ void nextControl() {
   if (currentControl < controls.size() - 1) {
     currentControl++;
     rvl::debug("Setting control to %d", currentControl);
-    Event::emit(Codes::EventType::UIStateChange);
+    rvl::emit(Codes::EventType::UIStateChange);
   }
 }
 
@@ -150,18 +149,18 @@ void previousControl() {
   if (currentControl > 0) {
     currentControl--;
     rvl::debug("Setting control to %d", currentControl);
-    Event::emit(Codes::EventType::UIStateChange);
+    rvl::emit(Codes::EventType::UIStateChange);
   }
 }
 
 void controlIncrease() {
   controls[currentControl]->increaseValue();
-  Event::emit(Codes::EventType::UIStateChange);
+  rvl::emit(Codes::EventType::UIStateChange);
 }
 
 void controlDecrease() {
   controls[currentControl]->decreaseValue();
-  Event::emit(Codes::EventType::UIStateChange);
+  rvl::emit(Codes::EventType::UIStateChange);
 }
 
 bool isCurrentControlRange() {

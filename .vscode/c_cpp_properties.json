@@ -4,7 +4,7 @@
             "name": "Linux",
             "includePath": [
             "/home/bryan/.platformio/packages/framework-arduinoespressif32/**",
-              "${workspaceFolder}/.pio/libdeps/controller/**",
+              "${workspaceFolder}/.pio/libdeps/**",
               "${workspaceFolder}/lib/rvl/src",
               "${workspaceFolder}/lib/rvl-wifi/src",
               "${workspaceFolder}/src"
