@@ -35,7 +35,6 @@ uint8_t minute;
 uint8_t brightness;
 
 bool wifiConnected = false;
-RVLLogging* logger;
 RVLWaveSettings* waveSettings;
 
 void onWaveSettingsUpdated(RVLWaveSettings* settings) {
@@ -62,9 +61,9 @@ void onBrightnessChanged(uint8_t brightness) {
 
 void onSynchronizationStateChanged(bool synchronized) {
   if (synchronized) {
-    State::getLogger()->debug("System is synchronized");
+    rvl::debug("System is synchronized");
   } else {
-    State::getLogger()->debug("System is not synchronized");
+    rvl::debug("System is not synchronized");
   }
   Event::emit(Codes::EventType::SynchronizationChange);
 }
@@ -89,7 +88,7 @@ void init() {
 #ifdef REMOTE_BRIGHTNESS
   RVLOnBrightnessChanged(onBrightnessChanged);
 #endif
-  State::getLogger()->info("State initialized");
+  rvl::info("State initialized");
 }
 
 void loop() {
@@ -134,14 +133,6 @@ bool isWifiConnected() {
 void setWifiConnectedState(bool connected) {
   wifiConnected = connected;
   Event::emit(Codes::EventType::ConnectedStateChange);
-}
-
-RVLLogging* getLogger() {
-  return logger;
-}
-
-void setLogger(RVLLogging* newLogger) {
-  logger = newLogger;
 }
 
 RVLWaveSettings* getWaveSettings() {

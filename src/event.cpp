@@ -36,7 +36,7 @@ void on(uint8_t eventType, void (*listener)()) {
 }
 
 void emit(uint8_t eventType) {
-  State::getLogger()->debug("Emitting event %d", eventType);
+  rvl::debug("Emitting event %d", eventType);
   for (auto& listener : listeners) {
     if (listener.eventType == eventType) {
       listener.listener();

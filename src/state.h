@@ -41,9 +41,6 @@ bool isSynchronized();
 bool isWifiConnected();
 void setWifiConnectedState(bool connected);
 
-RVLLogging* getLogger();
-void setLogger(RVLLogging* logger);
-
 RVLWaveSettings* getWaveSettings();
 
 }  // namespace State

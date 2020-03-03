@@ -1,11 +1,10 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Linux",
             "includePath": [
-              "${env:HOMEPATH}/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/**",
+            "/home/bryan/.platformio/packages/framework-arduinoespressif32/**",
               "${workspaceFolder}/.pio/libdeps/controller/**",
-              "${workspaceFolder}/.pio/libdeps/hub/**",
               "${workspaceFolder}/lib/rvl/src",
               "${workspaceFolder}/lib/rvl-wifi/src",
               "${workspaceFolder}/src"
@@ -15,11 +14,9 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "windowsSdkVersion": "10.0.17134.0",
-            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.15.26726/bin/Hostx64/x64/cl.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "msvc-x64"
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

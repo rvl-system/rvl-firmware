@@ -36,7 +36,7 @@ void init() {
   pinMode(CONTROL_DIGIT_4, INPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
-  State::getLogger()->info("Controls initialized");
+  rvl::info("Controls initialized");
 }
 
 void loop() {
@@ -60,7 +60,7 @@ void loop() {
   int digit4 = digitalRead(CONTROL_DIGIT_4);
   int channel = digit2 * 4 + digit3 * 2 + digit4;
   if (RVLGetChannel() != channel) {
-    State::getLogger()->info("Channel changed to %d", channel);
+    rvl::info("Channel changed to %d", channel);
     RVLSetChannel(channel);
   }
 }

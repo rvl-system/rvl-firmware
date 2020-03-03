@@ -35,7 +35,7 @@ CRGB leds[LED_NUM_PIXELS];
 
 void init() {
   FastLED.addLeds<WS2812B, LED_DATA_PIN, LED_COLOR_MODE>(leds, LED_NUM_PIXELS);
-  State::getLogger()->info("Lights initialized");
+  rvl::info("Lights initialized");
 }
 
 uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
@@ -118,7 +118,7 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    State::getLogger()->info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
+    rvl::info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
   }
 }
 

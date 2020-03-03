@@ -51,7 +51,7 @@ uint8_t getBrightnessValue() {
 void updateBrightnessValue(uint8_t newValue) {
   uint16_t adjustedBrightness = (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
   State::setBrightness(adjustedBrightness);
-  State::getLogger()->info("Changing brightness to %d", adjustedBrightness);
+  rvl::info("Changing brightness to %d", adjustedBrightness);
   Event::emit(Codes::EventType::AnimationChange);
 }
 Control::RangeControl brightnessControl(
@@ -141,7 +141,7 @@ void init() {
 void nextControl() {
   if (currentControl < controls.size() - 1) {
     currentControl++;
-    State::getLogger()->debug("Setting control to %d", currentControl);
+    rvl::debug("Setting control to %d", currentControl);
     Event::emit(Codes::EventType::UIStateChange);
   }
 }
@@ -149,7 +149,7 @@ void nextControl() {
 void previousControl() {
   if (currentControl > 0) {
     currentControl--;
-    State::getLogger()->debug("Setting control to %d", currentControl);
+    rvl::debug("Setting control to %d", currentControl);
     Event::emit(Codes::EventType::UIStateChange);
   }
 }
