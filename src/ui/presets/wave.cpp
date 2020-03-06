@@ -53,7 +53,7 @@ void updateWaveParameters() {
   newSettings.waves[2].v.b = 255;
   newSettings.waves[2].a.a = 255;
 
-  RVLSetWaveSettings(&newSettings);
+  rvl::setWaveSettings(&newSettings);
 }
 
 void updateRateValue(uint8_t newValue) {

@@ -40,7 +40,7 @@ void init() {
 }
 
 void loop() {
-  if (State::isWifiConnected()) {
+  if (rvl::isNetworkConnected()) {
     digitalWrite(GREEN_LED, HIGH);
   } else {
     uint32_t now = millis();
@@ -59,9 +59,9 @@ void loop() {
   int digit3 = digitalRead(CONTROL_DIGIT_3);
   int digit4 = digitalRead(CONTROL_DIGIT_4);
   int channel = digit2 * 4 + digit3 * 2 + digit4;
-  if (RVLGetChannel() != channel) {
+  if (rvl::getChannel() != channel) {
     rvl::info("Channel changed to %d", channel);
-    RVLSetChannel(channel);
+    rvl::setChannel(channel);
   }
 }
 

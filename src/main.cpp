@@ -75,7 +75,7 @@ void setup() {
   newSettings.waves[2].v.b = 255;
   newSettings.waves[2].a.a = 255;
 
-  RVLSetWaveSettings(&newSettings);
+  rvl::setWaveSettings(&newSettings);
 
   rvl::info("Running");
 }

@@ -30,19 +30,6 @@ namespace State {
 void init();
 void loop();
 
-uint8_t getBrightness();
-void setBrightness(uint8_t brightness);
-
-bool getPowerState();
-void setPowerState(bool powerState);
-
-bool isSynchronized();
-
-bool isWifiConnected();
-void setWifiConnectedState(bool connected);
-
-RVLWaveSettings* getWaveSettings();
-
 }  // namespace State
 
 #endif  // STATE_H_

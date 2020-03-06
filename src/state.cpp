@@ -23,113 +23,21 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace State {
 
-#define SUNRISE_HOUR 6
-#define SUNRISE_MINUTE 0
-
-#define SUNSET_HOUR 20
-#define SUNSET_MINUTE 0
-
-uint8_t hour;
-uint8_t minute;
-uint8_t brightness;
-
-bool wifiConnected = false;
-
 void onWaveSettingsUpdated() {
   rvl::emit(Codes::EventType::AnimationChange);
 }
 
-void onConnectionStateChanged(bool connected) {
-  wifiConnected = connected;
-  rvl::emit(Codes::EventType::ConnectedStateChange);
-}
-
-void onModeChanged(RVLDeviceMode newMode) {
-  rvl::emit(Codes::EventType::ModeChange);
-}
-
-void onPowerStateChanged(bool powerState) {
-  rvl::emit(Codes::EventType::PowerStateChange);
-}
-
-void onBrightnessChanged(uint8_t brightness) {
-  rvl::emit(Codes::EventType::BrightnessChange);
-}
-
-void onSynchronizationStateChanged(bool synchronized) {
-  if (synchronized) {
-    rvl::debug("System is synchronized");
-  } else {
-    rvl::debug("System is not synchronized");
-  }
-  rvl::emit(Codes::EventType::SynchronizationChange);
-}
-
 void init() {
-#ifdef DEFAULT_MODE_CONTROLLER
-  RVLSetMode(RVLDeviceMode::Controller);
-#else
-  RVLSetMode(RVLDeviceMode::Receiver);
-#endif
-  RVLSetChannel(DEFAULT_CHANNEL);
-  brightness = (DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
-#ifdef REMOTE_BRIGHTNESS
-  RVLSetBrightness(brightness);
-#endif
-  RVLSetPowerState(true);
+  rvl::setDeviceMode(RVLDeviceMode::Receiver);
+  rvl::setChannel(DEFAULT_CHANNEL);
+  uint8_t brightness = (DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
+  rvl::setBrightness(brightness);
+  rvl::setPowerState(true);
   rvl::on(EVENT_WAVE_SETTINGS_UPDATED, onWaveSettingsUpdated);
-  RVLOnConnectionStateChanged(onConnectionStateChanged);
-  RVLOnModeChanged(onModeChanged);
-  RVLOnPowerStateChanged(onPowerStateChanged);
-  RVLOnSynchronizationStateChage(onSynchronizationStateChanged);
-#ifdef REMOTE_BRIGHTNESS
-  RVLOnBrightnessChanged(onBrightnessChanged);
-#endif
   rvl::info("State initialized");
 }
 
 void loop() {
-}
-
-bool getPowerState() {
-  return RVLGetPowerState();
-}
-
-void setPowerState(bool powerState) {
-  RVLSetPowerState(powerState);
-}
-
-bool isSynchronized() {
-  return RVLGetSynchronizationState();
-}
-
-uint8_t getBrightness() {
-#ifdef REMOTE_BRIGHTNESS
-  brightness =  RVLGetBrightness();
-  if (brightness > MAX_BRIGHTNESS) {
-    brightness = MAX_BRIGHTNESS;
-  }
-  if (brightness < MIN_BRIGHTNESS) {
-    brightness = MIN_BRIGHTNESS;
-  }
-#endif
-  return brightness;
-}
-
-void setBrightness(uint8_t newBrightness) {
-  brightness = newBrightness;
-#ifdef REMOTE_BRIGHTNESS
-  RVLSetBrightness(newBrightness);
-#endif
-}
-
-bool isWifiConnected() {
-  return wifiConnected;
-}
-
-void setWifiConnectedState(bool connected) {
-  wifiConnected = connected;
-  rvl::emit(Codes::EventType::ConnectedStateChange);
 }
 
 }  // namespace State

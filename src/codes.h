@@ -27,11 +27,7 @@ namespace EventType {
     AnimationChange = 100,
     UIStateChange = 101,
     ConnectedStateChange = 102,
-    ModeChange = 103,
-    BrightnessChange = 104,
-    PowerStateChange = 105,
-    TimeChange = 106,
-    SynchronizationChange = 107
+    TimeChange = 106
   };
 }  // namespace EventType
 

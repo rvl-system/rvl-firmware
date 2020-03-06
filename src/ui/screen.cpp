@@ -30,12 +30,12 @@ namespace Screen {
 
 void update() {
   std::list<Icons::StatusIcon*> icons;
-  if (State::isWifiConnected()) {
+  if (rvl::isNetworkConnected()) {
     icons.push_back(&Icons::wifiConnectedIcon);
   } else {
     icons.push_back(&Icons::wifiDisconnectedIcon);
   }
-  if (State::isSynchronized()) {
+  if (rvl::getSynchronizationState()) {
     icons.push_back(&Icons::synchronizedIcon);
   } else {
     icons.push_back(&Icons::notSynchronizedIcon);
@@ -45,7 +45,7 @@ void update() {
 
 void init() {
   rvl::on(Codes::EventType::UIStateChange, update);
-  rvl::on(Codes::EventType::BrightnessChange, update);
+  rvl::on(EVENT_BRIGHTNESS_UPDATED, update);
   Render::init();
   Screen::update();
 }

@@ -37,7 +37,7 @@ void updateWaveParameters() {
   newSettings.waves[0].v.b = value;
   newSettings.waves[0].a.b = 255;
 
-  RVLSetWaveSettings(&newSettings);
+  rvl::setWaveSettings(&newSettings);
 }
 
 void updateHueValue(uint8_t newValue) {

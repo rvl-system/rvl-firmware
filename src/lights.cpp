@@ -49,15 +49,15 @@ void animationLoop(void* parameters) {
   while (true) {
     uint32_t startTime = millis();
 
-    if (!State::getPowerState()) {
+    if (!rvl::getPowerState()) {
       FastLED.setBrightness(0);
       FastLED.show();
       return;
     }
 
     auto waveSettings = rvl::getWaveSettings();
-    FastLED.setBrightness(State::getBrightness());
-    uint32_t t = RVLGetAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
+    FastLED.setBrightness(rvl::getBrightness());
+    uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
     for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
       uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
 

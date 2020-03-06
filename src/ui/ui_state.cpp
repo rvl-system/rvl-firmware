@@ -45,11 +45,11 @@ PresetControlSet* presets[] = {
 };
 
 uint8_t getBrightnessValue() {
-  return 16 * (State::getBrightness() - MIN_BRIGHTNESS) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
+  return 16 * (rvl::getBrightness() - MIN_BRIGHTNESS) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
 }
 void updateBrightnessValue(uint8_t newValue) {
   uint16_t adjustedBrightness = (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
-  State::setBrightness(adjustedBrightness);
+  rvl::setBrightness(adjustedBrightness);
   rvl::info("Changing brightness to %d", adjustedBrightness);
   rvl::emit(Codes::EventType::AnimationChange);
 }
@@ -62,8 +62,8 @@ Control::RangeControl brightnessControl(
   getBrightnessValue);
 
 void updateChannelValue(uint8_t selectedValueIndex) {
-  if (RVLGetChannel() != selectedValueIndex) {
-    RVLSetChannel(selectedValueIndex);
+  if (rvl::getChannel() != selectedValueIndex) {
+    rvl::setChannel(selectedValueIndex);
   }
 }
 Control::ListControl channelControl(
@@ -73,14 +73,14 @@ Control::ListControl channelControl(
   updateChannelValue);
 
 void updateModeValue(uint8_t selectedValueIndex) {
-  if (RVLGetMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
+  if (rvl::getDeviceMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
     switch (static_cast<RVLDeviceMode>(selectedValueIndex)) {
       case RVLDeviceMode::Controller:
-        RVLSetMode(RVLDeviceMode::Controller);
+        rvl::setDeviceMode(RVLDeviceMode::Controller);
         presets[preset]->updateWave();
         break;
       case RVLDeviceMode::Receiver:
-        RVLSetMode(RVLDeviceMode::Receiver);
+        rvl::setDeviceMode(RVLDeviceMode::Receiver);
         break;
     }
   }
@@ -117,7 +117,7 @@ void update() {
   while (controls.size() > NUM_GLOBAL_CONTROLS) {
     controls.pop_back();
   }
-  if (RVLGetMode() == RVLDeviceMode::Controller) {
+  if (rvl::getDeviceMode() == RVLDeviceMode::Controller) {
     controls.push_back(&presetControl);
     for (auto& control : presets[preset]->controls) {
       controls.push_back(control);
@@ -129,8 +129,8 @@ void update() {
 void init() {
   rvl::on(Codes::EventType::ConnectedStateChange, update);
   rvl::on(Codes::EventType::AnimationChange, update);
-  rvl::on(Codes::EventType::ModeChange, update);
-  rvl::on(Codes::EventType::BrightnessChange, update);
+  rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
+  rvl::on(EVENT_BRIGHTNESS_UPDATED, update);
   rvl::on(Codes::EventType::TimeChange, update);
   update();
   controls.reserve(10);
