@@ -34,10 +34,8 @@ uint8_t minute;
 uint8_t brightness;
 
 bool wifiConnected = false;
-RVLWaveSettings* waveSettings;
 
-void onWaveSettingsUpdated(RVLWaveSettings* settings) {
-  waveSettings = settings;
+void onWaveSettingsUpdated() {
   rvl::emit(Codes::EventType::AnimationChange);
 }
 
@@ -79,7 +77,7 @@ void init() {
   RVLSetBrightness(brightness);
 #endif
   RVLSetPowerState(true);
-  RVLOnWaveSettingsUpdate(onWaveSettingsUpdated);
+  rvl::on(EVENT_WAVE_SETTINGS_UPDATED, onWaveSettingsUpdated);
   RVLOnConnectionStateChanged(onConnectionStateChanged);
   RVLOnModeChanged(onModeChanged);
   RVLOnPowerStateChanged(onPowerStateChanged);
@@ -132,10 +130,6 @@ bool isWifiConnected() {
 void setWifiConnectedState(bool connected) {
   wifiConnected = connected;
   rvl::emit(Codes::EventType::ConnectedStateChange);
-}
-
-RVLWaveSettings* getWaveSettings() {
-  return waveSettings;
 }
 
 }  // namespace State
