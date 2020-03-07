@@ -127,7 +127,7 @@ void update() {
 }
 
 void init() {
-  rvl::on(Codes::EventType::ConnectedStateChange, update);
+  rvl::on(EVENT_CONNECTION_STATE_CHANGED, update);
   rvl::on(Codes::EventType::AnimationChange, update);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, update);

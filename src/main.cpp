@@ -32,12 +32,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.h"
 #include "./config.h"
 
+RVLWifi::Transport transport(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
+
 void setup() {
   delay(200);
 
   Serial.begin(SERIAL_BAUDRATE);
   rvl::setLogLevel(rvl::LogLevel::Debug);
-  RVLInitNetwork(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
+  RVLInit(&transport);
 
   rvl::info("Initializing");
   State::init();

@@ -26,8 +26,7 @@ namespace EventType {
   enum EventType {
     AnimationChange = 100,
     UIStateChange = 101,
-    ConnectedStateChange = 102,
-    TimeChange = 106
+    TimeChange = 102
   };
 }  // namespace EventType
 
