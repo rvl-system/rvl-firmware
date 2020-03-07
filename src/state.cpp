@@ -28,10 +28,6 @@ void onWaveSettingsUpdated() {
 }
 
 void init() {
-  rvl::setDeviceMode(RVLDeviceMode::Receiver);
-  rvl::setChannel(DEFAULT_CHANNEL);
-  uint8_t brightness = (DEFAULT_BRIGHTNESS * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
-  rvl::setBrightness(brightness);
   rvl::setPowerState(true);
   rvl::on(EVENT_WAVE_SETTINGS_UPDATED, onWaveSettingsUpdated);
   rvl::info("State initialized");

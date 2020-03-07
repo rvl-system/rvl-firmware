@@ -20,46 +20,37 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-// #include <Arduino.h>
-// #include <rvl-wifi.h>
-// #include "./codes.h"
-// #include "./config.h"
+#include <Arduino.h>
+#include <rvl-wifi.h>
+#include "./codes.h"
+#include "./config.h"
 
-// /*
-// WiFi SSID
-// WiFI Pass
-// Mode
-// Channel
-// Power state?
-// brightness
-// UI settings
-// */
+/*
+WiFi SSID
+WiFI Pass
+Mode
+Channel
+Power state?
+brightness
+UI settings
+*/
 
-// namespace Settings {
+namespace Settings {
 
-// void init();
+void init();
 
-// char* getWiFiSSID();
-// void setWiFiSSID(char* ssid);
+char* getWiFiSSID();
+void setWiFiSSID(const char* ssid);
 
-// char* getWiFiPassphrase();
-// void setWiFiPassphrase(char* passphrase);
+char* getWiFiPassphrase();
+void setWiFiPassphrase(const char* passphrase);
 
-// RVLDeviceMode getMode();
-// void setMode(RVLDeviceMode newDeviceMode);
+uint16_t getPort();
+void setPort(uint16_t newPort);
 
-// uint8_t getChannel();
-// void setChannel(uint8_t channel);
+uint8_t getSetting(const char* key);
+void setSetting(const char* key, uint8_t value);
 
-// bool getPowerState();
-// void setPowerState(bool powerState);
-
-// uint8_t getBrightness();
-// void setBrightness(uint8_t brightness);
-
-// uint8_t getSetting(char* key);
-// void setSetting(char* key, uint8_t value);
-
-// }  // namespace Settings
+}  // namespace Settings
 
 #endif  // SETTINGS_H_

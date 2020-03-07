@@ -53,47 +53,29 @@ void updateBrightnessValue(uint8_t newValue) {
   rvl::info("Changing brightness to %d", adjustedBrightness);
   rvl::emit(Codes::EventType::AnimationChange);
 }
-Control::RangeControl brightnessControl(
-  "BRT",
-  0,
-  16,
-  DEFAULT_BRIGHTNESS,
-  updateBrightnessValue,
-  getBrightnessValue);
+Control::RangeControl* brightnessControl;
 
 void updateChannelValue(uint8_t selectedValueIndex) {
   if (rvl::getChannel() != selectedValueIndex) {
     rvl::setChannel(selectedValueIndex);
   }
 }
-Control::ListControl channelControl(
-  "CHNL",
-  { "0", "1", "2", "3", "4", "5", "6", "7" },
-  DEFAULT_CHANNEL,
-  updateChannelValue);
+Control::ListControl* channelControl;
 
 void updateModeValue(uint8_t selectedValueIndex) {
-  if (rvl::getDeviceMode() != static_cast<RVLDeviceMode>(selectedValueIndex)) {
-    switch (static_cast<RVLDeviceMode>(selectedValueIndex)) {
-      case RVLDeviceMode::Controller:
-        rvl::setDeviceMode(RVLDeviceMode::Controller);
+  if (rvl::getDeviceMode() != static_cast<rvl::DeviceMode>(selectedValueIndex)) {
+    switch (static_cast<rvl::DeviceMode>(selectedValueIndex)) {
+      case rvl::DeviceMode::Controller:
+        rvl::setDeviceMode(rvl::DeviceMode::Controller);
         presets[preset]->updateWave();
         break;
-      case RVLDeviceMode::Receiver:
-        rvl::setDeviceMode(RVLDeviceMode::Receiver);
+      case rvl::DeviceMode::Receiver:
+        rvl::setDeviceMode(rvl::DeviceMode::Receiver);
         break;
     }
   }
 }
-Control::ListControl modeControl(
-  "MODE",
-  { "Controller", "Receiver" },
-#ifdef DEFAULT_MODE_CONTROLLER
-  0,
-#else
-  1,
-#endif
-  updateModeValue);
+Control::ListControl* modeControl;
 
 void updatePresetValue(uint8_t selectedValueIndex) {
   if (UIState::preset != selectedValueIndex) {
@@ -107,17 +89,13 @@ Control::ListControl presetControl(
   2,
   updatePresetValue);
 
-std::vector<Control::Control*> controls = {
-  &brightnessControl,
-  &channelControl,
-  &modeControl
-};
+std::vector<Control::Control*> controls;
 
 void update() {
   while (controls.size() > NUM_GLOBAL_CONTROLS) {
     controls.pop_back();
   }
-  if (rvl::getDeviceMode() == RVLDeviceMode::Controller) {
+  if (rvl::getDeviceMode() == rvl::DeviceMode::Controller) {
     controls.push_back(&presetControl);
     for (auto& control : presets[preset]->controls) {
       controls.push_back(control);
@@ -127,6 +105,30 @@ void update() {
 }
 
 void init() {
+  brightnessControl = new Control::RangeControl(
+    "BRT",
+    0,
+    16,
+    getBrightnessValue(),
+    updateBrightnessValue,
+    getBrightnessValue);
+
+  channelControl = new Control::ListControl(
+    "CHNL",
+    { "0", "1", "2", "3", "4", "5", "6", "7" },
+    rvl::getChannel(),
+    updateChannelValue);
+
+  modeControl = new Control::ListControl(
+    "MODE",
+    { "Controller", "Receiver" },
+    rvl::getDeviceMode() == rvl::DeviceMode::Controller ? 0 : 1,
+    updateModeValue);
+
+  controls.push_back(brightnessControl);
+  controls.push_back(channelControl);
+  controls.push_back(modeControl);
+
   rvl::on(EVENT_CONNECTION_STATE_CHANGED, update);
   rvl::on(Codes::EventType::AnimationChange, update);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);

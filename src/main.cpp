@@ -29,17 +29,20 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_LIGHTS
 #include "./lights.h"
 #endif
+#include "./settings.h"
 #include "./state.h"
 #include "./config.h"
 
-RVLWifi::Transport transport(WIFI_SSID, WIFI_PASSPHRASE, SERVER_PORT);
+RVLWifi::Transport* transport;
 
 void setup() {
-  delay(200);
+  Settings::init();
 
   Serial.begin(SERIAL_BAUDRATE);
   rvl::setLogLevel(rvl::LogLevel::Debug);
-  RVLInit(&transport);
+
+  transport = new RVLWifi::Transport(Settings::getWiFiSSID(), Settings::getWiFiPassphrase(), Settings::getPort());
+  rvl::init(transport);
 
   rvl::info("Initializing");
   State::init();
@@ -92,7 +95,7 @@ void loop() {
 #ifdef HAS_CONTROLS
   Controls::loop();
 #endif
-  RVLLoop();
+  rvl::loop();
 #ifdef HAS_LIGHTS
   if (!animationLoopStarted) {
     animationLoopStarted = true;
