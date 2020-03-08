@@ -95,7 +95,8 @@ void init() {
     setSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver));
     rvl::setDeviceMode(rvl::DeviceMode::Receiver);
   } else {
-    rvl::setDeviceMode(static_cast<rvl::DeviceMode>(getSetting("mode")));
+    mode = static_cast<rvl::DeviceMode>(getSetting("mode"));
+    rvl::setDeviceMode(mode);
   }
   rvl::on(EVENT_DEVICE_MODE_UPDATED, updateDeviceMode);
 
@@ -104,7 +105,8 @@ void init() {
     setSetting("channel", DEFAULT_CHANNEL);
     rvl::setChannel(DEFAULT_CHANNEL);
   } else {
-    rvl::setChannel(getSetting("channel"));
+    channel = getSetting("channel");
+    rvl::setChannel(channel);
   }
   rvl::on(EVENT_CHANNEL_UPDATED, updateChannel);
 
@@ -113,7 +115,8 @@ void init() {
     setSetting("brightnessr", DEFAULT_BRIGHTNESS);
     rvl::setBrightness(DEFAULT_BRIGHTNESS);
   } else {
-    rvl::setBrightness(getSetting("brightness"));
+    brightness = getSetting("brightness");
+    rvl::setBrightness(brightness);
   }
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
 
