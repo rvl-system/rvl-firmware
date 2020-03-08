@@ -48,14 +48,7 @@ void setup() {
   State::init();
 #ifdef HAS_UI
   UI::init();
-#endif
-#ifdef HAS_CONTROLS
-  Controls::init();
-#endif
-#ifdef HAS_LIGHTS
-  Lights::init();
-#endif
-
+#else
   // Create a default animation
   RVLWaveSettings newSettings;
 
@@ -81,7 +74,13 @@ void setup() {
   newSettings.waves[2].a.a = 255;
 
   rvl::setWaveSettings(&newSettings);
-
+#endif
+#ifdef HAS_CONTROLS
+  Controls::init();
+#endif
+#ifdef HAS_LIGHTS
+  Lights::init();
+#endif
   rvl::info("Running");
 }
 

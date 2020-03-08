@@ -67,23 +67,31 @@ void init() {
   ssid[MAX_SSID_LENGTH - 1] = 0;
   passphrase[MAX_PASSPHRASE_LENGTH - 1] = 0;
 
-  preferences.begin("rvl", false);
-
   if (!preferences.getBool("wifi-ssid-set", false)) {
+    preferences.begin("rvl", false);
     preferences.putBool("wifi-ssid-set", true);
+    preferences.end();
     setWiFiSSID(DEFAULT_WIFI_SSID);
   } else {
+    preferences.begin("rvl", false);
     preferences.getString("wifi-ssid", ssid, MAX_SSID_LENGTH);
+    preferences.end();
   }
 
   if (!preferences.getBool("wifi-ps-set", false)) {
+    preferences.begin("rvl", false);
     preferences.putBool("wifi-ps-set", true);
+    preferences.end();
     setWiFiPassphrase(DEFAULT_WIFI_PASSPHRASE);
   } else {
+    preferences.begin("rvl", false);
     preferences.getString("wifi-passphrase", passphrase, MAX_PASSPHRASE_LENGTH);
+    preferences.end();
   }
 
+  preferences.begin("rvl", false);
   port = preferences.getUShort("port", DEFAULT_WIFI_PORT);
+  preferences.end();
 
   mode = static_cast<rvl::DeviceMode>(getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
   rvl::setDeviceMode(mode);
@@ -99,8 +107,6 @@ void init() {
 
   // TODO(nebrius): wire this up properly so it can be changed
   rvl::setRemoteBrightnessState(false);
-
-  preferences.end();
 }
 
 char* getWiFiSSID() {
@@ -135,7 +141,9 @@ void setPort(uint16_t newPort) {
 }
 
 uint8_t getSetting(const char* key, uint8_t defaultValue) {
+  preferences.begin("rvl", false);
   uint8_t value = preferences.getUChar(key, defaultValue);
+  preferences.end();
   rvl::debug("Read setting %s (default=%d) = %d", key, defaultValue, value);
   return value;
 }
@@ -143,7 +151,7 @@ void setSetting(const char* key, uint8_t value) {
   preferences.begin("rvl", false);
   size_t written = preferences.putUChar(key, value);
   preferences.end();
-  rvl::debug("Saved setting %s=%d, wrote %d bytes", key, value, written);
+  rvl::debug("Saved setting %s=%d, wrote %d byte(s)", key, value, written);
 }
 
 }  // namespace Settings

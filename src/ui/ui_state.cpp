@@ -22,6 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/ui_state.h"
 #include "./state.h"
 #include "./codes.h"
+#include "./settings.h"
 #include "./presets/preset_control_set.h"
 #include "./presets/rainbow.h"
 #include "./presets/pulse.h"
@@ -32,7 +33,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace UIState {
 
 uint8_t currentControl = 0;
-uint8_t preset = DEFAULT_PRESET;
+uint8_t preset;
 
 #define NUM_GLOBAL_CONTROLS 3
 
@@ -79,15 +80,12 @@ Control::ListControl* modeControl;
 
 void updatePresetValue(uint8_t selectedValueIndex) {
   if (UIState::preset != selectedValueIndex) {
+    Settings::setSetting("ui-preset", selectedValueIndex);
     UIState::preset = selectedValueIndex;
     presets[preset]->updateWave();
   }
 }
-Control::ListControl presetControl(
-  "PRST",
-  { "Rainbow", "Pulse", "Wave", "Color Cycle", "Solid" },
-  2,
-  updatePresetValue);
+Control::ListControl* presetControl;
 
 std::vector<Control::Control*> controls;
 
@@ -96,7 +94,7 @@ void update() {
     controls.pop_back();
   }
   if (rvl::getDeviceMode() == rvl::DeviceMode::Controller) {
-    controls.push_back(&presetControl);
+    controls.push_back(presetControl);
     for (auto& control : presets[preset]->controls) {
       controls.push_back(control);
     }
@@ -105,6 +103,7 @@ void update() {
 }
 
 void init() {
+  preset = Settings::getSetting("ui-preset", 2);
   brightnessControl = new Control::RangeControl(
     "BRT",
     0,
@@ -124,6 +123,12 @@ void init() {
     { "Controller", "Receiver" },
     rvl::getDeviceMode() == rvl::DeviceMode::Controller ? 0 : 1,
     updateModeValue);
+
+  presetControl = new Control::ListControl(
+    "PRST",
+    { "Rainbow", "Pulse", "Wave", "Color Cycle", "Solid" },
+    preset,
+    updatePresetValue);
 
   controls.push_back(brightnessControl);
   controls.push_back(channelControl);
