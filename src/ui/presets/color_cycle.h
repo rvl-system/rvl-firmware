@@ -32,8 +32,6 @@ class ColorCycle : public PresetControlSet {
   void updateWave();
 };
 
-extern ColorCycle colorCycle;
-
 }  // namespace ColorCycle
 
 #endif  // UI_PRESETS_COLOR_CYCLE_H_

@@ -21,10 +21,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <rvl-wifi.h>
 #include <vector>
 #include "./ui/presets/color_cycle.h"
+#include "./settings.h"
 
 namespace ColorCycle {
 
-uint8_t rate = 4;
+uint8_t rate;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -38,11 +39,15 @@ void updateWaveParameters() {
 }
 
 void updateRateValue(uint8_t newValue) {
-  rate = newValue;
-  updateWaveParameters();
+  if (rate != newValue) {
+    rate = newValue;
+    Settings::setSetting("ui-cc-rate", rate);
+    updateWaveParameters();
+  }
 }
 
 ColorCycle::ColorCycle() {
+  rate = Settings::getSetting("ui-cc-rate", 4);
   this->controls.push_back(new Control::RangeControl(
     "RATE",
     0,
@@ -55,7 +60,5 @@ ColorCycle::ColorCycle() {
 void ColorCycle::updateWave() {
   updateWaveParameters();
 }
-
-ColorCycle colorCycle;
 
 }  // namespace ColorCycle

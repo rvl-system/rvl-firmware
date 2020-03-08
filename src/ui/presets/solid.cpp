@@ -20,13 +20,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
+#include "./settings.h"
 #include "./ui/presets/solid.h"
 
 namespace Solid {
 
-uint8_t hue = 170;
-uint8_t saturation = 255;
-uint8_t value = 255;
+uint8_t hue;
+uint8_t saturation;
+uint8_t value;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -41,21 +42,33 @@ void updateWaveParameters() {
 }
 
 void updateHueValue(uint8_t newValue) {
-  hue = newValue;
-  updateWaveParameters();
+  if (hue != newValue) {
+    hue = newValue;
+    Settings::setSetting("ui-s-hue", hue);
+    updateWaveParameters();
+  }
 }
 
 void updateSaturationValue(uint8_t newValue) {
-  saturation = newValue;
-  updateWaveParameters();
+  if (saturation != newValue) {
+    saturation = newValue;
+    Settings::setSetting("ui-s-sat", saturation);
+    updateWaveParameters();
+  }
 }
 
 void updateValueValue(uint8_t newValue) {
-  value = newValue;
-  updateWaveParameters();
+  if (value != newValue) {
+    value = newValue;
+    Settings::setSetting("ui-s-val", value);
+    updateWaveParameters();
+  }
 }
 
 Solid::Solid() {
+  hue = Settings::getSetting("ui-s-hue", 170);
+  saturation = Settings::getSetting("ui-s-sat", 255);
+  value = Settings::getSetting("ui-s-val", 255);
   this->controls.push_back(new Control::RangeControl(
     "HUE",
     0,
@@ -82,7 +95,5 @@ Solid::Solid() {
 void Solid::updateWave() {
   updateWaveParameters();
 }
-
-Solid solid;
 
 }  // namespace Solid

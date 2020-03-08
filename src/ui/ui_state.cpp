@@ -37,13 +37,7 @@ uint8_t preset;
 
 #define NUM_GLOBAL_CONTROLS 3
 
-PresetControlSet* presets[] = {
-  &Rainbow::rainbow,
-  &Pulse::pulse,
-  &Wave::wave,
-  &ColorCycle::colorCycle,
-  &Solid::solid
-};
+std::vector<PresetControlSet*> presets;
 
 uint8_t getBrightnessValue() {
   return 16 * (rvl::getBrightness() - MIN_BRIGHTNESS) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
@@ -133,6 +127,12 @@ void init() {
   controls.push_back(brightnessControl);
   controls.push_back(channelControl);
   controls.push_back(modeControl);
+
+  presets.push_back(new Rainbow::Rainbow());
+  presets.push_back(new Pulse::Pulse());
+  presets.push_back(new Wave::Wave());
+  presets.push_back(new ColorCycle::ColorCycle());
+  presets.push_back(new Solid::Solid());
 
   rvl::on(EVENT_CONNECTION_STATE_CHANGED, update);
   rvl::on(Codes::EventType::AnimationChange, update);

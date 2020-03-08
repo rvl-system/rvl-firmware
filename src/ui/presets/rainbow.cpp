@@ -20,11 +20,12 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
+#include "./settings.h"
 #include "./ui/presets/rainbow.h"
 
 namespace Rainbow {
 
-uint8_t rate = 4;
+uint8_t rate;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -38,11 +39,15 @@ void updateWaveParameters() {
 }
 
 void updateRateValue(uint8_t newValue) {
-  rate = newValue;
-  updateWaveParameters();
+  if (rate != newValue) {
+    rate = newValue;
+    Settings::setSetting("ui-r-rate", rate);
+    updateWaveParameters();
+  }
 }
 
 Rainbow::Rainbow() {
+  rate = Settings::getSetting("ui-r-rate", 4);
   this->controls.push_back(new Control::RangeControl(
     "RATE",
     0,
@@ -55,7 +60,5 @@ Rainbow::Rainbow() {
 void Rainbow::updateWave() {
   updateWaveParameters();
 }
-
-Rainbow rainbow;
 
 }  // namespace Rainbow

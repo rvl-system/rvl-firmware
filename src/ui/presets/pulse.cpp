@@ -20,13 +20,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
+#include "./settings.h"
 #include "./ui/presets/pulse.h"
 
 namespace Pulse {
 
-uint8_t rate = 16;
-uint8_t hue = 120;
-uint8_t saturation = 255;
+uint8_t rate;
+uint8_t hue;
+uint8_t saturation;
 
 void updateWaveParameters() {
   RVLWaveSettings newSettings;
@@ -39,21 +40,33 @@ void updateWaveParameters() {
 }
 
 void updateRateValue(uint8_t newValue) {
-  rate = newValue;
-  updateWaveParameters();
+  if (rate != newValue) {
+    rate = newValue;
+    Settings::setSetting("ui-p-rate", rate);
+    updateWaveParameters();
+  }
 }
 
 void updateHueValue(uint8_t newValue) {
-  hue = newValue;
-  updateWaveParameters();
+  if (hue != newValue) {
+    hue = newValue;
+    Settings::setSetting("ui-p-hue", hue);
+    updateWaveParameters();
+  }
 }
 
 void updateSaturationValue(uint8_t newValue) {
-  saturation = newValue;
-  updateWaveParameters();
+  if (saturation != newValue) {
+    saturation = newValue;
+    Settings::setSetting("ui-p-sat", saturation);
+    updateWaveParameters();
+  }
 }
 
 Pulse::Pulse() {
+  rate = Settings::getSetting("ui-p-rate", 16);
+  hue = Settings::getSetting("ui-p-hue", 120);
+  saturation = Settings::getSetting("ui-p-sat", 255);
   this->controls.push_back(new Control::RangeControl(
     "RATE",
     0,
@@ -80,7 +93,5 @@ Pulse::Pulse() {
 void Pulse::updateWave() {
   updateWaveParameters();
 }
-
-Pulse pulse;
 
 }  // namespace Pulse

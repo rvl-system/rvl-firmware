@@ -32,8 +32,6 @@ class Pulse : public PresetControlSet {
   void updateWave();
 };
 
-extern Pulse pulse;
-
 }  // namespace Pulse
 
 #endif  // UI_PRESETS_PULSE_H_

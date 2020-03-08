@@ -32,8 +32,6 @@ class Wave : public PresetControlSet {
   void updateWave();
 };
 
-extern Wave wave;
-
 }  // namespace Wave
 
 #endif  // UI_PRESETS_WAVE_H_

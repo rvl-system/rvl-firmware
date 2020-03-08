@@ -66,6 +66,9 @@
     "cinttypes": "cpp",
     "map": "cpp",
     "memory_resource": "cpp",
-    "string_view": "cpp"
+    "string_view": "cpp",
+    "ctime": "cpp",
+    "unordered_set": "cpp",
+    "iomanip": "cpp"
   }
 }

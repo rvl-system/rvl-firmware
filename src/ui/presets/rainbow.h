@@ -32,8 +32,6 @@ class Rainbow : public PresetControlSet {
   void updateWave();
 };
 
-extern Rainbow rainbow;
-
 }  // namespace Rainbow
 
 #endif  // UI_PRESETS_RAINBOW_H_

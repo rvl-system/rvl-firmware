@@ -32,8 +32,6 @@ class Solid : public PresetControlSet {
   void updateWave();
 };
 
-extern Solid solid;
-
 }  // namespace Solid
 
 #endif  // UI_PRESETS_SOLID_H_
