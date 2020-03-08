@@ -83,41 +83,18 @@ void init() {
     preferences.getString("wifi-passphrase", passphrase, MAX_PASSPHRASE_LENGTH);
   }
 
-  if (!preferences.getBool("port-set", false)) {
-    preferences.putBool("port-set", true);
-    setPort(DEFAULT_WIFI_PORT);
-  } else {
-    port = preferences.getUShort("port");
-  }
+  port = preferences.getUShort("port", DEFAULT_WIFI_PORT);
 
-  if (!preferences.getBool("mode-set", false)) {
-    preferences.putBool("mode-set", true);
-    setSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver));
-    rvl::setDeviceMode(rvl::DeviceMode::Receiver);
-  } else {
-    mode = static_cast<rvl::DeviceMode>(getSetting("mode"));
-    rvl::setDeviceMode(mode);
-  }
+  mode = static_cast<rvl::DeviceMode>(getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
+  rvl::setDeviceMode(mode);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, updateDeviceMode);
 
-  if (!preferences.getBool("channel-set", false)) {
-    preferences.putBool("channel-set", true);
-    setSetting("channel", DEFAULT_CHANNEL);
-    rvl::setChannel(DEFAULT_CHANNEL);
-  } else {
-    channel = getSetting("channel");
-    rvl::setChannel(channel);
-  }
+  channel = getSetting("channel", DEFAULT_CHANNEL);
+  rvl::setChannel(channel);
   rvl::on(EVENT_CHANNEL_UPDATED, updateChannel);
 
-  if (!preferences.getBool("brightness-set", false)) {
-    preferences.putBool("brightness-set", true);
-    setSetting("brightnessr", DEFAULT_BRIGHTNESS);
-    rvl::setBrightness(DEFAULT_BRIGHTNESS);
-  } else {
-    brightness = getSetting("brightness");
-    rvl::setBrightness(brightness);
-  }
+  brightness = getSetting("brightness", DEFAULT_BRIGHTNESS);
+  rvl::setBrightness(brightness);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
 
   // TODO(nebrius): wire this up properly so it can be changed
@@ -157,13 +134,16 @@ void setPort(uint16_t newPort) {
   preferences.end();
 }
 
-uint8_t getSetting(const char* key) {
-  return preferences.getUChar(key);
+uint8_t getSetting(const char* key, uint8_t defaultValue) {
+  uint8_t value = preferences.getUChar(key, defaultValue);
+  rvl::debug("Read setting %s (default=%d) = %d", key, defaultValue, value);
+  return value;
 }
 void setSetting(const char* key, uint8_t value) {
   preferences.begin("rvl", false);
-  preferences.putUChar(key, value);
+  size_t written = preferences.putUChar(key, value);
   preferences.end();
+  rvl::debug("Saved setting %s=%d, wrote %d bytes", key, value, written);
 }
 
 }  // namespace Settings
