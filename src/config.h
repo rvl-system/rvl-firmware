@@ -26,10 +26,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_WIFI_PASSPHRASE "RaverLights"
 #define DEFAULT_WIFI_PORT 4978
 #define DEFAULT_CHANNEL 0
-// #define DEFAULT_MODE_CONTROLLER
 #define LED_COLOR_MODE GRB
 #define LED_NUM_PIXELS 300
-// #define REMOTE_BRIGHTNESS
 
 /**** You *may* want to modify these settings, but it's not likely ****/
 
@@ -48,7 +46,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ESP8266
 #define LED_DATA_PIN 2
 #else
-#define LED_DATA_PIN 18
+#define LED_DATA_PIN 32
 #endif
 
 // Control parameters
@@ -82,7 +80,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ESP8266
 #define BUTTON_UP 15
 #else
-#define BUTTON_UP 5
+#define BUTTON_UP 16
 #endif
 #define BUTTON_UP_ON LOW
 #define BUTTON_UP_OFF HIGH
@@ -90,7 +88,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ESP8266
 #define BUTTON_DOWN 16
 #else
-#define BUTTON_DOWN 19
+#define BUTTON_DOWN 17
 #endif
 #define BUTTON_DOWN_ON HIGH
 #define BUTTON_DOWN_OFF LOW
