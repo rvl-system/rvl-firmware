@@ -80,7 +80,7 @@ while (i < args.length) {
 if (typeof target !== 'string') {
   error(`no value for TARGET was supplied.\n`);
 }
-const targetUrl = join(__dirname, '.pio', 'build', target, 'firmware.bin');
+const targetUrl = `.pio/build/${target}/firmware.bin`;
 
 function exec(command) {
   try {
