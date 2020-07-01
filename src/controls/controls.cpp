@@ -30,6 +30,7 @@ bool connectedLEDState = false;
 uint32_t nextConnectedLEDFlashTime = 0;
 
 void init() {
+#ifdef HAS_CONTROLS
   pinMode(CONTROL_DIGIT_1, INPUT);
   pinMode(CONTROL_DIGIT_2, INPUT);
   pinMode(CONTROL_DIGIT_3, INPUT);
@@ -37,9 +38,11 @@ void init() {
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   rvl::info("Controls initialized");
+#endif
 }
 
 void loop() {
+#ifdef HAS_CONTROLS
   if (rvl::isNetworkConnected()) {
     digitalWrite(GREEN_LED, HIGH);
   } else {
@@ -63,6 +66,7 @@ void loop() {
     rvl::info("Channel changed to %d", channel);
     rvl::setChannel(channel);
   }
+#endif
 }
 
 }  // namespace Controls

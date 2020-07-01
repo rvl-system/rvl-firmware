@@ -18,7 +18,9 @@
 // */
 
 #include <Arduino.h>
+#ifdef ESP32
 #include <Preferences.h>
+#endif
 #include <algorithm>
 #include "./settings.h"
 #include "./config.h"
@@ -26,7 +28,9 @@
 
 namespace Settings {
 
+#ifdef ESP32
 Preferences preferences;
+#endif
 
 #define MAX_SSID_LENGTH 32
 #define MAX_PASSPHRASE_LENGTH 64
@@ -67,6 +71,7 @@ void init() {
   ssid[MAX_SSID_LENGTH - 1] = 0;
   passphrase[MAX_PASSPHRASE_LENGTH - 1] = 0;
 
+#ifdef ESP32
   if (!preferences.getBool("wifi-ssid-set", false)) {
     preferences.begin("rvl", false);
     preferences.putBool("wifi-ssid-set", true);
@@ -77,7 +82,11 @@ void init() {
     preferences.getString("wifi-ssid", ssid, MAX_SSID_LENGTH);
     preferences.end();
   }
+#else
+  setWiFiSSID(DEFAULT_WIFI_SSID);
+#endif
 
+#ifdef ESP32
   if (!preferences.getBool("wifi-ps-set", false)) {
     preferences.begin("rvl", false);
     preferences.putBool("wifi-ps-set", true);
@@ -88,10 +97,17 @@ void init() {
     preferences.getString("wifi-passphrase", passphrase, MAX_PASSPHRASE_LENGTH);
     preferences.end();
   }
+#else
+  setWiFiPassphrase(DEFAULT_WIFI_PASSPHRASE);
+#endif
 
+#ifdef ESP32
   preferences.begin("rvl", false);
   port = preferences.getUShort("port", DEFAULT_WIFI_PORT);
   preferences.end();
+#else
+  port = DEFAULT_WIFI_PORT;
+#endif
 
   mode = static_cast<rvl::DeviceMode>(getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
   rvl::setDeviceMode(mode);
@@ -114,9 +130,11 @@ char* getWiFiSSID() {
 }
 void setWiFiSSID(const char* newSSID) {
   memcpy(ssid, newSSID, std::min(32, static_cast<int>(strlen(newSSID))));
+#ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putString("wifi-ssid", ssid);
   preferences.end();
+#endif
 }
 
 char* getWiFiPassphrase() {
@@ -124,9 +142,11 @@ char* getWiFiPassphrase() {
 }
 void setWiFiPassphrase(const char* newPassphrase) {
   memcpy(passphrase, newPassphrase, std::min(63, static_cast<int>(strlen(newPassphrase))));
+#ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putString("wifi-passphrase", passphrase);
   preferences.end();
+#endif
 }
 
 uint16_t getPort() {
@@ -135,23 +155,32 @@ uint16_t getPort() {
 
 void setPort(uint16_t newPort) {
   port = newPort;
+#ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putUShort("port", port);
   preferences.end();
+#endif
 }
 
 uint8_t getSetting(const char* key, uint8_t defaultValue) {
+#ifdef ESP32
   preferences.begin("rvl", false);
   uint8_t value = preferences.getUChar(key, defaultValue);
   preferences.end();
   rvl::debug("Read setting %s (default=%d) = %d", key, defaultValue, value);
   return value;
+#else
+  return defaultValue;
+#endif
 }
+
 void setSetting(const char* key, uint8_t value) {
+#ifdef ESP32
   preferences.begin("rvl", false);
   size_t written = preferences.putUChar(key, value);
   preferences.end();
   rvl::debug("Saved setting %s=%d, wrote %d byte(s)", key, value, written);
+#endif
 }
 
 }  // namespace Settings

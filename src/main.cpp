@@ -84,8 +84,6 @@ void setup() {
   rvl::info("Running");
 }
 
-bool animationLoopStarted = false;
-
 void loop() {
   State::loop();
 #ifdef HAS_UI
@@ -96,10 +94,6 @@ void loop() {
 #endif
   rvl::loop();
 #ifdef HAS_LIGHTS
-  if (!animationLoopStarted) {
-    animationLoopStarted = true;
-    Lights::startAnimationLoop();
-  }
   Lights::loop();
 #endif
 }

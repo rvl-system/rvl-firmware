@@ -25,16 +25,6 @@
 #include "./codes.h"
 #include "./config.h"
 
-/*
-WiFi SSID
-WiFI Pass
-Mode
-Channel
-Power state?
-brightness
-UI settings
-*/
-
 namespace Settings {
 
 void init();

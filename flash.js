@@ -105,11 +105,21 @@ if (flash) {
   if (!existsSync(targetUrl)) {
     error(`unknown or unbuilt target "${target}".\n`);
   }
-  console.log(`\nFlashing target ${target} using JTAG\n`);
-  exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+  if (target === 'controller') {
+    console.log(`\nFlashing target ${target} using JTAG\n`);
+    exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+  } else if (target === 'hub' || target === 'receiver') {
+    console.log(`\nFlashing target ${target} using UART\n`);
+    exec(`esptool.py -b 921600 write_flash 0x0 ${targetUrl}`);
+    //
+  }
 }
 
 if (debug) {
-  console.log(`\nCreating debug connection using JTAG\n`);
-  exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg`);
+  if (target === 'controller') {
+    console.log(`\nCreating debug connection using JTAG\n`);
+    exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg`);
+  } else {
+    error(`Debugging not supported for target "${target}".\n`);
+  }
 }

@@ -45,64 +45,79 @@ uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
 uint8_t loopTimes[NUM_LOOP_SAMPLES];
 uint8_t loopIndex = 0;
 
-void animationLoop(void* parameters) {
-  while (true) {
-    uint32_t startTime = millis();
+void animationLoop() {
+  uint32_t startTime = millis();
 
-    if (!rvl::getPowerState()) {
-      FastLED.setBrightness(0);
-      FastLED.show();
-      return;
-    }
-
-    auto waveSettings = rvl::getWaveSettings();
-    FastLED.setBrightness(rvl::getBrightness());
-    uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
-    for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
-      uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
-
-      CHSV waveHSV[NUM_WAVES];
-      CRGB waveRGB[NUM_WAVES];
-      uint8_t alphaValues[NUM_WAVES];
-
-      for (uint8_t j = 0; j < NUM_WAVES; j++) {
-        waveHSV[j].h = calculatePixelValue(&(waveSettings->waves[j].h), t, x);
-        waveHSV[j].s = calculatePixelValue(&(waveSettings->waves[j].s), t, x);
-        waveHSV[j].v = calculatePixelValue(&(waveSettings->waves[j].v), t, x);
-        alphaValues[j] = calculatePixelValue(&(waveSettings->waves[j].a), t, x);
-        hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
-      }
-      leds[i] = waveRGB[NUM_WAVES - 1];
-      for (int8_t j = NUM_WAVES - 2; j >= 0; j--) {
-        leds[i] = blend(leds[i], waveRGB[j], alphaValues[j]);
-      }
-    }
+  if (!rvl::getPowerState()) {
+    FastLED.setBrightness(0);
     FastLED.show();
+    return;
+  }
 
-    uint32_t now = millis();
-    if (loopIndex < NUM_LOOP_SAMPLES) {
-      loopTimes[loopIndex++] = now - startTime;
+  auto waveSettings = rvl::getWaveSettings();
+  FastLED.setBrightness(rvl::getBrightness());
+  uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
+  for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
+    uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
+
+    CHSV waveHSV[NUM_WAVES];
+    CRGB waveRGB[NUM_WAVES];
+    uint8_t alphaValues[NUM_WAVES];
+
+    for (uint8_t j = 0; j < NUM_WAVES; j++) {
+      waveHSV[j].h = calculatePixelValue(&(waveSettings->waves[j].h), t, x);
+      waveHSV[j].s = calculatePixelValue(&(waveSettings->waves[j].s), t, x);
+      waveHSV[j].v = calculatePixelValue(&(waveSettings->waves[j].v), t, x);
+      alphaValues[j] = calculatePixelValue(&(waveSettings->waves[j].a), t, x);
+      hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
     }
-    if (now - startTime > UPDATE_RATE) {
-      delay(1);
-    } else {
-      delay(UPDATE_RATE - (millis() - startTime));
+    leds[i] = waveRGB[NUM_WAVES - 1];
+    for (int8_t j = NUM_WAVES - 2; j >= 0; j--) {
+      leds[i] = blend(leds[i], waveRGB[j], alphaValues[j]);
     }
+  }
+  FastLED.show();
+
+  uint32_t now = millis();
+  if (loopIndex < NUM_LOOP_SAMPLES) {
+    loopTimes[loopIndex++] = now - startTime;
+  }
+  if (now - startTime > UPDATE_RATE) {
+    delay(1);
+  } else {
+    delay(UPDATE_RATE - (millis() - startTime));
+  }
+}
+
+void animationLoopRunner(void* parameters) {
+  while (true) {
+    animationLoop();
   }
 }
 
 void startAnimationLoop() {
+#ifdef ESP32
   xTaskCreatePinnedToCore(
-    animationLoop,
-    "animationLoop",
+    animationLoopRunner,
+    "animationLoopRunner",
     4096,
     NULL,
     2,
     NULL,
     0);
+#endif
 }
 
+bool animationLoopStarted = false;
 void loop() {
+#ifdef ESP32
+  if (!animationLoopStarted) {
+    animationLoopStarted = true;
+    startAnimationLoop();
+  }
+#else
+  animationLoop();
+#endif
   if (loopIndex == NUM_LOOP_SAMPLES) {
     loopIndex = 0;
     uint16_t sum = 0;
