@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef HAS_UI
+
 #include "./ui/ui.h"
 #include "./ui/ui_state.h"
 #include "./ui/input.h"
@@ -36,3 +38,5 @@ void loop() {
 }
 
 }  // namespace UI
+
+#endif  // HAS_UI

@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef HAS_UI
+
 #include <rvl-wifi.h>
 #include <Arduino.h>
 #include <Wire.h>
@@ -154,3 +156,5 @@ void render(std::vector<Control::Control*>* entries, uint8_t selectedEntry, std:
 }
 
 }  // namespace Render
+
+#endif  // HAS_UI

@@ -12,7 +12,11 @@
             "defines": [
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "HAS_UI",
+                "HAS_CONTROLS",
+                "HAS_LIGHTS",
+                "ESP32"
             ],
             "cStandard": "c11",
             "cppStandard": "c++17",

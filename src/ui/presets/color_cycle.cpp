@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef HAS_UI
+
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
@@ -62,3 +64,5 @@ void ColorCycle::updateWave() {
 }
 
 }  // namespace ColorCycle
+
+#endif  // HAS_UI

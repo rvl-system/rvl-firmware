@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef HAS_UI
+
 #include <Arduino.h>
 #include "./ui/input.h"
 #include "./ui/ui_state.h"
@@ -130,3 +132,5 @@ void loop() {
 }
 
 }  // namespace Input
+
+#endif  // HAS_UI
