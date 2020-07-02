@@ -42,6 +42,7 @@ OPTIONS:
   -b  --build  build the firmware before flashing the target
   -f  --flash  flash the firmware after building the target
   -d  --debug  spin up OpenOCD to allow GDN connections
+  -p  --port   serial port to use for flashing/debugging ESP8266 devices
       --help      display this help and exit
 `);
 }
@@ -50,6 +51,7 @@ let build = false;
 let flash = false;
 let debug = false;
 let target = 'controller';
+let port;
 
 let i = 0;
 while (i < args.length) {
@@ -68,6 +70,10 @@ while (i < args.length) {
     case '-d':
     case '--debug':
       debug = true;
+      break;
+    case '-p':
+    case '--port':
+      port = args[++i];
       break;
     default:
       target = args[i];
@@ -109,9 +115,8 @@ if (flash) {
     console.log(`\nFlashing target ${target} using JTAG\n`);
     exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
   } else if (target === 'hub' || target === 'receiver') {
-    console.log(`\nFlashing target ${target} using UART\n`);
-    exec(`esptool.py -b 921600 write_flash 0x0 ${targetUrl}`);
-    //
+    console.log(`\nFlashing target ${target} using UART${port ? ` on ${port}` : ''}\n`);
+    exec(`esptool.py${port ? ` -p ${port}` : ''} -b 921600 write_flash 0x0 ${targetUrl}`);
   }
 }
 
@@ -120,6 +125,7 @@ if (debug) {
     console.log(`\nCreating debug connection using JTAG\n`);
     exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg`);
   } else {
-    error(`Debugging not supported for target "${target}".\n`);
+    console.log(`\nOpening serial port for debugging${port ? ` on ${port}` : ''}\n`);
+    exec(`seriallog${port ? ` -p ${port}` : ''}`);
   }
 }
