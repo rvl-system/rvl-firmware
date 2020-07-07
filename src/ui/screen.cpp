@@ -42,6 +42,11 @@ void update() {
   } else {
     icons.push_back(&Icons::notSynchronizedIcon);
   }
+  if (UIState::currentTab == 0) {
+    icons.push_back(&Icons::tab1);
+  } else {
+    icons.push_back(&Icons::tab2);
+  }
   Render::render(&(UIState::controls), UIState::currentControl, &icons);
 }
 

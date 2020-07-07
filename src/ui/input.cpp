@@ -45,12 +45,14 @@ ButtonInfo nextControlButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, 
 ButtonInfo previousControlButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF };
 ButtonInfo increaseValueButtonInfo = { 5, BUTTON_RIGHT_OFF, BUTTON_RIGHT, BUTTON_RIGHT_ON, BUTTON_RIGHT_OFF };
 ButtonInfo decreaseValueButtonInfo = { 5, BUTTON_LEFT_OFF, BUTTON_LEFT, BUTTON_LEFT_ON, BUTTON_LEFT_OFF };
+ButtonInfo switchTabButtonInfo = { 5, BUTTON_PRESS_OFF, BUTTON_PRESS, BUTTON_PRESS_ON, BUTTON_PRESS_OFF };
 
 void init() {
   pinMode(nextControlButtonInfo.gpio, INPUT);
   pinMode(previousControlButtonInfo.gpio, INPUT);
   pinMode(increaseValueButtonInfo.gpio, INPUT);
   pinMode(decreaseValueButtonInfo.gpio, INPUT);
+  pinMode(switchTabButtonInfo.gpio, INPUT);
 }
 
 ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
@@ -124,6 +126,18 @@ void loop() {
       if (UIState::isCurrentControlRange()) {
         UIState::controlDecrease();
       }
+      break;
+    case None:
+      // Do Nothing
+      break;
+  }
+
+  switch (getButtonChangeState(&switchTabButtonInfo)) {
+    case Pressed:
+      UIState::nextTab();
+      break;
+    case Holding:
+      // Do Nothing
       break;
     case None:
       // Do Nothing

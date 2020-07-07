@@ -36,6 +36,9 @@ extern StatusIcon wifiDisconnectedIcon;
 extern StatusIcon synchronizedIcon;
 extern StatusIcon notSynchronizedIcon;
 
+extern StatusIcon tab1;
+extern StatusIcon tab2;
+
 }  // namespace Icons
 
 #endif  // UI_SCREEN_ICONS_H_

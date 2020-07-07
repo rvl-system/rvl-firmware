@@ -33,12 +33,15 @@ extern std::vector<Control::Control*> controls;
 extern uint8_t preset;
 extern uint8_t** presetValues;
 
+extern uint8_t currentTab;
+
 void init();
 
 void nextControl();
 void previousControl();
 void controlIncrease();
 void controlDecrease();
+void nextTab();
 
 bool isCurrentControlRange();
 

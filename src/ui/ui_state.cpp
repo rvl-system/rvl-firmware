@@ -36,6 +36,7 @@ namespace UIState {
 
 uint8_t currentControl = 0;
 uint8_t preset;
+uint8_t currentTab = 0;
 
 #define NUM_GLOBAL_CONTROLS 3
 
@@ -169,6 +170,15 @@ void controlIncrease() {
 
 void controlDecrease() {
   controls[currentControl]->decreaseValue();
+  rvl::emit(Codes::EventType::UIStateChange);
+}
+
+void nextTab() {
+  if (currentTab == 0) {
+    currentTab = 1;
+  } else {
+    currentTab = 0;
+  }
   rvl::emit(Codes::EventType::UIStateChange);
 }
 
