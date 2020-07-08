@@ -44,10 +44,11 @@ void update() {
   }
   if (UIState::currentTab == 0) {
     icons.push_back(&Icons::tab1);
+    Render::render(&(UIState::tab1Controls), UIState::currentTab, UIState::currentTab1Control, &icons);
   } else {
     icons.push_back(&Icons::tab2);
+    Render::render(&(UIState::tab2Controls), UIState::currentTab, UIState::currentTab2Control, &icons);
   }
-  Render::render(&(UIState::controls), UIState::currentControl, &icons);
 }
 
 void init() {

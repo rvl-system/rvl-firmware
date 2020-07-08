@@ -27,8 +27,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace UIState {
 
-extern uint8_t currentControl;
-extern std::vector<Control::Control*> controls;
+extern uint8_t currentTab1Control;
+extern uint8_t currentTab2Control;
+extern std::vector<Control::Control*> tab1Controls;
+extern std::vector<Control::Control*> tab2Controls;
 
 extern uint8_t preset;
 extern uint8_t** presetValues;

@@ -34,7 +34,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace UIState {
 
-uint8_t currentControl = 0;
+uint8_t currentTab1Control = 0;
+uint8_t currentTab2Control = 0;
 uint8_t preset;
 uint8_t currentTab = 0;
 
@@ -84,20 +85,31 @@ void updatePresetValue(uint8_t selectedValueIndex) {
 }
 Control::ListControl* presetControl;
 
-std::vector<Control::Control*> controls;
+std::vector<Control::Control*> tab1Controls;
+std::vector<Control::Control*> tab2Controls;
 
 void update() {
-  while (controls.size() > NUM_GLOBAL_CONTROLS) {
-    controls.pop_back();
+  while (tab1Controls.size() > NUM_GLOBAL_CONTROLS) {
+    tab1Controls.pop_back();
   }
   if (rvl::getDeviceMode() == rvl::DeviceMode::Controller) {
-    controls.push_back(presetControl);
+    tab1Controls.push_back(presetControl);
     for (auto& control : presets[preset]->controls) {
-      controls.push_back(control);
+      tab1Controls.push_back(control);
     }
   }
   rvl::emit(Codes::EventType::UIStateChange);
 }
+
+void getTestValue(char* buffer) {
+  memcpy(buffer, "Tab 2", 6);
+}
+Control::LabelControl* testControl;
+
+void getTest2Value(char* buffer) {
+  memcpy(buffer, "Control 2", 10);
+}
+Control::LabelControl* test2Control;
 
 void init() {
   preset = Settings::getSetting("ui-preset", 2);
@@ -127,9 +139,15 @@ void init() {
     preset,
     updatePresetValue);
 
-  controls.push_back(brightnessControl);
-  controls.push_back(channelControl);
-  controls.push_back(modeControl);
+  tab1Controls.push_back(brightnessControl);
+  tab1Controls.push_back(channelControl);
+  tab1Controls.push_back(modeControl);
+
+  testControl = new Control::LabelControl(getTestValue);
+  test2Control = new Control::LabelControl(getTest2Value);
+
+  tab2Controls.push_back(testControl);
+  tab2Controls.push_back(test2Control);
 
   presets.push_back(new Rainbow::Rainbow());
   presets.push_back(new Pulse::Pulse());
@@ -143,34 +161,61 @@ void init() {
   rvl::on(EVENT_BRIGHTNESS_UPDATED, update);
   rvl::on(Codes::EventType::TimeChange, update);
   update();
-  controls.reserve(10);
+  tab1Controls.reserve(10);
+  tab2Controls.reserve(10);
   presets[preset]->updateWave();
 }
 
 void nextControl() {
-  if (currentControl < controls.size() - 1) {
-    currentControl++;
-    rvl::debug("Setting control to %d", currentControl);
-    rvl::emit(Codes::EventType::UIStateChange);
+  if (currentTab == 0) {
+    if (currentTab1Control < tab1Controls.size() - 1) {
+      currentTab1Control++;
+      rvl::debug("Setting Tab 1 control to %d", currentTab1Control);
+      rvl::emit(Codes::EventType::UIStateChange);
+    }
+  } else {
+    if (currentTab2Control < tab2Controls.size() - 1) {
+      currentTab2Control++;
+      rvl::debug("Setting Tab 2 control to %d", currentTab2Control);
+      rvl::emit(Codes::EventType::UIStateChange);
+    }
   }
 }
 
 void previousControl() {
-  if (currentControl > 0) {
-    currentControl--;
-    rvl::debug("Setting control to %d", currentControl);
-    rvl::emit(Codes::EventType::UIStateChange);
+  if (currentTab == 0) {
+    if (currentTab1Control > 0) {
+      currentTab1Control--;
+      rvl::debug("Setting Tab 1 control to %d", currentTab1Control);
+      rvl::emit(Codes::EventType::UIStateChange);
+    }
+  } else {
+    if (currentTab2Control > 0) {
+      currentTab2Control--;
+      rvl::debug("Setting Tab 2 control to %d", currentTab2Control);
+      rvl::emit(Codes::EventType::UIStateChange);
+    }
   }
 }
 
 void controlIncrease() {
-  controls[currentControl]->increaseValue();
-  rvl::emit(Codes::EventType::UIStateChange);
+  if (currentTab == 0) {
+    tab1Controls[currentTab1Control]->increaseValue();
+    rvl::emit(Codes::EventType::UIStateChange);
+  } else {
+    tab2Controls[currentTab2Control]->increaseValue();
+    rvl::emit(Codes::EventType::UIStateChange);
+  }
 }
 
 void controlDecrease() {
-  controls[currentControl]->decreaseValue();
-  rvl::emit(Codes::EventType::UIStateChange);
+  if (currentTab == 0) {
+    tab1Controls[currentTab1Control]->decreaseValue();
+    rvl::emit(Codes::EventType::UIStateChange);
+  } else {
+    tab2Controls[currentTab2Control]->decreaseValue();
+    rvl::emit(Codes::EventType::UIStateChange);
+  }
 }
 
 void nextTab() {
@@ -183,7 +228,11 @@ void nextTab() {
 }
 
 bool isCurrentControlRange() {
-  return controls[currentControl]->type == Control::ControlType::Range;
+  if (currentTab == 0) {
+    return tab1Controls[currentTab1Control]->type == Control::ControlType::Range;
+  } else {
+    return tab2Controls[currentTab2Control]->type == Control::ControlType::Range;
+  }
 }
 
 }  // namespace UIState

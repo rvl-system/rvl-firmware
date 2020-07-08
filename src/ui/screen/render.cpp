@@ -32,9 +32,13 @@ namespace Render {
 
 SSD1306Wire display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
-uint8_t previousSelectedEntry = 0;  // from 0 to numEntries
-uint8_t entryWindowStart = 0;   // from 0 to numEntries
-uint8_t selectedEntryRow = 0;  // from 0 to 3
+struct WindowState {
+  uint8_t previousSelectedEntry = 0;  // from 0 to numEntries
+  uint8_t entryWindowStart = 0;   // from 0 to numEntries
+  uint8_t selectedEntryRow = 0;  // from 0 to 3
+};
+
+WindowState windowStates[2];
 
 void init() {
   display.init();
@@ -89,28 +93,28 @@ void renderEntry(Control::Control* entry, uint8_t row) {
   }
 }
 
-void renderEntrySet(std::vector<Control::Control*>* entries, uint8_t selectedEntry) {
-  if (previousSelectedEntry > selectedEntry) {
-    if (selectedEntryRow == 0) {
-      entryWindowStart--;
+void renderEntrySet(std::vector<Control::Control*>* entries, uint8_t selectedTab, uint8_t selectedEntry) {
+  if (windowStates[selectedTab].previousSelectedEntry > selectedEntry) {
+    if (windowStates[selectedTab].selectedEntryRow == 0) {
+      windowStates[selectedTab].entryWindowStart--;
     } else {
-      selectedEntryRow--;
+      windowStates[selectedTab].selectedEntryRow--;
     }
-  } else if (previousSelectedEntry < selectedEntry) {
-    if (selectedEntryRow == 3) {
-      entryWindowStart++;
+  } else if (windowStates[selectedTab].previousSelectedEntry < selectedEntry) {
+    if (windowStates[selectedTab].selectedEntryRow == 3) {
+      windowStates[selectedTab].entryWindowStart++;
     } else {
-      selectedEntryRow++;
+      windowStates[selectedTab].selectedEntryRow++;
     }
   }
-  previousSelectedEntry = selectedEntry;
+  windowStates[selectedTab].previousSelectedEntry = selectedEntry;
   for (uint8_t i = 0; i < 4; i++) {
-    if (i + entryWindowStart < entries->size()) {
-      renderEntry((*entries)[i + entryWindowStart], i);
+    if (i + windowStates[selectedTab].entryWindowStart < entries->size()) {
+      renderEntry((*entries)[i + windowStates[selectedTab].entryWindowStart], i);
     }
   }
-  renderSelectedEntryBox(selectedEntryRow);
-  renderScrollBar(entries->size(), entryWindowStart);
+  renderSelectedEntryBox(windowStates[selectedTab].selectedEntryRow);
+  renderScrollBar(entries->size(), windowStates[selectedTab].entryWindowStart);
 }
 
 void renderIcon(Icons::StatusIcon* icon, uint8_t row) {
@@ -131,14 +135,14 @@ void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
   }
 }
 
-void render(std::vector<Control::Control*>* entries, uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons) {
+void render(std::vector<Control::Control*>* entries, uint8_t selectedTab, uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);
   display.setColor(WHITE);
 
   renderIconSet(icons);
-  renderEntrySet(entries, selectedEntry);
+  renderEntrySet(entries, selectedTab, selectedEntry);
 
   // display.setColor(BLACK);
   // display.fillRect(0, 0, 50, 16);

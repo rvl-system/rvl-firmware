@@ -69,6 +69,23 @@
     "string_view": "cpp",
     "ctime": "cpp",
     "unordered_set": "cpp",
-    "iomanip": "cpp"
+    "iomanip": "cpp",
+    "condition_variable": "cpp",
+    "iostream": "cpp",
+    "mutex": "cpp",
+    "queue": "cpp",
+    "ratio": "cpp",
+    "set": "cpp",
+    "shared_mutex": "cpp",
+    "thread": "cpp",
+    "xfacet": "cpp",
+    "xiosbase": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "xtree": "cpp"
   }
 }
