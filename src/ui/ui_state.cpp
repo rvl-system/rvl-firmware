@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 #include <rvl-wifi.h>
+#include <rvl.h>
 #include "./ui/ui_state.h"
 #include "./state.h"
 #include "./codes.h"
@@ -101,15 +102,15 @@ void update() {
   rvl::emit(Codes::EventType::UIStateChange);
 }
 
-void getTestValue(char* buffer) {
-  memcpy(buffer, "Tab 2", 6);
+void getAddressValue(char* buffer) {
+  snprintf(buffer, strlen(buffer), "ADDR: %d", rvl::getDeviceId());
 }
-Control::LabelControl* testControl;
+Control::LabelControl* addressControl;
 
-void getTest2Value(char* buffer) {
-  memcpy(buffer, "Control 2", 10);
+void getClockValue(char* buffer) {
+  snprintf(buffer, strlen(buffer), "CLCK: %d", rvl::getAnimationClock());
 }
-Control::LabelControl* test2Control;
+Control::LabelControl* clockControl;
 
 void init() {
   preset = Settings::getSetting("ui-preset", 2);
@@ -143,11 +144,11 @@ void init() {
   tab1Controls.push_back(channelControl);
   tab1Controls.push_back(modeControl);
 
-  testControl = new Control::LabelControl(getTestValue);
-  test2Control = new Control::LabelControl(getTest2Value);
+  addressControl = new Control::LabelControl(getAddressValue);
+  clockControl = new Control::LabelControl(getClockValue);
 
-  tab2Controls.push_back(testControl);
-  tab2Controls.push_back(test2Control);
+  tab2Controls.push_back(clockControl);
+  tab2Controls.push_back(addressControl);
 
   presets.push_back(new Rainbow::Rainbow());
   presets.push_back(new Pulse::Pulse());
