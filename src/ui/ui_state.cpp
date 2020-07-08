@@ -102,8 +102,21 @@ void update() {
   rvl::emit(Codes::EventType::UIStateChange);
 }
 
+void getWiFiSSIDValue(char* buffer) {
+#ifdef DEFAULT_WIFI_SSID
+  snprintf(buffer, strlen(buffer), "SSID: %s", DEFAULT_WIFI_SSID);
+#else
+  snprintf(buffer, strlen(buffer), "SSID: N/A");
+#endif
+}
+Control::LabelControl* wifiSSIDControl;
+
 void getAddressValue(char* buffer) {
-  snprintf(buffer, strlen(buffer), "ADDR: %d", rvl::getDeviceId());
+  if (rvl::isNetworkConnected()) {
+    snprintf(buffer, strlen(buffer), "ADDR: %d", rvl::getDeviceId());
+  } else {
+    snprintf(buffer, strlen(buffer), "ADDR: N/A");
+  }
 }
 Control::LabelControl* addressControl;
 
@@ -144,11 +157,13 @@ void init() {
   tab1Controls.push_back(channelControl);
   tab1Controls.push_back(modeControl);
 
-  addressControl = new Control::LabelControl(getAddressValue);
   clockControl = new Control::LabelControl(getClockValue);
+  addressControl = new Control::LabelControl(getAddressValue);
+  wifiSSIDControl = new Control::LabelControl(getWiFiSSIDValue);
 
   tab2Controls.push_back(clockControl);
   tab2Controls.push_back(addressControl);
+  tab2Controls.push_back(wifiSSIDControl);
 
   presets.push_back(new Rainbow::Rainbow());
   presets.push_back(new Pulse::Pulse());
