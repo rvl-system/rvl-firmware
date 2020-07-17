@@ -43,13 +43,15 @@ OPTIONS:
   -f  --flash  flash the firmware after building the target
   -d  --debug  spin up OpenOCD to allow GDN connections
   -p  --port   serial port to use for flashing/debugging ESP8266 devices
-      --help      display this help and exit
+  -l  --log    open a serial port and log debugging information
+      --help   display this help and exit
 `);
 }
 
 let build = false;
 let flash = false;
 let debug = false;
+let log = false;
 let target = 'controller';
 let port;
 
@@ -74,6 +76,10 @@ while (i < args.length) {
     case '-p':
     case '--port':
       port = args[++i];
+      break;
+    case '-l':
+    case '--log':
+      log = true;
       break;
     default:
       target = args[i];
@@ -125,7 +131,12 @@ if (debug) {
     console.log(`\nCreating debug connection using JTAG\n`);
     exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg`);
   } else {
-    console.log(`\nOpening serial port for debugging${port ? ` on ${port}` : ''}\n`);
-    exec(`seriallog${port ? ` -p ${port}` : ''}`);
+    console.error(`\nDebugging is not supported on target ${target}`);
+    process.exit(-1);
   }
+}
+
+if (log) {
+  console.log(`\nOpening serial port for debugging${port ? ` on ${port}` : ''}\n`);
+  exec(`seriallog${port ? ` -p ${port}` : ''}`);
 }
