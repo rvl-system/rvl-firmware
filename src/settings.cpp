@@ -167,7 +167,6 @@ uint8_t getSetting(const char* key, uint8_t defaultValue) {
   preferences.begin("rvl", false);
   uint8_t value = preferences.getUChar(key, defaultValue);
   preferences.end();
-  rvl::debug("Read setting %s (default=%d) = %d", key, defaultValue, value);
   return value;
 #else
   return defaultValue;
@@ -179,7 +178,6 @@ void setSetting(const char* key, uint8_t value) {
   preferences.begin("rvl", false);
   size_t written = preferences.putUChar(key, value);
   preferences.end();
-  rvl::debug("Saved setting %s=%d, wrote %d byte(s)", key, value, written);
 #endif
 }
 
