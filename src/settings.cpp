@@ -121,7 +121,6 @@ void init() {
   rvl::setBrightness(brightness);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
 
-  // TODO(nebrius): wire this up properly so it can be changed
   rvl::setRemoteBrightnessState(false);
 }
 
