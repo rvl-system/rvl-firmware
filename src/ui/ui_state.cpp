@@ -126,7 +126,7 @@ void getClockValue(char* buffer) {
 Control::LabelControl* clockControl;
 
 void init() {
-  preset = Settings::getSetting("ui-preset", 2);
+  preset = Settings::getSetting("ui-preset", DEFAULT_PRESET);
   brightnessControl = new Control::RangeControl(
     "BRT",
     0,
