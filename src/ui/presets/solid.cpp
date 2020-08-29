@@ -68,8 +68,8 @@ void updateValueValue(uint8_t newValue) {
 }
 
 Solid::Solid() {
-  hue = Settings::getSetting("ui-s-hue", 170);
-  saturation = Settings::getSetting("ui-s-sat", 255);
+  hue = Settings::getSetting("ui-s-hue", 19);
+  saturation = Settings::getSetting("ui-s-sat", 48);
   value = Settings::getSetting("ui-s-val", 255);
   this->controls.push_back(new Control::RangeControl(
     "HUE",

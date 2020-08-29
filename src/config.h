@@ -40,10 +40,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_BAUDRATE 115200
 
 #define DEFAULT_CHANNEL 0
-#define DEFAULT_PRESET 2
-#define DEFAULT_BRIGHTNESS 50
+#define DEFAULT_PRESET 4
+#define DEFAULT_BRIGHTNESS 255
 #define MIN_BRIGHTNESS 25
-#define MAX_BRIGHTNESS 200
+#define MAX_BRIGHTNESS 255
 
 /**** You most likely should *not* modify these settings ****/
 
