@@ -86,6 +86,19 @@ void updatePresetValue(uint8_t selectedValueIndex) {
 }
 Control::ListControl* presetControl;
 
+void updateRemoteBrightnessValue(uint8_t selectedValueIndex) {
+  if (UIState::preset != selectedValueIndex) {
+  rvl::setRemoteBrightnessState(!!selectedValueIndex);
+  if (selectedValueIndex) {
+    rvl::info("Enabling remote brightness");
+  } else {
+    rvl::info("Disabling remote brightness");
+  }
+  rvl::emit(Codes::EventType::AnimationChange);
+  }
+}
+Control::ListControl* remoteBrightnessControl;
+
 std::vector<Control::Control*> tab1Controls;
 std::vector<Control::Control*> tab2Controls;
 
@@ -98,6 +111,8 @@ void update() {
     for (auto& control : presets[preset]->controls) {
       tab1Controls.push_back(control);
     }
+  } else {
+    tab1Controls.push_back(remoteBrightnessControl);
   }
   rvl::emit(Codes::EventType::UIStateChange);
 }
@@ -152,6 +167,12 @@ void init() {
     { "Rainbow", "Pulse", "Wave", "Color Cycle", "Solid" },
     preset,
     updatePresetValue);
+
+  remoteBrightnessControl = new Control::ListControl(
+    "RBRT",
+    { "Disabled", "Enabled" },
+    rvl::getRemoteBrightnessState(),
+    updateRemoteBrightnessValue);
 
   tab1Controls.push_back(brightnessControl);
   tab1Controls.push_back(channelControl);
