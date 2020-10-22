@@ -14,6 +14,12 @@ And a photo of the system on my bike at Burning Man 2017:
 
 ![Photo of Raver Lights on a bike at Burning Man 2017](https://user-images.githubusercontent.com/1141386/43027627-5eabe7a8-8c30-11e8-85ab-a81104623926.jpg)
 
+And finally a video of an art piece I designed the lighting for at Burning Man 2019
+
+<a href="https://www.youtube.com/watch?v=HZNM6n1g5n8" target="_blank">
+  <img src="https://img.youtube.com/vi/HZNM6n1g5n8/0.jpg" alt="Video of a tech demonstration of Raver Lights version 3" width="480" height="360" border="10" />
+</a>
+
 # License
 
 All schematics, layouts, software, and other documentation for raver-lights is released under the General Public License.
