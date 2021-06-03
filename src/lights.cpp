@@ -38,7 +38,9 @@ void init() {
 }
 
 uint8_t calculatePixelValue(RVLWaveChannel *wave, uint32_t t, uint8_t x) {
-  return sin8(wave->w_t * t / 100 + wave->w_x * x + wave->phi) * wave->a / 255 + wave->b;
+  return sin8(
+    wave->w_t * t / 100 + wave->w_x * x + wave->phi) *
+    wave->a / 255 + wave->b;
 }
 
 #define NUM_LOOP_SAMPLES 60
@@ -56,9 +58,11 @@ void animationLoop() {
 
   auto waveSettings = rvl::getWaveSettings();
   FastLED.setBrightness(rvl::getBrightness());
-  uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
+  uint32_t t = rvl::getAnimationClock() %
+    (waveSettings->timePeriod * 100) * 255 / waveSettings->timePeriod;
   for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
-    uint8_t x = 255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
+    uint8_t x =
+      255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
 
     CHSV waveHSV[NUM_WAVES];
     CRGB waveRGB[NUM_WAVES];
@@ -132,7 +136,9 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    rvl::info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES, min, max);
+    rvl::info(
+      "Performance stats: Avg=%d Min=%d Max=%d",
+      sum / NUM_LOOP_SAMPLES, min, max);
   }
 }
 

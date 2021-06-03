@@ -53,7 +53,8 @@ void renderScrollBar(uint8_t numEntries, uint8_t windowStart) {
   if (numEntries > 4) {
     uint8_t scrollBarHeight = 24;
     uint8_t y = (64 - scrollBarHeight) * windowStart / (numEntries - 4);
-    if (y > 64 - scrollBarHeight) {  // Can happen when changing the preset and the last items disappear
+    // Can happen when changing the preset and the last items disappear
+    if (y > 64 - scrollBarHeight) {
       y = 64 - scrollBarHeight;
     }
     display.fillRect(125, y, 3, 24);
@@ -70,7 +71,8 @@ void renderEntry(Control::Control* entry, uint8_t row) {
     display.drawString(21, textY, entry->label);
     auto listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(52, textY, "<");
-    display.drawStringMaxWidth(60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
+    display.drawStringMaxWidth(
+      60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
     display.drawString(115, textY, ">");
   } else if (entry->type == Control::ControlType::Range) {
     display.drawString(21, textY, entry->label);
@@ -79,7 +81,8 @@ void renderEntry(Control::Control* entry, uint8_t row) {
     if (rangeEntry->getValue != NULL) {
       rangeValue = rangeEntry->getValue();
     }
-    uint8_t progress = 100 * (rangeValue - rangeEntry->min) / (rangeEntry->max - rangeEntry->min);
+    uint8_t progress = 100 * (rangeValue - rangeEntry->min) /
+      (rangeEntry->max - rangeEntry->min);
     display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
   } else if (entry->type == Control::ControlType::Label) {
     auto labelEntry = static_cast<Control::LabelControl*>(entry);
@@ -93,7 +96,11 @@ void renderEntry(Control::Control* entry, uint8_t row) {
   }
 }
 
-void renderEntrySet(std::vector<Control::Control*>* entries, uint8_t selectedTab, uint8_t selectedEntry) {
+void renderEntrySet(
+  std::vector<Control::Control*>* entries,
+  uint8_t selectedTab,
+  uint8_t selectedEntry
+) {
   if (windowStates[selectedTab].previousSelectedEntry > selectedEntry) {
     if (windowStates[selectedTab].selectedEntryRow == 0) {
       windowStates[selectedTab].entryWindowStart--;
@@ -110,7 +117,8 @@ void renderEntrySet(std::vector<Control::Control*>* entries, uint8_t selectedTab
   windowStates[selectedTab].previousSelectedEntry = selectedEntry;
   for (uint8_t i = 0; i < 4; i++) {
     if (i + windowStates[selectedTab].entryWindowStart < entries->size()) {
-      renderEntry((*entries)[i + windowStates[selectedTab].entryWindowStart], i);
+      renderEntry(
+        (*entries)[i + windowStates[selectedTab].entryWindowStart], i);
     }
   }
   renderSelectedEntryBox(windowStates[selectedTab].selectedEntryRow);
@@ -135,7 +143,12 @@ void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
   }
 }
 
-void render(std::vector<Control::Control*>* entries, uint8_t selectedTab, uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons) {
+void render(
+  std::vector<Control::Control*>* entries,
+  uint8_t selectedTab,
+  uint8_t selectedEntry,
+  std::list<Icons::StatusIcon*>* icons
+) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, 128, 64);

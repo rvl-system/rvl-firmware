@@ -106,10 +106,7 @@ function exec(command) {
 }
 
 if (build) {
-  console.log(`\nBuilding target ${target}\n`);
-  for (const dir of [ 'lib/rvl/src', 'lib/rvl-wifi/src', 'src' ]) {
-    exec(`cpplint --quiet --linelength=120 --recursive --repository=${join(__dirname, dir)} ${dir}/*`);
-  }
+  console.log(`\Building ${target}\n`);
   exec(`platformio run -e ${target}`);
 }
 

@@ -118,7 +118,8 @@ void init() {
   port = DEFAULT_WIFI_PORT;
 #endif
 
-  mode = static_cast<rvl::DeviceMode>(getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
+  mode = static_cast<rvl::DeviceMode>(
+    getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
   rvl::setDeviceMode(mode);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, updateDeviceMode);
 
@@ -133,7 +134,6 @@ void init() {
   remoteBrightnessState = getSetting("remote-brightness", false);
   rvl::setRemoteBrightnessState(remoteBrightnessState);
   rvl::on(EVENT_REMOTE_BRIGHTNESS_UPDATED, updateRemoteBrightnessState);
-
 }
 
 char* getWiFiSSID() {
@@ -152,7 +152,8 @@ char* getWiFiPassphrase() {
   return passphrase;
 }
 void setWiFiPassphrase(const char* newPassphrase) {
-  memcpy(passphrase, newPassphrase, std::min(63, static_cast<int>(strlen(newPassphrase))));
+  memcpy(passphrase, newPassphrase,
+    std::min(63, static_cast<int>(strlen(newPassphrase))));
 #ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putString("wifi-passphrase", passphrase);
