@@ -62,7 +62,8 @@ void init() {
 
 void renderScrollBar(uint8_t numEntries, uint8_t windowStart) {
   if (numEntries > SCREEN_HEIGHT / ROW_HEIGHT) {
-    uint8_t y = (SCREEN_HEIGHT - SCROLLBAR_HEIGHT - 1) * windowStart / (numEntries * ROW_HEIGHT - SCREEN_HEIGHT);
+    uint8_t y = (SCREEN_HEIGHT - SCROLLBAR_HEIGHT - 1) * windowStart /
+      (numEntries * ROW_HEIGHT - SCREEN_HEIGHT);
     // Can happen when changing the preset and the last items disappear
     if (y > SCREEN_HEIGHT - SCROLLBAR_HEIGHT) {
       y = SCREEN_HEIGHT - SCROLLBAR_HEIGHT;
