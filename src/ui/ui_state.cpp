@@ -119,31 +119,31 @@ void update() {
 
 void getWiFiSSIDValue(char* buffer) {
 #ifdef DEFAULT_WIFI_SSID
-  snprintf(buffer, strlen(buffer), "SSID: %s", DEFAULT_WIFI_SSID);
+  snprintf(buffer, strlen(buffer), "%s", DEFAULT_WIFI_SSID);
 #else
-  snprintf(buffer, strlen(buffer), "SSID: N/A");
+  snprintf(buffer, strlen(buffer), "N/A");
 #endif
 }
 Control::LabelControl* wifiSSIDControl;
 
 void getAddressValue(char* buffer) {
   if (rvl::isNetworkConnected()) {
-    snprintf(buffer, strlen(buffer), "ADDR: %d", rvl::getDeviceId());
+    snprintf(buffer, strlen(buffer), "%d", rvl::getDeviceId());
   } else {
-    snprintf(buffer, strlen(buffer), "ADDR: N/A");
+    snprintf(buffer, strlen(buffer), "N/A");
   }
 }
 Control::LabelControl* addressControl;
 
 void getClockValue(char* buffer) {
-  snprintf(buffer, strlen(buffer), "CLCK: %d", rvl::getAnimationClock());
+  snprintf(buffer, strlen(buffer), "%d", rvl::getAnimationClock());
 }
 Control::LabelControl* clockControl;
 
 void init() {
   preset = Settings::getSetting("ui-preset", DEFAULT_PRESET);
   brightnessControl = new Control::RangeControl(
-    "BRT",
+    "Brightness",
     0,
     16,
     getBrightnessValue(),
@@ -151,25 +151,25 @@ void init() {
     getBrightnessValue);
 
   channelControl = new Control::ListControl(
-    "CHNL",
+    "Channel",
     { "0", "1", "2", "3", "4", "5", "6", "7" },
     rvl::getChannel(),
     updateChannelValue);
 
   modeControl = new Control::ListControl(
-    "MODE",
+    "Mode",
     { "Controller", "Receiver" },
     rvl::getDeviceMode() == rvl::DeviceMode::Controller ? 0 : 1,
     updateModeValue);
 
   presetControl = new Control::ListControl(
-    "PRST",
+    "Preset",
     { "Rainbow", "Pulse", "Wave", "Color Cycle", "Solid" },
     preset,
     updatePresetValue);
 
   remoteBrightnessControl = new Control::ListControl(
-    "RBRT",
+    "Remote Brightness",
     { "Disabled", "Enabled" },
     rvl::getRemoteBrightnessState(),
     updateRemoteBrightnessValue);
@@ -178,9 +178,9 @@ void init() {
   tab1Controls.push_back(channelControl);
   tab1Controls.push_back(modeControl);
 
-  clockControl = new Control::LabelControl(getClockValue);
-  addressControl = new Control::LabelControl(getAddressValue);
-  wifiSSIDControl = new Control::LabelControl(getWiFiSSIDValue);
+  clockControl = new Control::LabelControl("Clock", getClockValue);
+  addressControl = new Control::LabelControl("Node Address", getAddressValue);
+  wifiSSIDControl = new Control::LabelControl("WiFi SSID", getWiFiSSIDValue);
 
   tab2Controls.push_back(clockControl);
   tab2Controls.push_back(addressControl);

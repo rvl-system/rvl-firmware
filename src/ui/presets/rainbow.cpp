@@ -51,7 +51,7 @@ void updateRateValue(uint8_t newValue) {
 Rainbow::Rainbow() {
   rate = Settings::getSetting("ui-r-rate", 4);
   this->controls.push_back(new Control::RangeControl(
-    "RATE",
+    "Rate",
     0,
     32,
     rate,

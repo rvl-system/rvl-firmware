@@ -33,12 +33,23 @@ namespace Render {
 SSD1306Wire display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
 struct WindowState {
-  uint8_t previousSelectedEntry = 0;  // from 0 to numEntries
-  uint8_t entryWindowStart = 0;   // from 0 to numEntries
-  uint8_t selectedEntryRow = 0;  // from 0 to 3
+  uint8_t windowStart = 0;  // from 0 to numEntries * ROW_HEIGHT - WINDOW_HEIGHT
 };
 
 WindowState windowStates[2];
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define SCROLLBAR_WIDTH 3
+#define SCROLLBAR_HEIGHT 24
+
+#define ROW_HEIGHT 32
+#define ROW_START 21
+#define ROW_BORDER_PADDING 3
+#define ROW_END SCREEN_WIDTH - SCROLLBAR_WIDTH - ROW_BORDER_PADDING - 5
+
+#define ICON_SIZE 16
 
 void init() {
   display.init();
@@ -50,32 +61,35 @@ void init() {
 }
 
 void renderScrollBar(uint8_t numEntries, uint8_t windowStart) {
-  if (numEntries > 4) {
-    uint8_t scrollBarHeight = 24;
-    uint8_t y = (64 - scrollBarHeight) * windowStart / (numEntries - 4);
+  if (numEntries > SCREEN_HEIGHT / ROW_HEIGHT) {
+    uint8_t y = (SCREEN_HEIGHT - SCROLLBAR_HEIGHT - 1) * windowStart / (numEntries * ROW_HEIGHT - SCREEN_HEIGHT);
     // Can happen when changing the preset and the last items disappear
-    if (y > 64 - scrollBarHeight) {
-      y = 64 - scrollBarHeight;
+    if (y > SCREEN_HEIGHT - SCROLLBAR_HEIGHT) {
+      y = SCREEN_HEIGHT - SCROLLBAR_HEIGHT;
     }
-    display.fillRect(125, y, 3, 24);
+    display.fillRect(SCREEN_WIDTH - SCROLLBAR_WIDTH, y,
+      SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
   }
 }
 
-void renderSelectedEntryBox(uint8_t row) {
-  display.drawRect(18, row * 16, 105, 15);
+void renderSelectedEntryBox(uint8_t rowStart) {
+  display.drawRect(ROW_START - ROW_BORDER_PADDING, rowStart,
+    ROW_END - ROW_START + ROW_BORDER_PADDING * 2 + 2, ROW_HEIGHT - 1);
 }
 
-void renderEntry(Control::Control* entry, uint8_t row) {
-  uint8_t textY = row * 16 + 1;
+void renderEntry(Control::Control* entry, uint8_t labelY) {
+  uint8_t controlY = labelY + ROW_HEIGHT / 2;
+  display.drawString(ROW_START, labelY, entry->label);
   if (entry->type == Control::ControlType::List) {
-    display.drawString(21, textY, entry->label);
     auto listEntry = static_cast<Control::ListControl*>(entry);
-    display.drawString(52, textY, "<");
+    display.drawString(ROW_START, controlY, "<");
     display.drawStringMaxWidth(
-      60, textY, 56, listEntry->values[listEntry->selectedValueIndex]);
-    display.drawString(115, textY, ">");
+      ROW_START + 8,
+      controlY,
+      ROW_END - ROW_START - 10,
+      listEntry->values[listEntry->selectedValueIndex]);
+    display.drawString(ROW_END - 3, controlY, ">");
   } else if (entry->type == Control::ControlType::Range) {
-    display.drawString(21, textY, entry->label);
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
     uint8_t rangeValue = rangeEntry->value;
     if (rangeEntry->getValue != NULL) {
@@ -83,15 +97,16 @@ void renderEntry(Control::Control* entry, uint8_t row) {
     }
     uint8_t progress = 100 * (rangeValue - rangeEntry->min) /
       (rangeEntry->max - rangeEntry->min);
-    display.drawProgressBar(52, row * 16 + 3, 67, 8, progress);
+    display.drawProgressBar(ROW_START, controlY + 2,
+      ROW_END - ROW_START + 1, 8, progress);
   } else if (entry->type == Control::ControlType::Label) {
     auto labelEntry = static_cast<Control::LabelControl*>(entry);
     if (labelEntry->getValue != NULL) {
       char labelBuffer[] = "                  ";
       labelEntry->getValue(labelBuffer);
-      display.drawString(21, textY, labelBuffer);
+      display.drawString(ROW_START + 5, controlY, labelBuffer);
     } else {
-      display.drawString(21, textY, "LABEL ERROR");
+      display.drawString(ROW_START + 5, controlY, "LABEL ERROR");
     }
   }
 }
@@ -101,35 +116,32 @@ void renderEntrySet(
   uint8_t selectedTab,
   uint8_t selectedEntry
 ) {
-  if (windowStates[selectedTab].previousSelectedEntry > selectedEntry) {
-    if (windowStates[selectedTab].selectedEntryRow == 0) {
-      windowStates[selectedTab].entryWindowStart--;
-    } else {
-      windowStates[selectedTab].selectedEntryRow--;
-    }
-  } else if (windowStates[selectedTab].previousSelectedEntry < selectedEntry) {
-    if (windowStates[selectedTab].selectedEntryRow == 3) {
-      windowStates[selectedTab].entryWindowStart++;
-    } else {
-      windowStates[selectedTab].selectedEntryRow++;
+  if (selectedEntry * ROW_HEIGHT < windowStates[selectedTab].windowStart) {
+    windowStates[selectedTab].windowStart = selectedEntry * ROW_HEIGHT;
+  } else if (selectedEntry * ROW_HEIGHT >
+    windowStates[selectedTab].windowStart + SCREEN_HEIGHT - ROW_HEIGHT
+  ) {
+    windowStates[selectedTab].windowStart =
+      (selectedEntry + 1) * ROW_HEIGHT - SCREEN_HEIGHT;
+  }
+  for (uint8_t i = 0; i < entries->size(); i++) {
+    if (i * ROW_HEIGHT >= windowStates[selectedTab].windowStart &&
+      i * ROW_HEIGHT < windowStates[selectedTab].windowStart + SCREEN_HEIGHT
+    ) {
+      renderEntry((*entries)[i],
+        i * ROW_HEIGHT - windowStates[selectedTab].windowStart);
     }
   }
-  windowStates[selectedTab].previousSelectedEntry = selectedEntry;
-  for (uint8_t i = 0; i < 4; i++) {
-    if (i + windowStates[selectedTab].entryWindowStart < entries->size()) {
-      renderEntry(
-        (*entries)[i + windowStates[selectedTab].entryWindowStart], i);
-    }
-  }
-  renderSelectedEntryBox(windowStates[selectedTab].selectedEntryRow);
-  renderScrollBar(entries->size(), windowStates[selectedTab].entryWindowStart);
+  renderSelectedEntryBox(selectedEntry * ROW_HEIGHT -
+    windowStates[selectedTab].windowStart);
+  renderScrollBar(entries->size(), windowStates[selectedTab].windowStart);
 }
 
 void renderIcon(Icons::StatusIcon* icon, uint8_t row) {
-  for (uint8_t x = 0; x < 16; x++) {
-    for (uint8_t y = 0; y < 16; y++) {
+  for (uint8_t x = 0; x < ICON_SIZE; x++) {
+    for (uint8_t y = 0; y < ICON_SIZE; y++) {
       if (icon->data[y][x]) {
-        display.setPixel(x, y + row * 20);
+        display.setPixel(x, y + row * (ICON_SIZE + 4));
       }
     }
   }
@@ -151,23 +163,11 @@ void render(
 ) {
   display.clear();
   display.setColor(BLACK);
-  display.fillRect(0, 0, 128, 64);
+  display.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   display.setColor(WHITE);
 
   renderIconSet(icons);
   renderEntrySet(entries, selectedTab, selectedEntry);
-
-  // display.setColor(BLACK);
-  // display.fillRect(0, 0, 50, 16);
-  // display.setColor(WHITE);
-
-  // uint32_t localTime = RVLGetAnimationClock();
-  // uint16_t ms = localTime % 1000;
-  // uint8_t s = (localTime / 1000) % 60;
-  // uint8_t m = (localTime / 1000 / 60) % 60;
-  // char timeString[9];
-  // snprintf(timeString, strlen(timeString), "%02d:%02d:%02d", m, s, ms);
-  // display.drawString(0, 0, timeString);
 
   display.display();
 }

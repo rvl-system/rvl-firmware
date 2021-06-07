@@ -97,28 +97,28 @@ Wave::Wave() {
   foregroundHue = Settings::getSetting("ui-w-fhue", 170);
   backgroundHue = Settings::getSetting("ui-w-bhue", 85);
   this->controls.push_back(new Control::RangeControl(
-    "RATE",
+    "Rate",
     0,
     32,
     rate,
     updateRateValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "WHUE",
+    "Wave Hue",
     0,
     255,
     waveHue,
     updateWaveHueValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "FHUE",
+    "Foreground Hue",
     0,
     255,
     foregroundHue,
     updateForegroundHueValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "BHUE",
+    "Background Hue",
     0,
     255,
     backgroundHue,

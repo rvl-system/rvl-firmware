@@ -70,21 +70,21 @@ Pulse::Pulse() {
   hue = Settings::getSetting("ui-p-hue", 120);
   saturation = Settings::getSetting("ui-p-sat", 255);
   this->controls.push_back(new Control::RangeControl(
-    "RATE",
+    "Rate",
     0,
     32,
     rate,
     updateRateValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "HUE",
+    "Hue",
     0,
     255,
     hue,
     updateHueValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "SATR",
+    "Saturation",
     0,
     255,
     saturation,

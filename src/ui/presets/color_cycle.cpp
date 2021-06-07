@@ -51,7 +51,7 @@ void updateRateValue(uint8_t newValue) {
 ColorCycle::ColorCycle() {
   rate = Settings::getSetting("ui-cc-rate", 4);
   this->controls.push_back(new Control::RangeControl(
-    "RATE",
+    "Rate",
     0,
     32,
     rate,

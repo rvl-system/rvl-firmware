@@ -72,21 +72,21 @@ Solid::Solid() {
   saturation = Settings::getSetting("ui-s-sat", 255);
   value = Settings::getSetting("ui-s-val", 255);
   this->controls.push_back(new Control::RangeControl(
-    "HUE",
+    "Hue",
     0,
     255,
     hue,
     updateHueValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "SAT",
+    "Saturation",
     0,
     255,
     saturation,
     updateSaturationValue,
     NULL));
   this->controls.push_back(new Control::RangeControl(
-    "VAL",
+    "Value",
     0,
     255,
     value,

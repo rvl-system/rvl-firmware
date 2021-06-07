@@ -121,9 +121,11 @@ class LabelControl : public Control {
   void (*getValue)(char* buffer);
 
   LabelControl(
+    const char* labelLabel,
     void (*getValueMethod)(char* buffer)
   ) {
     this->type = ControlType::Label;
+    this->label = labelLabel;
     this->getValue = getValueMethod;
   }
 
