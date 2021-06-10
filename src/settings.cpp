@@ -188,7 +188,7 @@ uint8_t getSetting(const char* key, uint8_t defaultValue) {
 void setSetting(const char* key, uint8_t value) {
 #ifdef ESP32
   preferences.begin("rvl", false);
-  size_t written = preferences.putUChar(key, value);
+  preferences.putUChar(key, value);
   preferences.end();
 #endif
 }
