@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { existsSync } = require('fs');
+const { existsSync, readdirSync, statSync } = require('fs');
 const { join, sep } = require('path');
 const { execSync } = require('child_process');
 
@@ -112,6 +112,20 @@ function exec(command, env) {
   }
 }
 
+function findFiles(dir, pattern) {
+  const files = readdirSync(dir);
+  const foundFiles = [];
+  for (const file of files) {
+    const filePath = join(dir, file);
+    if (statSync(filePath).isDirectory()) {
+      foundFiles.push(...findFiles(filePath, pattern));
+    } else if (filePath.match(pattern)) {
+      foundFiles.push(filePath);
+    }
+  }
+  return foundFiles;
+}
+
 if (lint) {
   const cppConfig = require(join(__dirname, '.vscode', 'c_cpp_properties.json'));
   const rootIncludeDirs = cppConfig.configurations[0].includePath
@@ -123,7 +137,8 @@ if (lint) {
       .replace(/\//g, sep)
       .replace('${env.HOME}', process.env.HOME + sep)
       .replace('${workspaceFolder}', __dirname));
-  exec("clang-tidy src/*", {
+  const sourceFiles = findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/);
+  exec(`clang-tidy -checks=llvm-* ${sourceFiles.join(' ')}`, {
     CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
   });
 }
