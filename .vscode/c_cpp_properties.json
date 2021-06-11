@@ -4,7 +4,10 @@
             "name": "Windows",
             "includePath": [
                 "${env.HOME}.platformio/packages/**",
-                "${workspaceFolder}/.pio/libdeps/**",
+                "${env.HOME}.platformio/packages/framework-arduinoespressif32/libraries",
+                "${env.HOME}.platformio/packages/framework-arduinoespressif32/cores/esp32",
+                "${env.HOME}.platformio/packages/framework-arduinoespressif32/tools/sdk/include",
+                "${workspaceFolder}/.pio/libdeps/controller/**",
                 "${workspaceFolder}/lib/rvl/src",
                 "${workspaceFolder}/lib/rvl-wifi/src",
                 "${workspaceFolder}/src"

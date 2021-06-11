@@ -19,7 +19,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 const { existsSync } = require('fs');
-const { join } = require('path');
+const { join, sep } = require('path');
 const { execSync } = require('child_process');
 
 const args = process.argv.slice(2);
@@ -39,6 +39,7 @@ the name of the requested target as specified in an [env:TARGET] section of
 platformio.ini.
 
 OPTIONS:
+  -l  --lint   lint the source code
   -b  --build  build the firmware before flashing the target
   -f  --flash  flash the firmware after building the target
   -d  --debug  spin up OpenOCD to allow GDN connections
@@ -48,6 +49,7 @@ OPTIONS:
 `);
 }
 
+let lint = false;
 let build = false;
 let flash = false;
 let debug = false;
@@ -61,6 +63,10 @@ while (i < args.length) {
     case '--help':
       showHelp();
       process.exit(0);
+    case '-l':
+    case '--lint':
+      lint = true;
+      break;
     case '-b':
     case '--build':
       build = true;
@@ -94,15 +100,34 @@ if (typeof target !== 'string') {
 }
 const targetUrl = `.pio/build/${target}/firmware.bin`;
 
-function exec(command) {
+function exec(command, env) {
   try {
     execSync(command, {
       stdio: 'inherit',
-      cwd: __dirname
+      cwd: __dirname,
+      env
     });
   } catch(e) {
     process.exit(-1);
   }
+}
+
+if (lint) {
+  const cppConfig = require(join(__dirname, '.vscode', 'c_cpp_properties.json'));
+  const rootIncludeDirs = cppConfig.configurations[0].includePath
+    .filter((dir) =>
+      !dir.startsWith('${workspaceFolder}/lib') &&
+      !dir.startsWith('${workspaceFolder}/src') &&
+      !dir.endsWith('/**'))
+    .map((path) => {
+      return path
+        .replace(/\//g, sep)
+        .replace('${env.HOME}', process.env.HOME + sep)
+        .replace('${workspaceFolder}', __dirname);
+    });
+  exec("clang-tidy -checks=* src/*", {
+    CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
+  });
 }
 
 if (build) {
