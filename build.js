@@ -119,13 +119,11 @@ if (lint) {
       !dir.startsWith('${workspaceFolder}/lib') &&
       !dir.startsWith('${workspaceFolder}/src') &&
       !dir.endsWith('/**'))
-    .map((path) => {
-      return path
-        .replace(/\//g, sep)
-        .replace('${env.HOME}', process.env.HOME + sep)
-        .replace('${workspaceFolder}', __dirname);
-    });
-  exec("clang-tidy -checks=* src/*", {
+    .map((path) => path
+      .replace(/\//g, sep)
+      .replace('${env.HOME}', process.env.HOME + sep)
+      .replace('${workspaceFolder}', __dirname));
+  exec("clang-tidy src/*", {
     CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
   });
 }
