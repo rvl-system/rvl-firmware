@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODES_H
-#define CODES_H
+#ifndef CODES_H_
+#define CODES_H_
 
 namespace Codes {
 

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { existsSync, readdirSync, statSync } = require('fs');
+const { existsSync, readdirSync, readFileSync, statSync } = require('fs');
 const { join, sep } = require('path');
 const { execSync } = require('child_process');
 
@@ -39,7 +39,7 @@ the name of the requested target as specified in an [env:TARGET] section of
 platformio.ini.
 
 OPTIONS:
-  -l  --lint   lint the source code
+  -t  --lint   lint the source code
   -b  --build  build the firmware before flashing the target
   -f  --flash  flash the firmware after building the target
   -d  --debug  spin up OpenOCD to allow GDN connections
@@ -126,6 +126,43 @@ function findFiles(dir, pattern) {
   return foundFiles;
 }
 
+function checkHeaderGuard(file) {
+  if (!file.endsWith('.hpp') && !file.endsWith('.h')) {
+    return;
+  }
+  const contents = readFileSync(file, 'utf-8').split('\n');
+  let ifdef;
+  let def;
+  const splitFile = file.replace(/-/g, '_').toUpperCase().split(sep);
+  const headerGuardSegment = splitFile.slice(splitFile.lastIndexOf('SRC') + 1);
+  const filename = headerGuardSegment.pop().replace('.HPP', '').replace('.H', '');
+  headerGuardSegment.push(...filename.split('_'), 'H_');
+  for (let line of contents) {
+    line = line.trimEnd();
+    if (ifdef && def) {
+      break;
+    }
+    if (line.startsWith('#ifndef') && !ifdef) {
+      ifdef = line.split(' ')[1];
+    }
+    if (line.startsWith('#define') && !def) {
+      def = line.split(' ')[1];
+    }
+  }
+  function guard(segments) {
+    return segments.join('_');
+  }
+  let error = false;
+  if (headerGuardSegment.join('_') !== ifdef) {
+    error = true;
+    console.error(`Invalid #ifdef header guard ${ifdef} in ${file}. Expected ${guard(headerGuardSegment)}`);
+  } else if (headerGuardSegment.join('_') !== def) {
+    error = true;
+    console.error(`Invalid #define header guard ${def} in ${file}. Expected ${guard(headerGuardSegment)}`);
+  }
+  return error;
+}
+
 if (lint) {
   const cppConfig = require(join(__dirname, '.vscode', 'c_cpp_properties.json'));
   const rootIncludeDirs = cppConfig.configurations[0].includePath
@@ -142,6 +179,12 @@ if (lint) {
     ...findFiles(join(__dirname, 'lib', 'rvl', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
     ...findFiles(join(__dirname, 'lib', 'rvl-wifi', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
   ];
+  const guardError = sourceFiles.reduce((error, sourceFile) => {
+    return checkHeaderGuard(sourceFile) || error;
+  }, false);
+  if (guardError) {
+    process.exit(-1);
+  }
   exec(`clang-tidy ${sourceFiles.join(' ')}`, {
     CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
   });
