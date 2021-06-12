@@ -63,7 +63,7 @@ while (i < args.length) {
     case '--help':
       showHelp();
       process.exit(0);
-    case '-l':
+    case '-t':
     case '--lint':
       lint = true;
       break;
