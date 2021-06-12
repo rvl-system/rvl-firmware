@@ -138,7 +138,7 @@ if (lint) {
       .replace('${env.HOME}', process.env.HOME + sep)
       .replace('${workspaceFolder}', __dirname));
   const sourceFiles = findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/);
-  exec(`clang-tidy -checks=llvm-* ${sourceFiles.join(' ')}`, {
+  exec(`clang-tidy ${sourceFiles.join(' ')}`, {
     CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
   });
 }
