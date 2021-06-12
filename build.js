@@ -137,7 +137,11 @@ if (lint) {
       .replace(/\//g, sep)
       .replace('${env.HOME}', process.env.HOME + sep)
       .replace('${workspaceFolder}', __dirname));
-  const sourceFiles = findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/);
+  const sourceFiles = [
+    ...findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+    ...findFiles(join(__dirname, 'lib', 'rvl', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+    ...findFiles(join(__dirname, 'lib', 'rvl-wifi', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+  ];
   exec(`clang-tidy ${sourceFiles.join(' ')}`, {
     CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
   });
