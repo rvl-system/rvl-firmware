@@ -20,10 +20,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_UI_STATE_H_
 #define UI_UI_STATE_H_
 
+#include "./config.hpp"
+#include "./ui/control.hpp"
 #include <Arduino.h>
 #include <vector>
-#include "./ui/control.h"
-#include "./config.h"
 
 namespace UIState {
 
@@ -47,6 +47,6 @@ void nextTab();
 
 bool isCurrentControlRange();
 
-}  // namespace UIState
+} // namespace UIState
 
-#endif  // UI_UI_STATE_H_
+#endif // UI_UI_STATE_H_

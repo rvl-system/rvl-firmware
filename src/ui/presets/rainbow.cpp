@@ -19,11 +19,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/presets/rainbow.hpp"
+#include "./settings.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
-#include "./settings.h"
-#include "./ui/presets/rainbow.h"
 
 namespace Rainbow {
 
@@ -50,19 +50,12 @@ void updateRateValue(uint8_t newValue) {
 
 Rainbow::Rainbow() {
   rate = Settings::getSetting("ui-r-rate", 4);
-  this->controls.push_back(new Control::RangeControl(
-    "Rate",
-    0,
-    32,
-    rate,
-    updateRateValue,
-    NULL));
+  this->controls.push_back(
+      new Control::RangeControl("Rate", 0, 32, rate, updateRateValue, NULL));
 }
 
-void Rainbow::updateWave() {
-  updateWaveParameters();
-}
+void Rainbow::updateWave() { updateWaveParameters(); }
 
-}  // namespace Rainbow
+} // namespace Rainbow
 
-#endif  // HAS_UI
+#endif // HAS_UI

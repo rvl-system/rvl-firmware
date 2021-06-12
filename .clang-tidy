@@ -1,1 +1,1 @@
-Checks: '*,-llvm-header-guard,-llvmlibc*'
+Checks: '*,-llvm-header-guard,-llvmlibc*',-modernize-use-trailing-return-type

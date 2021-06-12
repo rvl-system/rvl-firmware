@@ -48,4 +48,4 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define BUTTON_RIGHT_ON LOW
 #define BUTTON_RIGHT_OFF HIGH
 
-#endif  // CONFIG_HUB_H_
+#endif // CONFIG_HUB_H_

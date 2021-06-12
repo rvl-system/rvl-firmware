@@ -27,6 +27,6 @@ namespace Screen {
 void init();
 void loop();
 
-}  // namespace Screen
+} // namespace Screen
 
-#endif  // UI_SCREEN_H_
+#endif // UI_SCREEN_H_

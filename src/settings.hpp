@@ -20,10 +20,10 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+#include "./codes.hpp"
+#include "./config.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
-#include "./codes.h"
-#include "./config.h"
 
 namespace Settings {
 
@@ -41,6 +41,6 @@ void setPort(uint16_t newPort);
 uint8_t getSetting(const char* key, uint8_t defaultValue);
 void setSetting(const char* key, uint8_t value);
 
-}  // namespace Settings
+} // namespace Settings
 
-#endif  // SETTINGS_H_
+#endif // SETTINGS_H_

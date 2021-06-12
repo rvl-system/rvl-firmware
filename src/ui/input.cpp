@@ -19,19 +19,15 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/input.hpp"
+#include "../config.hpp"
+#include "./codes.hpp"
+#include "./ui/ui_state.hpp"
 #include <Arduino.h>
-#include "./ui/input.h"
-#include "./ui/ui_state.h"
-#include "./codes.h"
-#include "../config.h"
 
 namespace Input {
 
-enum ButtonChangeState {
-  None = 0,
-  Pressed = 1,
-  Holding = 2
-};
+enum ButtonChangeState { None = 0, Pressed = 1, Holding = 2 };
 
 struct ButtonInfo {
   uint32_t holdStartTime;
@@ -41,11 +37,16 @@ struct ButtonInfo {
   byte off;
 };
 
-ButtonInfo nextControlButtonInfo = { 5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF };
-ButtonInfo previousControlButtonInfo = { 5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF };
-ButtonInfo increaseValueButtonInfo = { 5, BUTTON_RIGHT_OFF, BUTTON_RIGHT, BUTTON_RIGHT_ON, BUTTON_RIGHT_OFF };
-ButtonInfo decreaseValueButtonInfo = { 5, BUTTON_LEFT_OFF, BUTTON_LEFT, BUTTON_LEFT_ON, BUTTON_LEFT_OFF };
-ButtonInfo switchTabButtonInfo = { 5, BUTTON_PRESS_OFF, BUTTON_PRESS, BUTTON_PRESS_ON, BUTTON_PRESS_OFF };
+ButtonInfo nextControlButtonInfo = {
+    5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF};
+ButtonInfo previousControlButtonInfo = {
+    5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF};
+ButtonInfo increaseValueButtonInfo = {
+    5, BUTTON_RIGHT_OFF, BUTTON_RIGHT, BUTTON_RIGHT_ON, BUTTON_RIGHT_OFF};
+ButtonInfo decreaseValueButtonInfo = {
+    5, BUTTON_LEFT_OFF, BUTTON_LEFT, BUTTON_LEFT_ON, BUTTON_LEFT_OFF};
+ButtonInfo switchTabButtonInfo = {
+    5, BUTTON_PRESS_OFF, BUTTON_PRESS, BUTTON_PRESS_ON, BUTTON_PRESS_OFF};
 
 void init() {
   pinMode(nextControlButtonInfo.gpio, INPUT);
@@ -81,70 +82,70 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
 
 void loop() {
   switch (getButtonChangeState(&nextControlButtonInfo)) {
-    case Pressed:
-      UIState::nextControl();
-      break;
-    case Holding:
-      // Do Nothing
-      break;
-    case None:
-      // Do Nothing
-      break;
+  case Pressed:
+    UIState::nextControl();
+    break;
+  case Holding:
+    // Do Nothing
+    break;
+  case None:
+    // Do Nothing
+    break;
   }
 
   switch (getButtonChangeState(&previousControlButtonInfo)) {
-    case Pressed:
-      UIState::previousControl();
-      break;
-    case Holding:
-      // Do Nothing
-      break;
-    case None:
-      // Do Nothing
-      break;
+  case Pressed:
+    UIState::previousControl();
+    break;
+  case Holding:
+    // Do Nothing
+    break;
+  case None:
+    // Do Nothing
+    break;
   }
 
   switch (getButtonChangeState(&increaseValueButtonInfo)) {
-    case Pressed:
+  case Pressed:
+    UIState::controlIncrease();
+    break;
+  case Holding:
+    if (UIState::isCurrentControlRange()) {
       UIState::controlIncrease();
-      break;
-    case Holding:
-      if (UIState::isCurrentControlRange()) {
-        UIState::controlIncrease();
-      }
-      break;
-    case None:
-      // Do Nothing
-      break;
+    }
+    break;
+  case None:
+    // Do Nothing
+    break;
   }
 
   switch (getButtonChangeState(&decreaseValueButtonInfo)) {
-    case Pressed:
+  case Pressed:
+    UIState::controlDecrease();
+    break;
+  case Holding:
+    if (UIState::isCurrentControlRange()) {
       UIState::controlDecrease();
-      break;
-    case Holding:
-      if (UIState::isCurrentControlRange()) {
-        UIState::controlDecrease();
-      }
-      break;
-    case None:
-      // Do Nothing
-      break;
+    }
+    break;
+  case None:
+    // Do Nothing
+    break;
   }
 
   switch (getButtonChangeState(&switchTabButtonInfo)) {
-    case Pressed:
-      UIState::nextTab();
-      break;
-    case Holding:
-      // Do Nothing
-      break;
-    case None:
-      // Do Nothing
-      break;
+  case Pressed:
+    UIState::nextTab();
+    break;
+  case Holding:
+    // Do Nothing
+    break;
+  case None:
+    // Do Nothing
+    break;
   }
 }
 
-}  // namespace Input
+} // namespace Input
 
-#endif  // HAS_UI
+#endif // HAS_UI

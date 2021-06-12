@@ -25,6 +25,6 @@ namespace Input {
 void init();
 void loop();
 
-}  // namespace Input
+} // namespace Input
 
-#endif  // UI_INPUT_H_
+#endif // UI_INPUT_H_

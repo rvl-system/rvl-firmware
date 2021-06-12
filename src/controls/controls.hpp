@@ -25,6 +25,6 @@ namespace Controls {
 void init();
 void loop();
 
-}  // namespace Controls
+} // namespace Controls
 
-#endif  // CONTROLS_CONTROLS_H_
+#endif // CONTROLS_CONTROLS_H_

@@ -28,6 +28,6 @@ void init();
 void startAnimationLoop();
 void loop();
 
-}  // namespace Lights
+} // namespace Lights
 
-#endif  // LIGHTS_H_
+#endif // LIGHTS_H_

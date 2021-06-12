@@ -19,11 +19,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/presets/color_cycle.hpp"
+#include "./settings.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
-#include "./ui/presets/color_cycle.h"
-#include "./settings.h"
 
 namespace ColorCycle {
 
@@ -50,19 +50,12 @@ void updateRateValue(uint8_t newValue) {
 
 ColorCycle::ColorCycle() {
   rate = Settings::getSetting("ui-cc-rate", 4);
-  this->controls.push_back(new Control::RangeControl(
-    "Rate",
-    0,
-    32,
-    rate,
-    updateRateValue,
-    NULL));
+  this->controls.push_back(
+      new Control::RangeControl("Rate", 0, 32, rate, updateRateValue, NULL));
 }
 
-void ColorCycle::updateWave() {
-  updateWaveParameters();
-}
+void ColorCycle::updateWave() { updateWaveParameters(); }
 
-}  // namespace ColorCycle
+} // namespace ColorCycle
 
-#endif  // HAS_UI
+#endif // HAS_UI

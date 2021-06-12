@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "./controls/controls.hpp"
+#include "./state.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
-#include "./controls/controls.h"
-#include "./state.h"
 
 namespace Controls {
 
@@ -69,4 +69,4 @@ void loop() {
 #endif
 }
 
-}  // namespace Controls
+} // namespace Controls

@@ -51,13 +51,13 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define BUTTON_HOLD_ENGAGE_TIME 2000
 
 #ifdef RVL_CONTROLLER
-#include "./config-controller.h"
+#include "./config-controller.hpp"
 #endif
 #ifdef RVL_HUB
-#include "./config-hub.h"
+#include "./config-hub.hpp"
 #endif
 #ifdef RVL_RECEIVER
-#include "./config-receiver.h"
+#include "./config-receiver.hpp"
 #endif
 
-#endif  // CONFIG_H_
+#endif // CONFIG_H_

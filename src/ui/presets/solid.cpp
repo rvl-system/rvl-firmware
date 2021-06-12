@@ -19,11 +19,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/presets/solid.hpp"
+#include "./settings.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
-#include "./settings.h"
-#include "./ui/presets/solid.h"
 
 namespace Solid {
 
@@ -71,33 +71,16 @@ Solid::Solid() {
   hue = Settings::getSetting("ui-s-hue", 170);
   saturation = Settings::getSetting("ui-s-sat", 255);
   value = Settings::getSetting("ui-s-val", 255);
+  this->controls.push_back(
+      new Control::RangeControl("Hue", 0, 255, hue, updateHueValue, NULL));
   this->controls.push_back(new Control::RangeControl(
-    "Hue",
-    0,
-    255,
-    hue,
-    updateHueValue,
-    NULL));
-  this->controls.push_back(new Control::RangeControl(
-    "Saturation",
-    0,
-    255,
-    saturation,
-    updateSaturationValue,
-    NULL));
-  this->controls.push_back(new Control::RangeControl(
-    "Value",
-    0,
-    255,
-    value,
-    updateValueValue,
-    NULL));
+      "Saturation", 0, 255, saturation, updateSaturationValue, NULL));
+  this->controls.push_back(new Control::RangeControl("Value", 0, 255, value,
+                                                     updateValueValue, NULL));
 }
 
-void Solid::updateWave() {
-  updateWaveParameters();
-}
+void Solid::updateWave() { updateWaveParameters(); }
 
-}  // namespace Solid
+} // namespace Solid
 
-#endif  // HAS_UI
+#endif // HAS_UI

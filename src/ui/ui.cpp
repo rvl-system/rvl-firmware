@@ -19,10 +19,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
-#include "./ui/ui.h"
-#include "./ui/ui_state.h"
-#include "./ui/input.h"
-#include "./ui/screen.h"
+#include "./ui/ui.hpp"
+#include "./ui/input.hpp"
+#include "./ui/screen.hpp"
+#include "./ui/ui_state.hpp"
 
 namespace UI {
 
@@ -37,6 +37,6 @@ void loop() {
   Screen::loop();
 }
 
-}  // namespace UI
+} // namespace UI
 
-#endif  // HAS_UI
+#endif // HAS_UI

@@ -19,11 +19,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/presets/wave.hpp"
+#include "./settings.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
-#include "./settings.h"
-#include "./ui/presets/wave.h"
 
 namespace Wave {
 
@@ -96,40 +96,20 @@ Wave::Wave() {
   waveHue = Settings::getSetting("ui-w-whue", 0);
   foregroundHue = Settings::getSetting("ui-w-fhue", 170);
   backgroundHue = Settings::getSetting("ui-w-bhue", 85);
+  this->controls.push_back(
+      new Control::RangeControl("Rate", 0, 32, rate, updateRateValue, NULL));
   this->controls.push_back(new Control::RangeControl(
-    "Rate",
-    0,
-    32,
-    rate,
-    updateRateValue,
-    NULL));
+      "Wave Hue", 0, 255, waveHue, updateWaveHueValue, NULL));
   this->controls.push_back(new Control::RangeControl(
-    "Wave Hue",
-    0,
-    255,
-    waveHue,
-    updateWaveHueValue,
-    NULL));
+      "Foreground Hue", 0, 255, foregroundHue, updateForegroundHueValue, NULL));
   this->controls.push_back(new Control::RangeControl(
-    "Foreground Hue",
-    0,
-    255,
-    foregroundHue,
-    updateForegroundHueValue,
-    NULL));
-  this->controls.push_back(new Control::RangeControl(
-    "Background Hue",
-    0,
-    255,
-    backgroundHue,
-    updateBackgroundHueValue,
-    NULL));
+      "Background Hue", 0, 255, backgroundHue, updateBackgroundHueValue, NULL));
 }
 
 void Wave::updateWave() {
   updateWaveParameters();
 }
 
-}  // namespace Wave
+} // namespace Wave
 
-#endif  // HAS_UI
+#endif // HAS_UI

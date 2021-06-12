@@ -30,4 +30,4 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #define GREEN_LED 4
 #define RED_LED 5
 
-#endif  // CONFIG_RECEIVER_H_
+#endif // CONFIG_RECEIVER_H_

@@ -19,21 +19,21 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
-#include <rvl-wifi.h>
+#include "./ui/screen/render.hpp"
+#include "../../config.hpp"
+#include "./ui/control.hpp"
+#include "./ui/screen/icons.hpp"
+#include "SSD1306Wire.h"
 #include <Arduino.h>
 #include <Wire.h>
-#include "SSD1306Wire.h"
-#include "./ui/screen/render.h"
-#include "./ui/screen/icons.h"
-#include "./ui/control.h"
-#include "../../config.h"
+#include <rvl-wifi.h>
 
 namespace Render {
 
 SSD1306Wire display(LCD_ADDRESS, LCD_SDA, LCD_SCL);
 
 struct WindowState {
-  uint8_t windowStart = 0;  // from 0 to numEntries * ROW_HEIGHT - WINDOW_HEIGHT
+  uint8_t windowStart = 0; // from 0 to numEntries * ROW_HEIGHT - WINDOW_HEIGHT
 };
 
 WindowState windowStates[2];
@@ -63,19 +63,19 @@ void init() {
 void renderScrollBar(uint8_t numEntries, uint8_t windowStart) {
   if (numEntries > SCREEN_HEIGHT / ROW_HEIGHT) {
     uint8_t y = (SCREEN_HEIGHT - SCROLLBAR_HEIGHT - 1) * windowStart /
-      (numEntries * ROW_HEIGHT - SCREEN_HEIGHT);
+        (numEntries * ROW_HEIGHT - SCREEN_HEIGHT);
     // Can happen when changing the preset and the last items disappear
     if (y > SCREEN_HEIGHT - SCROLLBAR_HEIGHT) {
       y = SCREEN_HEIGHT - SCROLLBAR_HEIGHT;
     }
-    display.fillRect(SCREEN_WIDTH - SCROLLBAR_WIDTH, y,
-      SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+    display.fillRect(
+        SCREEN_WIDTH - SCROLLBAR_WIDTH, y, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
   }
 }
 
 void renderSelectedEntryBox(uint8_t rowStart) {
   display.drawRect(ROW_START - ROW_BORDER_PADDING, rowStart,
-    ROW_END - ROW_START + ROW_BORDER_PADDING * 2 + 2, ROW_HEIGHT - 1);
+      ROW_END - ROW_START + ROW_BORDER_PADDING * 2 + 2, ROW_HEIGHT - 1);
 }
 
 void renderEntry(Control::Control* entry, uint8_t labelY) {
@@ -84,11 +84,9 @@ void renderEntry(Control::Control* entry, uint8_t labelY) {
   if (entry->type == Control::ControlType::List) {
     auto listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(ROW_START, controlY, "<");
-    display.drawStringMaxWidth(
-      ROW_START + 8,
-      controlY,
-      ROW_END - ROW_START - 10,
-      listEntry->values[listEntry->selectedValueIndex]);
+    display.drawStringMaxWidth(ROW_START + 8, controlY,
+        ROW_END - ROW_START - 10,
+        listEntry->values[listEntry->selectedValueIndex]);
     display.drawString(ROW_END - 3, controlY, ">");
   } else if (entry->type == Control::ControlType::Range) {
     auto rangeEntry = static_cast<Control::RangeControl*>(entry);
@@ -97,9 +95,9 @@ void renderEntry(Control::Control* entry, uint8_t labelY) {
       rangeValue = rangeEntry->getValue();
     }
     uint8_t progress = 100 * (rangeValue - rangeEntry->min) /
-      (rangeEntry->max - rangeEntry->min);
-    display.drawProgressBar(ROW_START, controlY + 2,
-      ROW_END - ROW_START + 1, 8, progress);
+        (rangeEntry->max - rangeEntry->min);
+    display.drawProgressBar(
+        ROW_START, controlY + 2, ROW_END - ROW_START + 1, 8, progress);
   } else if (entry->type == Control::ControlType::Label) {
     auto labelEntry = static_cast<Control::LabelControl*>(entry);
     if (labelEntry->getValue != NULL) {
@@ -112,29 +110,26 @@ void renderEntry(Control::Control* entry, uint8_t labelY) {
   }
 }
 
-void renderEntrySet(
-  std::vector<Control::Control*>* entries,
-  uint8_t selectedTab,
-  uint8_t selectedEntry
-) {
+void renderEntrySet(std::vector<Control::Control*>* entries,
+    uint8_t selectedTab, uint8_t selectedEntry) {
   if (selectedEntry * ROW_HEIGHT < windowStates[selectedTab].windowStart) {
     windowStates[selectedTab].windowStart = selectedEntry * ROW_HEIGHT;
   } else if (selectedEntry * ROW_HEIGHT >
-    windowStates[selectedTab].windowStart + SCREEN_HEIGHT - ROW_HEIGHT
-  ) {
+      windowStates[selectedTab].windowStart + SCREEN_HEIGHT - ROW_HEIGHT)
+  {
     windowStates[selectedTab].windowStart =
-      (selectedEntry + 1) * ROW_HEIGHT - SCREEN_HEIGHT;
+        (selectedEntry + 1) * ROW_HEIGHT - SCREEN_HEIGHT;
   }
   for (uint8_t i = 0; i < entries->size(); i++) {
     if (i * ROW_HEIGHT >= windowStates[selectedTab].windowStart &&
-      i * ROW_HEIGHT < windowStates[selectedTab].windowStart + SCREEN_HEIGHT
-    ) {
+        i * ROW_HEIGHT < windowStates[selectedTab].windowStart + SCREEN_HEIGHT)
+    {
       renderEntry((*entries)[i],
-        i * ROW_HEIGHT - windowStates[selectedTab].windowStart);
+          i * ROW_HEIGHT - windowStates[selectedTab].windowStart);
     }
   }
-  renderSelectedEntryBox(selectedEntry * ROW_HEIGHT -
-    windowStates[selectedTab].windowStart);
+  renderSelectedEntryBox(
+      selectedEntry * ROW_HEIGHT - windowStates[selectedTab].windowStart);
   renderScrollBar(entries->size(), windowStates[selectedTab].windowStart);
 }
 
@@ -156,12 +151,8 @@ void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
   }
 }
 
-void render(
-  std::vector<Control::Control*>* entries,
-  uint8_t selectedTab,
-  uint8_t selectedEntry,
-  std::list<Icons::StatusIcon*>* icons
-) {
+void render(std::vector<Control::Control*>* entries, uint8_t selectedTab,
+    uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons) {
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -173,6 +164,6 @@ void render(
   display.display();
 }
 
-}  // namespace Render
+} // namespace Render
 
-#endif  // HAS_UI
+#endif // HAS_UI

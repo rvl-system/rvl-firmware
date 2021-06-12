@@ -19,11 +19,11 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/presets/pulse.hpp"
+#include "./settings.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <vector>
-#include "./settings.h"
-#include "./ui/presets/pulse.h"
 
 namespace Pulse {
 
@@ -69,33 +69,16 @@ Pulse::Pulse() {
   rate = Settings::getSetting("ui-p-rate", 16);
   hue = Settings::getSetting("ui-p-hue", 120);
   saturation = Settings::getSetting("ui-p-sat", 255);
+  this->controls.push_back(
+      new Control::RangeControl("Rate", 0, 32, rate, updateRateValue, NULL));
+  this->controls.push_back(
+      new Control::RangeControl("Hue", 0, 255, hue, updateHueValue, NULL));
   this->controls.push_back(new Control::RangeControl(
-    "Rate",
-    0,
-    32,
-    rate,
-    updateRateValue,
-    NULL));
-  this->controls.push_back(new Control::RangeControl(
-    "Hue",
-    0,
-    255,
-    hue,
-    updateHueValue,
-    NULL));
-  this->controls.push_back(new Control::RangeControl(
-    "Saturation",
-    0,
-    255,
-    saturation,
-    updateSaturationValue,
-    NULL));
+      "Saturation", 0, 255, saturation, updateSaturationValue, NULL));
 }
 
-void Pulse::updateWave() {
-  updateWaveParameters();
-}
+void Pulse::updateWave() { updateWaveParameters(); }
 
-}  // namespace Pulse
+} // namespace Pulse
 
-#endif  // HAS_UI
+#endif // HAS_UI

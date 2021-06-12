@@ -19,19 +19,19 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/ui_state.hpp"
+#include "./codes.hpp"
+#include "./presets/color_cycle.hpp"
+#include "./presets/preset_control_set.hpp"
+#include "./presets/pulse.hpp"
+#include "./presets/rainbow.hpp"
+#include "./presets/solid.hpp"
+#include "./presets/wave.hpp"
+#include "./settings.hpp"
+#include "./state.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
 #include <rvl.h>
-#include "./ui/ui_state.h"
-#include "./state.h"
-#include "./codes.h"
-#include "./settings.h"
-#include "./presets/preset_control_set.h"
-#include "./presets/rainbow.h"
-#include "./presets/pulse.h"
-#include "./presets/wave.h"
-#include "./presets/solid.h"
-#include "./presets/color_cycle.h"
 
 namespace UIState {
 
@@ -45,10 +45,12 @@ uint8_t currentTab = 0;
 std::vector<PresetControlSet*> presets;
 
 uint8_t getBrightnessValue() {
-  return 16 * (rvl::getBrightness() - MIN_BRIGHTNESS) / (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
+  return 16 * (rvl::getBrightness() - MIN_BRIGHTNESS) /
+      (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
 }
 void updateBrightnessValue(uint8_t newValue) {
-  uint16_t adjustedBrightness = (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
+  uint16_t adjustedBrightness =
+      (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
   rvl::setBrightness(adjustedBrightness);
   rvl::info("Changing brightness to %d", adjustedBrightness);
   rvl::emit(Codes::EventType::AnimationChange);
@@ -63,15 +65,16 @@ void updateChannelValue(uint8_t selectedValueIndex) {
 Control::ListControl* channelControl;
 
 void updateModeValue(uint8_t selectedValueIndex) {
-  if (rvl::getDeviceMode() != static_cast<rvl::DeviceMode>(selectedValueIndex)) {
+  if (rvl::getDeviceMode() != static_cast<rvl::DeviceMode>(selectedValueIndex))
+  {
     switch (static_cast<rvl::DeviceMode>(selectedValueIndex)) {
-      case rvl::DeviceMode::Controller:
-        rvl::setDeviceMode(rvl::DeviceMode::Controller);
-        presets[preset]->updateWave();
-        break;
-      case rvl::DeviceMode::Receiver:
-        rvl::setDeviceMode(rvl::DeviceMode::Receiver);
-        break;
+    case rvl::DeviceMode::Controller:
+      rvl::setDeviceMode(rvl::DeviceMode::Controller);
+      presets[preset]->updateWave();
+      break;
+    case rvl::DeviceMode::Receiver:
+      rvl::setDeviceMode(rvl::DeviceMode::Receiver);
+      break;
     }
   }
 }
@@ -88,13 +91,13 @@ Control::ListControl* presetControl;
 
 void updateRemoteBrightnessValue(uint8_t selectedValueIndex) {
   if (UIState::preset != selectedValueIndex) {
-  rvl::setRemoteBrightnessState(!!selectedValueIndex);
-  if (selectedValueIndex) {
-    rvl::info("Enabling remote brightness");
-  } else {
-    rvl::info("Disabling remote brightness");
-  }
-  rvl::emit(Codes::EventType::AnimationChange);
+    rvl::setRemoteBrightnessState(!!selectedValueIndex);
+    if (selectedValueIndex) {
+      rvl::info("Enabling remote brightness");
+    } else {
+      rvl::info("Disabling remote brightness");
+    }
+    rvl::emit(Codes::EventType::AnimationChange);
   }
 }
 Control::ListControl* remoteBrightnessControl;
@@ -142,37 +145,24 @@ Control::LabelControl* clockControl;
 
 void init() {
   preset = Settings::getSetting("ui-preset", DEFAULT_PRESET);
-  brightnessControl = new Control::RangeControl(
-    "Brightness",
-    0,
-    16,
-    getBrightnessValue(),
-    updateBrightnessValue,
-    getBrightnessValue);
+  brightnessControl = new Control::RangeControl("Brightness", 0, 16,
+      getBrightnessValue(), updateBrightnessValue, getBrightnessValue);
 
-  channelControl = new Control::ListControl(
-    "Channel",
-    { "0", "1", "2", "3", "4", "5", "6", "7" },
-    rvl::getChannel(),
-    updateChannelValue);
+  channelControl = new Control::ListControl("Channel",
+      {"0", "1", "2", "3", "4", "5", "6", "7"}, rvl::getChannel(),
+      updateChannelValue);
 
-  modeControl = new Control::ListControl(
-    "Mode",
-    { "Controller", "Receiver" },
-    rvl::getDeviceMode() == rvl::DeviceMode::Controller ? 0 : 1,
-    updateModeValue);
+  modeControl = new Control::ListControl("Mode", {"Controller", "Receiver"},
+      rvl::getDeviceMode() == rvl::DeviceMode::Controller ? 0 : 1,
+      updateModeValue);
 
-  presetControl = new Control::ListControl(
-    "Preset",
-    { "Rainbow", "Pulse", "Wave", "Color Cycle", "Solid" },
-    preset,
-    updatePresetValue);
+  presetControl = new Control::ListControl("Preset",
+      {"Rainbow", "Pulse", "Wave", "Color Cycle", "Solid"}, preset,
+      updatePresetValue);
 
-  remoteBrightnessControl = new Control::ListControl(
-    "Remote Brightness",
-    { "Disabled", "Enabled" },
-    rvl::getRemoteBrightnessState(),
-    updateRemoteBrightnessValue);
+  remoteBrightnessControl =
+      new Control::ListControl("Remote Brightness", {"Disabled", "Enabled"},
+          rvl::getRemoteBrightnessState(), updateRemoteBrightnessValue);
 
   tab1Controls.push_back(brightnessControl);
   tab1Controls.push_back(channelControl);
@@ -266,12 +256,14 @@ void nextTab() {
 
 bool isCurrentControlRange() {
   if (currentTab == 0) {
-    return tab1Controls[currentTab1Control]->type == Control::ControlType::Range;
+    return tab1Controls[currentTab1Control]->type ==
+        Control::ControlType::Range;
   } else {
-    return tab2Controls[currentTab2Control]->type == Control::ControlType::Range;
+    return tab2Controls[currentTab2Control]->type ==
+        Control::ControlType::Range;
   }
 }
 
-}  // namespace UIState
+} // namespace UIState
 
-#endif  // HAS_UI
+#endif // HAS_UI

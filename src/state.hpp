@@ -20,16 +20,16 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef STATE_H_
 #define STATE_H_
 
+#include "./codes.hpp"
+#include "./config.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.h>
-#include "./codes.h"
-#include "./config.h"
 
 namespace State {
 
 void init();
 void loop();
 
-}  // namespace State
+} // namespace State
 
-#endif  // STATE_H_
+#endif // STATE_H_

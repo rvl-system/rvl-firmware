@@ -20,18 +20,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_PRESETS_RAINBOW_H_
 #define UI_PRESETS_RAINBOW_H_
 
+#include "./ui/presets/preset_control_set.hpp"
 #include <Arduino.h>
 #include <vector>
-#include "./ui/presets/preset_control_set.h"
 
 namespace Rainbow {
 
 class Rainbow : public PresetControlSet {
- public:
+public:
   Rainbow();
   void updateWave();
 };
 
-}  // namespace Rainbow
+} // namespace Rainbow
 
-#endif  // UI_PRESETS_RAINBOW_H_
+#endif // UI_PRESETS_RAINBOW_H_

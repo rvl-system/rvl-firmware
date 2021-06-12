@@ -20,18 +20,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_PRESETS_WAVE_H_
 #define UI_PRESETS_WAVE_H_
 
+#include "./ui/presets/preset_control_set.hpp"
 #include <Arduino.h>
 #include <vector>
-#include "./ui/presets/preset_control_set.h"
 
 namespace Wave {
 
 class Wave : public PresetControlSet {
- public:
+public:
   Wave();
   void updateWave();
 };
 
-}  // namespace Wave
+} // namespace Wave
 
-#endif  // UI_PRESETS_WAVE_H_
+#endif // UI_PRESETS_WAVE_H_

@@ -20,18 +20,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_PRESETS_SOLID_H_
 #define UI_PRESETS_SOLID_H_
 
+#include "./ui/presets/preset_control_set.hpp"
 #include <Arduino.h>
 #include <vector>
-#include "./ui/presets/preset_control_set.h"
 
 namespace Solid {
 
 class Solid : public PresetControlSet {
- public:
+public:
   Solid();
   void updateWave();
 };
 
-}  // namespace Solid
+} // namespace Solid
 
-#endif  // UI_PRESETS_SOLID_H_
+#endif // UI_PRESETS_SOLID_H_

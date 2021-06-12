@@ -18,20 +18,21 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#include <rvl.h>
 #include <rvl-wifi.h>
+#include <rvl.h>
+
 #ifdef HAS_UI
-#include "./ui/ui.h"
+#include "./ui/ui.hpp"
 #endif
 #ifdef HAS_CONTROLS
-#include "./controls/controls.h"
+#include "./controls/controls.hpp"
 #endif
 #ifdef HAS_LIGHTS
-#include "./lights.h"
+#include "./lights.hpp"
 #endif
-#include "./settings.h"
-#include "./state.h"
-#include "./config.h"
+#include "./config.hpp"
+#include "./settings.hpp"
+#include "./state.hpp"
 
 RVLWifi::System* wifiSystem;
 
@@ -41,7 +42,8 @@ void setup() {
   Serial.begin(SERIAL_BAUDRATE);
   rvl::setLogLevel(rvl::LogLevel::Debug);
 
-  wifiSystem = new RVLWifi::System(Settings::getWiFiSSID(), Settings::getWiFiPassphrase(), Settings::getPort());
+  wifiSystem = new RVLWifi::System(Settings::getWiFiSSID(),
+      Settings::getWiFiPassphrase(), Settings::getPort());
   rvl::init(wifiSystem);
 
   rvl::info("Initializing");

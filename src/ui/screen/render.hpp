@@ -20,22 +20,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_SCREEN_RENDER_H_
 #define UI_SCREEN_RENDER_H_
 
+#include "./ui/control.hpp"
+#include "./ui/screen/icons.hpp"
 #include <Arduino.h>
 #include <list>
 #include <vector>
-#include "./ui/screen/icons.h"
-#include "./ui/control.h"
 
 namespace Render {
 
 void init();
-void render(
-  std::vector<Control::Control*>* entries,
-  uint8_t selectedTab,
-  uint8_t selectedEntry,
-  std::list<Icons::StatusIcon*>* icons
-);
+void render(std::vector<Control::Control*>* entries, uint8_t selectedTab,
+    uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons);
 
-}  // namespace Render
+} // namespace Render
 
-#endif  // UI_SCREEN_RENDER_H_
+#endif // UI_SCREEN_RENDER_H_

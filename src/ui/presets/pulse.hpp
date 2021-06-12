@@ -20,18 +20,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_PRESETS_PULSE_H_
 #define UI_PRESETS_PULSE_H_
 
+#include "./ui/presets/preset_control_set.hpp"
 #include <Arduino.h>
 #include <vector>
-#include "./ui/presets/preset_control_set.h"
 
 namespace Pulse {
 
 class Pulse : public PresetControlSet {
- public:
+public:
   Pulse();
   void updateWave();
 };
 
-}  // namespace Pulse
+} // namespace Pulse
 
-#endif  // UI_PRESETS_PULSE_H_
+#endif // UI_PRESETS_PULSE_H_

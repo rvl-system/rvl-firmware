@@ -21,10 +21,10 @@
 #ifdef ESP32
 #include <Preferences.h>
 #endif
+#include "./config.hpp"
+#include "./settings.hpp"
 #include <algorithm>
-#include "./settings.h"
-#include "./config.h"
-#include "./rvl.h"
+#include <rvl.h>
 
 namespace Settings {
 
@@ -119,7 +119,7 @@ void init() {
 #endif
 
   mode = static_cast<rvl::DeviceMode>(
-    getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
+      getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
   rvl::setDeviceMode(mode);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, updateDeviceMode);
 
@@ -153,7 +153,7 @@ char* getWiFiPassphrase() {
 }
 void setWiFiPassphrase(const char* newPassphrase) {
   memcpy(passphrase, newPassphrase,
-    std::min(63, static_cast<int>(strlen(newPassphrase))));
+      std::min(63, static_cast<int>(strlen(newPassphrase))));
 #ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putString("wifi-passphrase", passphrase);
@@ -193,4 +193,4 @@ void setSetting(const char* key, uint8_t value) {
 #endif
 }
 
-}  // namespace Settings
+} // namespace Settings

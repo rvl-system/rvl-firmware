@@ -25,6 +25,6 @@ namespace UI {
 void init();
 void loop();
 
-}  // namespace UI
+} // namespace UI
 
-#endif  // UI_UI_H_
+#endif // UI_UI_H_

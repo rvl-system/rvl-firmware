@@ -20,18 +20,18 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UI_PRESETS_COLOR_CYCLE_H_
 #define UI_PRESETS_COLOR_CYCLE_H_
 
+#include "./ui/presets/preset_control_set.hpp"
 #include <Arduino.h>
 #include <vector>
-#include "./ui/presets/preset_control_set.h"
 
 namespace ColorCycle {
 
 class ColorCycle : public PresetControlSet {
- public:
+public:
   ColorCycle();
   void updateWave();
 };
 
-}  // namespace ColorCycle
+} // namespace ColorCycle
 
-#endif  // UI_PRESETS_COLOR_CYCLE_H_
+#endif // UI_PRESETS_COLOR_CYCLE_H_

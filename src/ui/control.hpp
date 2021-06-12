@@ -25,32 +25,27 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Control {
 
-enum class ControlType {
-  Range,
-  List,
-  Label
-};
+enum class ControlType { Range, List, Label };
 
 class Control {
- public:
+public:
   const char* label;
   ControlType type;
   void (*updateValue)(uint8_t newValue);
-  virtual void increaseValue() {}
-  virtual void decreaseValue() {}
+  virtual void increaseValue() {
+  }
+  virtual void decreaseValue() {
+  }
 };
 
 class ListControl : public Control {
- public:
+public:
   std::vector<const char*> values;
   uint8_t selectedValueIndex = 0;
 
-  ListControl(
-    const char* listLabel,
-    std::vector<const char*> listValues,
-    uint8_t defaultValueIndex,
-    void (*updateValueCallback)(uint8_t newValue)
-  ) {
+  ListControl(const char* listLabel, std::vector<const char*> listValues,
+      uint8_t defaultValueIndex,
+      void (*updateValueCallback)(uint8_t newValue)) {
     this->type = ControlType::List;
     this->label = listLabel;
     this->values = listValues;
@@ -78,20 +73,15 @@ class ListControl : public Control {
 };
 
 class RangeControl : public Control {
- public:
+public:
   uint8_t value;
   uint8_t min;
   uint8_t max;
   uint8_t (*getValue)();
 
-  RangeControl(
-    const char* rangeLabel,
-    uint8_t rangeMin,
-    uint8_t rangeMax,
-    uint8_t defaultValue,
-    void (*updateValueCallback)(uint8_t newValue),
-    uint8_t (*getValueMethod)()
-  ) {
+  RangeControl(const char* rangeLabel, uint8_t rangeMin, uint8_t rangeMax,
+      uint8_t defaultValue, void (*updateValueCallback)(uint8_t newValue),
+      uint8_t (*getValueMethod)()) {
     this->type = ControlType::Range;
     this->label = rangeLabel;
     this->updateValue = updateValueCallback;
@@ -117,13 +107,10 @@ class RangeControl : public Control {
 };
 
 class LabelControl : public Control {
- public:
+public:
   void (*getValue)(char* buffer);
 
-  LabelControl(
-    const char* labelLabel,
-    void (*getValueMethod)(char* buffer)
-  ) {
+  LabelControl(const char* labelLabel, void (*getValueMethod)(char* buffer)) {
     this->type = ControlType::Label;
     this->label = labelLabel;
     this->getValue = getValueMethod;
@@ -138,6 +125,6 @@ class LabelControl : public Control {
   }
 };
 
-}  // namespace Control
+} // namespace Control
 
-#endif  // UI_CONTROL_H_
+#endif // UI_CONTROL_H_

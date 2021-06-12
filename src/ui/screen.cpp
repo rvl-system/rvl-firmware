@@ -19,14 +19,14 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef HAS_UI
 
+#include "./ui/screen.hpp"
+#include "../config.hpp"
+#include "./codes.hpp"
+#include "./state.hpp"
+#include "./ui/screen/icons.hpp"
+#include "./ui/screen/render.hpp"
+#include "./ui/ui_state.hpp"
 #include <Arduino.h>
-#include "./ui/screen.h"
-#include "./ui/ui_state.h"
-#include "./ui/screen/render.h"
-#include "./ui/screen/icons.h"
-#include "../config.h"
-#include "./state.h"
-#include "./codes.h"
 
 namespace Screen {
 
@@ -44,10 +44,12 @@ void update() {
   }
   if (UIState::currentTab == 0) {
     icons.push_back(&Icons::tab1);
-    Render::render(&(UIState::tab1Controls), UIState::currentTab, UIState::currentTab1Control, &icons);
+    Render::render(&(UIState::tab1Controls), UIState::currentTab,
+        UIState::currentTab1Control, &icons);
   } else {
     icons.push_back(&Icons::tab2);
-    Render::render(&(UIState::tab2Controls), UIState::currentTab, UIState::currentTab2Control, &icons);
+    Render::render(&(UIState::tab2Controls), UIState::currentTab,
+        UIState::currentTab2Control, &icons);
   }
 }
 
@@ -62,6 +64,6 @@ void loop() {
   Screen::update();
 }
 
-}  // namespace Screen
+} // namespace Screen
 
-#endif  // HAS_UI
+#endif // HAS_UI
