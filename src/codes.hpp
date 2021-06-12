@@ -17,59 +17,41 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODES_H_
-#define CODES_H_
+#ifndef CODES_H
+#define CODES_H
 
 namespace Codes {
 
 namespace EventType {
-  enum EventType {
-    AnimationChange = 100,
-    UIStateChange = 101,
-    TimeChange = 102
-  };
-}  // namespace EventType
+enum EventType { AnimationChange = 100, UIStateChange = 101, TimeChange = 102 };
+} // namespace EventType
 
 namespace Preset {
-  enum Preset {
-    Rainbow = 0,
-    Pulse = 1,
-    Wave = 2,
-    ColorCycle = 3,
-    Unknown = 255
-  };
-}  // namespace Preset
+enum Preset { Rainbow = 0, Pulse = 1, Wave = 2, ColorCycle = 3, Unknown = 255 };
+} // namespace Preset
 
 namespace RainbowPresetValues {
-  enum RainbowPresetValues {
-    Rate = 0
-  };
-}  // namespace RainbowPresetValues
+enum RainbowPresetValues { Rate = 0 };
+} // namespace RainbowPresetValues
 
 namespace PulsePresetValues {
-  enum PulsePresetValues {
-    Rate = 0,
-    Hue = 1,
-    Saturation = 2
-  };
-}  // namespace PulsePresetValues
+enum PulsePresetValues { Rate = 0, Hue = 1, Saturation = 2 };
+} // namespace PulsePresetValues
 
 namespace WavePresetValues {
-  enum WavePresetValues {
-    Rate = 0,
-    ForegroundHue = 1,
-    ForegroundSaturation = 2,
-    BackgroundHue = 3,
-    BackgroundSaturation = 4
-  };
-}  // namespace WavePresetValues
+enum WavePresetValues {
+  Rate = 0,
+  ForegroundHue = 1,
+  ForegroundSaturation = 2,
+  BackgroundHue = 3,
+  BackgroundSaturation = 4
+};
+} // namespace WavePresetValues
 
 namespace ColorCyclePresetValues {
-  enum ColorCyclePresetValues {
-    Rate = 0
-  };
-}  // namespace ColorCyclePresetValues
+enum ColorCyclePresetValues { Rate = 0 };
+} // namespace ColorCyclePresetValues
 
-}  // namespace Codes
+} // namespace Codes
 
-#endif  // CODES_H_
+#endif // CODES_H_
