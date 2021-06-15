@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/presets/color_cycle.hpp"
 #include "./settings.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.h>
+#include <rvl-wifi.hpp>
 #include <vector>
 
 namespace ColorCycle {
@@ -54,7 +54,9 @@ ColorCycle::ColorCycle() {
       new Control::RangeControl("Rate", 0, 32, rate, updateRateValue, NULL));
 }
 
-void ColorCycle::updateWave() { updateWaveParameters(); }
+void ColorCycle::updateWave() {
+  updateWaveParameters();
+}
 
 } // namespace ColorCycle
 

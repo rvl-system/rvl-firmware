@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/presets/wave.hpp"
 #include "./settings.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.h>
+#include <rvl-wifi.hpp>
 #include <vector>
 
 namespace Wave {

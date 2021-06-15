@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/presets/pulse.hpp"
 #include "./settings.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.h>
+#include <rvl-wifi.hpp>
 #include <vector>
 
 namespace Pulse {
@@ -77,7 +77,9 @@ Pulse::Pulse() {
       "Saturation", 0, 255, saturation, updateSaturationValue, NULL));
 }
 
-void Pulse::updateWave() { updateWaveParameters(); }
+void Pulse::updateWave() {
+  updateWaveParameters();
+}
 
 } // namespace Pulse
 

@@ -23,7 +23,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./codes.hpp"
 #include "./config.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.h>
+#include <rvl-wifi.hpp>
 
 namespace State {
 

@@ -1,1 +1,1 @@
-Checks: '*,-llvm-header-guard,-llvmlibc*,-modernize-use-trailing-return-type'
+Checks: '*,-llvm-header-guard,-llvmlibc*,-modernize-use-trailing-return-type,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-non-const-global-variables'

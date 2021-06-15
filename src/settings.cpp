@@ -24,7 +24,7 @@
 #include "./config.hpp"
 #include "./settings.hpp"
 #include <algorithm>
-#include <rvl.h>
+#include <rvl.hpp>
 
 namespace Settings {
 

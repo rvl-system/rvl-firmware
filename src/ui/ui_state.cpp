@@ -30,8 +30,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./settings.hpp"
 #include "./state.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.h>
-#include <rvl.h>
+#include <rvl-wifi.hpp>
+#include <rvl.hpp>
 
 namespace UIState {
 

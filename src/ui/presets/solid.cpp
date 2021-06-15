@@ -22,7 +22,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/presets/solid.hpp"
 #include "./settings.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.h>
+#include <rvl-wifi.hpp>
 #include <vector>
 
 namespace Solid {
@@ -75,11 +75,13 @@ Solid::Solid() {
       new Control::RangeControl("Hue", 0, 255, hue, updateHueValue, NULL));
   this->controls.push_back(new Control::RangeControl(
       "Saturation", 0, 255, saturation, updateSaturationValue, NULL));
-  this->controls.push_back(new Control::RangeControl("Value", 0, 255, value,
-                                                     updateValueValue, NULL));
+  this->controls.push_back(new Control::RangeControl(
+      "Value", 0, 255, value, updateValueValue, NULL));
 }
 
-void Solid::updateWave() { updateWaveParameters(); }
+void Solid::updateWave() {
+  updateWaveParameters();
+}
 
 } // namespace Solid
 
