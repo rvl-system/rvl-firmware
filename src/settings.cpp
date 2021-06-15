@@ -131,7 +131,7 @@ void init() {
   rvl::setBrightness(brightness);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
 
-  remoteBrightnessState = getSetting("remote-brightness", false);
+  remoteBrightnessState = getSetting("remote-brightness", 0) == 1;
   rvl::setRemoteBrightnessState(remoteBrightnessState);
   rvl::on(EVENT_REMOTE_BRIGHTNESS_UPDATED, updateRemoteBrightnessState);
 }
