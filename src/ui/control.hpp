@@ -53,7 +53,7 @@ public:
     this->selectedValueIndex = defaultValueIndex;
   }
 
-  void increaseValue() {
+  void increaseValue() override {
     if (this->selectedValueIndex == this->values.size() - 1) {
       this->selectedValueIndex = 0;
     } else {
@@ -62,7 +62,7 @@ public:
     this->updateValue(this->selectedValueIndex);
   }
 
-  void decreaseValue() {
+  void decreaseValue() override {
     if (this->selectedValueIndex == 0) {
       this->selectedValueIndex = this->values.size() - 1;
     } else {
@@ -91,14 +91,14 @@ public:
     this->getValue = getValueMethod;
   }
 
-  void increaseValue() {
+  void increaseValue() override {
     if (this->value < this->max) {
       this->value++;
       this->updateValue(this->value);
     }
   }
 
-  void decreaseValue() {
+  void decreaseValue() override {
     if (this->value > this->min) {
       this->value--;
       this->updateValue(this->value);
@@ -116,11 +116,11 @@ public:
     this->getValue = getValueMethod;
   }
 
-  void increaseValue() {
+  void increaseValue() override {
     // Do nothing
   }
 
-  void decreaseValue() {
+  void decreaseValue() override {
     // Do nothing
   }
 };

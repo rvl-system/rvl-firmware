@@ -26,7 +26,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 
 class PresetControlSet {
 public:
-  std::vector<Control::Control *> controls;
+  std::vector<Control::Control*> controls;
   virtual void updateWave() = 0;
 };
 
