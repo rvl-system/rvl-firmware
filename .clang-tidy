@@ -1,1 +1,1 @@
-Checks: '*,-llvm-header-guard,-llvmlibc*,-modernize-use-trailing-return-type,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-non-const-global-variables'
+Checks: '*,-llvm-header-guard,-llvmlibc*,-hicpp-*,-modernize-*,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-non-const-global-variables,-readability-convert-member-functions-to-static,-cppcoreguidelines-avoid-c-arrays,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-cppcoreguidelines-init-variables'

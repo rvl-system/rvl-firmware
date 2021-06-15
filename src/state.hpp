@@ -20,8 +20,8 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef STATE_H_
 #define STATE_H_
 
-#include "./codes.hpp"
-#include "./config.hpp"
+#include "codes.hpp"
+#include "config.hpp"
 #include <Arduino.h>
 #include <rvl-wifi.hpp>
 
