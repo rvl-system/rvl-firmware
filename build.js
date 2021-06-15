@@ -21,6 +21,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 const { existsSync, readdirSync, readFileSync, statSync } = require('fs');
 const { join, sep } = require('path');
 const { execSync } = require('child_process');
+const { platform } = require('os');
 
 const args = process.argv.slice(2);
 
@@ -39,16 +40,18 @@ the name of the requested target as specified in an [env:TARGET] section of
 platformio.ini.
 
 OPTIONS:
-  -t  --lint   lint the source code
-  -b  --build  build the firmware before flashing the target
-  -f  --flash  flash the firmware after building the target
-  -d  --debug  spin up OpenOCD to allow GDN connections
-  -p  --port   serial port to use for flashing/debugging ESP8266 devices
-  -l  --log    open a serial port and log debugging information
-      --help   display this help and exit
+  -l  --lint    lint the source code
+  -b  --build   build the firmware before flashing the target
+  -f  --flash   flash the firmware after building the target
+  -d  --debug   spin up OpenOCD to allow GDN connections
+  -p  --port    serial port to use for flashing/debugging ESP8266 devices
+  -c  --console open a serial port and log debugging information
+      --cpath   Print the value of the CPATH variable
+      --help    display this help and exit
 `);
 }
 
+let cpath = false;
 let lint = false;
 let build = false;
 let flash = false;
@@ -63,7 +66,10 @@ while (i < args.length) {
     case '--help':
       showHelp();
       process.exit(0);
-    case '-t':
+    case '--cpath':
+      cpath = true;
+      break;
+    case '-l':
     case '--lint':
       lint = true;
       break;
@@ -83,8 +89,8 @@ while (i < args.length) {
     case '--port':
       port = args[++i];
       break;
-    case '-l':
-    case '--log':
+    case '-c':
+    case '--console':
       log = true;
       break;
     default:
@@ -163,7 +169,13 @@ function checkHeaderGuard(file) {
   return error;
 }
 
-if (lint) {
+const SOURCE_FILES = [
+  ...findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+  ...findFiles(join(__dirname, 'lib', 'rvl', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+  ...findFiles(join(__dirname, 'lib', 'rvl-wifi', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+];
+
+function getIncludeDirs() {
   const cppConfig = require(join(__dirname, '.vscode', 'c_cpp_properties.json'));
   const rootIncludeDirs = cppConfig.configurations[0].includePath
     .filter((dir) =>
@@ -174,6 +186,15 @@ if (lint) {
       .replace(/\//g, sep)
       .replace('${env.HOME}', process.env.HOME + sep)
       .replace('${workspaceFolder}', __dirname));
+  const isWindows = platform() === 'win32';
+  return rootIncludeDirs.map((dir) => `${dir}`).join(isWindows ? ';' : ':');
+}
+
+if (cpath) {
+  console.log(getIncludeDirs());
+}
+
+if (lint) {
   const sourceFiles = [
     ...findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
     ...findFiles(join(__dirname, 'lib', 'rvl', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
@@ -186,7 +207,7 @@ if (lint) {
     process.exit(-1);
   }
   exec(`clang-tidy ${sourceFiles.join(' ')}`, {
-    CPATH: rootIncludeDirs.map((dir) => `${dir}`).join(';')
+    CPATH: getIncludeDirs()
   });
 }
 
