@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { existsSync, readdirSync, readFileSync, statSync } = require('fs');
+const { existsSync, readdirSync, readFileSync, writeFileSync, statSync } = require('fs');
 const { join, sep } = require('path');
 const { execSync } = require('child_process');
 const { platform } = require('os');
@@ -178,7 +178,11 @@ const SOURCE_FILES = [
 
 if (compiledb || !existsSync(join(__dirname, 'compile_commands.json'))) {
   console.log('Generating compile_commands.json\n');
-  exec('platformio run -t compiledb -e compiledb');
+  exec('platformio run -e compiledb -t compiledb');
+  const commandsPath = join(__dirname, 'compile_commands.json');
+  const commands = readFileSync(commandsPath, 'utf-8')
+    .replace(/ -I[^\s]*?\.platformio[^\s]*?newlib/g, '');
+  writeFileSync(commandsPath, commands);
 }
 
 if (lint) {
@@ -189,7 +193,9 @@ if (lint) {
   if (guardError) {
     process.exit(-1);
   }
-  exec(`clang-tidy ${SOURCE_FILES.join(' ')}`);
+  exec(`clang-tidy ${SOURCE_FILES.join(' ')}`, {
+    CPATH: ''
+  });
 }
 
 if (build) {
