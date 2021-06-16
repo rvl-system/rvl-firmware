@@ -29,3 +29,5 @@ _autosave-*
 
 # VS Code temp files
 .vscode/ipch
+
+compile_commands.json

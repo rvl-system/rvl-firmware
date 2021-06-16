@@ -40,23 +40,24 @@ the name of the requested target as specified in an [env:TARGET] section of
 platformio.ini.
 
 OPTIONS:
-  -l  --lint    lint the source code
-  -b  --build   build the firmware before flashing the target
-  -f  --flash   flash the firmware after building the target
-  -d  --debug   spin up OpenOCD to allow GDN connections
-  -p  --port    serial port to use for flashing/debugging ESP8266 devices
-  -c  --console open a serial port and log debugging information
-      --cpath   Print the value of the CPATH variable
-      --help    display this help and exit
+  -l  --lint      lint the source code
+  -b  --build     build the firmware before flashing the target
+  -f  --flash     flash the firmware after building the target
+  -d  --debug     spin up OpenOCD to allow GDN connections
+  -p  --port      serial port to use for flashing/debugging ESP8266 devices
+  -c  --console   open a serial port and log debugging information
+      --compiledb generate compile_commands.json file
+      --help      display this help and exit
 `);
 }
 
-let cpath = false;
 let lint = false;
 let build = false;
 let flash = false;
 let debug = false;
 let log = false;
+let compiledb = false;
+
 let target = 'controller';
 let port;
 
@@ -66,9 +67,6 @@ while (i < args.length) {
     case '--help':
       showHelp();
       process.exit(0);
-    case '--cpath':
-      cpath = true;
-      break;
     case '-l':
     case '--lint':
       lint = true;
@@ -92,6 +90,9 @@ while (i < args.length) {
     case '-c':
     case '--console':
       log = true;
+      break;
+    case '--compiledb':
+      compiledb = true;
       break;
     default:
       target = args[i];
@@ -175,48 +176,29 @@ const SOURCE_FILES = [
   ...findFiles(join(__dirname, 'lib', 'rvl-wifi', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
 ];
 
-function getIncludeDirs() {
-  const cppConfig = require(join(__dirname, '.vscode', 'c_cpp_properties.json'));
-  const rootIncludeDirs = cppConfig.configurations[0].includePath
-    .filter((dir) =>
-      !dir.startsWith('${workspaceFolder}/lib') &&
-      !dir.startsWith('${workspaceFolder}/src') &&
-      !dir.endsWith('/**'))
-    .map((path) => path
-      .replace(/\//g, sep)
-      .replace('${env.HOME}', process.env.HOME + sep)
-      .replace('${workspaceFolder}', __dirname));
-  const isWindows = platform() === 'win32';
-  return rootIncludeDirs.map((dir) => `${dir}`).join(isWindows ? ';' : ':');
-}
-
-if (cpath) {
-  console.log(getIncludeDirs());
+if (compiledb || !existsSync(join(__dirname, 'compile_commands.json'))) {
+  console.log('Generating compile_commands.json\n');
+  exec('platformio run -t compiledb -e compiledb');
 }
 
 if (lint) {
-  const sourceFiles = [
-    ...findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
-    ...findFiles(join(__dirname, 'lib', 'rvl', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
-    ...findFiles(join(__dirname, 'lib', 'rvl-wifi', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
-  ];
-  const guardError = sourceFiles.reduce((error, sourceFile) => {
+  console.log(`Linting\n`);
+  const guardError = SOURCE_FILES.reduce((error, sourceFile) => {
     return checkHeaderGuard(sourceFile) || error;
   }, false);
   if (guardError) {
     process.exit(-1);
   }
-  exec(`clang-tidy ${sourceFiles.join(' ')}`, {
-    CPATH: getIncludeDirs()
-  });
+  exec(`clang-tidy ${SOURCE_FILES.join(' ')}`);
 }
 
 if (build) {
-  console.log(`\Building ${target}\n`);
+  console.log(`Building ${target}\n`);
   exec(`platformio run -e ${target}`);
 }
 
 if (flash) {
+  console.log(`Flashing ${target}\n`);
   if (!existsSync(targetUrl)) {
     error(`unknown or unbuilt target "${target}".\n`);
   }
