@@ -17,8 +17,11 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// ESP8266 specific stuff
+#ifdef ESP8266
 #define FASTLED_INTERRUPT_RETRY_COUNT 0 // Helps keep LEDs from flickering
 #define FASTLED_ESP8266_RAW_PIN_ORDER
+#endif
 
 #include "./lights.hpp"
 #include "./codes.hpp"
@@ -99,15 +102,19 @@ void animationLoopRunner(void* parameters) {
 }
 
 void startAnimationLoop() {
-#ifdef ESP32
+  // Temporarily disabled multi-core rendering due to
+  // https://github.com/rvl-system/rvl-firmware/issues/13
+#ifdef FALSE // ESP32
   xTaskCreatePinnedToCore(
-      animationLoopRunner, "animationLoopRunner", 4096, NULL, 2, NULL, 0);
+      animationLoopRunner, "animationLoopRunner", 8192, NULL, 2, NULL, 0);
 #endif
 }
 
 bool animationLoopStarted = false;
 void loop() {
-#ifdef ESP32
+  // Temporarily disabled multi-core rendering due to
+  // https://github.com/rvl-system/rvl-firmware/issues/13
+#ifdef FALSE // ESP32
   if (!animationLoopStarted) {
     animationLoopStarted = true;
     startAnimationLoop();
@@ -129,7 +136,7 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    rvl::info("Performance stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
+    rvl::info("LED render stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
         min, max);
   }
 }

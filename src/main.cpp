@@ -34,6 +34,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./settings.hpp"
 #include "./state.hpp"
 
+#define NUM_LOOP_SAMPLES 60
+uint8_t loopTimes[NUM_LOOP_SAMPLES];
+uint8_t loopIndex = 0;
+
 RVLWifi::System* wifiSystem;
 
 void setup() {
@@ -88,6 +92,7 @@ void setup() {
 }
 
 void loop() {
+  uint32_t startTime = millis();
   State::loop();
 #ifdef HAS_UI
   UI::loop();
@@ -99,4 +104,30 @@ void loop() {
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
+  uint32_t now = millis();
+  if (loopIndex < NUM_LOOP_SAMPLES) {
+    loopTimes[loopIndex++] = now - startTime;
+  }
+  if (now - startTime > UPDATE_RATE) {
+    delay(1);
+  } else {
+    delay(UPDATE_RATE - (millis() - startTime));
+  }
+  if (loopIndex == NUM_LOOP_SAMPLES) {
+    loopIndex = 0;
+    uint16_t sum = 0;
+    uint8_t min = 255;
+    uint8_t max = 0;
+    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
+      sum += loopTimes[i];
+      if (loopTimes[i] < min) {
+        min = loopTimes[i];
+      }
+      if (loopTimes[i] > max) {
+        max = loopTimes[i];
+      }
+    }
+    rvl::info("Main loop stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
+        min, max);
+  }
 }
