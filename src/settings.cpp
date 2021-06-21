@@ -29,7 +29,7 @@
 namespace Settings {
 
 #ifdef ESP32
-Preferences preferences;
+Preferences preferences; // NOLINT
 #endif
 
 #define MAX_SSID_LENGTH 32
@@ -72,7 +72,7 @@ void updateRemoteBrightnessState() {
   bool newRemoteBrightnessState = rvl::getRemoteBrightnessState();
   if (newRemoteBrightnessState != remoteBrightnessState) {
     remoteBrightnessState = newRemoteBrightnessState;
-    setSetting("remote-brightness", rvl::getRemoteBrightnessState());
+    setSetting("remote-brightness", rvl::getRemoteBrightnessState() ? 1 : 0);
   }
 }
 

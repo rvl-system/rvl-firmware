@@ -47,7 +47,7 @@ WindowState windowStates[2];
 #define ROW_HEIGHT 32
 #define ROW_START 21
 #define ROW_BORDER_PADDING 3
-#define ROW_END SCREEN_WIDTH - SCROLLBAR_WIDTH - ROW_BORDER_PADDING - 5
+#define ROW_END (SCREEN_WIDTH - SCROLLBAR_WIDTH - ROW_BORDER_PADDING - 5)
 
 #define ICON_SIZE 16
 
@@ -82,14 +82,14 @@ void renderEntry(Control::Control* entry, uint8_t labelY) {
   uint8_t controlY = labelY + ROW_HEIGHT / 2;
   display.drawString(ROW_START, labelY, entry->label);
   if (entry->type == Control::ControlType::List) {
-    auto listEntry = static_cast<Control::ListControl*>(entry);
+    auto* listEntry = static_cast<Control::ListControl*>(entry);
     display.drawString(ROW_START, controlY, "<");
     display.drawStringMaxWidth(ROW_START + 8, controlY,
         ROW_END - ROW_START - 10,
         listEntry->values[listEntry->selectedValueIndex]);
     display.drawString(ROW_END - 3, controlY, ">");
   } else if (entry->type == Control::ControlType::Range) {
-    auto rangeEntry = static_cast<Control::RangeControl*>(entry);
+    auto* rangeEntry = static_cast<Control::RangeControl*>(entry);
     uint8_t rangeValue = rangeEntry->value;
     if (rangeEntry->getValue != NULL) {
       rangeValue = rangeEntry->getValue();
@@ -99,7 +99,7 @@ void renderEntry(Control::Control* entry, uint8_t labelY) {
     display.drawProgressBar(
         ROW_START, controlY + 2, ROW_END - ROW_START + 1, 8, progress);
   } else if (entry->type == Control::ControlType::Label) {
-    auto labelEntry = static_cast<Control::LabelControl*>(entry);
+    auto* labelEntry = static_cast<Control::LabelControl*>(entry);
     if (labelEntry->getValue != NULL) {
       char labelBuffer[] = "                  ";
       labelEntry->getValue(labelBuffer);
@@ -136,7 +136,7 @@ void renderEntrySet(std::vector<Control::Control*>* entries,
 void renderIcon(Icons::StatusIcon* icon, uint8_t row) {
   for (uint8_t x = 0; x < ICON_SIZE; x++) {
     for (uint8_t y = 0; y < ICON_SIZE; y++) {
-      if (icon->data[y][x]) {
+      if (icon->data[y][x] == 1) {
         display.setPixel(x, y + row * (ICON_SIZE + 4));
       }
     }

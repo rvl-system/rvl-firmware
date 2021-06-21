@@ -29,7 +29,7 @@ namespace Pulse {
 class Pulse : public PresetControlSet {
 public:
   Pulse();
-  void updateWave();
+  void updateWave() override;
 };
 
 } // namespace Pulse

@@ -29,7 +29,7 @@ namespace Rainbow {
 class Rainbow : public PresetControlSet {
 public:
   Rainbow();
-  void updateWave();
+  void updateWave() override;
 };
 
 } // namespace Rainbow

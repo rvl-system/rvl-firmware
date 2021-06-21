@@ -91,8 +91,8 @@ Control::ListControl* presetControl;
 
 void updateRemoteBrightnessValue(uint8_t selectedValueIndex) {
   if (UIState::preset != selectedValueIndex) {
-    rvl::setRemoteBrightnessState(!!selectedValueIndex);
-    if (selectedValueIndex) {
+    rvl::setRemoteBrightnessState(selectedValueIndex == 1);
+    if (selectedValueIndex == 1) {
       rvl::info("Enabling remote brightness");
     } else {
       rvl::info("Disabling remote brightness");

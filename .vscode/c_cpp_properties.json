@@ -4,7 +4,7 @@
             "name": "General",
             "includePath": [
                 "${env.HOME}.platformio/packages/**",
-                "${workspaceFolder}/.pio/libdeps/controller/**",
+                "${workspaceFolder}/.pio/libdeps/**",
                 "${workspaceFolder}/lib/rvl/src",
                 "${workspaceFolder}/lib/rvl-wifi/src",
                 "${workspaceFolder}/src"

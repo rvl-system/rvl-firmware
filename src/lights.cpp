@@ -55,7 +55,7 @@ void animationLoop() {
     return;
   }
 
-  auto waveSettings = rvl::getWaveSettings();
+  auto* waveSettings = rvl::getWaveSettings();
   FastLED.setBrightness(rvl::getBrightness());
   uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) *
       255 / waveSettings->timePeriod;

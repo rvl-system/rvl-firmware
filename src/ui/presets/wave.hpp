@@ -29,7 +29,7 @@ namespace Wave {
 class Wave : public PresetControlSet {
 public:
   Wave();
-  void updateWave();
+  void updateWave() override;
 };
 
 } // namespace Wave
