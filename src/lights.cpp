@@ -136,7 +136,7 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    rvl::info("LED render stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
+    rvl::debug("LED render stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
         min, max);
   }
 }

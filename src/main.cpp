@@ -44,7 +44,13 @@ void setup() {
   Settings::init();
 
   Serial.begin(SERIAL_BAUDRATE);
+#ifdef LOG_DEBUG_ENABLED
   rvl::setLogLevel(rvl::LogLevel::Debug);
+#elif LOG_INFO_ENABLED
+  rvl::setLogLevel(rvl::LogLevel::Info);
+#else
+  rvl::setLogLevel(rvl::LogLevel::Error);
+#endif
 
   wifiSystem = new RVLWifi::System(Settings::getWiFiSSID(),
       Settings::getWiFiPassphrase(), Settings::getPort());
@@ -93,6 +99,9 @@ void setup() {
 
 void loop() {
   uint32_t startTime = millis();
+  // Try flipping the cores here. I don't think it's a parallel race condition,
+  // the timing doesn't fit, but something about what FreeRTOS is doing in core
+  // 0. I bet we'll be ok running non-LED stuff on core 0 though
   State::loop();
 #ifdef HAS_UI
   UI::loop();
@@ -127,7 +136,7 @@ void loop() {
         max = loopTimes[i];
       }
     }
-    rvl::info("Main loop stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
+    rvl::debug("Main loop stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
         min, max);
   }
 }
