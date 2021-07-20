@@ -20,6 +20,10 @@ And finally a video of an art piece I designed the lighting for at Burning Man 2
   <img src="https://img.youtube.com/vi/HZNM6n1g5n8/0.jpg" alt="Video of a tech demonstration of Raver Lights version 3" width="840" height="630" border="10" />
 </a>
 
+## Notes
+
+The ESP32 sometimes has trouble with Linksys brand routers. If you find that controllers work for a while, then disconnect and never reconnect, try a different router.
+
 # License
 
 All schematics, layouts, software, and other documentation for raver-lights is released under the General Public License.
