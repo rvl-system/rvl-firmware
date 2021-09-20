@@ -20,4 +20,5 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./config.hpp"
 #include <vector>
 
-std::vector<StripSegment> segments = {{0, LED_NUM_PIXELS, 0, false}};
+std::vector<StripSegment> segments = {
+    {0, 68, 16, false}, {69, 209, 1, false}, {210, 278, 11, true}};
