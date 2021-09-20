@@ -62,26 +62,35 @@ void animationLoop() {
   FastLED.setBrightness(rvl::getBrightness());
   uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) *
       255 / waveSettings->timePeriod;
-  for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
-    uint8_t x =
-        255 * (i % waveSettings->distancePeriod) / waveSettings->distancePeriod;
+  for (const auto& segment : segments) {
+    for (uint16_t i = segment.start; i <= segment.end; i++) {
+      uint16_t normalizedIndex = 0;
+      if (segment.reverse) {
+        normalizedIndex = (segment.end - i) + segment.offset;
+      } else {
+        normalizedIndex = (i - segment.start) + segment.offset;
+      }
+      uint8_t x = 255 * (normalizedIndex % waveSettings->distancePeriod) /
+          waveSettings->distancePeriod;
 
-    CHSV waveHSV[NUM_WAVES];
-    CRGB waveRGB[NUM_WAVES];
-    uint8_t alphaValues[NUM_WAVES];
+      CHSV waveHSV[NUM_WAVES];
+      CRGB waveRGB[NUM_WAVES];
+      uint8_t alphaValues[NUM_WAVES];
 
-    for (uint8_t j = 0; j < NUM_WAVES; j++) {
-      waveHSV[j].h = calculatePixelValue(&(waveSettings->waves[j].h), t, x);
-      waveHSV[j].s = calculatePixelValue(&(waveSettings->waves[j].s), t, x);
-      waveHSV[j].v = calculatePixelValue(&(waveSettings->waves[j].v), t, x);
-      alphaValues[j] = calculatePixelValue(&(waveSettings->waves[j].a), t, x);
-      hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
-    }
-    leds[i] = waveRGB[NUM_WAVES - 1];
-    for (int8_t j = NUM_WAVES - 2; j >= 0; j--) {
-      leds[i] = blend(leds[i], waveRGB[j], alphaValues[j]);
+      for (uint8_t j = 0; j < NUM_WAVES; j++) {
+        waveHSV[j].h = calculatePixelValue(&(waveSettings->waves[j].h), t, x);
+        waveHSV[j].s = calculatePixelValue(&(waveSettings->waves[j].s), t, x);
+        waveHSV[j].v = calculatePixelValue(&(waveSettings->waves[j].v), t, x);
+        alphaValues[j] = calculatePixelValue(&(waveSettings->waves[j].a), t, x);
+        hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
+      }
+      leds[i] = waveRGB[NUM_WAVES - 1];
+      for (int8_t j = NUM_WAVES - 2; j >= 0; j--) {
+        leds[i] = blend(leds[i], waveRGB[j], alphaValues[j]);
+      }
     }
   }
+
   FastLED.show();
 
   uint32_t now = millis();

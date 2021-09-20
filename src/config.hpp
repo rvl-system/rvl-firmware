@@ -17,13 +17,25 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdint.h>
+#include <vector>
+
 #ifndef CONFIG_H_
 #define CONFIG_H_
+
+struct StripSegment {
+  uint16_t start;
+  uint16_t end;
+  uint8_t offset;
+  bool reverse;
+};
 
 /**** You'll probably want to modify these settings ****/
 
 #define LED_COLOR_MODE GRB
 #define LED_NUM_PIXELS 300
+
+extern std::vector<StripSegment> segments;
 
 /**** You *may* want to modify these settings, but it's not likely ****/
 
