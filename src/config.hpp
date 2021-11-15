@@ -57,6 +57,8 @@ extern std::vector<StripSegment> segments;
 #define MIN_BRIGHTNESS 25
 #define MAX_BRIGHTNESS 200
 
+#define SCREEN_OFF_TIME 10000
+
 /**** You most likely should *not* modify these settings ****/
 
 #define BUTTON_PRESS_ENGAGE_TIME 50

@@ -153,6 +153,7 @@ void renderIconSet(std::list<Icons::StatusIcon*>* icons) {
 
 void render(std::vector<Control::Control*>* entries, uint8_t selectedTab,
     uint8_t selectedEntry, std::list<Icons::StatusIcon*>* icons) {
+  display.displayOn();
   display.clear();
   display.setColor(BLACK);
   display.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -162,6 +163,10 @@ void render(std::vector<Control::Control*>* entries, uint8_t selectedTab,
   renderEntrySet(entries, selectedTab, selectedEntry);
 
   display.display();
+}
+
+void off() {
+  display.displayOff();
 }
 
 } // namespace Render

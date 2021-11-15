@@ -31,6 +31,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 namespace Screen {
 
 void update() {
+  if (!UIState::isScreenActive()) {
+    Render::off();
+    return;
+  }
   std::list<Icons::StatusIcon*> icons;
   if (rvl::isNetworkConnected()) {
     icons.push_back(&Icons::wifiConnectedIcon);

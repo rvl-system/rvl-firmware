@@ -83,7 +83,10 @@ ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
 void loop() {
   switch (getButtonChangeState(&nextControlButtonInfo)) {
   case Pressed:
-    UIState::nextControl();
+    if (UIState::isScreenActive()) {
+      UIState::nextControl();
+    }
+    UIState::resetScreenTimeout();
     break;
   case Holding:
     // Do Nothing
@@ -95,7 +98,10 @@ void loop() {
 
   switch (getButtonChangeState(&previousControlButtonInfo)) {
   case Pressed:
-    UIState::previousControl();
+    if (UIState::isScreenActive()) {
+      UIState::previousControl();
+    }
+    UIState::resetScreenTimeout();
     break;
   case Holding:
     // Do Nothing
@@ -107,7 +113,10 @@ void loop() {
 
   switch (getButtonChangeState(&increaseValueButtonInfo)) {
   case Pressed:
-    UIState::controlIncrease();
+    if (UIState::isScreenActive()) {
+      UIState::controlIncrease();
+    }
+    UIState::resetScreenTimeout();
     break;
   case Holding:
     if (UIState::isCurrentControlRange()) {
@@ -121,7 +130,10 @@ void loop() {
 
   switch (getButtonChangeState(&decreaseValueButtonInfo)) {
   case Pressed:
-    UIState::controlDecrease();
+    if (UIState::isScreenActive()) {
+      UIState::controlDecrease();
+    }
+    UIState::resetScreenTimeout();
     break;
   case Holding:
     if (UIState::isCurrentControlRange()) {
@@ -135,7 +147,10 @@ void loop() {
 
   switch (getButtonChangeState(&switchTabButtonInfo)) {
   case Pressed:
-    UIState::nextTab();
+    if (UIState::isScreenActive()) {
+      UIState::nextTab();
+    }
+    UIState::resetScreenTimeout();
     break;
   case Holding:
     // Do Nothing

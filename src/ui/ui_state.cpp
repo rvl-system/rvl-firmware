@@ -39,6 +39,7 @@ uint8_t currentTab1Control = 0;
 uint8_t currentTab2Control = 0;
 uint8_t preset;
 uint8_t currentTab = 0;
+uint32_t screenTimeout = 0;
 
 #define NUM_GLOBAL_CONTROLS 3
 
@@ -144,6 +145,7 @@ void getClockValue(char* buffer) {
 Control::LabelControl* clockControl;
 
 void init() {
+  resetScreenTimeout();
   preset = Settings::getSetting("ui-preset", DEFAULT_PRESET);
   brightnessControl = new Control::RangeControl("Brightness", 0, 16,
       getBrightnessValue(), updateBrightnessValue, getBrightnessValue);
@@ -262,6 +264,14 @@ bool isCurrentControlRange() {
     return tab2Controls[currentTab2Control]->type ==
         Control::ControlType::Range;
   }
+}
+
+void resetScreenTimeout() {
+  screenTimeout = rvl::getAnimationClock() + SCREEN_OFF_TIME;
+}
+
+bool isScreenActive() {
+  return rvl::getAnimationClock() < screenTimeout;
 }
 
 } // namespace UIState
