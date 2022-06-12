@@ -18,10 +18,10 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { existsSync, readdirSync, readFileSync, writeFileSync, statSync } = require('fs');
-const { join, sep } = require('path');
-const { execSync } = require('child_process');
-const { platform } = require('os');
+import { existsSync, readdirSync, readFileSync, writeFileSync, statSync } from 'fs';
+import { join, sep } from 'path';
+import { execSync } from 'child_process';
+import { platform } from 'os';
 
 const args = process.argv.slice(2);
 
@@ -210,7 +210,7 @@ if (flash) {
   }
   if (target === 'controller') {
     console.log(`\nFlashing target ${target} using JTAG\n`);
-    exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+    exec(`openocd -f configs/c232hm.cfg -f configs/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
   } else if (target === 'hub' || target === 'receiver') {
     console.log(`\nFlashing target ${target} using UART${port ? ` on ${port}` : ''}\n`);
     exec(`esptool.py${port ? ` -p ${port}` : ''} -b 921600 write_flash 0x0 ${targetUrl}`);
@@ -220,7 +220,7 @@ if (flash) {
 if (debug) {
   if (target === 'controller') {
     console.log(`\nCreating debug connection using JTAG\n`);
-    exec(`openocd -f scripts/c232hm.cfg -f scripts/esp-wroom-32.cfg`);
+    exec(`openocd -f configs/c232hm.cfg -f configs/esp-wroom-32.cfg`);
   } else {
     console.error(`\nDebugging is not supported on target ${target}`);
     process.exit(-1);
