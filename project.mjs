@@ -21,7 +21,10 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 import { existsSync, readdirSync, readFileSync, writeFileSync, statSync } from 'fs';
 import { join, sep } from 'path';
 import { execSync } from 'child_process';
-import { platform } from 'os';
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const args = process.argv.slice(2);
 

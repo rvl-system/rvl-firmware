@@ -1,0 +1,21 @@
+{
+  "name": "rvl-firmware",
+  "version": "1.0.0",
+  "scripts": {
+    "monitor": "node scripts/monitor.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvl-system/rvl-firmware.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rvl-system/rvl-firmware/issues"
+  },
+  "homepage": "https://github.com/rvl-system/rvl-firmware#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "serialport": "^10.4.0"
+  }
+}
