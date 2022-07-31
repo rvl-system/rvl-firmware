@@ -97,20 +97,35 @@ void animationLoop() {
   if (loopIndex < NUM_LOOP_SAMPLES) {
     loopTimes[loopIndex++] = now - startTime;
   }
-// Temporarily disabled multi-core rendering due to
-// https://github.com/rvl-system/rvl-firmware/issues/13
-#ifdef FALSE // ESP32
-  if (now - startTime > UPDATE_RATE) {
-    delay(1);
-  } else {
-    delay(UPDATE_RATE - (millis() - startTime));
+  if (loopIndex == NUM_LOOP_SAMPLES) {
+    loopIndex = 0;
+    uint16_t sum = 0;
+    uint8_t min = 255;
+    uint8_t max = 0;
+    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
+      sum += loopTimes[i];
+      if (loopTimes[i] < min) {
+        min = loopTimes[i];
+      }
+      if (loopTimes[i] > max) {
+        max = loopTimes[i];
+      }
+    }
+    rvl::debug("LED render stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
+        min, max);
   }
-#endif
 }
 
 void animationLoopRunner(void* parameters) {
   while (true) {
+    uint32_t startTime = millis();
     animationLoop();
+    uint32_t now = millis();
+    if (now - startTime > UPDATE_RATE) {
+      delay(1);
+    } else {
+      delay(UPDATE_RATE - (millis() - startTime));
+    }
   }
 }
 
@@ -135,23 +150,6 @@ void loop() {
 #else
   animationLoop();
 #endif
-  if (loopIndex == NUM_LOOP_SAMPLES) {
-    loopIndex = 0;
-    uint16_t sum = 0;
-    uint8_t min = 255;
-    uint8_t max = 0;
-    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
-      sum += loopTimes[i];
-      if (loopTimes[i] < min) {
-        min = loopTimes[i];
-      }
-      if (loopTimes[i] > max) {
-        max = loopTimes[i];
-      }
-    }
-    rvl::debug("LED render stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
-        min, max);
-  }
 }
 
 } // namespace Lights
