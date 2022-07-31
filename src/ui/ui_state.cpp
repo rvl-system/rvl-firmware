@@ -271,7 +271,11 @@ void resetScreenTimeout() {
 }
 
 bool isScreenActive() {
+#ifdef SCREEN_SAVER_ENABLED
   return rvl::getAnimationClock() < screenTimeout;
+#else
+  return true;
+#endif
 }
 
 } // namespace UIState

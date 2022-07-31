@@ -35,6 +35,8 @@ struct StripSegment {
 #define LED_COLOR_MODE GRB
 #define LED_NUM_PIXELS 300
 
+#define SCREEN_SAVER_ENABLED
+
 extern std::vector<StripSegment> segments;
 
 /**** You *may* want to modify these settings, but it's not likely ****/
