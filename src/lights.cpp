@@ -97,11 +97,15 @@ void animationLoop() {
   if (loopIndex < NUM_LOOP_SAMPLES) {
     loopTimes[loopIndex++] = now - startTime;
   }
+// Temporarily disabled multi-core rendering due to
+// https://github.com/rvl-system/rvl-firmware/issues/13
+#ifdef FALSE // ESP32
   if (now - startTime > UPDATE_RATE) {
     delay(1);
   } else {
     delay(UPDATE_RATE - (millis() - startTime));
   }
+#endif
 }
 
 void animationLoopRunner(void* parameters) {
