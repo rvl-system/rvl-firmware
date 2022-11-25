@@ -23,6 +23,7 @@ import { join, sep } from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import { SerialPort } from 'serialport'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -60,6 +61,7 @@ let flash = false;
 let debug = false;
 let log = false;
 let compiledb = false;
+let monitor = false;
 
 let target = 'controller';
 let port;
@@ -96,6 +98,10 @@ while (i < args.length) {
       break;
     case '--compiledb':
       compiledb = true;
+      break;
+    case '-m':
+    case '--monitor':
+      monitor = true;
       break;
     default:
       target = args[i];
@@ -233,4 +239,28 @@ if (debug) {
 if (log) {
   console.log(`\nOpening serial port for debugging${port ? ` on ${port}` : ''}\n`);
   exec(`seriallog${port ? ` -p ${port}` : ''}`);
+}
+
+if (monitor) {
+  console.log('Monitoring for system failure');
+  const port = new SerialPort({
+    path: 'COM3',
+    baudRate: 112500,
+  });
+  
+  let BUFFER_LENGTH = 250;
+  let buffer = [];
+  let timeout;
+  port.on('data', (data) => {
+    buffer.push(data.toString());
+    while (buffer.length > BUFFER_LENGTH) {
+      buffer.shift();
+    }
+    clearTimeout(timeout);
+    timeout = setTimeout(() => { {
+      console.log('Dead system');
+      console.log(buffer.join(''))
+    }}, 5_000);
+  });
+  
 }
