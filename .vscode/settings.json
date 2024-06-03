@@ -87,5 +87,6 @@
     "xlocnum": "cpp",
     "xloctime": "cpp",
     "xtree": "cpp"
-  }
+  },
+  "cmake.sourceDirectory": "C:/Users/nebri/Projects/rvl/rvl-firmware/.pio/libdeps/controller/FastLED"
 }
