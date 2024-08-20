@@ -27,6 +27,7 @@ along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/rainbow.hpp"
 #include "./presets/solid.hpp"
 #include "./presets/wave.hpp"
+#include "./presets/shift.hpp"
 #include "./settings.hpp"
 #include "./state.hpp"
 #include <Arduino.h>
@@ -159,7 +160,7 @@ void init() {
       updateModeValue);
 
   presetControl = new Control::ListControl("Preset",
-      {"Rainbow", "Pulse", "Wave", "Color Cycle", "Solid"}, preset,
+      {"Rainbow", "Pulse", "Wave", "Shift", "Color Cycle", "Solid"}, preset,
       updatePresetValue);
 
   remoteBrightnessControl =
@@ -181,6 +182,7 @@ void init() {
   presets.push_back(new Rainbow::Rainbow());
   presets.push_back(new Pulse::Pulse());
   presets.push_back(new Wave::Wave());
+  presets.push_back(new Shift::Shift());
   presets.push_back(new ColorCycle::ColorCycle());
   presets.push_back(new Solid::Solid());
 

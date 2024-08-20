@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2018 Bryan Hughes <bryan@nebri.us>
 
 This file is part of Raver Lights.
 
@@ -17,15 +17,21 @@ You should have received a copy of the GNU General Public License
 along with Raver Lights.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODES_H_
-#define CODES_H_
+#ifndef UI_PRESETS_SHIFT_H_
+#define UI_PRESETS_SHIFT_H_
 
-namespace Codes {
+#include "./ui/presets/preset_control_set.hpp"
+#include <Arduino.h>
+#include <vector>
 
-namespace EventType {
-enum EventType { AnimationChange = 100, UIStateChange = 101, TimeChange = 102 };
-} // namespace EventType
+namespace Shift {
 
-} // namespace Codes
+class Shift : public PresetControlSet {
+public:
+  Shift();
+  void updateWave() override;
+};
 
-#endif // CODES_H_
+} // namespace Shift
+
+#endif // UI_PRESETS_SHIFT_H_
