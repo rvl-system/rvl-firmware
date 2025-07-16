@@ -218,13 +218,8 @@ if (flash) {
   if (!existsSync(targetUrl)) {
     error(`unknown or unbuilt target "${target}".\n`);
   }
-  if (target === 'controller') {
-    console.log(`\nFlashing target ${target} using JTAG\n`);
-    exec(`openocd -f configs/c232hm.cfg -f configs/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
-  } else if (target === 'hub' || target === 'receiver') {
-    console.log(`\nFlashing target ${target} using UART${port ? ` on ${port}` : ''}\n`);
-    exec(`esptool.py${port ? ` -p ${port}` : ''} -b 921600 write_flash 0x0 ${targetUrl}`);
-  }
+  console.log(`\nFlashing target ${target} using JTAG\n`);
+  exec(`openocd -f configs/c232hm.cfg -f configs/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
 }
 
 if (debug) {

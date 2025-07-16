@@ -58,6 +58,10 @@ void setup() {
 
   rvl::info("Initializing");
 
+  rvl::info("Device mode: %d", rvl::getDeviceMode());
+  rvl::info("Channel: %d", rvl::getChannel());
+  rvl::info("Brightness: %d", rvl::getBrightness());
+
   State::init();
 #ifdef HAS_UI
   UI::init();

@@ -20,14 +20,14 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_RECEIVER_H_
 #define CONFIG_RECEIVER_H_
 
-#define LED_DATA_PIN 2
+#define LED_DATA_PIN 33
 
-#define CONTROL_DIGIT_1 13
-#define CONTROL_DIGIT_2 12
-#define CONTROL_DIGIT_3 14
-#define CONTROL_DIGIT_4 16
+#define CONTROL_DIGIT_1 5
+#define CONTROL_DIGIT_2 17
+#define CONTROL_DIGIT_3 16
 
-#define GREEN_LED 4
-#define RED_LED 5
+#define BRIGHTNESS_PIN 35
+
+#define STATUS_LED 34
 
 #endif // CONFIG_RECEIVER_H_

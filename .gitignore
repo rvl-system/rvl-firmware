@@ -5,6 +5,7 @@ node_modules
 npm-debug.log
 .vscode/.browse*
 .DS_Store
+.cache
 
 # For PCBs designed using KiCad: http://www.kicad-pcb.org/
 

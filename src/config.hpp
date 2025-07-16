@@ -69,9 +69,6 @@ extern std::vector<StripSegment> segments;
 #ifdef RVL_CONTROLLER
 #include "./config-controller.hpp"
 #endif
-#ifdef RVL_HUB
-#include "./config-hub.hpp"
-#endif
 #ifdef RVL_RECEIVER
 #include "./config-receiver.hpp"
 #endif

@@ -34,34 +34,23 @@ void init() {
   pinMode(CONTROL_DIGIT_1, INPUT);
   pinMode(CONTROL_DIGIT_2, INPUT);
   pinMode(CONTROL_DIGIT_3, INPUT);
-  pinMode(CONTROL_DIGIT_4, INPUT);
-  pinMode(GREEN_LED, OUTPUT);
-  pinMode(RED_LED, OUTPUT);
+  pinMode(STATUS_LED, OUTPUT);
+  pinMode(BRIGHTNESS_PIN, ANALOG);
   rvl::info("Controls initialized");
 #endif
 }
 
 void loop() {
 #ifdef HAS_CONTROLS
-  if (rvl::isNetworkConnected()) {
-    digitalWrite(GREEN_LED, HIGH);
-  } else {
-    uint32_t now = millis();
-    if (now >= nextConnectedLEDFlashTime) {
-      if (connectedLEDState) {
-        digitalWrite(GREEN_LED, HIGH);
-      } else {
-        digitalWrite(GREEN_LED, LOW);
-      }
-      nextConnectedLEDFlashTime = now + NETWORK_FLASH_RATE;
-      connectedLEDState = !connectedLEDState;
-    }
+  int brightness = analogRead(BRIGHTNESS_PIN);
+  if (rvl::getBrightness() != brightness) {
+    rvl::info("Brightness changed to %d", brightness);
   }
 
+  int digit1 = digitalRead(CONTROL_DIGIT_1);
   int digit2 = digitalRead(CONTROL_DIGIT_2);
   int digit3 = digitalRead(CONTROL_DIGIT_3);
-  int digit4 = digitalRead(CONTROL_DIGIT_4);
-  int channel = digit2 * 4 + digit3 * 2 + digit4;
+  int channel = digit1 * 4 + digit2 * 2 + digit3;
   if (rvl::getChannel() != channel) {
     rvl::info("Channel changed to %d", channel);
     rvl::setChannel(channel);
