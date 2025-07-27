@@ -25,9 +25,9 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/preset_control_set.hpp"
 #include "./presets/pulse.hpp"
 #include "./presets/rainbow.hpp"
+#include "./presets/shift.hpp"
 #include "./presets/solid.hpp"
 #include "./presets/wave.hpp"
-#include "./presets/shift.hpp"
 #include "./settings.hpp"
 #include "./state.hpp"
 #include <Arduino.h>

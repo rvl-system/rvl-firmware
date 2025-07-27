@@ -43,13 +43,6 @@ extern std::vector<StripSegment> segments;
 
 #define UPDATE_RATE 33
 
-#ifndef DEFAULT_WIFI_SSID
-#define DEFAULT_WIFI_SSID "purpleville_lights"
-#endif
-#ifndef DEFAULT_WIFI_PASSPHRASE
-#define DEFAULT_WIFI_PASSPHRASE "CtAygjffYkJQdp7PhuubpHVVM6YkEYw4"
-#endif
-
 #define DEFAULT_WIFI_PORT 4978
 #define SERIAL_BAUDRATE 115200
 
@@ -60,6 +53,9 @@ extern std::vector<StripSegment> segments;
 #define MAX_BRIGHTNESS 200
 
 #define SCREEN_OFF_TIME 10000
+
+#define CONNECTING_PIXEL_PERIOD 1000
+#define CONNECTING_PIXEL_HUE 85
 
 /**** You most likely should *not* modify these settings ****/
 

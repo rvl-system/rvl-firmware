@@ -49,6 +49,10 @@ uint8_t calculatePixelValue(RVLWaveChannel* wave, uint32_t t, uint8_t x) {
 uint8_t loopTimes[NUM_LOOP_SAMPLES];
 uint8_t loopIndex = 0;
 
+#ifndef HAS_UI
+uint32_t lastConnectedTime = 0;
+#endif
+
 void animationLoop() {
   uint32_t startTime = millis();
 
@@ -60,8 +64,9 @@ void animationLoop() {
 
   auto* waveSettings = rvl::getWaveSettings();
   FastLED.setBrightness(rvl::getBrightness());
-  uint32_t t = rvl::getAnimationClock() % (waveSettings->timePeriod * 100) *
-      255 / waveSettings->timePeriod;
+  auto animationClock = rvl::getAnimationClock();
+  uint32_t t = animationClock % (waveSettings->timePeriod * 100) * 255 /
+      waveSettings->timePeriod;
   for (const auto& segment : segments) {
     for (uint16_t i = segment.start; i <= segment.end; i++) {
       uint16_t normalizedIndex = 0;
@@ -90,6 +95,28 @@ void animationLoop() {
       }
     }
   }
+
+  // If we don't have a UI, we hijack the first pixel to use as a wifi status
+  // indicator
+#ifndef HAS_UI
+  auto isConnected = rvl::isNetworkConnected();
+  if (isConnected) {
+    lastConnectedTime = animationClock;
+  }
+  if (!isConnected &&
+      (lastConnectedTime == 0 || animationClock - lastConnectedTime > 1000))
+  {
+    CHSV statusHSV;
+    CRGB statusRGB;
+    statusHSV.h = CONNECTING_PIXEL_HUE;
+    statusHSV.s = 255;
+    statusHSV.v =
+        sin8(255 * uint16_t(animationClock % CONNECTING_PIXEL_PERIOD) /
+            CONNECTING_PIXEL_PERIOD);
+    hsv2rgb_spectrum(statusHSV, statusRGB);
+    leds[0] = statusRGB;
+  }
+#endif
 
   FastLED.show();
 
