@@ -219,7 +219,9 @@ if (flash) {
     error(`unknown or unbuilt target "${target}".\n`);
   }
   console.log(`\nFlashing target ${target} using JTAG\n`);
-  exec(`openocd -f configs/c232hm.cfg -f configs/esp-wroom-32.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+  // JTAG command, not currently working
+  // exec(`openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+  exec(`esptool --port /dev/tty.usbserial-FTAV921H write-flash -z 0x10000 ${targetUrl}`)
 }
 
 if (debug) {

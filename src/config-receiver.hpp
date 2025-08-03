@@ -22,11 +22,14 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #define LED_DATA_PIN 33
 
-#define CONTROL_DIGIT_1 5
+#define CONTROL_DIGIT_1 16
 #define CONTROL_DIGIT_2 17
-#define CONTROL_DIGIT_3 16
+#define CONTROL_DIGIT_3 5
 
 #define BRIGHTNESS_PIN 35
+#define NUM_BRIGHTNESS_BUCKETS 15
+
+#define NETWORK_FLASH_RATE 500
 
 #define STATUS_LED 34
 

@@ -123,6 +123,9 @@ void init() {
   rvl::setDeviceMode(mode);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, updateDeviceMode);
 
+  // If we have physical controls, channel and brightness are continually read
+  // from the pins for them, so there's no need to save the value to storage.
+#ifndef HAS_CONTROLS
   channel = getSetting("channel", DEFAULT_CHANNEL);
   rvl::setChannel(channel);
   rvl::on(EVENT_CHANNEL_UPDATED, updateChannel);
@@ -130,6 +133,7 @@ void init() {
   brightness = getSetting("brightness", DEFAULT_BRIGHTNESS);
   rvl::setBrightness(brightness);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
+#endif
 
   remoteBrightnessState = getSetting("remote-brightness", 0) == 1;
   rvl::setRemoteBrightnessState(remoteBrightnessState);
