@@ -22,6 +22,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MAX_ADC_INPUT 4096
 #define BUCKET_WIDTH MAX_ADC_INPUT / (NUM_BRIGHTNESS_BUCKETS / 2)
+#define PWM_CHANNEL 0
 
 namespace Controls {
 

@@ -31,6 +31,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #define NETWORK_FLASH_RATE 500
 
-#define STATUS_LED 34
+#define STATUS_LED 25
 
 #endif // CONFIG_RECEIVER_H_
