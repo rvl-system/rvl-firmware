@@ -35,8 +35,10 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./state.hpp"
 
 #define NUM_LOOP_SAMPLES 60
-uint8_t loopTimes[NUM_LOOP_SAMPLES];
-uint8_t loopIndex = 0;
+uint8_t backgroundLoopTimes[NUM_LOOP_SAMPLES];
+uint8_t backgroundLoopIndex = 0;
+uint8_t foregroundLoopTimes[NUM_LOOP_SAMPLES];
+uint8_t foregroundLoopIndex = 0;
 
 RVLWifi::System* wifiSystem;
 
@@ -101,7 +103,7 @@ void setup() {
   rvl::info("Running");
 }
 
-void loop() {
+void backgroundLoop() {
   uint32_t startTime = millis();
   // Try flipping the cores here. I don't think it's a parallel race condition,
   // the timing doesn't fit, but something about what FreeRTOS is doing in core
@@ -114,33 +116,90 @@ void loop() {
   Controls::loop();
 #endif
   rvl::loop();
-#ifdef HAS_LIGHTS
-  Lights::loop();
-#endif
   uint32_t now = millis();
-  if (loopIndex < NUM_LOOP_SAMPLES) {
-    loopTimes[loopIndex++] = now - startTime;
+  if (backgroundLoopIndex < NUM_LOOP_SAMPLES) {
+    backgroundLoopTimes[backgroundLoopIndex++] = now - startTime;
   }
   if (now - startTime > UPDATE_RATE) {
     delay(1);
   } else {
     delay(UPDATE_RATE - (millis() - startTime));
   }
-  if (loopIndex == NUM_LOOP_SAMPLES) {
-    loopIndex = 0;
+  if (backgroundLoopIndex == NUM_LOOP_SAMPLES) {
+    backgroundLoopIndex = 0;
     uint16_t sum = 0;
     uint8_t min = 255;
     uint8_t max = 0;
     for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
-      sum += loopTimes[i];
-      if (loopTimes[i] < min) {
-        min = loopTimes[i];
+      sum += backgroundLoopTimes[i];
+      if (backgroundLoopTimes[i] < min) {
+        min = backgroundLoopTimes[i];
       }
-      if (loopTimes[i] > max) {
-        max = loopTimes[i];
+      if (backgroundLoopTimes[i] > max) {
+        max = backgroundLoopTimes[i];
       }
     }
-    rvl::debug("Main loop stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
-        min, max);
+    rvl::debug("Background loop stats: Avg=%d Min=%d Max=%d",
+        sum / NUM_LOOP_SAMPLES, min, max);
   }
+}
+
+void backgroundLoopRunner(void* parameters) {
+  while (true) {
+    backgroundLoop();
+  }
+}
+
+void startBackgroundLoop() {
+#ifdef ESP32
+  xTaskCreatePinnedToCore(backgroundLoopRunner, "backgroundLoopRunner", 20192,
+      NULL, 255, NULL, xPortGetCoreID() ? 0 : 1);
+#endif
+}
+
+void foregroundLoop() {
+#ifdef HAS_LIGHTS
+  uint32_t startTime = millis();
+  Lights::loop();
+  uint32_t now = millis();
+  if (foregroundLoopIndex < NUM_LOOP_SAMPLES) {
+    foregroundLoopTimes[foregroundLoopIndex++] = now - startTime;
+  }
+  if (now - startTime > UPDATE_RATE) {
+    delay(1);
+  } else {
+    delay(UPDATE_RATE - (millis() - startTime));
+  }
+  if (foregroundLoopIndex == NUM_LOOP_SAMPLES) {
+    foregroundLoopIndex = 0;
+    uint16_t sum = 0;
+    uint8_t min = 255;
+    uint8_t max = 0;
+    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
+      sum += foregroundLoopTimes[i];
+      if (foregroundLoopTimes[i] < min) {
+        min = foregroundLoopTimes[i];
+      }
+      if (foregroundLoopTimes[i] > max) {
+        max = foregroundLoopTimes[i];
+      }
+    }
+    rvl::debug("Foreground loop stats: Avg=%d Min=%d Max=%d",
+        sum / NUM_LOOP_SAMPLES, min, max);
+  }
+#endif
+}
+
+bool backgroundLoopStarted = false;
+void loop() {
+#ifdef ESP32
+  if (!backgroundLoopStarted) {
+    backgroundLoopStarted = true;
+    startBackgroundLoop();
+  }
+#else
+  backgroundLoop();
+#endif
+
+  foregroundLoop();
 }

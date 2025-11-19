@@ -45,24 +45,22 @@ uint8_t calculatePixelValue(RVLWaveChannel* wave, uint32_t t, uint8_t x) {
       wave->b;
 }
 
-#define NUM_LOOP_SAMPLES 60
-uint8_t loopTimes[NUM_LOOP_SAMPLES];
-uint8_t loopIndex = 0;
-
-void animationLoop() {
-  uint32_t startTime = millis();
-
+void loop() {
   if (!rvl::getPowerState()) {
     FastLED.setBrightness(0);
     FastLED.show();
     return;
   }
 
-  auto* waveSettings = rvl::getWaveSettings();
+  RVLWaveSettings waveSettings;
+  rvl::lockState();
+  memcpy(&waveSettings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
   FastLED.setBrightness(rvl::getBrightness());
   auto animationClock = rvl::getAnimationClock();
-  uint32_t t = animationClock % (waveSettings->timePeriod * 100) * 255 /
-      waveSettings->timePeriod;
+  rvl::freeState();
+
+  uint32_t t = animationClock % (waveSettings.timePeriod * 100) * 255 /
+      waveSettings.timePeriod;
   for (const auto& segment : segments) {
     for (uint16_t i = segment.start; i <= segment.end; i++) {
       uint16_t normalizedIndex = 0;
@@ -71,18 +69,18 @@ void animationLoop() {
       } else {
         normalizedIndex = (i - segment.start) + segment.offset;
       }
-      uint8_t x = 255 * (normalizedIndex % waveSettings->distancePeriod) /
-          waveSettings->distancePeriod;
+      uint8_t x = 255 * (normalizedIndex % waveSettings.distancePeriod) /
+          waveSettings.distancePeriod;
 
       CHSV waveHSV[NUM_WAVES];
       CRGB waveRGB[NUM_WAVES];
       uint8_t alphaValues[NUM_WAVES];
 
       for (uint8_t j = 0; j < NUM_WAVES; j++) {
-        waveHSV[j].h = calculatePixelValue(&(waveSettings->waves[j].h), t, x);
-        waveHSV[j].s = calculatePixelValue(&(waveSettings->waves[j].s), t, x);
-        waveHSV[j].v = calculatePixelValue(&(waveSettings->waves[j].v), t, x);
-        alphaValues[j] = calculatePixelValue(&(waveSettings->waves[j].a), t, x);
+        waveHSV[j].h = calculatePixelValue(&(waveSettings.waves[j].h), t, x);
+        waveHSV[j].s = calculatePixelValue(&(waveSettings.waves[j].s), t, x);
+        waveHSV[j].v = calculatePixelValue(&(waveSettings.waves[j].v), t, x);
+        alphaValues[j] = calculatePixelValue(&(waveSettings.waves[j].a), t, x);
         hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
       }
       leds[i] = waveRGB[NUM_WAVES - 1];
@@ -93,64 +91,6 @@ void animationLoop() {
   }
 
   FastLED.show();
-
-  uint32_t now = millis();
-  if (loopIndex < NUM_LOOP_SAMPLES) {
-    loopTimes[loopIndex++] = now - startTime;
-  }
-  if (loopIndex == NUM_LOOP_SAMPLES) {
-    loopIndex = 0;
-    uint16_t sum = 0;
-    uint8_t min = 255;
-    uint8_t max = 0;
-    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
-      sum += loopTimes[i];
-      if (loopTimes[i] < min) {
-        min = loopTimes[i];
-      }
-      if (loopTimes[i] > max) {
-        max = loopTimes[i];
-      }
-    }
-    rvl::debug("LED render stats: Avg=%d Min=%d Max=%d", sum / NUM_LOOP_SAMPLES,
-        min, max);
-  }
-}
-
-void animationLoopRunner(void* parameters) {
-  while (true) {
-    uint32_t startTime = millis();
-    animationLoop();
-    uint32_t now = millis();
-    if (now - startTime > UPDATE_RATE) {
-      delay(1);
-    } else {
-      delay(UPDATE_RATE - (millis() - startTime));
-    }
-  }
-}
-
-void startAnimationLoop() {
-  // Temporarily disabled multi-core rendering due to
-  // https://github.com/rvl-system/rvl-firmware/issues/13
-#ifdef FALSE // ESP32
-  xTaskCreatePinnedToCore(
-      animationLoopRunner, "animationLoopRunner", 8192, NULL, 2, NULL, 0);
-#endif
-}
-
-bool animationLoopStarted = false;
-void loop() {
-  // Temporarily disabled multi-core rendering due to
-  // https://github.com/rvl-system/rvl-firmware/issues/13
-#ifdef FALSE // ESP32
-  if (!animationLoopStarted) {
-    animationLoopStarted = true;
-    startAnimationLoop();
-  }
-#else
-  animationLoop();
-#endif
 }
 
 } // namespace Lights
