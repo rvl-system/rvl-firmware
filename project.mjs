@@ -62,7 +62,6 @@ let flash = false;
 let debug = false;
 let log = false;
 let compiledb = false;
-let monitor = false;
 
 let target = 'controller';
 let port;
@@ -99,10 +98,6 @@ while (i < args.length) {
       break;
     case '--compiledb':
       compiledb = true;
-      break;
-    case '-m':
-    case '--monitor':
-      monitor = true;
       break;
     default:
       target = args[i];
@@ -220,8 +215,8 @@ if (flash) {
   }
   console.log(`\nFlashing target ${target} using JTAG\n`);
   // JTAG command, not currently working
-  exec(`openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
-  // exec(`esptool.py --port /dev/tty.usbserial-FTAV921H --baud 500000 write_flash -z 0x10000 ${targetUrl}`)
+  // exec(`openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+  exec(`esptool.py --port /dev/tty.usbserial-FTAV921H --baud 500000 write_flash -z 0x10000 ${targetUrl}`)
 }
 
 if (debug) {
@@ -237,27 +232,4 @@ if (debug) {
 if (log) {
   console.log(`\nOpening serial port for debugging${port ? ` on ${port}` : ''}\n`);
   exec(`seriallog${port ? ` -p ${port}` : ''}`);
-}
-
-if (monitor) {
-  console.log('Monitoring for system failure');
-  const port = new SerialPort({
-    path: 'COM3',
-    baudRate: 112500,
-  });
-
-  let BUFFER_LENGTH = 250;
-  let buffer = [];
-  let timeout;
-  port.on('data', (data) => {
-    buffer.push(data.toString());
-    while (buffer.length > BUFFER_LENGTH) {
-      buffer.shift();
-    }
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      console.log('Dead system');
-      console.log(buffer.join(''))
-    }, 5_000);
-  });
 }

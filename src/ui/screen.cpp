@@ -30,7 +30,11 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Screen {
 
-void update() {
+void init() {
+  Render::init();
+}
+
+void loop() {
   if (!UIState::isScreenActive()) {
     Render::off();
     return;
@@ -55,17 +59,6 @@ void update() {
     Render::render(&(UIState::tab2Controls), UIState::currentTab,
         UIState::currentTab2Control, &icons);
   }
-}
-
-void init() {
-  rvl::on(Codes::EventType::UIStateChange, update);
-  rvl::on(EVENT_BRIGHTNESS_UPDATED, update);
-  Render::init();
-  Screen::update();
-}
-
-void loop() {
-  Screen::update();
 }
 
 } // namespace Screen

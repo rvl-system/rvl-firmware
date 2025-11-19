@@ -105,9 +105,6 @@ void setup() {
 
 void backgroundLoop() {
   uint32_t startTime = millis();
-  // Try flipping the cores here. I don't think it's a parallel race condition,
-  // the timing doesn't fit, but something about what FreeRTOS is doing in core
-  // 0. I bet we'll be ok running non-LED stuff on core 0 though
   State::loop();
 #ifdef HAS_UI
   UI::loop();
@@ -158,9 +155,10 @@ void startBackgroundLoop() {
 }
 
 void foregroundLoop() {
-#ifdef HAS_LIGHTS
   uint32_t startTime = millis();
+#ifdef HAS_LIGHTS
   Lights::loop();
+#endif
   uint32_t now = millis();
   if (foregroundLoopIndex < NUM_LOOP_SAMPLES) {
     foregroundLoopTimes[foregroundLoopIndex++] = now - startTime;
@@ -187,7 +185,6 @@ void foregroundLoop() {
     rvl::debug("Foreground loop stats: Avg=%d Min=%d Max=%d",
         sum / NUM_LOOP_SAMPLES, min, max);
   }
-#endif
 }
 
 bool backgroundLoopStarted = false;
