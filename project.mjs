@@ -38,7 +38,7 @@ function error(message) {
 
 function showHelp() {
   console.log(
-`Usage: ./flash.js [OPTIONS].. [TARGET]
+    `Usage: ./flash.js [OPTIONS].. [TARGET]
 
 Builds and flashses the firemware supplied by TARGET to an RVL board. TARGET is
 the name of the requested target as specified in an [env:TARGET] section of
@@ -124,7 +124,7 @@ function exec(command, env) {
       cwd: __dirname,
       env
     });
-  } catch(e) {
+  } catch (e) {
     process.exit(-1);
   }
 }
@@ -220,8 +220,8 @@ if (flash) {
   }
   console.log(`\nFlashing target ${target} using JTAG\n`);
   // JTAG command, not currently working
-  // exec(`openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
-  exec(`esptool --port /dev/tty.usbserial-3120 write-flash -z 0x10000 ${targetUrl}`)
+  exec(`openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
+  // exec(`esptool.py --port /dev/tty.usbserial-FTAV921H --baud 500000 write_flash -z 0x10000 ${targetUrl}`)
 }
 
 if (debug) {
@@ -245,7 +245,7 @@ if (monitor) {
     path: 'COM3',
     baudRate: 112500,
   });
-  
+
   let BUFFER_LENGTH = 250;
   let buffer = [];
   let timeout;
@@ -255,10 +255,9 @@ if (monitor) {
       buffer.shift();
     }
     clearTimeout(timeout);
-    timeout = setTimeout(() => { {
+    timeout = setTimeout(() => {
       console.log('Dead system');
       console.log(buffer.join(''))
-    }}, 5_000);
+    }, 5_000);
   });
-  
 }

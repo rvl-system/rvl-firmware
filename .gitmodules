@@ -4,6 +4,3 @@
 [submodule "lib/rvl"]
 	path = lib/rvl
 	url = git@github.com:rvl-system/rvl.git
-[submodule "lib/esp8266-oled-ssd1306"]
-	path = lib/esp8266-oled-ssd1306
-	url = https://github.com/ThingPulse/esp8266-oled-ssd1306.git
