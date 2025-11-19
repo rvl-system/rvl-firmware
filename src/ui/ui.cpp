@@ -29,12 +29,10 @@ namespace UI {
 void init() {
   UIState::init();
   Input::init();
-  Screen::init();
 }
 
 void loop() {
   Input::loop();
-  Screen::loop();
 }
 
 } // namespace UI

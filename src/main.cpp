@@ -22,6 +22,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include <rvl.hpp>
 
 #ifdef HAS_UI
+#include "./ui/screen.hpp"
 #include "./ui/ui.hpp"
 #endif
 #ifdef HAS_CONTROLS
@@ -67,6 +68,7 @@ void setup() {
   State::init();
 #ifdef HAS_UI
   UI::init();
+  Screen::init();
 #else
   // Create a default animation
   RVLWaveSettings newSettings;
@@ -156,6 +158,9 @@ void startBackgroundLoop() {
 
 void foregroundLoop() {
   uint32_t startTime = millis();
+#ifdef HAS_UI
+  Screen::loop();
+#endif
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
