@@ -38,8 +38,6 @@ struct StripSegment {
 // For some reason, the screen never comes back on in multicore rendering
 // #define SCREEN_SAVER_ENABLED
 
-// #define ENABLE_MULTITHREADING
-
 extern std::vector<StripSegment> segments;
 
 /**** You *may* want to modify these settings, but it's not likely ****/
