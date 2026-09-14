@@ -25,8 +25,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 22
 #define LCD_SCL 21
-#define LCD_WIDTH 128
-#define LCD_HEIGHT 64
 
 #define BUTTON_PRESS 4
 #define BUTTON_PRESS_ON LOW

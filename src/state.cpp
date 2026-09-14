@@ -33,7 +33,4 @@ void init() {
   rvl::info("State initialized");
 }
 
-void loop() {
-}
-
 } // namespace State

@@ -169,15 +169,6 @@ uint16_t getPort() {
   return port;
 }
 
-void setPort(uint16_t newPort) {
-  port = newPort;
-#ifdef ESP32
-  preferences.begin("rvl", false);
-  preferences.putUShort("port", port);
-  preferences.end();
-#endif
-}
-
 uint8_t getSetting(const char* key, uint8_t defaultValue) {
 #ifdef ESP32
   preferences.begin("rvl", false);

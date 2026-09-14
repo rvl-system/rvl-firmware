@@ -131,7 +131,6 @@ void setup() {
 // platforms the foreground's frame-aligned sleep paces both loops together
 uint32_t backgroundLoop() {
   uint32_t startTime = millis();
-  State::loop();
 #ifdef HAS_UI
   UI::loop();
 #endif

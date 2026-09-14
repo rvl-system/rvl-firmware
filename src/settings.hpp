@@ -23,7 +23,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./codes.hpp"
 #include "./config.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.hpp>
+#include <rvl.hpp>
 
 namespace Settings {
 
@@ -36,7 +36,6 @@ char* getWiFiPassphrase();
 void setWiFiPassphrase(const char* passphrase);
 
 uint16_t getPort();
-void setPort(uint16_t newPort);
 
 uint8_t getSetting(const char* key, uint8_t defaultValue);
 void setSetting(const char* key, uint8_t value);

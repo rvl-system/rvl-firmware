@@ -22,8 +22,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Arduino.h>
 
-#define STATUS_ICON_SIZE 16
-
 namespace Icons {
 
 struct StatusIcon {

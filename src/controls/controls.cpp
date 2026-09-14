@@ -21,7 +21,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./config.hpp"
 #include <Arduino.h>
 #include <FastLED.h>
-#include <rvl-wifi.hpp>
+#include <rvl.hpp>
 
 namespace Controls {
 

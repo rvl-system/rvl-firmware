@@ -23,12 +23,11 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "codes.hpp"
 #include "config.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.hpp>
+#include <rvl.hpp>
 
 namespace State {
 
 void init();
-void loop();
 
 } // namespace State
 

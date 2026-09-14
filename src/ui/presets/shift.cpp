@@ -22,7 +22,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/presets/shift.hpp"
 #include "./settings.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.hpp>
+#include <rvl.hpp>
 #include <vector>
 
 namespace Shift {

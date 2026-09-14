@@ -31,7 +31,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./settings.hpp"
 #include "./state.hpp"
 #include <Arduino.h>
-#include <rvl-wifi.hpp>
 #include <rvl.hpp>
 
 namespace UIState {
@@ -119,7 +118,6 @@ void update() {
   } else {
     tab1Controls.push_back(remoteBrightnessControl);
   }
-  rvl::emit(Codes::EventType::UIStateChange);
 }
 
 void getWiFiSSIDValue(char* buffer) {
@@ -190,7 +188,6 @@ void init() {
   rvl::on(Codes::EventType::AnimationChange, update);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, update);
-  rvl::on(Codes::EventType::TimeChange, update);
   update();
   tab1Controls.reserve(10);
   tab2Controls.reserve(10);
@@ -202,13 +199,11 @@ void nextControl() {
     if (currentTab1Control < tab1Controls.size() - 1) {
       currentTab1Control++;
       rvl::debug("Setting Tab 1 control to %d", currentTab1Control);
-      rvl::emit(Codes::EventType::UIStateChange);
     }
   } else {
     if (currentTab2Control < tab2Controls.size() - 1) {
       currentTab2Control++;
       rvl::debug("Setting Tab 2 control to %d", currentTab2Control);
-      rvl::emit(Codes::EventType::UIStateChange);
     }
   }
 }
@@ -218,13 +213,11 @@ void previousControl() {
     if (currentTab1Control > 0) {
       currentTab1Control--;
       rvl::debug("Setting Tab 1 control to %d", currentTab1Control);
-      rvl::emit(Codes::EventType::UIStateChange);
     }
   } else {
     if (currentTab2Control > 0) {
       currentTab2Control--;
       rvl::debug("Setting Tab 2 control to %d", currentTab2Control);
-      rvl::emit(Codes::EventType::UIStateChange);
     }
   }
 }
@@ -232,20 +225,16 @@ void previousControl() {
 void controlIncrease() {
   if (currentTab == 0) {
     tab1Controls[currentTab1Control]->increaseValue();
-    rvl::emit(Codes::EventType::UIStateChange);
   } else {
     tab2Controls[currentTab2Control]->increaseValue();
-    rvl::emit(Codes::EventType::UIStateChange);
   }
 }
 
 void controlDecrease() {
   if (currentTab == 0) {
     tab1Controls[currentTab1Control]->decreaseValue();
-    rvl::emit(Codes::EventType::UIStateChange);
   } else {
     tab2Controls[currentTab2Control]->decreaseValue();
-    rvl::emit(Codes::EventType::UIStateChange);
   }
 }
 
@@ -255,7 +244,6 @@ void nextTab() {
   } else {
     currentTab = 0;
   }
-  rvl::emit(Codes::EventType::UIStateChange);
 }
 
 bool isCurrentControlRange() {

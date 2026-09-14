@@ -26,7 +26,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "SSD1306Wire.h"
 #include <Arduino.h>
 #include <Wire.h>
-#include <rvl-wifi.hpp>
+#include <rvl.hpp>
 
 namespace Render {
 

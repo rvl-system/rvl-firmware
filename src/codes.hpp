@@ -23,7 +23,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 namespace Codes {
 
 namespace EventType {
-enum EventType { AnimationChange = 100, UIStateChange = 101, TimeChange = 102 };
+enum EventType { AnimationChange = 100 };
 } // namespace EventType
 
 } // namespace Codes

@@ -55,7 +55,6 @@ extern std::vector<StripSegment> segments;
 #define SCREEN_OFF_TIME 10000
 
 #define CONNECTING_PIXEL_PERIOD 2000
-#define CONNECTING_PIXEL_HUE 85
 
 /**** You most likely should *not* modify these settings ****/
 
