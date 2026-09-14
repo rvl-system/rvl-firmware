@@ -51,6 +51,8 @@ RVLESP32Wifi::System* wifiSystem;
 RVLWifi::System* wifiSystem;
 #endif
 
+void startBackgroundLoop();
+
 void setup() {
   Settings::init();
 
@@ -120,6 +122,7 @@ void setup() {
 #ifdef HAS_LIGHTS
   Lights::init();
 #endif
+  startBackgroundLoop();
   rvl::info("Running");
 }
 
@@ -175,6 +178,8 @@ void backgroundLoopRunner(void* parameters) {
   }
 }
 
+// Must run exactly once: the network transport and protocol state driven by the
+// background loop are not safe to use from more than one task
 void startBackgroundLoop() {
 #ifdef ESP32
   // Priority 1: this task polls and sleeps, and must never outrank the WiFi
@@ -224,16 +229,9 @@ void foregroundLoop() {
   }
 }
 
-bool backgroundLoopStarted = false;
 void loop() {
-#ifdef ESP32
-  if (!backgroundLoopStarted) {
-    backgroundLoopStarted = true;
-    startBackgroundLoop();
-  }
-#else
+#ifndef ESP32
   backgroundLoop();
 #endif
-
   foregroundLoop();
 }

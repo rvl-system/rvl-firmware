@@ -20,7 +20,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_CONTROLLER_H_
 #define CONFIG_CONTROLLER_H_
 
-#define LED_DATA_PIN 32
+#define LED_DATA_PIN 33
 
 #define LCD_ADDRESS 0x3C
 #define LCD_SDA 22

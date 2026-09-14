@@ -36,6 +36,15 @@ namespace Lights {
 CRGB leds[LED_NUM_PIXELS];
 
 void init() {
+  // Segment ends are inclusive and index leds directly, so an end past the last
+  // pixel writes into whatever global the linker placed after the array
+  for (auto& segment : segments) {
+    if (segment.end >= LED_NUM_PIXELS) {
+      rvl::error("Segment end %d is past the last pixel %d, clamping",
+          segment.end, LED_NUM_PIXELS - 1);
+      segment.end = LED_NUM_PIXELS - 1;
+    }
+  }
   FastLED.addLeds<WS2812B, LED_DATA_PIN, LED_COLOR_MODE>(leds, LED_NUM_PIXELS);
   rvl::info("Lights initialized");
 }

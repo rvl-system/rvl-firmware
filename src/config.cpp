@@ -20,4 +20,4 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./config.hpp"
 #include <vector>
 
-std::vector<StripSegment> segments = {{0, LED_NUM_PIXELS, 0, false}};
+std::vector<StripSegment> segments = {{0, LED_NUM_PIXELS - 1, 0, false}};

@@ -19,14 +19,20 @@ You should have received a copy of the GNU General Public License
 along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { existsSync, readdirSync, readFileSync, writeFileSync, statSync } from 'fs';
-import { join, sep } from 'path';
-import { execSync } from 'child_process';
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
-import { SerialPort } from 'serialport'
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  statSync,
+} from "fs";
+import { join, sep } from "path";
+import { execSync } from "child_process";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import { SerialPort } from "serialport";
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
 
@@ -53,7 +59,8 @@ OPTIONS:
   -c  --console   open a serial port and log debugging information
       --compiledb generate compile_commands.json file
       --help      display this help and exit
-`);
+`,
+  );
 }
 
 let lint = false;
@@ -63,40 +70,40 @@ let debug = false;
 let log = false;
 let compiledb = false;
 
-let target = 'controller';
+let target = "controller";
 let port;
 
 let i = 0;
 while (i < args.length) {
   switch (args[i]) {
-    case '--help':
+    case "--help":
       showHelp();
       process.exit(0);
-    case '-l':
-    case '--lint':
+    case "-l":
+    case "--lint":
       lint = true;
       break;
-    case '-b':
-    case '--build':
+    case "-b":
+    case "--build":
       build = true;
       break;
-    case '-f':
-    case '--flash':
+    case "-f":
+    case "--flash":
       flash = true;
       break;
-    case '-d':
-    case '--debug':
+    case "-d":
+    case "--debug":
       debug = true;
       break;
-    case '-p':
-    case '--port':
+    case "-p":
+    case "--port":
       port = args[++i];
       break;
-    case '-c':
-    case '--console':
+    case "-c":
+    case "--console":
       log = true;
       break;
-    case '--compiledb':
+    case "--compiledb":
       compiledb = true;
       break;
     default:
@@ -107,7 +114,7 @@ while (i < args.length) {
 }
 
 // Validate the target
-if (typeof target !== 'string') {
+if (typeof target !== "string") {
   error(`no value for TARGET was supplied.\n`);
 }
 const targetUrl = `.pio/build/${target}/firmware.bin`;
@@ -115,9 +122,9 @@ const targetUrl = `.pio/build/${target}/firmware.bin`;
 function exec(command, env) {
   try {
     execSync(command, {
-      stdio: 'inherit',
+      stdio: "inherit",
       cwd: __dirname,
-      env
+      env,
     });
   } catch (e) {
     process.exit(-1);
@@ -139,54 +146,66 @@ function findFiles(dir, pattern) {
 }
 
 function checkHeaderGuard(file) {
-  if (!file.endsWith('.hpp') && !file.endsWith('.h')) {
+  if (!file.endsWith(".hpp") && !file.endsWith(".h")) {
     return;
   }
-  const contents = readFileSync(file, 'utf-8').split('\n');
+  const contents = readFileSync(file, "utf-8").split("\n");
   let ifdef;
   let def;
-  const splitFile = file.replace(/-/g, '_').toUpperCase().split(sep);
-  const headerGuardSegment = splitFile.slice(splitFile.lastIndexOf('SRC') + 1);
-  const filename = headerGuardSegment.pop().replace('.HPP', '').replace('.H', '');
-  headerGuardSegment.push(...filename.split('_'), 'H_');
+  const splitFile = file.replace(/-/g, "_").toUpperCase().split(sep);
+  const headerGuardSegment = splitFile.slice(splitFile.lastIndexOf("SRC") + 1);
+  const filename = headerGuardSegment
+    .pop()
+    .replace(".HPP", "")
+    .replace(".H", "");
+  headerGuardSegment.push(...filename.split("_"), "H_");
   for (let line of contents) {
     line = line.trimEnd();
     if (ifdef && def) {
       break;
     }
-    if (line.startsWith('#ifndef') && !ifdef) {
-      ifdef = line.split(' ')[1];
+    if (line.startsWith("#ifndef") && !ifdef) {
+      ifdef = line.split(" ")[1];
     }
-    if (line.startsWith('#define') && !def) {
-      def = line.split(' ')[1];
+    if (line.startsWith("#define") && !def) {
+      def = line.split(" ")[1];
     }
   }
   function guard(segments) {
-    return segments.join('_');
+    return segments.join("_");
   }
   let error = false;
-  if (headerGuardSegment.join('_') !== ifdef) {
+  if (headerGuardSegment.join("_") !== ifdef) {
     error = true;
-    console.error(`Invalid #ifdef header guard ${ifdef} in ${file}. Expected ${guard(headerGuardSegment)}`);
-  } else if (headerGuardSegment.join('_') !== def) {
+    console.error(
+      `Invalid #ifdef header guard ${ifdef} in ${file}. Expected ${guard(headerGuardSegment)}`,
+    );
+  } else if (headerGuardSegment.join("_") !== def) {
     error = true;
-    console.error(`Invalid #define header guard ${def} in ${file}. Expected ${guard(headerGuardSegment)}`);
+    console.error(
+      `Invalid #define header guard ${def} in ${file}. Expected ${guard(headerGuardSegment)}`,
+    );
   }
   return error;
 }
 
 const SOURCE_FILES = [
-  ...findFiles(join(__dirname, 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
-  ...findFiles(join(__dirname, 'lib', 'rvl', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
-  ...findFiles(join(__dirname, 'lib', 'rvl-wifi', 'src'), /(\.cpp|\.hpp|\.c|\.h)$/),
+  ...findFiles(join(__dirname, "src"), /(\.cpp|\.hpp|\.c|\.h)$/),
+  ...findFiles(join(__dirname, "lib", "rvl", "src"), /(\.cpp|\.hpp|\.c|\.h)$/),
+  ...findFiles(
+    join(__dirname, "lib", "rvl-wifi", "src"),
+    /(\.cpp|\.hpp|\.c|\.h)$/,
+  ),
 ];
 
-if (compiledb || !existsSync(join(__dirname, 'compile_commands.json'))) {
-  console.log('Generating compile_commands.json\n');
-  exec('platformio run -e compiledb -t compiledb');
-  const commandsPath = join(__dirname, 'compile_commands.json');
-  const commands = readFileSync(commandsPath, 'utf-8')
-    .replace(/ -I[^\s]*?\.platformio[^\s]*?newlib/g, '');
+if (compiledb || !existsSync(join(__dirname, "compile_commands.json"))) {
+  console.log("Generating compile_commands.json\n");
+  exec("platformio run -e compiledb -t compiledb");
+  const commandsPath = join(__dirname, "compile_commands.json");
+  const commands = readFileSync(commandsPath, "utf-8").replace(
+    / -I[^\s]*?\.platformio[^\s]*?newlib/g,
+    "",
+  );
   writeFileSync(commandsPath, commands);
 }
 
@@ -198,8 +217,8 @@ if (lint) {
   if (guardError) {
     process.exit(-1);
   }
-  exec(`clang-tidy ${SOURCE_FILES.join(' ')}`, {
-    CPATH: ''
+  exec(`clang-tidy ${SOURCE_FILES.join(" ")}`, {
+    CPATH: "",
   });
 }
 
@@ -215,12 +234,15 @@ if (flash) {
   }
   console.log(`\nFlashing target ${target} using JTAG\n`);
   // JTAG command, not currently working
-  exec(`openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`);
-  // exec(`esptool.py --port /dev/tty.usbserial-FTAV921H --baud 500000 write_flash -z 0x10000 ${targetUrl}`)
+  exec(
+    `openocd -f configs/c232hm.cfg -f board/esp32-wrover-kit-3.3v.cfg -c "program_esp ${targetUrl} 0x10000 verify exit"`,
+  );
+  exec();
+  // `esptool.py --port /dev/tty.usbserial-FTAV921H --baud 230400 write_flash -z 0x10000 ${targetUrl}`,
 }
 
 if (debug) {
-  if (target === 'controller') {
+  if (target === "controller") {
     console.log(`\nCreating debug connection using JTAG\n`);
     exec(`openocd -f configs/c232hm.cfg -f configs/esp-wroom-32.cfg`);
   } else {
@@ -230,6 +252,8 @@ if (debug) {
 }
 
 if (log) {
-  console.log(`\nOpening serial port for debugging${port ? ` on ${port}` : ''}\n`);
-  exec(`seriallog${port ? ` -p ${port}` : ''}`);
+  console.log(
+    `\nOpening serial port for debugging${port ? ` on ${port}` : ""}\n`,
+  );
+  exec(`seriallog${port ? ` -p ${port}` : ""}`);
 }
