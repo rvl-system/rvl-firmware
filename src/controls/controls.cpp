@@ -112,10 +112,10 @@ void init() {
         break;
       }
       auto currentBucket = buckets[i];
-      auto nextBucket = buckets[i];
+      auto nextBucket = buckets[i + 1];
       if (currentBucket->start <= initialInput &&
           currentBucket->end > initialInput &&
-          nextBucket->start < initialInput && nextBucket->end > initialInput)
+          nextBucket->start <= initialInput && nextBucket->end > initialInput)
       {
         auto currentBucketDistance = abs((initialInput - currentBucket->start) -
             (currentBucket->end - initialInput));

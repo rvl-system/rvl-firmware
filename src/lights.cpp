@@ -64,9 +64,9 @@ void loop() {
   RVLWaveSettings waveSettings;
   rvl::lockState();
   memcpy(&waveSettings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+  rvl::freeState();
   FastLED.setBrightness(rvl::getBrightness());
   auto animationClock = rvl::getAnimationClock();
-  rvl::freeState();
 
   uint32_t t = animationClock % (waveSettings.timePeriod * 100) * 255 /
       waveSettings.timePeriod;

@@ -119,9 +119,10 @@ void loop() {
     UIState::resetScreenTimeout();
     break;
   case Holding:
-    if (UIState::isCurrentControlRange()) {
+    if (UIState::isScreenActive() && UIState::isCurrentControlRange()) {
       UIState::controlIncrease();
     }
+    UIState::resetScreenTimeout();
     break;
   case None:
     // Do Nothing
@@ -136,9 +137,10 @@ void loop() {
     UIState::resetScreenTimeout();
     break;
   case Holding:
-    if (UIState::isCurrentControlRange()) {
+    if (UIState::isScreenActive() && UIState::isCurrentControlRange()) {
       UIState::controlDecrease();
     }
+    UIState::resetScreenTimeout();
     break;
   case None:
     // Do Nothing

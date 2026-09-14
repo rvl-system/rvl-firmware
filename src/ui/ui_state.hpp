@@ -37,8 +37,6 @@ extern uint8_t** presetValues;
 
 extern uint8_t currentTab;
 
-extern uint32_t screenTimeout;
-
 void init();
 
 void nextControl();

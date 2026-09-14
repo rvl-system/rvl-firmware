@@ -35,8 +35,7 @@ struct StripSegment {
 #define LED_COLOR_MODE GRB
 #define LED_NUM_PIXELS 300
 
-// For some reason, the screen never comes back on in multicore rendering
-// #define SCREEN_SAVER_ENABLED
+#define SCREEN_SAVER_ENABLED
 
 extern std::vector<StripSegment> segments;
 

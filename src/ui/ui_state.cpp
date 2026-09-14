@@ -40,7 +40,7 @@ uint8_t currentTab1Control = 0;
 uint8_t currentTab2Control = 0;
 uint8_t preset;
 uint8_t currentTab = 0;
-uint32_t screenTimeout = 0;
+uint32_t lastInteractionTime = 0;
 
 #define NUM_GLOBAL_CONTROLS 3
 
@@ -269,12 +269,12 @@ bool isCurrentControlRange() {
 }
 
 void resetScreenTimeout() {
-  screenTimeout = rvl::getAnimationClock() + SCREEN_OFF_TIME;
+  lastInteractionTime = millis();
 }
 
 bool isScreenActive() {
 #ifdef SCREEN_SAVER_ENABLED
-  return rvl::getAnimationClock() < screenTimeout;
+  return millis() - lastInteractionTime < SCREEN_OFF_TIME;
 #else
   return true;
 #endif
