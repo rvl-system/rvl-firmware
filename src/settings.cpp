@@ -55,7 +55,6 @@ char passphrase[MAX_PASSPHRASE_LENGTH];
 uint16_t port;
 
 uint8_t brightness = 0;
-bool remoteBrightnessState = false;
 uint8_t channel = 0;
 rvl::DeviceMode mode = rvl::DeviceMode::Receiver;
 
@@ -80,14 +79,6 @@ void updateBrightness() {
   if (newBrightness != brightness) {
     brightness = newBrightness;
     setSetting("brightness", rvl::getBrightness());
-  }
-}
-
-void updateRemoteBrightnessState() {
-  bool newRemoteBrightnessState = rvl::getRemoteBrightnessState();
-  if (newRemoteBrightnessState != remoteBrightnessState) {
-    remoteBrightnessState = newRemoteBrightnessState;
-    setSetting("remote-brightness", rvl::getRemoteBrightnessState() ? 1 : 0);
   }
 }
 
@@ -154,10 +145,6 @@ void init() {
   rvl::setBrightness(brightness);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
 #endif
-
-  remoteBrightnessState = getSetting("remote-brightness", 0) == 1;
-  rvl::setRemoteBrightnessState(remoteBrightnessState);
-  rvl::on(EVENT_REMOTE_BRIGHTNESS_UPDATED, updateRemoteBrightnessState);
 }
 
 char* getWiFiSSID() {
