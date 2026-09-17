@@ -28,6 +28,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 namespace Settings {
 
 void init();
+void loop();
 
 char* getWiFiSSID();
 void setWiFiSSID(const char* ssid);

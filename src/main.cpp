@@ -137,6 +137,7 @@ uint32_t backgroundLoop() {
 #ifdef HAS_CONTROLS
   Controls::loop();
 #endif
+  Settings::loop();
   rvl::loop();
   uint32_t now = millis();
   uint32_t elapsed = now - startTime;

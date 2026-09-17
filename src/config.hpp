@@ -41,7 +41,7 @@ extern std::vector<StripSegment> segments;
 
 /**** You *may* want to modify these settings, but it's not likely ****/
 
-#define UPDATE_RATE 33
+#define UPDATE_RATE 32
 
 #define DEFAULT_WIFI_PORT 4978
 #define SERIAL_BAUDRATE 115200

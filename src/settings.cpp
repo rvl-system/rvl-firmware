@@ -35,6 +35,21 @@ Preferences preferences; // NOLINT
 #define MAX_SSID_LENGTH 32
 #define MAX_PASSPHRASE_LENGTH 64
 
+// Flash writes stall both cores, so settings are written once a value has been
+// stable for this long instead of on every change
+#define SETTING_WRITE_DELAY 1000
+#define MAX_PENDING_SETTINGS 8
+
+struct PendingSetting {
+  const char* key;
+  uint8_t value;
+  uint32_t lastChanged;
+};
+
+// Only ever touched from the background task
+PendingSetting pendingSettings[MAX_PENDING_SETTINGS];
+uint8_t numPendingSettings = 0;
+
 char ssid[MAX_SSID_LENGTH];
 char passphrase[MAX_PASSPHRASE_LENGTH];
 uint16_t port;
@@ -81,30 +96,35 @@ void init() {
   passphrase[MAX_PASSPHRASE_LENGTH - 1] = 0;
 
 #ifdef ESP32
-  if (!preferences.getBool("wifi-ssid-set", false)) {
-    preferences.begin("rvl", false);
-    preferences.putBool("wifi-ssid-set", true);
-    preferences.end();
-    setWiFiSSID(DEFAULT_WIFI_SSID);
-  } else {
-    preferences.begin("rvl", false);
+  // Preferences only reads from flash once begun, so the flag has to be read
+  // inside a begin/end pair. setWiFiSSID opens its own, so it can't be called
+  // from inside this one
+  preferences.begin("rvl", false);
+  bool ssidSet = preferences.getBool("wifi-ssid-set", false);
+  if (ssidSet) {
     preferences.getString("wifi-ssid", ssid, MAX_SSID_LENGTH);
-    preferences.end();
+  } else {
+    preferences.putBool("wifi-ssid-set", true);
+  }
+  preferences.end();
+  if (!ssidSet) {
+    setWiFiSSID(DEFAULT_WIFI_SSID);
   }
 #else
   setWiFiSSID(DEFAULT_WIFI_SSID);
 #endif
 
 #ifdef ESP32
-  if (!preferences.getBool("wifi-ps-set", false)) {
-    preferences.begin("rvl", false);
-    preferences.putBool("wifi-ps-set", true);
-    preferences.end();
-    setWiFiPassphrase(DEFAULT_WIFI_PASSPHRASE);
-  } else {
-    preferences.begin("rvl", false);
+  preferences.begin("rvl", false);
+  bool passphraseSet = preferences.getBool("wifi-ps-set", false);
+  if (passphraseSet) {
     preferences.getString("wifi-passphrase", passphrase, MAX_PASSPHRASE_LENGTH);
-    preferences.end();
+  } else {
+    preferences.putBool("wifi-ps-set", true);
+  }
+  preferences.end();
+  if (!passphraseSet) {
+    setWiFiPassphrase(DEFAULT_WIFI_PASSPHRASE);
   }
 #else
   setWiFiPassphrase(DEFAULT_WIFI_PASSPHRASE);
@@ -169,7 +189,20 @@ uint16_t getPort() {
   return port;
 }
 
+void writeSetting(const char* key, uint8_t value) {
+#ifdef ESP32
+  preferences.begin("rvl", false);
+  preferences.putUChar(key, value);
+  preferences.end();
+#endif
+}
+
 uint8_t getSetting(const char* key, uint8_t defaultValue) {
+  for (uint8_t i = 0; i < numPendingSettings; i++) {
+    if (strcmp(pendingSettings[i].key, key) == 0) {
+      return pendingSettings[i].value;
+    }
+  }
 #ifdef ESP32
   preferences.begin("rvl", false);
   uint8_t value = preferences.getUChar(key, defaultValue);
@@ -181,11 +214,34 @@ uint8_t getSetting(const char* key, uint8_t defaultValue) {
 }
 
 void setSetting(const char* key, uint8_t value) {
-#ifdef ESP32
-  preferences.begin("rvl", false);
-  preferences.putUChar(key, value);
-  preferences.end();
-#endif
+  for (uint8_t i = 0; i < numPendingSettings; i++) {
+    if (strcmp(pendingSettings[i].key, key) == 0) {
+      pendingSettings[i].value = value;
+      pendingSettings[i].lastChanged = millis();
+      return;
+    }
+  }
+  if (numPendingSettings == MAX_PENDING_SETTINGS) {
+    writeSetting(key, value);
+    return;
+  }
+  pendingSettings[numPendingSettings] = {key, value, millis()};
+  numPendingSettings++;
+}
+
+// Writes at most one setting per pass, so a burst of changes never turns into a
+// burst of flash writes
+void loop() {
+  uint32_t now = millis();
+  for (uint8_t i = 0; i < numPendingSettings; i++) {
+    if (now - pendingSettings[i].lastChanged < SETTING_WRITE_DELAY) {
+      continue;
+    }
+    writeSetting(pendingSettings[i].key, pendingSettings[i].value);
+    pendingSettings[i] = pendingSettings[numPendingSettings - 1];
+    numPendingSettings--;
+    return;
+  }
 }
 
 } // namespace Settings
