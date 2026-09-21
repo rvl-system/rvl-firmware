@@ -31,8 +31,8 @@ struct StatusIcon {
 extern StatusIcon wifiConnectedIcon;
 extern StatusIcon wifiDisconnectedIcon;
 
-extern StatusIcon synchronizedIcon;
-extern StatusIcon notSynchronizedIcon;
+extern StatusIcon readyToRenderIcon;
+extern StatusIcon notReadyToRenderIcon;
 
 extern StatusIcon tab1;
 extern StatusIcon tab2;

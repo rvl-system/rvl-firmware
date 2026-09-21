@@ -40,15 +40,15 @@ void loop() {
     return;
   }
   std::list<Icons::StatusIcon*> icons;
-  if (rvl::isNetworkConnected()) {
+  if (rvl::isLinkUp()) {
     icons.push_back(&Icons::wifiConnectedIcon);
   } else {
     icons.push_back(&Icons::wifiDisconnectedIcon);
   }
-  if (rvl::getSynchronizationState()) {
-    icons.push_back(&Icons::synchronizedIcon);
+  if (rvl::isReadyToRender()) {
+    icons.push_back(&Icons::readyToRenderIcon);
   } else {
-    icons.push_back(&Icons::notSynchronizedIcon);
+    icons.push_back(&Icons::notReadyToRenderIcon);
   }
   if (UIState::currentTab == 0) {
     icons.push_back(&Icons::tab1);

@@ -140,7 +140,7 @@ void loop() {
   updateChannel();
   updateBrightness(analogRead(BRIGHTNESS_PIN));
 
-  auto isConnected = rvl::isNetworkConnected();
+  auto isConnected = rvl::isLinkUp();
   auto animationClock = rvl::getAnimationClock();
   if (isConnected) {
     lastConnectedTime = animationClock;

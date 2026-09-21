@@ -93,16 +93,32 @@ Control::ListControl* presetControl;
 std::vector<Control::Control*> tab1Controls;
 std::vector<Control::Control*> tab2Controls;
 
+// Render::render reads these vectors on the foreground task while update()
+// runs on the background task, so only mutate them on a real change. The
+// contents depend only on mode and preset.
+bool listBuilt = false;
+rvl::DeviceMode listDeviceMode = rvl::DeviceMode::Receiver;
+uint8_t listPreset = 0;
+
 void update() {
+  auto deviceMode = rvl::getDeviceMode();
+  if (listBuilt && deviceMode == listDeviceMode && preset == listPreset) {
+    return;
+  }
+
   while (tab1Controls.size() > NUM_GLOBAL_CONTROLS) {
     tab1Controls.pop_back();
   }
-  if (rvl::getDeviceMode() == rvl::DeviceMode::Controller) {
+  if (deviceMode == rvl::DeviceMode::Controller) {
     tab1Controls.push_back(presetControl);
     for (auto& control : presets[preset]->controls) {
       tab1Controls.push_back(control);
     }
   }
+
+  listBuilt = true;
+  listDeviceMode = deviceMode;
+  listPreset = preset;
 }
 
 void getWiFiSSIDValue(char* buffer) {
@@ -115,7 +131,7 @@ void getWiFiSSIDValue(char* buffer) {
 Control::LabelControl* wifiSSIDControl;
 
 void getAddressValue(char* buffer) {
-  if (rvl::isNetworkConnected()) {
+  if (rvl::isConnected()) {
     snprintf(buffer, strlen(buffer), "%d", rvl::getDeviceId());
   } else {
     snprintf(buffer, strlen(buffer), "N/A");
@@ -165,10 +181,8 @@ void init() {
   presets.push_back(new ColorCycle::ColorCycle());
   presets.push_back(new Solid::Solid());
 
-  rvl::on(EVENT_CONNECTION_STATE_CHANGED, update);
   rvl::on(Codes::EventType::AnimationChange, update);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
-  rvl::on(EVENT_BRIGHTNESS_UPDATED, update);
   update();
   tab1Controls.reserve(10);
   tab2Controls.reserve(10);
