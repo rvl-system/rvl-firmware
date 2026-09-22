@@ -76,13 +76,8 @@ void init() {
   pinMode(CONTROL_DIGIT_2, INPUT);
   pinMode(CONTROL_DIGIT_3, INPUT);
 
-  // 5khz frequency w/ 12-bit resolution
-  ledcAttachPin(STATUS_LED, PWM_CHANNEL); // assign a led pins to a channel
-
-  // Initialize channels
-  // channels 0-15, resolution 1-16 bits, freq limits depend on resolution
-  // ledcSetup(uint8_t channel, uint32_t freq, uint8_t resolution_bits);
-  ledcSetup(PWM_CHANNEL, 4000, 8); // 12 kHz PWM, 8-bit resolution
+  // 4kHz PWM, 8-bit resolution. The LEDC channel is allocated for us
+  ledcAttach(STATUS_LED, 4000, 8);
 
   pinMode(BRIGHTNESS_PIN, ANALOG);
 
@@ -144,12 +139,12 @@ void loop() {
   auto animationClock = rvl::getAnimationClock();
   if (isConnected) {
     lastConnectedTime = animationClock;
-    ledcWrite(PWM_CHANNEL, 255);
+    ledcWrite(STATUS_LED, 255);
   } else {
     uint8_t brightness =
         sin8(255 * uint16_t(animationClock % CONNECTING_PIXEL_PERIOD) /
             CONNECTING_PIXEL_PERIOD);
-    ledcWrite(PWM_CHANNEL, brightness);
+    ledcWrite(STATUS_LED, brightness);
   }
 #endif
 }
