@@ -36,7 +36,9 @@ function showHelp(): void {
 
 Builds and flashes the firmware supplied by TARGET. TARGET is the name of an
 [env:TARGET] section of platformio.ini, or "coordinator" for the transport
-coordinator, which is a separate PlatformIO project under coordinator/.
+coordinator, which is a separate PlatformIO project under coordinator/. The
+"esp8266" target is build-only: it compiles the ESP8266 transport, which no
+board here runs.
 
 OPTIONS:
   -l  --lint      lint the source code
@@ -219,6 +221,11 @@ if (values.build) {
 
 if (values.flash) {
   console.log(`Flashing ${target}\n`);
+  // The esp8266 target exists to compile the ESP8266 transport, which is a
+  // submodule shared with other projects. No board here runs it
+  if (target === "esp8266") {
+    error(`target "esp8266" is build-only, there is no board to flash.\n`);
+  }
   if (!existsSync(targetUrl)) {
     error(`unknown or unbuilt target "${target}".\n`);
   }

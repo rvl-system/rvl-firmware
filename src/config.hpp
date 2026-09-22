@@ -67,5 +67,8 @@ extern std::vector<StripSegment> segments;
 #ifdef RVL_RECEIVER
 #include "./config-receiver.hpp"
 #endif
+#ifdef RVL_ESP8266
+#include "./config-esp8266.hpp"
+#endif
 
 #endif // CONFIG_H_
