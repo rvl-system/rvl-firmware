@@ -24,16 +24,15 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 
 #define WIFI_CHANNEL 3
-#define PORT 4978
 
 // A set is NUM_OBSERVATIONS_IN_SET broadcasts spaced REFERENCE_SPACING apart,
 // with SET_PERIOD from the start of one set to the start of the next
 #define SET_PERIOD 2300
 #define REFERENCE_SPACING 100
 
-// One socket per protocol: rvlxUdp broadcasts clock references to the fleet,
+// One socket per protocol: rvlaUdp broadcasts clock references to the fleet,
 // rvliUdp answers coordinator requests. Separate so neither drains the other
-WiFiUDP rvlxUdp;
+WiFiUDP rvlaUdp;
 WiFiUDP rvliUdp;
 
 uint16_t id = 0;
@@ -62,11 +61,6 @@ void write(WiFiUDP& udp, uint8_t* data, uint16_t length) {
   }
 }
 
-// Assigning IDs from the requester's own address is what makes them unique
-// without any allocator here: the DHCP server already guarantees no two
-// stations share one, and it is the only party that can. That derivation is
-// private to the coordinator — requesters never assume it, which is what lets a
-// future non-IP transport hand out something else entirely
 void handleRvliPacket() {
   if (rvliUdp.parsePacket() == 0) {
     return;
@@ -83,13 +77,14 @@ void handleRvliPacket() {
     rvliUdp.clear();
     return;
   }
-  if (header[4] != RVLI_VERSION) {
+  if (header[4] != PROTOCOL_VERSION) {
     Serial.printf("Ignoring RVLI version %d\n", header[4]);
     rvliUdp.clear();
     return;
   }
 
-  switch (header[5]) {
+  // header[5] is the source, which the coordinator has no use for
+  switch (header[6]) {
   case RVLI_PACKET_TYPE_ID_ASSIGNMENT: {
     uint8_t subType = rvliUdp.read();
     rvliUdp.clear();
@@ -101,7 +96,7 @@ void handleRvliPacket() {
     // one, and it is the only party that can. That derivation is private to the
     // coordinator, so a future non-IP transport can hand out something else
     uint8_t assignedId = requester[3];
-    if (assignedId >= CHANNEL_OFFSET) {
+    if (assignedId >= NUM_DEVICE_IDS) {
       // The pool is exhausted, or the AP moved onto a subnet whose addresses
       // can't be device IDs. Say nothing: silence is wire-identical to being
       // down, which the requester already retries against
@@ -110,9 +105,9 @@ void handleRvliPacket() {
     }
     rvliUdp.beginPacket(requester, requesterPort);
     write(rvliUdp, rvl::rvliSignature, 4);
-    write8(rvliUdp, RVLI_VERSION);
-    write8(rvliUdp, RVLI_PACKET_TYPE_ID_ASSIGNMENT);
+    write8(rvliUdp, PROTOCOL_VERSION);
     write8(rvliUdp, deviceId);
+    write8(rvliUdp, RVLI_PACKET_TYPE_ID_ASSIGNMENT);
     write8(rvliUdp, 0); // Reserved
     write8(rvliUdp, ID_REPLY_TYPE);
     write8(rvliUdp, assignedId);
@@ -122,7 +117,7 @@ void handleRvliPacket() {
     break;
   }
   default:
-    Serial.printf("Ignoring unknown RVLI packet type %d\n", header[5]);
+    Serial.printf("Ignoring unknown RVLI packet type %d\n", header[6]);
     rvliUdp.clear();
     break;
   }
@@ -130,23 +125,23 @@ void handleRvliPacket() {
 
 void sendReferenceBroadcast(bool isStartOfSet) {
   IPAddress ip(255, 255, 255, 255);
-  rvlxUdp.beginPacket(ip, PORT);
+  rvlaUdp.beginPacket(ip, RVLA_PORT);
 
-  write(rvlxUdp, rvl::rvlxSignature, 4);
-  write8(rvlxUdp, PROTOCOL_VERSION);
-  write8(rvlxUdp, 255); // Destination: broadcast
-  write8(rvlxUdp, deviceId);
-  write8(rvlxUdp, PACKET_TYPE_CLOCK_SYNC);
-  write8(rvlxUdp, 0); // Channel: clock sync is channel independent
-  write8(rvlxUdp, 0); // Reserved
+  write(rvlaUdp, rvl::rvlaSignature, 4);
+  write8(rvlaUdp, PROTOCOL_VERSION);
+  write8(rvlaUdp, 255); // Destination: broadcast
+  write8(rvlaUdp, deviceId);
+  write8(rvlaUdp, PACKET_TYPE_CLOCK_SYNC);
+  write8(rvlaUdp, 0); // Channel: clock sync is channel independent
+  write8(rvlaUdp, 0); // Reserved
 
-  write8(rvlxUdp, 1); // Clock sync subpacket type: reference broadcast
-  write16(rvlxUdp, id);
-  write8(rvlxUdp, 0); // Reserved
-  write8(rvlxUdp, isStartOfSet ? 1 : 0);
-  write8(rvlxUdp, 0); // Reserved
+  write8(rvlaUdp, 1); // Clock sync subpacket type: reference broadcast
+  write16(rvlaUdp, id);
+  write8(rvlaUdp, 0); // Reserved
+  write8(rvlaUdp, isStartOfSet ? 1 : 0);
+  write8(rvlaUdp, 0); // Reserved
 
-  rvlxUdp.endPacket();
+  rvlaUdp.endPacket();
 }
 
 void setup() {
@@ -166,13 +161,17 @@ void setup() {
   Serial.println(ip);
 
   // Boards drop any packet whose source is >= 240, so an AP address ending
-  // there would silently kill clock sync for the whole fleet
+  // there would silently kill clock sync for the whole fleet.
+  //
+  // This ID must also never be one a board can be assigned, or that board would
+  // drop every reference as its own. That holds because the DHCP server never
+  // leases its own address, which is only true while the coordinator is the AP
   deviceId = ip[3];
-  if (deviceId >= CHANNEL_OFFSET) {
+  if (deviceId >= NUM_DEVICE_IDS) {
     Serial.println("ERROR: AP address ends >= 240, boards will ignore us");
   }
 
-  rvlxUdp.begin(PORT);
+  rvlaUdp.begin(RVLA_PORT);
   rvliUdp.begin(RVLI_PORT);
 }
 

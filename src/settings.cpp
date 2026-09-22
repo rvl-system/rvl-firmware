@@ -52,7 +52,6 @@ uint8_t numPendingSettings = 0;
 
 char ssid[MAX_SSID_LENGTH];
 char passphrase[MAX_PASSPHRASE_LENGTH];
-uint16_t port;
 
 uint8_t brightness = 0;
 uint8_t channel = 0;
@@ -121,14 +120,6 @@ void init() {
   setWiFiPassphrase(DEFAULT_WIFI_PASSPHRASE);
 #endif
 
-#ifdef ESP32
-  preferences.begin("rvl", false);
-  port = preferences.getUShort("port", DEFAULT_WIFI_PORT);
-  preferences.end();
-#else
-  port = DEFAULT_WIFI_PORT;
-#endif
-
   mode = static_cast<rvl::DeviceMode>(
       getSetting("mode", static_cast<uint8_t>(rvl::DeviceMode::Receiver)));
   rvl::setDeviceMode(mode);
@@ -170,10 +161,6 @@ void setWiFiPassphrase(const char* newPassphrase) {
   preferences.putString("wifi-passphrase", passphrase);
   preferences.end();
 #endif
-}
-
-uint16_t getPort() {
-  return port;
 }
 
 void writeSetting(const char* key, uint8_t value) {

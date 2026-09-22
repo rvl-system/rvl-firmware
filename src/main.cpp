@@ -66,11 +66,11 @@ void setup() {
 #endif
 
 #ifdef ESP32
-  wifiSystem = new RVLESP32Wifi::System(Settings::getWiFiSSID(),
-      Settings::getWiFiPassphrase(), Settings::getPort());
+  wifiSystem = new RVLESP32Wifi::System(
+      Settings::getWiFiSSID(), Settings::getWiFiPassphrase());
 #else
-  wifiSystem = new RVLWifi::System(Settings::getWiFiSSID(),
-      Settings::getWiFiPassphrase(), Settings::getPort());
+  wifiSystem = new RVLWifi::System(
+      Settings::getWiFiSSID(), Settings::getWiFiPassphrase());
 #endif
   rvl::init(wifiSystem);
 

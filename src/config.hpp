@@ -43,7 +43,6 @@ extern std::vector<StripSegment> segments;
 
 #define UPDATE_RATE 32
 
-#define DEFAULT_WIFI_PORT 4978
 #define SERIAL_BAUDRATE 115200
 
 #define DEFAULT_CHANNEL 0

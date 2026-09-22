@@ -36,8 +36,6 @@ void setWiFiSSID(const char* ssid);
 char* getWiFiPassphrase();
 void setWiFiPassphrase(const char* passphrase);
 
-uint16_t getPort();
-
 uint8_t getSetting(const char* key, uint8_t defaultValue);
 void setSetting(const char* key, uint8_t value);
 
