@@ -34,9 +34,9 @@ function showHelp(): void {
   console.log(
     `Usage: ./project.ts [OPTIONS].. [TARGET]
 
-Builds and flashes the firmware supplied by TARGET to an RVL board. TARGET is
-the name of the requested target as specified in an [env:TARGET] section of
-platformio.ini.
+Builds and flashes the firmware supplied by TARGET. TARGET is the name of an
+[env:TARGET] section of platformio.ini, or "coordinator" for the transport
+coordinator, which is a separate PlatformIO project under coordinator/.
 
 OPTIONS:
   -l  --lint      lint the source code
@@ -88,13 +88,25 @@ if (positionals.length > 1) {
   error(`expected at most one TARGET, got ${positionals.length}.`);
 }
 const target = positionals[0] ?? "controller";
-const targetUrl = `.pio/build/${target}/firmware.bin`;
 
-function exec(command: string, env?: NodeJS.ProcessEnv): void {
+// The coordinator differs from the boards in two ways: it is its own
+// PlatformIO project rather than another env of this one, and it is flashed
+// through a dev kit's onboard serial device rather than the FTDI cable the
+// boards use. Resolving both here keeps every command below target-agnostic.
+const isCoordinator = target === "coordinator";
+const projectDir = isCoordinator
+  ? join(import.meta.dirname, "coordinator")
+  : import.meta.dirname;
+const serialPort = isCoordinator
+  ? "/dev/cu.usbserial-2120"
+  : "/dev/tty.usbserial-FTAV921H";
+const targetUrl = join(projectDir, ".pio", "build", target, "firmware.bin");
+
+function exec(command: string, env?: NodeJS.ProcessEnv, cwd?: string): void {
   try {
     execSync(command, {
       stdio: "inherit",
-      cwd: import.meta.dirname,
+      cwd: cwd ?? import.meta.dirname,
       // Extend rather than replace: passing a bare object to execSync drops
       // PATH and everything else the child needs
       env: { ...process.env, ...env },
@@ -170,8 +182,13 @@ const SOURCE_FILES = [
 ];
 
 // clang-tidy resolves each file's include paths and flags from this database,
-// so it has to exist before linting and be regenerated when the build changes
-if (values.compiledb || !existsSync(join(import.meta.dirname, "compile_commands.json"))) {
+// so it has to exist before linting and be regenerated when the build changes.
+// Only the root project has one; generating it costs a full build, so don't do
+// that as a side effect of an unrelated command
+if (
+  values.compiledb ||
+  (values.lint && !existsSync(join(import.meta.dirname, "compile_commands.json")))
+) {
   console.log("Generating compile_commands.json\n");
   exec("platformio run -e compiledb -t compiledb");
   const commandsPath = join(import.meta.dirname, "compile_commands.json");
@@ -197,7 +214,7 @@ if (values.lint) {
 
 if (values.build) {
   console.log(`Building ${target}\n`);
-  exec(`platformio run -e ${target}`);
+  exec(`platformio run -e ${target}`, undefined, projectDir);
 }
 
 if (values.flash) {
@@ -206,6 +223,6 @@ if (values.flash) {
     error(`unknown or unbuilt target "${target}".\n`);
   }
   exec(
-    `esptool --port /dev/tty.usbserial-FTAV921H --baud 460800 write-flash -z 0x10000 ${targetUrl}`,
+    `esptool --port ${serialPort} --baud 460800 write-flash -z 0x10000 ${targetUrl}`,
   );
 }
