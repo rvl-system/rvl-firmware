@@ -54,18 +54,11 @@ uint8_t calculatePixelValue(RVLWaveChannel* wave, uint32_t t, uint8_t x) {
       wave->b;
 }
 
-void loop() {
-  if (!rvl::getPowerState()) {
-    FastLED.setBrightness(0);
-    FastLED.show();
-    return;
-  }
-
+void renderWave() {
   RVLWaveSettings waveSettings;
   rvl::lockState();
   memcpy(&waveSettings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
   rvl::freeState();
-  FastLED.setBrightness(rvl::getBrightness());
   auto animationClock = rvl::getAnimationClock();
 
   uint32_t t = animationClock % (waveSettings.timePeriod * 100) * 255 /
@@ -98,7 +91,20 @@ void loop() {
       }
     }
   }
+}
 
+void loop() {
+  switch (rvl::getAnimationType()) {
+  case rvl::AnimationType::Off:
+    // Clears leds[] too, so nothing that shows it later can bring back the
+    // frame from before the strip went dark
+    FastLED.clear(true);
+    return;
+  case rvl::AnimationType::Wave:
+    renderWave();
+    break;
+  }
+  FastLED.setBrightness(rvl::getBrightness());
   FastLED.show();
 }
 

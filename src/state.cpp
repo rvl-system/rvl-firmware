@@ -28,8 +28,7 @@ void onWaveSettingsUpdated() {
 }
 
 void init() {
-  rvl::setPowerState(true);
-  rvl::on(EVENT_WAVE_SETTINGS_UPDATED, onWaveSettingsUpdated);
+  rvl::on(EVENT_ANIMATION_UPDATED, onWaveSettingsUpdated);
   rvl::info("State initialized");
 }
 
