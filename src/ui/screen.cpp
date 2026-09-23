@@ -44,7 +44,7 @@ void loop() {
   } else {
     icons.push_back(&Icons::wifiDisconnectedIcon);
   }
-  if (rvl::isReadyToRender()) {
+  if (rvl::getRenderState() == rvl::RenderState::Current) {
     icons.push_back(&Icons::readyToRenderIcon);
   } else {
     icons.push_back(&Icons::notReadyToRenderIcon);

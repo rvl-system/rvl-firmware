@@ -92,6 +92,13 @@ void renderWave() {
 }
 
 void loop() {
+  // Blanks rather than showing the local preset or another channel's animation
+  // before this node knows what the fleet is showing
+  if (rvl::getRenderState() == rvl::RenderState::Unknown) {
+    FastLED.clear(true);
+    return;
+  }
+
   switch (rvl::getAnimationType()) {
   case rvl::AnimationType::Off:
     // Clears leds[] too, so nothing that shows it later can bring back the
