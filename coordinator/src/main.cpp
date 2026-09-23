@@ -30,9 +30,8 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #define SET_PERIOD 2300
 #define REFERENCE_SPACING 100
 
-// One socket per protocol: rvlaUdp broadcasts clock references to the fleet,
-// rvliUdp answers coordinator requests. Separate so neither drains the other
-WiFiUDP rvlaUdp;
+// The coordinator speaks only RVLI: it answers requests and broadcasts clock
+// references on the same socket
 WiFiUDP rvliUdp;
 
 uint16_t id = 0;
@@ -116,6 +115,10 @@ void handleRvliPacket() {
         "Assigned ID %d to %s\n", assignedId, requester.toString().c_str());
     break;
   }
+  case RVLI_PACKET_TYPE_CLOCK_SYNC:
+    // Boards' observations of our references, which only other boards use
+    rvliUdp.clear();
+    break;
   default:
     Serial.printf("Ignoring unknown RVLI packet type %d\n", header[6]);
     rvliUdp.clear();
@@ -125,23 +128,21 @@ void handleRvliPacket() {
 
 void sendReferenceBroadcast(bool isStartOfSet) {
   IPAddress ip(255, 255, 255, 255);
-  rvlaUdp.beginPacket(ip, RVLA_PORT);
+  rvliUdp.beginPacket(ip, RVLI_PORT);
 
-  write(rvlaUdp, rvl::rvlaSignature, 4);
-  write8(rvlaUdp, PROTOCOL_VERSION);
-  write8(rvlaUdp, 255); // Destination: broadcast
-  write8(rvlaUdp, deviceId);
-  write8(rvlaUdp, PACKET_TYPE_CLOCK_SYNC);
-  write8(rvlaUdp, 0); // Channel: clock sync is channel independent
-  write8(rvlaUdp, 0); // Reserved
+  write(rvliUdp, rvl::rvliSignature, 4);
+  write8(rvliUdp, PROTOCOL_VERSION);
+  write8(rvliUdp, deviceId);
+  write8(rvliUdp, RVLI_PACKET_TYPE_CLOCK_SYNC);
+  write8(rvliUdp, 0); // Reserved
 
-  write8(rvlaUdp, 1); // Clock sync subpacket type: reference broadcast
-  write16(rvlaUdp, id);
-  write8(rvlaUdp, 0); // Reserved
-  write8(rvlaUdp, isStartOfSet ? 1 : 0);
-  write8(rvlaUdp, 0); // Reserved
+  write8(rvliUdp, 1); // Clock sync subpacket type: reference broadcast
+  write16(rvliUdp, id);
+  write8(rvliUdp, 0); // Reserved
+  write8(rvliUdp, isStartOfSet ? 1 : 0);
+  write8(rvliUdp, 0); // Reserved
 
-  rvlaUdp.endPacket();
+  rvliUdp.endPacket();
 }
 
 void setup() {
@@ -171,7 +172,6 @@ void setup() {
     Serial.println("ERROR: AP address ends >= 240, boards will ignore us");
   }
 
-  rvlaUdp.begin(RVLA_PORT);
   rvliUdp.begin(RVLI_PORT);
 }
 
