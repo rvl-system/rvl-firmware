@@ -130,14 +130,14 @@ void getWiFiSSIDValue(char* buffer) {
 }
 Control::LabelControl* wifiSSIDControl;
 
-void getAddressValue(char* buffer) {
+void getDeviceIdValue(char* buffer) {
   if (rvl::isConnected()) {
     snprintf(buffer, strlen(buffer), "%d", rvl::getDeviceId());
   } else {
-    snprintf(buffer, strlen(buffer), "N/A");
+    snprintf(buffer, strlen(buffer), "Pending");
   }
 }
-Control::LabelControl* addressControl;
+Control::LabelControl* deviceIdControl;
 
 void getClockValue(char* buffer) {
   snprintf(buffer, strlen(buffer), "%d", rvl::getAnimationClock());
@@ -167,11 +167,11 @@ void init() {
   tab1Controls.push_back(modeControl);
 
   clockControl = new Control::LabelControl("Clock", getClockValue);
-  addressControl = new Control::LabelControl("Node Address", getAddressValue);
+  deviceIdControl = new Control::LabelControl("Device ID", getDeviceIdValue);
   wifiSSIDControl = new Control::LabelControl("WiFi SSID", getWiFiSSIDValue);
 
   tab2Controls.push_back(clockControl);
-  tab2Controls.push_back(addressControl);
+  tab2Controls.push_back(deviceIdControl);
   tab2Controls.push_back(wifiSSIDControl);
 
   presets.push_back(new Rainbow::Rainbow());
