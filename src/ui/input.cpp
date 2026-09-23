@@ -21,7 +21,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "./ui/input.hpp"
 #include "../config.hpp"
-#include "./codes.hpp"
 #include "./ui/ui_state.hpp"
 #include <Arduino.h>
 

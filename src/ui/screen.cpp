@@ -21,12 +21,11 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "./ui/screen.hpp"
 #include "../config.hpp"
-#include "./codes.hpp"
-#include "./state.hpp"
 #include "./ui/screen/icons.hpp"
 #include "./ui/screen/render.hpp"
 #include "./ui/ui_state.hpp"
 #include <Arduino.h>
+#include <rvl.hpp>
 
 namespace Screen {
 

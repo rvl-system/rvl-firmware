@@ -20,7 +20,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include "./codes.hpp"
 #include "./config.hpp"
 #include <Arduino.h>
 #include <rvl.hpp>

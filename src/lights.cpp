@@ -24,9 +24,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "./lights.hpp"
-#include "./codes.hpp"
 #include "./config.hpp"
-#include "./state.hpp"
 #include <Arduino.h>
 #include <FastLED.h>
 #include <rvl.hpp>

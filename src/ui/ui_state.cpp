@@ -20,7 +20,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_UI
 
 #include "./ui/ui_state.hpp"
-#include "./codes.hpp"
 #include "./presets/color_cycle.hpp"
 #include "./presets/preset_control_set.hpp"
 #include "./presets/pulse.hpp"
@@ -29,7 +28,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/solid.hpp"
 #include "./presets/wave.hpp"
 #include "./settings.hpp"
-#include "./state.hpp"
 #include <Arduino.h>
 #include <rvl.hpp>
 
@@ -45,6 +43,8 @@ uint32_t lastInteractionTime = 0;
 
 std::vector<PresetControlSet*> presets;
 
+void update();
+
 uint8_t getBrightnessValue() {
   return 16 * (rvl::getBrightness() - MIN_BRIGHTNESS) /
       (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
@@ -54,7 +54,6 @@ void updateBrightnessValue(uint8_t newValue) {
       (newValue * (MAX_BRIGHTNESS - MIN_BRIGHTNESS) / 16) + MIN_BRIGHTNESS;
   rvl::setBrightness(adjustedBrightness);
   rvl::info("Changing brightness to %d", adjustedBrightness);
-  rvl::emit(Codes::EventType::AnimationChange);
 }
 Control::RangeControl* brightnessControl;
 
@@ -86,6 +85,7 @@ void updatePresetValue(uint8_t selectedValueIndex) {
     Settings::setSetting("ui-preset", selectedValueIndex);
     UIState::preset = selectedValueIndex;
     presets[preset]->updateWave();
+    update();
   }
 }
 Control::ListControl* presetControl;
@@ -181,7 +181,6 @@ void init() {
   presets.push_back(new ColorCycle::ColorCycle());
   presets.push_back(new Solid::Solid());
 
-  rvl::on(Codes::EventType::AnimationChange, update);
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
   update();
   tab1Controls.reserve(10);

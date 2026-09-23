@@ -37,7 +37,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "./config.hpp"
 #include "./settings.hpp"
-#include "./state.hpp"
 
 #define NUM_LOOP_SAMPLES 60
 uint8_t backgroundLoopTimes[NUM_LOOP_SAMPLES];
@@ -85,7 +84,6 @@ void setup() {
   rvl::info("Channel: %d", rvl::getChannel());
   rvl::info("Brightness: %d", rvl::getBrightness());
 
-  State::init();
 #ifdef HAS_UI
   UI::init();
   Screen::init();
