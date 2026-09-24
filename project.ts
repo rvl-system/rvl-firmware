@@ -43,6 +43,8 @@ board here runs.
 OPTIONS:
   -l  --lint      lint the source code
   -b  --build     build the firmware before flashing the target
+  -t  --test      run lib/rvl's unit tests on this computer, whatever the
+                  target, stopping before flashing if any fail
   -f  --flash     flash the firmware after building the target
       --compiledb regenerate compile_commands.json, used by the linter
       --help      display this help and exit
@@ -59,6 +61,7 @@ function error(message: string): never {
 let values: {
   lint?: boolean;
   build?: boolean;
+  test?: boolean;
   flash?: boolean;
   compiledb?: boolean;
   help?: boolean;
@@ -69,6 +72,7 @@ try {
     options: {
       lint: { type: "boolean", short: "l" },
       build: { type: "boolean", short: "b" },
+      test: { type: "boolean", short: "t" },
       flash: { type: "boolean", short: "f" },
       compiledb: { type: "boolean" },
       help: { type: "boolean" },
@@ -217,6 +221,13 @@ if (values.lint) {
 if (values.build) {
   console.log(`Building ${target}\n`);
   exec(`platformio run -e ${target}`, undefined, projectDir);
+}
+
+// Always from the root project, since the tests exercise lib/rvl rather than
+// any one target
+if (values.test) {
+  console.log("Testing\n");
+  exec("platformio test -e native");
 }
 
 if (values.flash) {
