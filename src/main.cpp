@@ -37,12 +37,10 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "./config.hpp"
 #include "./settings.hpp"
+#include "./timing_stats.hpp"
 
-#define NUM_LOOP_SAMPLES 60
-uint8_t backgroundLoopTimes[NUM_LOOP_SAMPLES];
-uint8_t backgroundLoopIndex = 0;
-uint8_t foregroundLoopTimes[NUM_LOOP_SAMPLES];
-uint8_t foregroundLoopIndex = 0;
+TimingStats backgroundStats;
+TimingStats foregroundStats;
 
 #ifdef ESP32
 RVLESP32Wifi::System* wifiSystem;
@@ -139,26 +137,8 @@ uint32_t backgroundLoop() {
   rvl::loop();
   uint32_t now = millis();
   uint32_t elapsed = now - startTime;
-  if (backgroundLoopIndex < NUM_LOOP_SAMPLES) {
-    backgroundLoopTimes[backgroundLoopIndex++] = elapsed;
-  }
-  if (backgroundLoopIndex == NUM_LOOP_SAMPLES) {
-    backgroundLoopIndex = 0;
-    uint16_t sum = 0;
-    uint8_t min = 255;
-    uint8_t max = 0;
-    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
-      sum += backgroundLoopTimes[i];
-      if (backgroundLoopTimes[i] < min) {
-        min = backgroundLoopTimes[i];
-      }
-      if (backgroundLoopTimes[i] > max) {
-        max = backgroundLoopTimes[i];
-      }
-    }
-    rvl::debug("Background loop stats: Avg=%d Min=%d Max=%d",
-        sum / NUM_LOOP_SAMPLES, min, max);
-  }
+  backgroundStats.record(elapsed);
+  backgroundStats.log("Background loop");
   return elapsed;
 }
 
@@ -198,9 +178,7 @@ void foregroundLoop() {
 #endif
   uint32_t now = millis();
   uint32_t elapsed = now - startTime;
-  if (foregroundLoopIndex < NUM_LOOP_SAMPLES) {
-    foregroundLoopTimes[foregroundLoopIndex++] = elapsed;
-  }
+  foregroundStats.record(elapsed);
   // Sleep until the next frame boundary in animation-clock time, not
   // UPDATE_RATE after this node's last frame. Every node then renders the same
   // instants, so frame phase can't differ between nodes by up to a full frame.
@@ -208,23 +186,7 @@ void foregroundLoop() {
   // simply re-aligns to the next boundary
   uint32_t clock = rvl::getAnimationClock();
   delay(UPDATE_RATE - (clock % UPDATE_RATE));
-  if (foregroundLoopIndex == NUM_LOOP_SAMPLES) {
-    foregroundLoopIndex = 0;
-    uint16_t sum = 0;
-    uint8_t min = 255;
-    uint8_t max = 0;
-    for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
-      sum += foregroundLoopTimes[i];
-      if (foregroundLoopTimes[i] < min) {
-        min = foregroundLoopTimes[i];
-      }
-      if (foregroundLoopTimes[i] > max) {
-        max = foregroundLoopTimes[i];
-      }
-    }
-    rvl::debug("Foreground loop stats: Avg=%d Min=%d Max=%d",
-        sum / NUM_LOOP_SAMPLES, min, max);
-  }
+  foregroundStats.log("Foreground loop");
 }
 
 void loop() {
