@@ -51,7 +51,7 @@ void loop() {
   }
   if (UIState::currentTab == 0) {
     icons.push_back(&Icons::tab1);
-    Render::render(&(UIState::tab1Controls), UIState::currentTab,
+    Render::render(UIState::tab1Controls.load(), UIState::currentTab,
         UIState::currentTab1Control, &icons);
   } else {
     icons.push_back(&Icons::tab2);

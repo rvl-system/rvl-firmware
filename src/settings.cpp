@@ -23,7 +23,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "./config.hpp"
 #include "./settings.hpp"
-#include <algorithm>
 #include <rvl.hpp>
 
 namespace Settings {
@@ -82,9 +81,6 @@ void updateBrightness() {
 }
 
 void init() {
-  ssid[MAX_SSID_LENGTH - 1] = 0;
-  passphrase[MAX_PASSPHRASE_LENGTH - 1] = 0;
-
 #ifdef ESP32
   // Preferences only reads from flash once begun, so the flag has to be read
   // inside a begin/end pair. setWiFiSSID opens its own, so it can't be called
@@ -142,7 +138,7 @@ char* getWiFiSSID() {
   return ssid;
 }
 void setWiFiSSID(const char* newSSID) {
-  memcpy(ssid, newSSID, std::min(32, static_cast<int>(strlen(newSSID))));
+  strlcpy(ssid, newSSID, MAX_SSID_LENGTH);
 #ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putString("wifi-ssid", ssid);
@@ -154,8 +150,7 @@ char* getWiFiPassphrase() {
   return passphrase;
 }
 void setWiFiPassphrase(const char* newPassphrase) {
-  memcpy(passphrase, newPassphrase,
-      std::min(63, static_cast<int>(strlen(newPassphrase))));
+  strlcpy(passphrase, newPassphrase, MAX_PASSPHRASE_LENGTH);
 #ifdef ESP32
   preferences.begin("rvl", false);
   preferences.putString("wifi-passphrase", passphrase);

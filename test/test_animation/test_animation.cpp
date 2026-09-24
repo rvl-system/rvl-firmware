@@ -186,6 +186,25 @@ void test_a_sent_wave_round_trips() {
       &settings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
 }
 
+// The renderer divides by both periods, so a zero would panic the board
+void test_a_wave_with_a_zero_period_is_dropped_and_logged() {
+  RVLWaveSettings defaults;
+  RVLWaveSettings settings = distinctiveWave();
+  settings.timePeriod = 0;
+  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
+      wavePayload(settings)));
+  TEST_ASSERT_EQUAL_MEMORY(
+      &defaults, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+  TEST_ASSERT_TRUE(fake.logged("zero period"));
+
+  settings = distinctiveWave();
+  settings.distancePeriod = 0;
+  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
+      wavePayload(settings)));
+  TEST_ASSERT_EQUAL_MEMORY(
+      &defaults, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+}
+
 void test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave() {
   rvl::setDeviceMode(rvl::DeviceMode::Controller);
   rvl::setOff();
@@ -267,6 +286,7 @@ int main() {
   RUN_TEST(test_everything_is_discarded_while_the_node_has_no_id);
   RUN_TEST(test_an_unknown_packet_type_is_logged);
   RUN_TEST(test_a_sent_wave_round_trips);
+  RUN_TEST(test_a_wave_with_a_zero_period_is_dropped_and_logged);
   RUN_TEST(test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave);
   RUN_TEST(test_the_periodic_sender_repeats_only_the_current_selection);
   RUN_TEST(test_a_controller_without_an_id_sends_nothing);

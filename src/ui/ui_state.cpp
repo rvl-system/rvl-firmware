@@ -39,8 +39,6 @@ uint8_t preset;
 uint8_t currentTab = 0;
 uint32_t lastInteractionTime = 0;
 
-#define NUM_GLOBAL_CONTROLS 3
-
 std::vector<PresetControlSet*> presets;
 
 void update();
@@ -90,35 +88,22 @@ void updatePresetValue(uint8_t selectedValueIndex) {
 }
 Control::ListControl* presetControl;
 
-std::vector<Control::Control*> tab1Controls;
+// Every list tab 1 can show, built in init() and never changed after, since the
+// foreground task renders whichever one it's handed while the background task
+// switches between them
+std::vector<Control::Control*> receiverTab1Controls;
+std::vector<std::vector<Control::Control*>> controllerTab1Controls;
+std::atomic<std::vector<Control::Control*>*> tab1Controls{
+    &receiverTab1Controls};
+
 std::vector<Control::Control*> tab2Controls;
 
-// Render::render reads these vectors on the foreground task while update()
-// runs on the background task, so only mutate them on a real change. The
-// contents depend only on mode and preset.
-bool listBuilt = false;
-rvl::DeviceMode listDeviceMode = rvl::DeviceMode::Receiver;
-uint8_t listPreset = 0;
-
 void update() {
-  auto deviceMode = rvl::getDeviceMode();
-  if (listBuilt && deviceMode == listDeviceMode && preset == listPreset) {
-    return;
+  if (rvl::getDeviceMode() == rvl::DeviceMode::Controller) {
+    tab1Controls = &controllerTab1Controls[preset];
+  } else {
+    tab1Controls = &receiverTab1Controls;
   }
-
-  while (tab1Controls.size() > NUM_GLOBAL_CONTROLS) {
-    tab1Controls.pop_back();
-  }
-  if (deviceMode == rvl::DeviceMode::Controller) {
-    tab1Controls.push_back(presetControl);
-    for (auto& control : presets[preset]->controls) {
-      tab1Controls.push_back(control);
-    }
-  }
-
-  listBuilt = true;
-  listDeviceMode = deviceMode;
-  listPreset = preset;
 }
 
 void getWiFiSSIDValue(char* buffer) {
@@ -162,9 +147,7 @@ void init() {
       {"Rainbow", "Pulse", "Wave", "Shift", "Color Cycle", "Solid"}, preset,
       updatePresetValue);
 
-  tab1Controls.push_back(brightnessControl);
-  tab1Controls.push_back(channelControl);
-  tab1Controls.push_back(modeControl);
+  receiverTab1Controls = {brightnessControl, channelControl, modeControl};
 
   clockControl = new Control::LabelControl("Clock", getClockValue);
   deviceIdControl = new Control::LabelControl("Device ID", getDeviceIdValue);
@@ -181,16 +164,22 @@ void init() {
   presets.push_back(new ColorCycle::ColorCycle());
   presets.push_back(new Solid::Solid());
 
+  for (auto* presetControlSet : presets) {
+    auto controls = receiverTab1Controls;
+    controls.push_back(presetControl);
+    controls.insert(controls.end(), presetControlSet->controls.begin(),
+        presetControlSet->controls.end());
+    controllerTab1Controls.push_back(controls);
+  }
+
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
   update();
-  tab1Controls.reserve(10);
-  tab2Controls.reserve(10);
   presets[preset]->updateWave();
 }
 
 void nextControl() {
   if (currentTab == 0) {
-    if (currentTab1Control < tab1Controls.size() - 1) {
+    if (currentTab1Control < tab1Controls.load()->size() - 1) {
       currentTab1Control++;
       rvl::debug("Setting Tab 1 control to %d", currentTab1Control);
     }
@@ -218,7 +207,7 @@ void previousControl() {
 
 void controlIncrease() {
   if (currentTab == 0) {
-    tab1Controls[currentTab1Control]->increaseValue();
+    (*tab1Controls)[currentTab1Control]->increaseValue();
   } else {
     tab2Controls[currentTab2Control]->increaseValue();
   }
@@ -226,7 +215,7 @@ void controlIncrease() {
 
 void controlDecrease() {
   if (currentTab == 0) {
-    tab1Controls[currentTab1Control]->decreaseValue();
+    (*tab1Controls)[currentTab1Control]->decreaseValue();
   } else {
     tab2Controls[currentTab2Control]->decreaseValue();
   }
@@ -242,7 +231,7 @@ void nextTab() {
 
 bool isCurrentControlRange() {
   if (currentTab == 0) {
-    return tab1Controls[currentTab1Control]->type ==
+    return (*tab1Controls)[currentTab1Control]->type ==
         Control::ControlType::Range;
   } else {
     return tab2Controls[currentTab2Control]->type ==
