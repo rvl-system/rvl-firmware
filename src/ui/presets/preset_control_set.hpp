@@ -27,7 +27,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 class PresetControlSet {
 public:
   std::vector<Control::Control*> controls;
-  virtual void updateWave() = 0;
+  virtual void updateParameters() = 0;
 };
 
 #endif // UI_PRESETS_PRESET_CONTROL_SET_H_

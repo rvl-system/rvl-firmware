@@ -47,20 +47,23 @@ void init() {
   rvl::info("Lights initialized");
 }
 
-uint8_t calculatePixelValue(RVLWaveChannel* wave, uint32_t t, uint8_t x) {
-  return sin8(wave->w_t * t / 100 + wave->w_x * x + wave->phi) * wave->a / 255 +
-      wave->b;
+uint8_t calculatePixelValue(
+    RVLColorComponent* component, uint32_t t, uint8_t x) {
+  return sin8(component->w_t * t / 100 + component->w_x * x + component->phi) *
+          component->a / 255 +
+      component->b;
 }
 
-void renderWave() {
-  RVLWaveSettings waveSettings;
+void renderParametric() {
+  RVLParametricSettings settings;
   rvl::lockState();
-  memcpy(&waveSettings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+  memcpy(
+      &settings, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
   rvl::freeState();
   auto animationClock = rvl::getAnimationClock();
 
-  uint32_t t = animationClock % (waveSettings.timePeriod * 100) * 255 /
-      waveSettings.timePeriod;
+  uint32_t t = animationClock % (settings.timePeriod * 100) * 255 /
+      settings.timePeriod;
   for (const auto& segment : segments) {
     for (uint16_t i = segment.start; i <= segment.end; i++) {
       uint16_t normalizedIndex = 0;
@@ -69,23 +72,23 @@ void renderWave() {
       } else {
         normalizedIndex = (i - segment.start) + segment.offset;
       }
-      uint8_t x = 255 * (normalizedIndex % waveSettings.distancePeriod) /
-          waveSettings.distancePeriod;
+      uint8_t x = 255 * (normalizedIndex % settings.distancePeriod) /
+          settings.distancePeriod;
 
-      CHSV waveHSV[NUM_WAVES];
-      CRGB waveRGB[NUM_WAVES];
-      uint8_t alphaValues[NUM_WAVES];
+      CHSV layerHSV[NUM_LAYERS];
+      CRGB layerRGB[NUM_LAYERS];
+      uint8_t alphaValues[NUM_LAYERS];
 
-      for (uint8_t j = 0; j < NUM_WAVES; j++) {
-        waveHSV[j].h = calculatePixelValue(&(waveSettings.waves[j].h), t, x);
-        waveHSV[j].s = calculatePixelValue(&(waveSettings.waves[j].s), t, x);
-        waveHSV[j].v = calculatePixelValue(&(waveSettings.waves[j].v), t, x);
-        alphaValues[j] = calculatePixelValue(&(waveSettings.waves[j].a), t, x);
-        hsv2rgb_spectrum(waveHSV[j], waveRGB[j]);
+      for (uint8_t j = 0; j < NUM_LAYERS; j++) {
+        layerHSV[j].h = calculatePixelValue(&(settings.layers[j].h), t, x);
+        layerHSV[j].s = calculatePixelValue(&(settings.layers[j].s), t, x);
+        layerHSV[j].v = calculatePixelValue(&(settings.layers[j].v), t, x);
+        alphaValues[j] = calculatePixelValue(&(settings.layers[j].a), t, x);
+        hsv2rgb_spectrum(layerHSV[j], layerRGB[j]);
       }
-      leds[i] = waveRGB[NUM_WAVES - 1];
-      for (int8_t j = NUM_WAVES - 2; j >= 0; j--) {
-        leds[i] = blend(leds[i], waveRGB[j], alphaValues[j]);
+      leds[i] = layerRGB[NUM_LAYERS - 1];
+      for (int8_t j = NUM_LAYERS - 2; j >= 0; j--) {
+        leds[i] = blend(leds[i], layerRGB[j], alphaValues[j]);
       }
     }
   }
@@ -105,8 +108,8 @@ void loop() {
     // frame from before the strip went dark
     FastLED.clear(true);
     return;
-  case rvl::AnimationType::Wave:
-    renderWave();
+  case rvl::AnimationType::Parametric:
+    renderParametric();
     break;
   }
   FastLED.setBrightness(rvl::getBrightness());

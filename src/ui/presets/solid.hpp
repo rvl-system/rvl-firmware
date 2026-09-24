@@ -29,7 +29,7 @@ namespace Solid {
 class Solid : public PresetControlSet {
 public:
   Solid();
-  void updateWave() override;
+  void updateParameters() override;
 };
 
 } // namespace Solid

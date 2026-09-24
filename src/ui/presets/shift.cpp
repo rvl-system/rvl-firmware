@@ -31,35 +31,34 @@ uint8_t hue;
 uint8_t saturation;
 uint8_t value;
 
-void updateWaveParameters() {
-  RVLWaveSettings newSettings;
+void updateParametricSettings() {
+  RVLParametricSettings newSettings;
 
-  // Wave wave
   // b = 0.6, a = 0.3 so we go from 0.6 to 0.9, so blue to red
-  newSettings.waves[0].h.a = 50;
-  newSettings.waves[0].h.w_x = 2;
-  newSettings.waves[0].h.b = 165;
-  newSettings.waves[0].s.b = 255;
-  newSettings.waves[0].v.b = 255;
-  newSettings.waves[0].a.a = 255;
-  newSettings.waves[0].a.w_t = 8;
+  newSettings.layers[0].h.a = 50;
+  newSettings.layers[0].h.w_x = 2;
+  newSettings.layers[0].h.b = 165;
+  newSettings.layers[0].s.b = 255;
+  newSettings.layers[0].v.b = 255;
+  newSettings.layers[0].a.a = 255;
+  newSettings.layers[0].a.w_t = 8;
 
-  newSettings.waves[1].h.a = 75;
-  newSettings.waves[1].h.w_x = 2;
-  newSettings.waves[1].h.b = 165;
-  newSettings.waves[1].h.phi = 127;
-  newSettings.waves[1].s.b = 255;
-  newSettings.waves[1].v.b = 255;
-  newSettings.waves[1].a.b = 255;
+  newSettings.layers[1].h.a = 75;
+  newSettings.layers[1].h.w_x = 2;
+  newSettings.layers[1].h.b = 165;
+  newSettings.layers[1].h.phi = 127;
+  newSettings.layers[1].s.b = 255;
+  newSettings.layers[1].v.b = 255;
+  newSettings.layers[1].a.b = 255;
 
-  rvl::setWaveSettings(&newSettings);
+  rvl::setParametricSettings(&newSettings);
 }
 
 // void updateHueValue(uint8_t newValue) {
 //   if (hue != newValue) {
 //     hue = newValue;
 //     Settings::setSetting("ui-s-hue", hue);
-//     updateWaveParameters();
+//     updateParametricSettings();
 //   }
 // }
 
@@ -67,7 +66,7 @@ void updateWaveParameters() {
 //   if (saturation != newValue) {
 //     saturation = newValue;
 //     Settings::setSetting("ui-s-sat", saturation);
-//     updateWaveParameters();
+//     updateParametricSettings();
 //   }
 // }
 
@@ -75,7 +74,7 @@ void updateWaveParameters() {
 //   if (value != newValue) {
 //     value = newValue;
 //     Settings::setSetting("ui-sh-val", value);
-//     updateWaveParameters();
+//     updateParametricSettings();
 //   }
 // }
 
@@ -91,8 +90,8 @@ Shift::Shift() {
   //     "Value", 0, 255, value, updateValueValue, NULL));
 }
 
-void Shift::updateWave() {
-  updateWaveParameters();
+void Shift::updateParameters() {
+  updateParametricSettings();
 }
 
 } // namespace Shift

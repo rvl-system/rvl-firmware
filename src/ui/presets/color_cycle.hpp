@@ -29,7 +29,7 @@ namespace ColorCycle {
 class ColorCycle : public PresetControlSet {
 public:
   ColorCycle();
-  void updateWave() override;
+  void updateParameters() override;
 };
 
 } // namespace ColorCycle

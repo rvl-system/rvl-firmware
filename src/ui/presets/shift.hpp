@@ -29,7 +29,7 @@ namespace Shift {
 class Shift : public PresetControlSet {
 public:
   Shift();
-  void updateWave() override;
+  void updateParameters() override;
 };
 
 } // namespace Shift

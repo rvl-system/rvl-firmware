@@ -32,38 +32,38 @@ uint8_t waveHue;
 uint8_t foregroundHue;
 uint8_t backgroundHue;
 
-void updateWaveParameters() {
-  RVLWaveSettings newSettings;
+void updateParametricSettings() {
+  RVLParametricSettings newSettings;
 
-  // Wave wave
-  newSettings.waves[0].h.b = waveHue;
-  newSettings.waves[0].s.b = 255;
-  newSettings.waves[0].v.b = 255;
-  newSettings.waves[0].a.a = 255;
-  newSettings.waves[0].a.w_t = rate;
-  newSettings.waves[0].a.w_x = 2;
+  // Wave layer
+  newSettings.layers[0].h.b = waveHue;
+  newSettings.layers[0].s.b = 255;
+  newSettings.layers[0].v.b = 255;
+  newSettings.layers[0].a.a = 255;
+  newSettings.layers[0].a.w_t = rate;
+  newSettings.layers[0].a.w_x = 2;
 
-  // Foreground wave
-  newSettings.waves[1].h.b = foregroundHue;
-  newSettings.waves[1].s.b = 255;
-  newSettings.waves[1].v.b = 255;
-  newSettings.waves[1].a.w_t = rate;
-  newSettings.waves[1].a.a = 255;
+  // Foreground layer
+  newSettings.layers[1].h.b = foregroundHue;
+  newSettings.layers[1].s.b = 255;
+  newSettings.layers[1].v.b = 255;
+  newSettings.layers[1].a.w_t = rate;
+  newSettings.layers[1].a.a = 255;
 
-  // Background wave
-  newSettings.waves[2].h.b = backgroundHue;
-  newSettings.waves[2].s.b = 255;
-  newSettings.waves[2].v.b = 255;
-  newSettings.waves[2].a.a = 255;
+  // Background layer
+  newSettings.layers[2].h.b = backgroundHue;
+  newSettings.layers[2].s.b = 255;
+  newSettings.layers[2].v.b = 255;
+  newSettings.layers[2].a.a = 255;
 
-  rvl::setWaveSettings(&newSettings);
+  rvl::setParametricSettings(&newSettings);
 }
 
 void updateRateValue(uint8_t newValue) {
   if (rate != newValue) {
     rate = newValue;
     Settings::setSetting("ui-w-rate", rate);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -71,7 +71,7 @@ void updateWaveHueValue(uint8_t newValue) {
   if (waveHue != newValue) {
     waveHue = newValue;
     Settings::setSetting("ui-w-whue", waveHue);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -79,7 +79,7 @@ void updateForegroundHueValue(uint8_t newValue) {
   if (foregroundHue != newValue) {
     foregroundHue = newValue;
     Settings::setSetting("ui-w-fhue", foregroundHue);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -87,7 +87,7 @@ void updateBackgroundHueValue(uint8_t newValue) {
   if (backgroundHue != newValue) {
     backgroundHue = newValue;
     Settings::setSetting("ui-w-bhue", backgroundHue);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -106,8 +106,8 @@ Wave::Wave() {
       "Background Hue", 0, 255, backgroundHue, updateBackgroundHueValue, NULL));
 }
 
-void Wave::updateWave() {
-  updateWaveParameters();
+void Wave::updateParameters() {
+  updateParametricSettings();
 }
 
 } // namespace Wave

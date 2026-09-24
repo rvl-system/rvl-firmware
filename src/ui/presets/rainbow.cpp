@@ -29,22 +29,22 @@ namespace Rainbow {
 
 uint8_t rate;
 
-void updateWaveParameters() {
-  RVLWaveSettings newSettings;
-  newSettings.waves[0].h.a = 255;
-  newSettings.waves[0].h.w_t = rate;
-  newSettings.waves[0].h.w_x = 2;
-  newSettings.waves[0].s.b = 255;
-  newSettings.waves[0].v.b = 255;
-  newSettings.waves[0].a.b = 255;
-  rvl::setWaveSettings(&newSettings);
+void updateParametricSettings() {
+  RVLParametricSettings newSettings;
+  newSettings.layers[0].h.a = 255;
+  newSettings.layers[0].h.w_t = rate;
+  newSettings.layers[0].h.w_x = 2;
+  newSettings.layers[0].s.b = 255;
+  newSettings.layers[0].v.b = 255;
+  newSettings.layers[0].a.b = 255;
+  rvl::setParametricSettings(&newSettings);
 }
 
 void updateRateValue(uint8_t newValue) {
   if (rate != newValue) {
     rate = newValue;
     Settings::setSetting("ui-r-rate", rate);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -54,8 +54,8 @@ Rainbow::Rainbow() {
       new Control::RangeControl("Rate", 0, 32, rate, updateRateValue, NULL));
 }
 
-void Rainbow::updateWave() {
-  updateWaveParameters();
+void Rainbow::updateParameters() {
+  updateParametricSettings();
 }
 
 } // namespace Rainbow

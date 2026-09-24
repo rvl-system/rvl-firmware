@@ -68,7 +68,7 @@ void updateModeValue(uint8_t selectedValueIndex) {
     switch (static_cast<rvl::DeviceMode>(selectedValueIndex)) {
     case rvl::DeviceMode::Controller:
       rvl::setDeviceMode(rvl::DeviceMode::Controller);
-      presets[preset]->updateWave();
+      presets[preset]->updateParameters();
       break;
     case rvl::DeviceMode::Receiver:
       rvl::setDeviceMode(rvl::DeviceMode::Receiver);
@@ -82,7 +82,7 @@ void updatePresetValue(uint8_t selectedValueIndex) {
   if (UIState::preset != selectedValueIndex) {
     Settings::setSetting("ui-preset", selectedValueIndex);
     UIState::preset = selectedValueIndex;
-    presets[preset]->updateWave();
+    presets[preset]->updateParameters();
     update();
   }
 }
@@ -174,7 +174,7 @@ void init() {
 
   rvl::on(EVENT_DEVICE_MODE_UPDATED, update);
   update();
-  presets[preset]->updateWave();
+  presets[preset]->updateParameters();
 }
 
 void nextControl() {

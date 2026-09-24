@@ -31,21 +31,21 @@ uint8_t rate;
 uint8_t hue;
 uint8_t saturation;
 
-void updateWaveParameters() {
-  RVLWaveSettings newSettings;
-  newSettings.waves[0].h.b = hue;
-  newSettings.waves[0].s.b = saturation;
-  newSettings.waves[0].v.a = 255;
-  newSettings.waves[0].v.w_t = rate;
-  newSettings.waves[0].a.b = 255;
-  rvl::setWaveSettings(&newSettings);
+void updateParametricSettings() {
+  RVLParametricSettings newSettings;
+  newSettings.layers[0].h.b = hue;
+  newSettings.layers[0].s.b = saturation;
+  newSettings.layers[0].v.a = 255;
+  newSettings.layers[0].v.w_t = rate;
+  newSettings.layers[0].a.b = 255;
+  rvl::setParametricSettings(&newSettings);
 }
 
 void updateRateValue(uint8_t newValue) {
   if (rate != newValue) {
     rate = newValue;
     Settings::setSetting("ui-p-rate", rate);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -53,7 +53,7 @@ void updateHueValue(uint8_t newValue) {
   if (hue != newValue) {
     hue = newValue;
     Settings::setSetting("ui-p-hue", hue);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -61,7 +61,7 @@ void updateSaturationValue(uint8_t newValue) {
   if (saturation != newValue) {
     saturation = newValue;
     Settings::setSetting("ui-p-sat", saturation);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -77,8 +77,8 @@ Pulse::Pulse() {
       "Saturation", 0, 255, saturation, updateSaturationValue, NULL));
 }
 
-void Pulse::updateWave() {
-  updateWaveParameters();
+void Pulse::updateParameters() {
+  updateParametricSettings();
 }
 
 } // namespace Pulse

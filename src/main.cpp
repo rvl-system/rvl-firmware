@@ -87,30 +87,30 @@ void setup() {
   Screen::init();
 #else
   // Create a default animation
-  RVLWaveSettings newSettings;
+  RVLParametricSettings newSettings;
 
-  // Wave wave
-  newSettings.waves[0].h.b = 0;
-  newSettings.waves[0].s.b = 255;
-  newSettings.waves[0].v.b = 255;
-  newSettings.waves[0].a.a = 255;
-  newSettings.waves[0].a.w_t = 8;
-  newSettings.waves[0].a.w_x = 2;
+  // Wave layer
+  newSettings.layers[0].h.b = 0;
+  newSettings.layers[0].s.b = 255;
+  newSettings.layers[0].v.b = 255;
+  newSettings.layers[0].a.a = 255;
+  newSettings.layers[0].a.w_t = 8;
+  newSettings.layers[0].a.w_x = 2;
 
-  // Foreground wave
-  newSettings.waves[1].h.b = 170;
-  newSettings.waves[1].s.b = 255;
-  newSettings.waves[1].v.b = 255;
-  newSettings.waves[1].a.w_t = 8;
-  newSettings.waves[1].a.a = 255;
+  // Foreground layer
+  newSettings.layers[1].h.b = 170;
+  newSettings.layers[1].s.b = 255;
+  newSettings.layers[1].v.b = 255;
+  newSettings.layers[1].a.w_t = 8;
+  newSettings.layers[1].a.a = 255;
 
-  // Background wave
-  newSettings.waves[2].h.b = 85;
-  newSettings.waves[2].s.b = 255;
-  newSettings.waves[2].v.b = 255;
-  newSettings.waves[2].a.a = 255;
+  // Background layer
+  newSettings.layers[2].h.b = 85;
+  newSettings.layers[2].s.b = 255;
+  newSettings.layers[2].v.b = 255;
+  newSettings.layers[2].a.a = 255;
 
-  rvl::setWaveSettings(&newSettings);
+  rvl::setParametricSettings(&newSettings);
 #endif
 #ifdef HAS_CONTROLS
   Controls::init();

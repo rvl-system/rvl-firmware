@@ -31,23 +31,22 @@ uint8_t hue;
 uint8_t saturation;
 uint8_t value;
 
-void updateWaveParameters() {
-  RVLWaveSettings newSettings;
+void updateParametricSettings() {
+  RVLParametricSettings newSettings;
 
-  // Wave wave
-  newSettings.waves[0].h.b = hue;
-  newSettings.waves[0].s.b = saturation;
-  newSettings.waves[0].v.b = value;
-  newSettings.waves[0].a.b = 255;
+  newSettings.layers[0].h.b = hue;
+  newSettings.layers[0].s.b = saturation;
+  newSettings.layers[0].v.b = value;
+  newSettings.layers[0].a.b = 255;
 
-  rvl::setWaveSettings(&newSettings);
+  rvl::setParametricSettings(&newSettings);
 }
 
 void updateHueValue(uint8_t newValue) {
   if (hue != newValue) {
     hue = newValue;
     Settings::setSetting("ui-s-hue", hue);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -55,7 +54,7 @@ void updateSaturationValue(uint8_t newValue) {
   if (saturation != newValue) {
     saturation = newValue;
     Settings::setSetting("ui-s-sat", saturation);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -63,7 +62,7 @@ void updateValueValue(uint8_t newValue) {
   if (value != newValue) {
     value = newValue;
     Settings::setSetting("ui-s-val", value);
-    updateWaveParameters();
+    updateParametricSettings();
   }
 }
 
@@ -79,8 +78,8 @@ Solid::Solid() {
       "Value", 0, 255, value, updateValueValue, NULL));
 }
 
-void Solid::updateWave() {
-  updateWaveParameters();
+void Solid::updateParameters() {
+  updateParametricSettings();
 }
 
 } // namespace Solid

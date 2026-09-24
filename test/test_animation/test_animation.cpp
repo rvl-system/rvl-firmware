@@ -55,36 +55,36 @@ uint8_t packetType(const SentPacket& packet) {
 }
 
 // Every field different, and the signed ones negative
-RVLWaveSettings distinctiveWave() {
-  RVLWaveSettings settings;
+RVLParametricSettings distinctiveParametric() {
+  RVLParametricSettings settings;
   settings.timePeriod = 200;
   settings.distancePeriod = 16;
   uint8_t n = 0;
-  for (auto& wave : settings.waves) {
-    for (auto* channel : {&wave.h, &wave.s, &wave.v, &wave.a}) {
-      channel->a = 100 + n;
-      channel->b = 200 + n;
-      channel->w_t = -1 - n;
-      channel->w_x = 1 + n;
-      channel->phi = -64 + n;
+  for (auto& layer : settings.layers) {
+    for (auto* component : {&layer.h, &layer.s, &layer.v, &layer.a}) {
+      component->a = 100 + n;
+      component->b = 200 + n;
+      component->w_t = -1 - n;
+      component->w_x = 1 + n;
+      component->phi = -64 + n;
       n++;
     }
   }
   return settings;
 }
 
-// The wire layout: time period, distance period, then each wave's h, s, v and
+// The wire layout: time period, distance period, then each layer's h, s, v and
 // a, each as a, b, w_t, w_x, phi
-Bytes wavePayload(const RVLWaveSettings& settings) {
+Bytes parametricPayload(const RVLParametricSettings& settings) {
   PacketWriter payload;
   payload.u8(settings.timePeriod).u8(settings.distancePeriod);
-  for (auto& wave : settings.waves) {
-    for (auto* channel : {&wave.h, &wave.s, &wave.v, &wave.a}) {
-      payload.u8(channel->a)
-          .u8(channel->b)
-          .u8(channel->w_t)
-          .u8(channel->w_x)
-          .u8(channel->phi);
+  for (auto& layer : settings.layers) {
+    for (auto* component : {&layer.h, &layer.s, &layer.v, &layer.a}) {
+      payload.u8(component->a)
+          .u8(component->b)
+          .u8(component->w_t)
+          .u8(component->w_x)
+          .u8(component->phi);
     }
   }
   return payload.bytes;
@@ -94,8 +94,8 @@ void setUp() {
   rvl::setDeviceMode(rvl::DeviceMode::Receiver);
   rvl::setLinkUpState(true);
   rvl::setDeviceId(LOCAL_ID);
-  RVLWaveSettings wave;
-  rvl::setWaveSettings(&wave);
+  RVLParametricSettings settings;
+  rvl::setParametricSettings(&settings);
   // A channel change forgets the controller
   rvl::setChannel(1);
   rvl::setChannel(0);
@@ -166,46 +166,46 @@ void test_an_unknown_packet_type_is_logged() {
 
 // A controller's packet fed back to a receiver, which needs a peer's source or
 // it drops the packet as its own
-void test_a_sent_wave_round_trips() {
-  RVLWaveSettings settings = distinctiveWave();
+void test_a_sent_parametric_round_trips() {
+  RVLParametricSettings settings = distinctiveParametric();
   rvl::setDeviceMode(rvl::DeviceMode::Controller);
-  rvl::setWaveSettings(&settings);
+  rvl::setParametricSettings(&settings);
   TEST_ASSERT_EQUAL(1, animation.sent.size());
   TEST_ASSERT(animation.sent[0].destination == Destination::Channel);
-  TEST_ASSERT_PACKET(rvlaPacket(LOCAL_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
-                         wavePayload(settings)),
+  TEST_ASSERT_PACKET(rvlaPacket(LOCAL_ID, PACKET_TYPE_PARAMETRIC_ANIMATION, 0,
+                         parametricPayload(settings)),
       animation.sent[0].bytes);
 
   Bytes packet = animation.sent[0].bytes;
   packet[5] = CONTROLLER_ID;
   rvl::setDeviceMode(rvl::DeviceMode::Receiver);
-  RVLWaveSettings defaults;
-  rvl::setWaveSettings(&defaults);
+  RVLParametricSettings defaults;
+  rvl::setParametricSettings(&defaults);
   deliver(packet);
   TEST_ASSERT_EQUAL_MEMORY(
-      &settings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+      &settings, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
 }
 
 // The renderer divides by both periods, so a zero would panic the board
-void test_a_wave_with_a_zero_period_is_dropped_and_logged() {
-  RVLWaveSettings defaults;
-  RVLWaveSettings settings = distinctiveWave();
+void test_a_parametric_with_a_zero_period_is_dropped_and_logged() {
+  RVLParametricSettings defaults;
+  RVLParametricSettings settings = distinctiveParametric();
   settings.timePeriod = 0;
-  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
-      wavePayload(settings)));
+  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_PARAMETRIC_ANIMATION, 0,
+      parametricPayload(settings)));
   TEST_ASSERT_EQUAL_MEMORY(
-      &defaults, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+      &defaults, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
   TEST_ASSERT_TRUE(fake.logged("zero period"));
 
-  settings = distinctiveWave();
+  settings = distinctiveParametric();
   settings.distancePeriod = 0;
-  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
-      wavePayload(settings)));
+  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_PARAMETRIC_ANIMATION, 0,
+      parametricPayload(settings)));
   TEST_ASSERT_EQUAL_MEMORY(
-      &defaults, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+      &defaults, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
 }
 
-void test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave() {
+void test_a_sent_off_round_trips_and_a_parametric_after_it_restores_it() {
   rvl::setDeviceMode(rvl::DeviceMode::Controller);
   rvl::setOff();
   TEST_ASSERT_EQUAL(1, animation.sent.size());
@@ -215,17 +215,17 @@ void test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave() {
   Bytes packet = animation.sent[0].bytes;
   packet[5] = CONTROLLER_ID;
   rvl::setDeviceMode(rvl::DeviceMode::Receiver);
-  RVLWaveSettings defaults;
-  rvl::setWaveSettings(&defaults);
+  RVLParametricSettings defaults;
+  rvl::setParametricSettings(&defaults);
   deliver(packet);
   TEST_ASSERT_TRUE(isOff());
 
-  RVLWaveSettings settings = distinctiveWave();
-  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
-      wavePayload(settings)));
+  RVLParametricSettings settings = distinctiveParametric();
+  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_PARAMETRIC_ANIMATION, 0,
+      parametricPayload(settings)));
   TEST_ASSERT_FALSE(isOff());
   TEST_ASSERT_EQUAL_MEMORY(
-      &settings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+      &settings, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
 }
 
 // One sender for every type, so a controller never sends two types at once
@@ -243,14 +243,14 @@ void test_the_periodic_sender_repeats_only_the_current_selection() {
   }
 
   animation.sent.clear();
-  RVLWaveSettings settings = distinctiveWave();
-  rvl::setWaveSettings(&settings);
+  RVLParametricSettings settings = distinctiveParametric();
+  rvl::setParametricSettings(&settings);
   for (uint32_t elapsed = 5000; elapsed <= 8000; elapsed += 1000) {
     loopAt(start + elapsed);
   }
   TEST_ASSERT_GREATER_OR_EQUAL(3, animation.sent.size());
   for (auto& packet : animation.sent) {
-    TEST_ASSERT_EQUAL(PACKET_TYPE_WAVE_ANIMATION, packetType(packet));
+    TEST_ASSERT_EQUAL(PACKET_TYPE_PARAMETRIC_ANIMATION, packetType(packet));
   }
 }
 
@@ -285,9 +285,9 @@ int main() {
   RUN_TEST(test_only_the_nodes_channel_is_accepted);
   RUN_TEST(test_everything_is_discarded_while_the_node_has_no_id);
   RUN_TEST(test_an_unknown_packet_type_is_logged);
-  RUN_TEST(test_a_sent_wave_round_trips);
-  RUN_TEST(test_a_wave_with_a_zero_period_is_dropped_and_logged);
-  RUN_TEST(test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave);
+  RUN_TEST(test_a_sent_parametric_round_trips);
+  RUN_TEST(test_a_parametric_with_a_zero_period_is_dropped_and_logged);
+  RUN_TEST(test_a_sent_off_round_trips_and_a_parametric_after_it_restores_it);
   RUN_TEST(test_the_periodic_sender_repeats_only_the_current_selection);
   RUN_TEST(test_a_controller_without_an_id_sends_nothing);
   RUN_TEST(test_a_receiver_never_sends);
