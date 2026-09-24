@@ -217,6 +217,28 @@ void test_a_straggler_from_the_last_set_keeps_this_sets_row() {
   TEST_ASSERT_EQUAL_INT32(10, processSet(t + 4600, id + 6));
 }
 
+void test_the_animation_clock_wraps_with_its_offset() {
+  rvl::adjustAnimationClock(static_cast<int32_t>(0xFFFFFF00 - offset()));
+  TEST_ASSERT_EQUAL_UINT32(0xFFFFFF00, offset());
+  TEST_ASSERT_EQUAL_UINT32(0x100, rvl::toAnimationClock(0x200));
+  fake.clock = 0x200;
+  TEST_ASSERT_EQUAL_UINT32(0x100, rvl::getAnimationClock());
+  rvl::adjustAnimationClock(-0x200);
+  TEST_ASSERT_EQUAL_UINT32(0xFFFFFF00, rvl::toAnimationClock(0x200));
+}
+
+// Corrections accumulate modulo 2^32, like the clocks they correct
+void test_offset_adjustments_wrap_in_both_directions() {
+  uint32_t before = offset();
+  rvl::adjustAnimationClock(INT32_MAX);
+  rvl::adjustAnimationClock(INT32_MAX);
+  rvl::adjustAnimationClock(2);
+  TEST_ASSERT_EQUAL_UINT32(before, offset());
+  rvl::adjustAnimationClock(INT32_MIN);
+  rvl::adjustAnimationClock(INT32_MIN);
+  TEST_ASSERT_EQUAL_UINT32(before, offset());
+}
+
 int main() {
   rvl::init(&fake);
   rvl::setLinkUpState(true);
@@ -231,5 +253,7 @@ int main() {
   RUN_TEST(test_a_lone_board_syncs_with_a_zero_correction);
   RUN_TEST(test_a_cold_start_against_a_long_running_fleet);
   RUN_TEST(test_a_straggler_from_the_last_set_keeps_this_sets_row);
+  RUN_TEST(test_the_animation_clock_wraps_with_its_offset);
+  RUN_TEST(test_offset_adjustments_wrap_in_both_directions);
   return UNITY_END();
 }

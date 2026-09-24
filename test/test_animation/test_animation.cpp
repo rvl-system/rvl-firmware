@@ -19,6 +19,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fake_system.hpp"
 #include "packets.hpp"
+#include <initializer_list>
 #include <rvl.hpp>
 #include <rvl/config.hpp>
 #include <unity.h>
@@ -44,7 +45,53 @@ bool isOff() {
   return rvl::getAnimationType() == rvl::AnimationType::Off;
 }
 
+void loopAt(uint32_t time) {
+  fake.clock = time;
+  rvl::loop();
+}
+
+uint8_t packetType(const SentPacket& packet) {
+  return packet.bytes[6];
+}
+
+// Every field different, and the signed ones negative
+RVLWaveSettings distinctiveWave() {
+  RVLWaveSettings settings;
+  settings.timePeriod = 200;
+  settings.distancePeriod = 16;
+  uint8_t n = 0;
+  for (auto& wave : settings.waves) {
+    for (auto* channel : {&wave.h, &wave.s, &wave.v, &wave.a}) {
+      channel->a = 100 + n;
+      channel->b = 200 + n;
+      channel->w_t = -1 - n;
+      channel->w_x = 1 + n;
+      channel->phi = -64 + n;
+      n++;
+    }
+  }
+  return settings;
+}
+
+// The wire layout: time period, distance period, then each wave's h, s, v and
+// a, each as a, b, w_t, w_x, phi
+Bytes wavePayload(const RVLWaveSettings& settings) {
+  PacketWriter payload;
+  payload.u8(settings.timePeriod).u8(settings.distancePeriod);
+  for (auto& wave : settings.waves) {
+    for (auto* channel : {&wave.h, &wave.s, &wave.v, &wave.a}) {
+      payload.u8(channel->a)
+          .u8(channel->b)
+          .u8(channel->w_t)
+          .u8(channel->w_x)
+          .u8(channel->phi);
+    }
+  }
+  return payload.bytes;
+}
+
 void setUp() {
+  rvl::setDeviceMode(rvl::DeviceMode::Receiver);
   rvl::setLinkUpState(true);
   rvl::setDeviceId(LOCAL_ID);
   RVLWaveSettings wave;
@@ -52,6 +99,7 @@ void setUp() {
   // A channel change forgets the controller
   rvl::setChannel(1);
   rvl::setChannel(0);
+  animation.sent.clear();
   fake.output.clear();
 }
 
@@ -116,6 +164,97 @@ void test_an_unknown_packet_type_is_logged() {
   TEST_ASSERT_TRUE(fake.logged("Received unknown RVLA packet type 9"));
 }
 
+// A controller's packet fed back to a receiver, which needs a peer's source or
+// it drops the packet as its own
+void test_a_sent_wave_round_trips() {
+  RVLWaveSettings settings = distinctiveWave();
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  rvl::setWaveSettings(&settings);
+  TEST_ASSERT_EQUAL(1, animation.sent.size());
+  TEST_ASSERT(animation.sent[0].destination == Destination::Channel);
+  TEST_ASSERT_PACKET(rvlaPacket(LOCAL_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
+                         wavePayload(settings)),
+      animation.sent[0].bytes);
+
+  Bytes packet = animation.sent[0].bytes;
+  packet[5] = CONTROLLER_ID;
+  rvl::setDeviceMode(rvl::DeviceMode::Receiver);
+  RVLWaveSettings defaults;
+  rvl::setWaveSettings(&defaults);
+  deliver(packet);
+  TEST_ASSERT_EQUAL_MEMORY(
+      &settings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+}
+
+void test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave() {
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  rvl::setOff();
+  TEST_ASSERT_EQUAL(1, animation.sent.size());
+  TEST_ASSERT_PACKET(
+      rvlaPacket(LOCAL_ID, PACKET_TYPE_OFF, 0), animation.sent[0].bytes);
+
+  Bytes packet = animation.sent[0].bytes;
+  packet[5] = CONTROLLER_ID;
+  rvl::setDeviceMode(rvl::DeviceMode::Receiver);
+  RVLWaveSettings defaults;
+  rvl::setWaveSettings(&defaults);
+  deliver(packet);
+  TEST_ASSERT_TRUE(isOff());
+
+  RVLWaveSettings settings = distinctiveWave();
+  deliver(rvlaPacket(CONTROLLER_ID, PACKET_TYPE_WAVE_ANIMATION, 0,
+      wavePayload(settings)));
+  TEST_ASSERT_FALSE(isOff());
+  TEST_ASSERT_EQUAL_MEMORY(
+      &settings, rvl::getWaveSettings(), sizeof(RVLWaveSettings));
+}
+
+// One sender for every type, so a controller never sends two types at once
+void test_the_periodic_sender_repeats_only_the_current_selection() {
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  uint32_t start = fake.clock;
+  rvl::setOff();
+  for (uint32_t elapsed = 1000; elapsed <= 4000; elapsed += 1000) {
+    loopAt(start + elapsed);
+  }
+  // The selection, then at least two repeats 2 s apart
+  TEST_ASSERT_GREATER_OR_EQUAL(3, animation.sent.size());
+  for (auto& packet : animation.sent) {
+    TEST_ASSERT_EQUAL(PACKET_TYPE_OFF, packetType(packet));
+  }
+
+  animation.sent.clear();
+  RVLWaveSettings settings = distinctiveWave();
+  rvl::setWaveSettings(&settings);
+  for (uint32_t elapsed = 5000; elapsed <= 8000; elapsed += 1000) {
+    loopAt(start + elapsed);
+  }
+  TEST_ASSERT_GREATER_OR_EQUAL(3, animation.sent.size());
+  for (auto& packet : animation.sent) {
+    TEST_ASSERT_EQUAL(PACKET_TYPE_WAVE_ANIMATION, packetType(packet));
+  }
+}
+
+void test_a_controller_without_an_id_sends_nothing() {
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  rvl::setDeviceId(UNASSIGNED_DEVICE_ID);
+  uint32_t start = fake.clock;
+  rvl::setOff();
+  for (uint32_t elapsed = 1000; elapsed <= 4000; elapsed += 1000) {
+    loopAt(start + elapsed);
+  }
+  TEST_ASSERT_EQUAL(0, animation.sent.size());
+}
+
+void test_a_receiver_never_sends() {
+  uint32_t start = fake.clock;
+  rvl::setOff();
+  for (uint32_t elapsed = 1000; elapsed <= 4000; elapsed += 1000) {
+    loopAt(start + elapsed);
+  }
+  TEST_ASSERT_EQUAL(0, animation.sent.size());
+}
+
 int main() {
   rvl::init(&fake);
   UNITY_BEGIN();
@@ -127,5 +266,10 @@ int main() {
   RUN_TEST(test_only_the_nodes_channel_is_accepted);
   RUN_TEST(test_everything_is_discarded_while_the_node_has_no_id);
   RUN_TEST(test_an_unknown_packet_type_is_logged);
+  RUN_TEST(test_a_sent_wave_round_trips);
+  RUN_TEST(test_a_sent_off_round_trips_and_a_wave_after_it_restores_wave);
+  RUN_TEST(test_the_periodic_sender_repeats_only_the_current_selection);
+  RUN_TEST(test_a_controller_without_an_id_sends_nothing);
+  RUN_TEST(test_a_receiver_never_sends);
   return UNITY_END();
 }
