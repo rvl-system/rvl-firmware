@@ -24,6 +24,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include <rvl-wifi.hpp>
 #endif
 #include <rvl.hpp>
+#include <rvl/config.hpp>
 
 #ifdef HAS_UI
 #include "./ui/screen.hpp"
@@ -146,12 +147,12 @@ void backgroundLoopRunner(void* parameters) {
   while (true) {
     uint32_t elapsed = backgroundLoop();
     // Never recompute millis() inside the delay expression: if the elapsed
-    // time crosses UPDATE_RATE after the comparison, the subtraction
+    // time crosses FRAME_PERIOD after the comparison, the subtraction
     // underflows to a ~49 day delay
-    if (elapsed >= UPDATE_RATE) {
+    if (elapsed >= FRAME_PERIOD) {
       delay(1);
     } else {
-      delay(UPDATE_RATE - elapsed);
+      delay(FRAME_PERIOD - elapsed);
     }
   }
 }
@@ -180,12 +181,12 @@ void foregroundLoop() {
   uint32_t elapsed = now - startTime;
   foregroundStats.record(elapsed);
   // Sleep until the next frame boundary in animation-clock time, not
-  // UPDATE_RATE after this node's last frame. Every node then renders the same
+  // FRAME_PERIOD after this node's last frame. Every node then renders the same
   // instants, so frame phase can't differ between nodes by up to a full frame.
-  // The result is always 1..UPDATE_RATE, and a clock correction or an overrun
+  // The result is always 1..FRAME_PERIOD, and a clock correction or an overrun
   // simply re-aligns to the next boundary
   uint32_t clock = rvl::getAnimationClock();
-  delay(UPDATE_RATE - (clock % UPDATE_RATE));
+  delay(FRAME_PERIOD - (clock % FRAME_PERIOD));
   foregroundStats.log("Foreground loop");
 }
 

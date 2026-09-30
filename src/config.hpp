@@ -41,8 +41,6 @@ extern std::vector<StripSegment> segments;
 
 /**** You *may* want to modify these settings, but it's not likely ****/
 
-#define UPDATE_RATE 32
-
 #define SERIAL_BAUDRATE 115200
 
 #define DEFAULT_CHANNEL 0

@@ -36,18 +36,32 @@ Bytes off(uint8_t source = CONTROLLER_ID, uint8_t channel = 0) {
   return rvlaPacket(source, PACKET_TYPE_OFF, channel);
 }
 
+void loopAt(uint32_t time) {
+  fake.clock = time;
+  rvl::loop();
+}
+
+// A scene scheduled now has started and finished fading
+void settle() {
+  loopAt(fake.clock + (SCENE_LEAD_FRAMES + 1) * FRAME_PERIOD);
+  loopAt(fake.clock + (UINT8_MAX + 1) * FRAME_PERIOD);
+}
+
+// A received scene becomes current a lead after it arrives
 void deliver(const Bytes& packet) {
   animation.receive(packet);
   rvl::loop();
+  settle();
+}
+
+// Current becomes these settings, with no fade running to hold the next scene
+void show(const RVLParametricSettings& settings) {
+  rvl::scheduleScene({rvl::getAnimationFrame(), MIN_FADE_FRAMES, settings});
+  settle();
 }
 
 bool isOff() {
   return rvl::getAnimationType() == rvl::AnimationType::Off;
-}
-
-void loopAt(uint32_t time) {
-  fake.clock = time;
-  rvl::loop();
 }
 
 uint8_t packetType(const SentPacket& packet) {
@@ -94,11 +108,13 @@ void setUp() {
   rvl::setDeviceMode(rvl::DeviceMode::Receiver);
   rvl::setLinkUpState(true);
   rvl::setDeviceId(LOCAL_ID);
-  RVLParametricSettings settings;
-  rvl::setParametricSettings(&settings);
   // A channel change forgets the controller
   rvl::setChannel(1);
   rvl::setChannel(0);
+  rvl::Scenes::reset();
+  // The boot scene is off, and these tests tell a packet got through by off
+  RVLParametricSettings defaults;
+  show(defaults);
   animation.sent.clear();
   fake.output.clear();
 }
@@ -144,6 +160,8 @@ void test_sources_of_240_and_up_are_dropped() {
 
 void test_only_the_nodes_channel_is_accepted() {
   rvl::setChannel(3);
+  RVLParametricSettings defaults;
+  show(defaults);
   deliver(off(CONTROLLER_ID, 0));
   deliver(off(CONTROLLER_ID, 2));
   TEST_ASSERT_FALSE(isOff());
@@ -179,8 +197,6 @@ void test_a_sent_parametric_round_trips() {
   Bytes packet = animation.sent[0].bytes;
   packet[5] = CONTROLLER_ID;
   rvl::setDeviceMode(rvl::DeviceMode::Receiver);
-  RVLParametricSettings defaults;
-  rvl::setParametricSettings(&defaults);
   deliver(packet);
   TEST_ASSERT_EQUAL_MEMORY(
       &settings, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
@@ -216,7 +232,7 @@ void test_a_sent_off_round_trips_and_a_parametric_after_it_restores_it() {
   packet[5] = CONTROLLER_ID;
   rvl::setDeviceMode(rvl::DeviceMode::Receiver);
   RVLParametricSettings defaults;
-  rvl::setParametricSettings(&defaults);
+  show(defaults);
   deliver(packet);
   TEST_ASSERT_TRUE(isOff());
 
