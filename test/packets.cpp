@@ -33,10 +33,10 @@ PacketWriter& PacketWriter::u32(uint32_t value) {
   return u16(value >> 16).u16(value & 0xFFFF);
 }
 
-Bytes rvlaPacket(uint8_t source, uint8_t packetType, uint8_t channel,
-    const Bytes& payload) {
-  Bytes packet = {'R', 'V', 'L', 'A', PROTOCOL_VERSION, source, packetType,
-      channel, 0};
+Bytes rvlaPacket(
+    uint8_t source, uint8_t packetType, uint8_t channel, const Bytes& payload) {
+  Bytes packet = {
+      'R', 'V', 'L', 'A', PROTOCOL_VERSION, source, packetType, channel, 0};
   packet.insert(packet.end(), payload.begin(), payload.end());
   return packet;
 }

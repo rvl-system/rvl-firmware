@@ -54,7 +54,8 @@ void setUp() {
   fake.output.clear();
 }
 
-void tearDown() {}
+void tearDown() {
+}
 
 // Must run first: nothing has synced or been heard since boot
 void test_unknown_at_boot() {

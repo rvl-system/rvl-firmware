@@ -45,7 +45,7 @@ Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload = {});
     Bytes expectedBytes = (expected);                                          \
     Bytes actualBytes = (actual);                                              \
     TEST_ASSERT_EQUAL_MESSAGE(                                                 \
-        expectedBytes.size(), actualBytes.size(), "packet length");           \
+        expectedBytes.size(), actualBytes.size(), "packet length");            \
     if (!expectedBytes.empty()) {                                              \
       TEST_ASSERT_EQUAL_HEX8_ARRAY(                                            \
           expectedBytes.data(), actualBytes.data(), expectedBytes.size());     \

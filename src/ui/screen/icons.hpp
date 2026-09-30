@@ -37,6 +37,6 @@ extern StatusIcon notReadyToRenderIcon;
 extern StatusIcon tab1;
 extern StatusIcon tab2;
 
-}  // namespace Icons
+} // namespace Icons
 
-#endif  // UI_SCREEN_ICONS_H_
+#endif // UI_SCREEN_ICONS_H_

@@ -57,7 +57,8 @@ void setUp() {
   fake.output.clear();
 }
 
-void tearDown() {}
+void tearDown() {
+}
 
 void test_unassigned_while_link_down() {
   loopAt(fake.clock + 5000);
@@ -108,8 +109,8 @@ void test_requested_is_logged_once_per_link_up() {
   TEST_ASSERT_EQUAL(2, requests.size());
   size_t first = fake.output.find("Requesting device ID");
   TEST_ASSERT_NOT_EQUAL(std::string::npos, first);
-  TEST_ASSERT_EQUAL(std::string::npos,
-      fake.output.find("Requesting device ID", first + 1));
+  TEST_ASSERT_EQUAL(
+      std::string::npos, fake.output.find("Requesting device ID", first + 1));
 }
 
 void test_a_reply_stores_the_id_and_stops_requests() {

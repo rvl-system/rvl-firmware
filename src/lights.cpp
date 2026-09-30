@@ -50,7 +50,7 @@ void init() {
 uint8_t calculatePixelValue(
     RVLColorComponent* component, uint32_t t, uint8_t x) {
   return sin8(component->w_t * t / 100 + component->w_x * x + component->phi) *
-          component->a / 255 +
+      component->a / 255 +
       component->b;
 }
 
@@ -62,8 +62,8 @@ void renderParametric() {
   rvl::freeState();
   auto animationClock = rvl::getAnimationClock();
 
-  uint32_t t = animationClock % (settings.timePeriod * 100) * 255 /
-      settings.timePeriod;
+  uint32_t t =
+      animationClock % (settings.timePeriod * 100) * 255 / settings.timePeriod;
   for (const auto& segment : segments) {
     for (uint16_t i = segment.start; i <= segment.end; i++) {
       uint16_t normalizedIndex = 0;

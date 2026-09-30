@@ -177,7 +177,8 @@ public:
     return linkUp;
   }
 
-  void loop() override {}
+  void loop() override {
+  }
 
   uint32_t localClock() override {
     return clock;

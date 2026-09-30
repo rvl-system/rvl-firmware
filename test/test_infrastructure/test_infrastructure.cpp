@@ -110,8 +110,8 @@ void test_id_assignment_from_an_unassigned_source_is_dropped() {
 
 // Checked before the ID byte, which a request doesn't have
 void test_a_request_with_a_legal_source_is_ignored() {
-  deliver(rvliPacket(
-      PEER_ID, RVLI_PACKET_TYPE_ID_ASSIGNMENT, {ID_REQUEST_TYPE}));
+  deliver(
+      rvliPacket(PEER_ID, RVLI_PACKET_TYPE_ID_ASSIGNMENT, {ID_REQUEST_TYPE}));
   TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
   TEST_ASSERT_EQUAL(0, infrastructure.readsPastEnd);
 }
