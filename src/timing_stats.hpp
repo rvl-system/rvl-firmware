@@ -20,6 +20,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TIMING_STATS_H_
 #define TIMING_STATS_H_
 
+#include <algorithm>
 #include <rvl.hpp>
 #include <stdint.h>
 
@@ -45,12 +46,8 @@ struct TimingStats {
     uint32_t max = 0;
     for (uint8_t i = 0; i < NUM_LOOP_SAMPLES; i++) {
       sum += samples[i];
-      if (samples[i] < min) {
-        min = samples[i];
-      }
-      if (samples[i] > max) {
-        max = samples[i];
-      }
+      min = std::min(min, samples[i]);
+      max = std::max(max, samples[i]);
     }
     rvl::debug("%s stats: Avg=%u Min=%u Max=%u", label, sum / NUM_LOOP_SAMPLES,
         min, max);

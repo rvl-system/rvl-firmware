@@ -79,7 +79,7 @@ void setup() {
   rvl::info("Network transport: polling WiFiUDP (RVLWifi)");
 #endif
 
-  rvl::info("Device mode: %d", rvl::getDeviceMode());
+  rvl::info("Device mode: %d", static_cast<int>(rvl::getDeviceMode()));
   rvl::info("Channel: %d", rvl::getChannel());
   rvl::info("Brightness: %d", rvl::getBrightness());
 
@@ -165,7 +165,7 @@ void startBackgroundLoop() {
   // stack (the old 255 was silently clamped to max, starving the WiFi task on
   // this core and delaying packet delivery)
   xTaskCreatePinnedToCore(backgroundLoopRunner, "backgroundLoopRunner", 20192,
-      NULL, 1, NULL, xPortGetCoreID() ? 0 : 1);
+      NULL, 1, NULL, xPortGetCoreID() == 0 ? 1 : 0);
 #endif
 }
 

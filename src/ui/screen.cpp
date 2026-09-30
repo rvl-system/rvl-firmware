@@ -55,7 +55,7 @@ void loop() {
         UIState::currentTab1Control, &icons);
   } else {
     icons.push_back(&Icons::tab2);
-    Render::render(&(UIState::tab2Controls), UIState::currentTab,
+    Render::render(&UIState::tab2Controls, UIState::currentTab,
         UIState::currentTab2Control, &icons);
   }
 }

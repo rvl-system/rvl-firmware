@@ -29,6 +29,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/wave.hpp"
 #include "./settings.hpp"
 #include <Arduino.h>
+#include <inttypes.h>
 #include <rvl.hpp>
 
 namespace UIState {
@@ -106,26 +107,26 @@ void update() {
   }
 }
 
-void getWiFiSSIDValue(char* buffer) {
+void getWiFiSSIDValue(char* buffer, size_t size) {
 #ifdef DEFAULT_WIFI_SSID
-  snprintf(buffer, strlen(buffer), "%s", DEFAULT_WIFI_SSID);
+  snprintf(buffer, size, "%s", DEFAULT_WIFI_SSID);
 #else
-  snprintf(buffer, strlen(buffer), "N/A");
+  snprintf(buffer, size, "N/A");
 #endif
 }
 Control::LabelControl* wifiSSIDControl;
 
-void getDeviceIdValue(char* buffer) {
+void getDeviceIdValue(char* buffer, size_t size) {
   if (rvl::isConnected()) {
-    snprintf(buffer, strlen(buffer), "%d", rvl::getDeviceId());
+    snprintf(buffer, size, "%d", rvl::getDeviceId());
   } else {
-    snprintf(buffer, strlen(buffer), "Pending");
+    snprintf(buffer, size, "Pending");
   }
 }
 Control::LabelControl* deviceIdControl;
 
-void getClockValue(char* buffer) {
-  snprintf(buffer, strlen(buffer), "%d", rvl::getAnimationClock());
+void getClockValue(char* buffer, size_t size) {
+  snprintf(buffer, size, "%" PRIu32, rvl::getAnimationClock());
 }
 Control::LabelControl* clockControl;
 
@@ -233,10 +234,8 @@ bool isCurrentControlRange() {
   if (currentTab == 0) {
     return (*tab1Controls)[currentTab1Control]->type ==
         Control::ControlType::Range;
-  } else {
-    return tab2Controls[currentTab2Control]->type ==
-        Control::ControlType::Range;
   }
+  return tab2Controls[currentTab2Control]->type == Control::ControlType::Range;
 }
 
 void resetScreenTimeout() {

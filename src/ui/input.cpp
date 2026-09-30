@@ -26,7 +26,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Input {
 
-enum ButtonChangeState { None = 0, Pressed = 1, Holding = 2 };
+enum class ButtonChangeState : uint8_t { None, Pressed, Holding };
 
 struct ButtonInfo {
   uint32_t holdStartTime;
@@ -37,15 +37,15 @@ struct ButtonInfo {
 };
 
 ButtonInfo nextControlButtonInfo = {
-    5, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF};
+    UINT32_MAX, BUTTON_UP_OFF, BUTTON_UP, BUTTON_UP_ON, BUTTON_UP_OFF};
 ButtonInfo previousControlButtonInfo = {
-    5, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF};
-ButtonInfo increaseValueButtonInfo = {
-    5, BUTTON_RIGHT_OFF, BUTTON_RIGHT, BUTTON_RIGHT_ON, BUTTON_RIGHT_OFF};
+    UINT32_MAX, BUTTON_DOWN_OFF, BUTTON_DOWN, BUTTON_DOWN_ON, BUTTON_DOWN_OFF};
+ButtonInfo increaseValueButtonInfo = {UINT32_MAX, BUTTON_RIGHT_OFF,
+    BUTTON_RIGHT, BUTTON_RIGHT_ON, BUTTON_RIGHT_OFF};
 ButtonInfo decreaseValueButtonInfo = {
-    5, BUTTON_LEFT_OFF, BUTTON_LEFT, BUTTON_LEFT_ON, BUTTON_LEFT_OFF};
-ButtonInfo switchTabButtonInfo = {
-    5, BUTTON_PRESS_OFF, BUTTON_PRESS, BUTTON_PRESS_ON, BUTTON_PRESS_OFF};
+    UINT32_MAX, BUTTON_LEFT_OFF, BUTTON_LEFT, BUTTON_LEFT_ON, BUTTON_LEFT_OFF};
+ButtonInfo switchTabButtonInfo = {UINT32_MAX, BUTTON_PRESS_OFF, BUTTON_PRESS,
+    BUTTON_PRESS_ON, BUTTON_PRESS_OFF};
 
 void init() {
   pinMode(nextControlButtonInfo.gpio, INPUT);
@@ -56,107 +56,107 @@ void init() {
 }
 
 ButtonChangeState getButtonChangeState(ButtonInfo* buttonInfo) {
-  ButtonChangeState returnValue = None;
+  ButtonChangeState returnValue = ButtonChangeState::None;
   byte state = digitalRead(buttonInfo->gpio);
   if (state == buttonInfo->on) {
     uint32_t now = millis();
-    if (buttonInfo->holdStartTime == -1) {
+    if (buttonInfo->holdStartTime == UINT32_MAX) {
       buttonInfo->holdStartTime = now;
     }
     uint32_t holdTime = now - buttonInfo->holdStartTime;
     if (buttonInfo->state == buttonInfo->off) {
       if (holdTime > BUTTON_PRESS_ENGAGE_TIME) {
         buttonInfo->state = buttonInfo->on;
-        returnValue = Pressed;
+        returnValue = ButtonChangeState::Pressed;
       }
     } else if (holdTime > BUTTON_HOLD_ENGAGE_TIME) {
-      returnValue = Holding;
+      returnValue = ButtonChangeState::Holding;
     }
   } else {
     buttonInfo->state = buttonInfo->off;
-    buttonInfo->holdStartTime = -1;
+    buttonInfo->holdStartTime = UINT32_MAX;
   }
   return returnValue;
 }
 
 void loop() {
   switch (getButtonChangeState(&nextControlButtonInfo)) {
-  case Pressed:
+  case ButtonChangeState::Pressed:
     if (UIState::isScreenActive()) {
       UIState::nextControl();
     }
     UIState::resetScreenTimeout();
     break;
-  case Holding:
+  case ButtonChangeState::Holding:
     // Do Nothing
     break;
-  case None:
+  case ButtonChangeState::None:
     // Do Nothing
     break;
   }
 
   switch (getButtonChangeState(&previousControlButtonInfo)) {
-  case Pressed:
+  case ButtonChangeState::Pressed:
     if (UIState::isScreenActive()) {
       UIState::previousControl();
     }
     UIState::resetScreenTimeout();
     break;
-  case Holding:
+  case ButtonChangeState::Holding:
     // Do Nothing
     break;
-  case None:
+  case ButtonChangeState::None:
     // Do Nothing
     break;
   }
 
   switch (getButtonChangeState(&increaseValueButtonInfo)) {
-  case Pressed:
+  case ButtonChangeState::Pressed:
     if (UIState::isScreenActive()) {
       UIState::controlIncrease();
     }
     UIState::resetScreenTimeout();
     break;
-  case Holding:
+  case ButtonChangeState::Holding:
     if (UIState::isScreenActive() && UIState::isCurrentControlRange()) {
       UIState::controlIncrease();
     }
     UIState::resetScreenTimeout();
     break;
-  case None:
+  case ButtonChangeState::None:
     // Do Nothing
     break;
   }
 
   switch (getButtonChangeState(&decreaseValueButtonInfo)) {
-  case Pressed:
+  case ButtonChangeState::Pressed:
     if (UIState::isScreenActive()) {
       UIState::controlDecrease();
     }
     UIState::resetScreenTimeout();
     break;
-  case Holding:
+  case ButtonChangeState::Holding:
     if (UIState::isScreenActive() && UIState::isCurrentControlRange()) {
       UIState::controlDecrease();
     }
     UIState::resetScreenTimeout();
     break;
-  case None:
+  case ButtonChangeState::None:
     // Do Nothing
     break;
   }
 
   switch (getButtonChangeState(&switchTabButtonInfo)) {
-  case Pressed:
+  case ButtonChangeState::Pressed:
     if (UIState::isScreenActive()) {
       UIState::nextTab();
     }
     UIState::resetScreenTimeout();
     break;
-  case Holding:
+  case ButtonChangeState::Holding:
     // Do Nothing
     break;
-  case None:
+  case ButtonChangeState::None:
     // Do Nothing
     break;
   }

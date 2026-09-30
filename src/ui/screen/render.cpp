@@ -26,6 +26,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "SSD1306Wire.h"
 #include <Arduino.h>
 #include <Wire.h>
+#include <algorithm>
 #include <rvl.hpp>
 
 namespace Render {
@@ -64,10 +65,8 @@ void renderScrollBar(uint8_t numEntries, uint8_t windowStart) {
   if (numEntries > SCREEN_HEIGHT / ROW_HEIGHT) {
     uint8_t y = (SCREEN_HEIGHT - SCROLLBAR_HEIGHT - 1) * windowStart /
         (numEntries * ROW_HEIGHT - SCREEN_HEIGHT);
-    // Can happen when changing the preset and the last items disappear
-    if (y > SCREEN_HEIGHT - SCROLLBAR_HEIGHT) {
-      y = SCREEN_HEIGHT - SCROLLBAR_HEIGHT;
-    }
+    // Can overshoot when changing the preset and the last items disappear
+    y = std::min<uint8_t>(y, SCREEN_HEIGHT - SCROLLBAR_HEIGHT);
     display.fillRect(
         SCREEN_WIDTH - SCROLLBAR_WIDTH, y, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
   }
@@ -101,8 +100,8 @@ void renderEntry(Control::Control* entry, uint8_t labelY) {
   } else if (entry->type == Control::ControlType::Label) {
     auto* labelEntry = static_cast<Control::LabelControl*>(entry);
     if (labelEntry->getValue != NULL) {
-      char labelBuffer[] = "                  ";
-      labelEntry->getValue(labelBuffer);
+      char labelBuffer[19] = "";
+      labelEntry->getValue(labelBuffer, sizeof(labelBuffer));
       display.drawString(ROW_START + 5, controlY, labelBuffer);
     } else {
       display.drawString(ROW_START + 5, controlY, "LABEL ERROR");
@@ -120,7 +119,7 @@ void renderEntrySet(std::vector<Control::Control*>* entries,
     windowStates[selectedTab].windowStart =
         (selectedEntry + 1) * ROW_HEIGHT - SCREEN_HEIGHT;
   }
-  for (uint8_t i = 0; i < entries->size(); i++) {
+  for (size_t i = 0; i < entries->size(); i++) {
     if (i * ROW_HEIGHT >= windowStates[selectedTab].windowStart &&
         i * ROW_HEIGHT < windowStates[selectedTab].windowStart + SCREEN_HEIGHT)
     {

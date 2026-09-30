@@ -21,17 +21,24 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #define UI_CONTROL_H_
 
 #include <Arduino.h>
+#include <utility>
 #include <vector>
 
 namespace Control {
 
-enum class ControlType { Range, List, Label };
+enum class ControlType : uint8_t { Range, List, Label };
 
 class Control {
 public:
   const char* label;
   ControlType type;
   void (*updateValue)(uint8_t newValue);
+
+  Control(const char* controlLabel, ControlType controlType,
+      void (*updateValueCallback)(uint8_t newValue))
+      : label(controlLabel), type(controlType),
+        updateValue(updateValueCallback) {}
+
   virtual void increaseValue() {}
   virtual void decreaseValue() {}
 };
@@ -39,17 +46,12 @@ public:
 class ListControl : public Control {
 public:
   std::vector<const char*> values;
-  uint8_t selectedValueIndex = 0;
+  uint8_t selectedValueIndex;
 
   ListControl(const char* listLabel, std::vector<const char*> listValues,
-      uint8_t defaultValueIndex,
-      void (*updateValueCallback)(uint8_t newValue)) {
-    this->type = ControlType::List;
-    this->label = listLabel;
-    this->values = listValues;
-    this->updateValue = updateValueCallback;
-    this->selectedValueIndex = defaultValueIndex;
-  }
+      uint8_t defaultValueIndex, void (*updateValueCallback)(uint8_t newValue))
+      : Control(listLabel, ControlType::List, updateValueCallback),
+        values(std::move(listValues)), selectedValueIndex(defaultValueIndex) {}
 
   void increaseValue() override {
     if (this->selectedValueIndex == this->values.size() - 1) {
@@ -79,15 +81,10 @@ public:
 
   RangeControl(const char* rangeLabel, uint8_t rangeMin, uint8_t rangeMax,
       uint8_t defaultValue, void (*updateValueCallback)(uint8_t newValue),
-      uint8_t (*getValueMethod)()) {
-    this->type = ControlType::Range;
-    this->label = rangeLabel;
-    this->updateValue = updateValueCallback;
-    this->min = rangeMin;
-    this->max = rangeMax;
-    this->value = defaultValue;
-    this->getValue = getValueMethod;
-  }
+      uint8_t (*getValueMethod)())
+      : Control(rangeLabel, ControlType::Range, updateValueCallback),
+        value(defaultValue), min(rangeMin), max(rangeMax),
+        getValue(getValueMethod) {}
 
   void increaseValue() override {
     if (this->value < this->max) {
@@ -106,21 +103,12 @@ public:
 
 class LabelControl : public Control {
 public:
-  void (*getValue)(char* buffer);
+  void (*getValue)(char* buffer, size_t size);
 
-  LabelControl(const char* labelLabel, void (*getValueMethod)(char* buffer)) {
-    this->type = ControlType::Label;
-    this->label = labelLabel;
-    this->getValue = getValueMethod;
-  }
-
-  void increaseValue() override {
-    // Do nothing
-  }
-
-  void decreaseValue() override {
-    // Do nothing
-  }
+  LabelControl(
+      const char* labelLabel, void (*getValueMethod)(char* buffer, size_t size))
+      : Control(labelLabel, ControlType::Label, nullptr),
+        getValue(getValueMethod) {}
 };
 
 } // namespace Control
