@@ -117,8 +117,7 @@ void setUp() {
   updates = 0;
 }
 
-void tearDown() {
-}
+void tearDown() {}
 
 void test_a_future_scene_pends_and_activates_at_its_start() {
   uint32_t n = moveToFreshFrame();

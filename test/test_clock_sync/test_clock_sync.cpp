@@ -101,8 +101,7 @@ void setUp() {
   fake.output.clear();
 }
 
-void tearDown() {
-}
+void tearDown() {}
 
 void test_a_reference_is_answered_with_its_arrival_time() {
   uint32_t t = fake.clock + 10000;

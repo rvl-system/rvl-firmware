@@ -57,8 +57,7 @@ void setUp() {
   fake.output.clear();
 }
 
-void tearDown() {
-}
+void tearDown() {}
 
 void test_unassigned_while_link_down() {
   loopAt(fake.clock + 5000);

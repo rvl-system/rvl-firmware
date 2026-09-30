@@ -33,11 +33,9 @@ void setAnimationClock(uint32_t time) {
       static_cast<int32_t>(time - rvl::getAnimationClock()));
 }
 
-void setUp() {
-}
+void setUp() {}
 
-void tearDown() {
-}
+void tearDown() {}
 
 void test_a_frame_is_the_animation_clock_over_the_frame_period() {
   setAnimationClock(0);

@@ -32,10 +32,8 @@ public:
   const char* label;
   ControlType type;
   void (*updateValue)(uint8_t newValue);
-  virtual void increaseValue() {
-  }
-  virtual void decreaseValue() {
-  }
+  virtual void increaseValue() {}
+  virtual void decreaseValue() {}
 };
 
 class ListControl : public Control {
