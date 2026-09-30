@@ -19,15 +19,9 @@ You should have received a copy of the GNU General Public License
 along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  existsSync,
-  readdirSync,
-  readFileSync,
-  writeFileSync,
-  statSync,
-} from "node:fs";
-import { join, sep } from "node:path";
-import { execSync } from "node:child_process";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { basename, join, sep } from "node:path";
+import { execFileSync, execSync, spawnSync } from "node:child_process";
 import { parseArgs } from "node:util";
 
 function showHelp(): void {
@@ -41,12 +35,13 @@ coordinator, which is a separate PlatformIO project under coordinator/. The
 board here runs.
 
 OPTIONS:
-  -l  --lint      lint the source code
+  -l  --lint      check header guards, formatting and clang-tidy's checks on
+                  all the source, whatever the target, changing no files
+      --format    format the source code in place
   -b  --build     build the firmware before flashing the target
   -t  --test      run lib/rvl's unit tests on this computer, whatever the
                   target, stopping before flashing if any fail
   -f  --flash     flash the firmware after building the target
-      --compiledb regenerate compile_commands.json, used by the linter
       --help      display this help and exit
 `,
   );
@@ -60,10 +55,10 @@ function error(message: string): never {
 
 let values: {
   lint?: boolean;
+  format?: boolean;
   build?: boolean;
   test?: boolean;
   flash?: boolean;
-  compiledb?: boolean;
   help?: boolean;
 };
 let positionals: string[];
@@ -71,10 +66,10 @@ try {
   ({ values, positionals } = parseArgs({
     options: {
       lint: { type: "boolean", short: "l" },
+      format: { type: "boolean" },
       build: { type: "boolean", short: "b" },
       test: { type: "boolean", short: "t" },
       flash: { type: "boolean", short: "f" },
-      compiledb: { type: "boolean" },
       help: { type: "boolean" },
     },
     allowPositionals: true,
@@ -178,44 +173,136 @@ function checkHeaderGuard(file: string): boolean {
   return false;
 }
 
-const SOURCE_FILES = [
-  ...findFiles(join(import.meta.dirname, "src"), /(\.cpp|\.hpp|\.c|\.h)$/),
-  ...findFiles(join(import.meta.dirname, "lib", "rvl", "src"), /(\.cpp|\.hpp|\.c|\.h)$/),
-  ...findFiles(
-    join(import.meta.dirname, "lib", "rvl-wifi", "src"),
-    /(\.cpp|\.hpp|\.c|\.h)$/,
-  ),
+// The tests are formatted but not linted: Unity's assertion macros would bury
+// them in findings
+const FORMATTED_DIRS = [
+  "src",
+  "lib/rvl/src",
+  "lib/rvl-esp32-wifi/src",
+  "lib/rvl-wifi/src",
+  "coordinator/src",
+  "test",
 ];
+const LINTED_DIRS = FORMATTED_DIRS.filter((dir) => dir !== "test");
 
-// clang-tidy resolves each file's include paths and flags from this database,
-// so it has to exist before linting and be regenerated when the build changes.
-// Only the root project has one; generating it costs a full build, so don't do
-// that as a side effect of an unrelated command
-if (
-  values.compiledb ||
-  (values.lint && !existsSync(join(import.meta.dirname, "compile_commands.json")))
-) {
-  console.log("Generating compile_commands.json\n");
-  exec("platformio run -e compiledb -t compiledb");
-  const commandsPath = join(import.meta.dirname, "compile_commands.json");
-  const commands = readFileSync(commandsPath, "utf-8").replace(
-    / -I[^\s]*?\.platformio[^\s]*?newlib/g,
-    "",
+function findSourceFiles(dirs: string[]): string[] {
+  return dirs.flatMap((dir) =>
+    findFiles(join(import.meta.dirname, dir), /\.(cpp|hpp)$/),
   );
-  writeFileSync(commandsPath, commands);
+}
+
+// Imported here rather than at the top, so building and flashing don't need
+// npm install. clang-tidy must be 22 or later: earlier versions analyze the
+// library code too, only to drop its findings, which multiplies the run time
+async function loadClangTools() {
+  try {
+    return await import("@polycam/clang-tools");
+  } catch {
+    error(`clang-format and clang-tidy are missing, run "npm install".`);
+  }
+}
+
+interface BuildMetadata {
+  defines: string[];
+  includes: { build: string[]; compatlib: string[] };
+  cxx_flags: string[];
+  cxx_path: string;
+}
+
+// The controller's flags parse every linted file, including the coordinator
+// and rvl-wifi, which takes its ESP32 branch
+function readControllerMetadata(): BuildMetadata {
+  try {
+    const output = execFileSync(
+      "platformio",
+      ["project", "metadata", "-e", "controller", "--json-output"],
+      {
+        cwd: import.meta.dirname,
+        encoding: "utf-8",
+        stdio: ["ignore", "pipe", "inherit"],
+      },
+    );
+    return JSON.parse(output.trim().split("\n").at(-1)!).controller;
+  } catch {
+    error("couldn't read the controller's build metadata.");
+  }
+}
+
+// pio check can't be used: it parses for this computer instead of the chip,
+// and with system includes the cross compiler doesn't use. So clang gets the
+// compiler's target, and its system includes in its own search order. Every
+// include outside our own source is a system include, which clang-tidy skips
+function buildCompileArgs(metadata: BuildMetadata): string[] {
+  const ownDirs = LINTED_DIRS.map((dir) => join(import.meta.dirname, dir));
+  const isOwn = (include: string) =>
+    ownDirs.some((dir) => include === dir || include.startsWith(dir + sep));
+  const std = metadata.cxx_flags
+    .filter((flag) => flag.startsWith("-std="))
+    .at(-1);
+  if (!std) {
+    error("the controller's build flags name no C++ standard.");
+  }
+  const systemIncludes = spawnSync(
+    metadata.cxx_path,
+    ["-x", "c++", std, "-E", "-v", "-"],
+    { input: "", encoding: "utf-8" },
+  )
+    .stderr.split("#include <...> search starts here:")[1]
+    ?.split("End of search list.")[0]
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (!systemIncludes) {
+    error(`couldn't read the system includes of ${metadata.cxx_path}.`);
+  }
+  return [
+    `--target=${basename(metadata.cxx_path).replace(/-g\+\+$/, "")}`,
+    std,
+    ...metadata.defines.map((define) => `-D${define}`),
+    ...[...metadata.includes.build, ...metadata.includes.compatlib].flatMap(
+      (include) => (isOwn(include) ? [`-I${include}`] : ["-isystem", include]),
+    ),
+    "-nostdlibinc",
+    ...systemIncludes.flatMap((include) => ["-isystem", include]),
+  ];
+}
+
+if (values.format) {
+  console.log("Formatting\n");
+  const { run } = await loadClangTools();
+  const files = findSourceFiles(FORMATTED_DIRS);
+  if (run("clang-format", ["-i", ...files]).status !== 0) {
+    process.exit(-1);
+  }
 }
 
 if (values.lint) {
-  console.log(`Linting\n`);
-  const guardError = SOURCE_FILES.reduce<boolean>((error, sourceFile) => {
-    return checkHeaderGuard(sourceFile) || error;
-  }, false);
-  if (guardError) {
+  console.log("Linting\n");
+  const { run } = await loadClangTools();
+  const guardsFailed = findSourceFiles(LINTED_DIRS).reduce<boolean>(
+    (failed, file) => checkHeaderGuard(file) || failed,
+    false,
+  );
+  const formatted =
+    run("clang-format", [
+      "--dry-run",
+      "-Werror",
+      ...findSourceFiles(FORMATTED_DIRS),
+    ]).status === 0;
+  // Every header is linted as its own translation unit, so its findings are
+  // reported once rather than once per file that includes it
+  const tidied =
+    run("clang-tidy", [
+      "--quiet",
+      "--warnings-as-errors=*",
+      "--header-filter=^$",
+      ...findSourceFiles(LINTED_DIRS),
+      "--",
+      ...buildCompileArgs(readControllerMetadata()),
+    ]).status === 0;
+  if (guardsFailed || !formatted || !tidied) {
     process.exit(-1);
   }
-  exec(`clang-tidy ${SOURCE_FILES.join(" ")}`, {
-    CPATH: "",
-  });
 }
 
 if (values.build) {

@@ -5,12 +5,15 @@ Guidance for anyone, human or agent, changing code here. `lib/rvl` and
 
 ## Building and testing
 
-- Build, test and flash only through `./project.ts`: `-b <target>` builds,
-  `-t` runs the native tests, `-f` flashes, `--compiledb` regenerates
-  `compile_commands.json`. Targets are the `[env:...]` sections of
-  `platformio.ini` plus `coordinator`, which is a separate PlatformIO project.
-  `esp8266` is build-only. Never run `pio` by hand, and build several targets
-  with several `-b` calls.
+- Use `./project.ts` for everything it covers: `-b <target>` builds, `-t`
+  runs the native tests, `-f` flashes, `-l` lints and `--format` formats in
+  place. Targets are the `[env:...]` sections of `platformio.ini` plus
+  `coordinator`, which is a separate PlatformIO project. `esp8266` is
+  build-only. Build several targets with several `-b` calls.
+- When `./project.ts` has no command for what you need, first ask whether the
+  task can be put in terms of one it has. If it can't, stop and ask. Never run
+  `pio` directly: `pio check`, for one, can't parse this code and passes
+  anyway.
 - Native tests are Unity suites in `test/`, run by `./project.ts -t`. They
   test `lib/rvl`; the Arduino code in `src/` isn't built for them.
 - Never add `-fwrapv` or similar flags to make a test pass. `lib/rvl` must not
