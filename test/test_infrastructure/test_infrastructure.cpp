@@ -84,7 +84,7 @@ void test_a_bad_signature_is_dropped() {
 
 void test_another_version_is_dropped_and_logged() {
   Bytes packet = idReply(COORDINATOR_ID, 42);
-  packet[4] = PROTOCOL_VERSION + 1;
+  packet[4] = RVLI_VERSION + 1;
   deliver(packet);
   TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
   TEST_ASSERT_TRUE(fake.logged("unsupported RVLI protocol version"));

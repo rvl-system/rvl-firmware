@@ -34,6 +34,9 @@ public:
   PacketWriter& u32(uint32_t value);
 };
 
+// A big-endian field of a packet, as the firmware's readers decode one
+uint32_t readU32(const Bytes& bytes, size_t offset);
+
 // Spelled out here rather than built with the library's own header writers, so
 // a test can't agree with a wrong writer
 Bytes rvlaPacket(uint8_t source, uint8_t packetType, uint8_t channel,

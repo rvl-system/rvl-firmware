@@ -33,16 +33,22 @@ PacketWriter& PacketWriter::u32(uint32_t value) {
   return u16(value >> 16).u16(value & 0xFFFF);
 }
 
+uint32_t readU32(const Bytes& bytes, size_t offset) {
+  return static_cast<uint32_t>(bytes[offset]) << 24 |
+      static_cast<uint32_t>(bytes[offset + 1]) << 16 |
+      static_cast<uint32_t>(bytes[offset + 2]) << 8 | bytes[offset + 3];
+}
+
 Bytes rvlaPacket(
     uint8_t source, uint8_t packetType, uint8_t channel, const Bytes& payload) {
   Bytes packet = {
-      'R', 'V', 'L', 'A', PROTOCOL_VERSION, source, packetType, channel, 0};
+      'R', 'V', 'L', 'A', RVLA_VERSION, source, packetType, channel, 0};
   packet.insert(packet.end(), payload.begin(), payload.end());
   return packet;
 }
 
 Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload) {
-  Bytes packet = {'R', 'V', 'L', 'I', PROTOCOL_VERSION, source, packetType, 0};
+  Bytes packet = {'R', 'V', 'L', 'I', RVLI_VERSION, source, packetType, 0};
   packet.insert(packet.end(), payload.begin(), payload.end());
   return packet;
 }

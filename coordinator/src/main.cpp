@@ -76,7 +76,7 @@ void handleRvliPacket() {
     rvliUdp.clear();
     return;
   }
-  if (header[4] != PROTOCOL_VERSION) {
+  if (header[4] != RVLI_VERSION) {
     Serial.printf("Ignoring RVLI version %d\n", header[4]);
     rvliUdp.clear();
     return;
@@ -104,7 +104,7 @@ void handleRvliPacket() {
     }
     rvliUdp.beginPacket(requester, requesterPort);
     write(rvliUdp, rvl::rvliSignature, 4);
-    write8(rvliUdp, PROTOCOL_VERSION);
+    write8(rvliUdp, RVLI_VERSION);
     write8(rvliUdp, deviceId);
     write8(rvliUdp, RVLI_PACKET_TYPE_ID_ASSIGNMENT);
     write8(rvliUdp, 0); // Reserved
@@ -131,7 +131,7 @@ void sendReferenceBroadcast(bool isStartOfSet) {
   rvliUdp.beginPacket(ip, RVLI_PORT);
 
   write(rvliUdp, rvl::rvliSignature, 4);
-  write8(rvliUdp, PROTOCOL_VERSION);
+  write8(rvliUdp, RVLI_VERSION);
   write8(rvliUdp, deviceId);
   write8(rvliUdp, RVLI_PACKET_TYPE_CLOCK_SYNC);
   write8(rvliUdp, 0); // Reserved

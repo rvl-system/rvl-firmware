@@ -20,6 +20,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "fake_system.hpp"
 #include <rvl.hpp>
 #include <rvl/config.hpp>
+#include <rvl/protocols/network_state.hpp>
 #include <unity.h>
 #include <vector>
 
@@ -531,6 +532,36 @@ void test_a_controllers_channel_switch_keeps_its_scenes_and_sends_them() {
   TEST_ASSERT_EQUAL(1, fake.animationEndpoint.sent.size());
 }
 
+void test_in_receiver_mode_the_conveniences_schedule_nothing() {
+  uint32_t n = moveToFreshFrame();
+  requestContent(1);
+  rvl::setOff();
+  TEST_ASSERT_FALSE(rvl::getPendingScene().has_value());
+  TEST_ASSERT_EQUAL(0, updates);
+  TEST_ASSERT_EQUAL(0, fake.animationEndpoint.sent.size());
+  // Nothing was held either
+  runThrough(n + 40);
+  TEST_ASSERT_FALSE(rvl::getPendingScene().has_value());
+  TEST_ASSERT_EQUAL(-1, readId(rvl::getCurrentScene()));
+}
+
+// The switch to Receiver resets every slot to the boot scene, which is this
+// node's own and must not go out when it becomes a controller again
+void test_a_controller_toggled_to_receiver_and_back_sends_only_the_preset() {
+  uint32_t n = moveToFreshFrame();
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  requestContent(1);
+  runThrough(n + 30);
+  rvl::setDeviceMode(rvl::DeviceMode::Receiver);
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  fake.animationEndpoint.sent.clear();
+  // What the mode control does next
+  requestContent(2);
+  TEST_ASSERT_EQUAL(1, fake.animationEndpoint.sent.size());
+  TEST_ASSERT_EQUAL(PACKET_TYPE_PARAMETRIC_ANIMATION,
+      fake.animationEndpoint.sent[0].bytes[6]);
+}
+
 void test_a_step_reschedules_the_held_request_over_pending() {
   uint32_t n = moveToFreshFrame();
   rvl::setDeviceMode(rvl::DeviceMode::Controller);
@@ -571,6 +602,17 @@ void test_a_step_reschedules_current_with_its_own_fade() {
   TEST_ASSERT_EQUAL_UINT32(
       n + 28 + SCENE_LEAD_FRAMES, rvl::getCurrentScene().start);
   TEST_ASSERT_FALSE(rvl::getRenderPlan().fading);
+}
+
+// The one scene with no fade is the boot scene, and the sender relies on that
+// to keep it off the wire, so a copy of it made by the hook gets the floor
+void test_a_step_on_the_boot_scene_schedules_it_with_the_floor() {
+  moveToFreshFrame();
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  rvl::adjustAnimationClock(FRAME_PERIOD);
+  RVLScene pending = readPendingScene();
+  TEST_ASSERT_EQUAL(-1, readId(pending));
+  TEST_ASSERT_EQUAL(MIN_FADE_FRAMES, pending.fade);
 }
 
 // A controller's own fleet would otherwise hold its re-scheduled scene under
@@ -803,6 +845,9 @@ int main() {
   rvl::init(&fake);
   rvl::setLinkUpState(true);
   rvl::setDeviceId(LOCAL_ID);
+  // The sender is gated on the first sync, and nothing here tests an unsynced
+  // clock
+  rvl::NetworkState::refreshLocalClockSynchronization();
   rvl::on(EVENT_ANIMATION_UPDATED, countUpdate);
   UNITY_BEGIN();
   RUN_TEST(test_a_future_scene_pends_and_activates_at_its_start);
@@ -837,9 +882,13 @@ int main() {
   RUN_TEST(test_switching_to_receiver_returns_to_the_boot_scene);
   RUN_TEST(test_switching_to_controller_drops_a_fleet_scene_pending);
   RUN_TEST(test_a_controllers_channel_switch_keeps_its_scenes_and_sends_them);
+  RUN_TEST(test_in_receiver_mode_the_conveniences_schedule_nothing);
+  RUN_TEST(
+      test_a_controller_toggled_to_receiver_and_back_sends_only_the_preset);
   RUN_TEST(test_a_step_reschedules_the_held_request_over_pending);
   RUN_TEST(test_a_step_reschedules_pending_with_its_own_fade);
   RUN_TEST(test_a_step_reschedules_current_with_its_own_fade);
+  RUN_TEST(test_a_step_on_the_boot_scene_schedules_it_with_the_floor);
   RUN_TEST(test_a_step_during_a_fade_reschedules_at_the_fades_end);
   RUN_TEST(test_a_receivers_step_drops_its_pending_scene);
   RUN_TEST(test_a_fade_keeps_its_amount_across_a_step_either_way);

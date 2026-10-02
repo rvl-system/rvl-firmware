@@ -97,11 +97,53 @@ int32_t processSet(uint32_t time, uint16_t id) {
 }
 
 void setUp() {
+  // A controller's corrections send scenes, which only the first test wants
+  rvl::setDeviceMode(rvl::DeviceMode::Receiver);
+  rvl::Scenes::reset();
   fake.infrastructureEndpoint.sent.clear();
+  fake.animationEndpoint.sent.clear();
   fake.output.clear();
 }
 
 void tearDown() {}
+
+void loopAt(uint32_t time) {
+  fake.clock = time;
+  rvl::loop();
+}
+
+// Must run first: it needs a clock that has never synced. The first sync's
+// correction re-schedules the scene a controller already shows, and that goes
+// out at once beside the scene it had, then again four frames later
+void test_a_controllers_first_sync_sends_its_scene_at_once_and_four_frames_on() {
+  rvl::setDeviceMode(rvl::DeviceMode::Controller);
+  RVLParametricSettings settings;
+  rvl::setParametricSettings(&settings);
+  loopAt(fake.clock + (SCENE_LEAD_FRAMES + 1) * FRAME_PERIOD);
+  uint32_t presyncStart = rvl::getCurrentScene().start;
+  auto& sent = fake.animationEndpoint.sent;
+  TEST_ASSERT_EQUAL(0, sent.size());
+
+  uint32_t t = fake.clock + 10000;
+  uint16_t id = freshSetId();
+  row(t, id, true, {1000, 1000});
+  TEST_ASSERT_GREATER_OR_EQUAL(FRAME_PERIOD, processSet(t + 2300, id + 1));
+  TEST_ASSERT_EQUAL(2, sent.size());
+  TEST_ASSERT_EQUAL(PACKET_TYPE_PARAMETRIC_ANIMATION, sent[0].bytes[6]);
+  TEST_ASSERT_EQUAL(PACKET_TYPE_PARAMETRIC_ANIMATION, sent[1].bytes[6]);
+  // Byte 9 starts the scene prefix with the start frame
+  TEST_ASSERT_EQUAL_UINT32(presyncStart, readU32(sent[0].bytes, 9));
+  TEST_ASSERT_TRUE(rvl::getPendingScene().has_value());
+
+  uint32_t repeatAt = fake.clock + REPEAT_SEND_FRAMES * FRAME_PERIOD -
+      rvl::getAnimationClock() % FRAME_PERIOD;
+  loopAt(repeatAt - 1);
+  TEST_ASSERT_EQUAL(2, sent.size());
+  loopAt(repeatAt);
+  TEST_ASSERT_EQUAL(4, sent.size());
+  TEST_ASSERT_TRUE(sent[2].bytes == sent[0].bytes);
+  TEST_ASSERT_TRUE(sent[3].bytes == sent[1].bytes);
+}
 
 void test_a_reference_is_answered_with_its_arrival_time() {
   uint32_t t = fake.clock + 10000;
@@ -244,6 +286,8 @@ int main() {
   rvl::setLinkUpState(true);
   rvl::setDeviceId(LOCAL_ID);
   UNITY_BEGIN();
+  RUN_TEST(
+      test_a_controllers_first_sync_sends_its_scene_at_once_and_four_frames_on);
   RUN_TEST(test_a_reference_is_answered_with_its_arrival_time);
   RUN_TEST(test_each_row_takes_the_upper_median);
   RUN_TEST(test_rows_with_mixed_numbers_of_observations_are_averaged);
