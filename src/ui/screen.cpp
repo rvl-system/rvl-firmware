@@ -29,11 +29,19 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Screen {
 
+// Draws on every other frame: a draw is about 13 ms of the 32 ms frame, which
+// the strip's render shares
+bool skipFrame = false;
+
 void init() {
   Render::init();
 }
 
 void loop() {
+  skipFrame = !skipFrame;
+  if (skipFrame) {
+    return;
+  }
   if (!UIState::isScreenActive()) {
     Render::off();
     return;

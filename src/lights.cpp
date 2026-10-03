@@ -28,10 +28,15 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <FastLED.h>
 #include <rvl.hpp>
+#include <rvl/config.hpp>
+#include <variant>
 
 namespace Lights {
 
 CRGB leds[LED_NUM_PIXELS];
+// The outgoing scene of a dissolve. Here rather than on the loop task's stack
+CRGB fadeFrom[LED_NUM_PIXELS];
+bool blanked = false;
 
 void init() {
   // Segment ends are inclusive and index leds directly, so an end past the last
@@ -48,20 +53,14 @@ void init() {
 }
 
 uint8_t calculatePixelValue(
-    RVLColorComponent* component, uint32_t t, uint8_t x) {
-  return sin8(component->w_t * t / 100 + component->w_x * x + component->phi) *
-      component->a / 255 +
-      component->b;
+    const RVLColorComponent& component, uint32_t t, uint8_t x) {
+  return sin8(component.w_t * t / 100 + component.w_x * x + component.phi) *
+      component.a / 255 +
+      component.b;
 }
 
-void renderParametric() {
-  RVLParametricSettings settings;
-  rvl::lockState();
-  memcpy(
-      &settings, rvl::getParametricSettings(), sizeof(RVLParametricSettings));
-  rvl::freeState();
-  auto animationClock = rvl::getAnimationClock();
-
+void renderParametric(
+    const RVLParametricSettings& settings, uint32_t animationClock, CRGB* out) {
   uint32_t t =
       animationClock % (settings.timePeriod * 100) * 255 / settings.timePeriod;
   for (const auto& segment : segments) {
@@ -80,37 +79,55 @@ void renderParametric() {
       uint8_t alphaValues[NUM_LAYERS];
 
       for (uint8_t j = 0; j < NUM_LAYERS; j++) {
-        layerHSV[j].h = calculatePixelValue(&(settings.layers[j].h), t, x);
-        layerHSV[j].s = calculatePixelValue(&(settings.layers[j].s), t, x);
-        layerHSV[j].v = calculatePixelValue(&(settings.layers[j].v), t, x);
-        alphaValues[j] = calculatePixelValue(&(settings.layers[j].a), t, x);
+        layerHSV[j].h = calculatePixelValue(settings.layers[j].h, t, x);
+        layerHSV[j].s = calculatePixelValue(settings.layers[j].s, t, x);
+        layerHSV[j].v = calculatePixelValue(settings.layers[j].v, t, x);
+        alphaValues[j] = calculatePixelValue(settings.layers[j].a, t, x);
         hsv2rgb_spectrum(layerHSV[j], layerRGB[j]);
       }
-      leds[i] = layerRGB[NUM_LAYERS - 1];
+      out[i] = layerRGB[NUM_LAYERS - 1];
       for (int8_t j = NUM_LAYERS - 2; j >= 0; j--) {
-        leds[i] = blend(leds[i], layerRGB[j], alphaValues[j]);
+        out[i] = blend(out[i], layerRGB[j], alphaValues[j]);
       }
     }
   }
 }
 
+// At the frame's time rather than a live clock read, so both renders of a
+// dissolve, and every board's render of a frame, see the same instant
+void renderScene(const RVLScene& scene, uint32_t frame, CRGB* out) {
+  const auto* settings = std::get_if<RVLParametricSettings>(&scene.content);
+  if (settings != nullptr) {
+    renderParametric(*settings, frame * FRAME_PERIOD, out);
+  } else {
+    fill_solid(out, LED_NUM_PIXELS, CRGB::Black);
+  }
+}
+
 void loop() {
+  rvl::RenderPlan plan = rvl::getRenderPlan();
   // Blanks rather than showing the local preset or another channel's animation
-  // before this node knows what the fleet is showing
-  if (rvl::getRenderState() == rvl::RenderState::Unknown) {
-    FastLED.clear(true);
+  // before this node knows what the fleet is showing, and once an off scene has
+  // finished dissolving in
+  bool blank = rvl::getRenderState() == rvl::RenderState::Unknown ||
+      (std::holds_alternative<RVLOff>(plan.current.content) && !plan.fading);
+  if (blank) {
+    if (!blanked) {
+      // Clears leds[] too, so nothing that shows it later can bring back the
+      // frame from before the strip went dark
+      FastLED.clear(true);
+      blanked = true;
+    }
     return;
   }
+  blanked = false;
 
-  switch (rvl::getAnimationType()) {
-  case rvl::AnimationType::Off:
-    // Clears leds[] too, so nothing that shows it later can bring back the
-    // frame from before the strip went dark
-    FastLED.clear(true);
-    return;
-  case rvl::AnimationType::Parametric:
-    renderParametric();
-    break;
+  renderScene(plan.current, plan.frame, leds);
+  if (plan.fading) {
+    renderScene(plan.previous, plan.frame, fadeFrom);
+    for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
+      leds[i] = blend(fadeFrom[i], leds[i], plan.amount);
+    }
   }
   FastLED.setBrightness(rvl::getBrightness());
   FastLED.show();

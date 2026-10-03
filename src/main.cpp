@@ -123,10 +123,10 @@ void setup() {
   rvl::info("Running");
 }
 
-// Returns the time spent in this iteration. Pacing is the caller's job: the
-// background task paces itself in backgroundLoopRunner, while on single-loop
-// platforms the foreground's frame-aligned sleep paces both loops together
-uint32_t backgroundLoop() {
+// Pacing is the caller's job: the background task paces itself in
+// backgroundLoopRunner, while on single-loop platforms the foreground's
+// frame-aligned sleep paces both loops together
+void backgroundLoop() {
   uint32_t startTime = millis();
 #ifdef HAS_UI
   UI::loop();
@@ -136,24 +136,22 @@ uint32_t backgroundLoop() {
 #endif
   Settings::loop();
   rvl::loop();
-  uint32_t now = millis();
-  uint32_t elapsed = now - startTime;
-  backgroundStats.record(elapsed);
+  backgroundStats.record(millis() - startTime);
   backgroundStats.log("Background loop");
-  return elapsed;
+}
+
+// Sleeps to the next frame boundary in animation-clock time, so every node
+// renders the same instants, plus a millisecond: delay(n) can return a tick
+// short of n ms, and a wake before the boundary would read the old frame
+void delayUntilNextFrame() {
+  uint32_t clock = rvl::getAnimationClock();
+  delay(FRAME_PERIOD - (clock % FRAME_PERIOD) + 1);
 }
 
 void backgroundLoopRunner(void* parameters) {
   while (true) {
-    uint32_t elapsed = backgroundLoop();
-    // Never recompute millis() inside the delay expression: if the elapsed
-    // time crosses FRAME_PERIOD after the comparison, the subtraction
-    // underflows to a ~49 day delay
-    if (elapsed >= FRAME_PERIOD) {
-      delay(1);
-    } else {
-      delay(FRAME_PERIOD - elapsed);
-    }
+    backgroundLoop();
+    delayUntilNextFrame();
   }
 }
 
@@ -169,25 +167,19 @@ void startBackgroundLoop() {
 #endif
 }
 
+// The strip first, so a dissolve's frame goes out right after waking on its
+// boundary, and the screen's draw after it
 void foregroundLoop() {
   uint32_t startTime = millis();
-#ifdef HAS_UI
-  Screen::loop();
-#endif
 #ifdef HAS_LIGHTS
   Lights::loop();
 #endif
-  uint32_t now = millis();
-  uint32_t elapsed = now - startTime;
-  foregroundStats.record(elapsed);
-  // Sleep until the next frame boundary in animation-clock time, not
-  // FRAME_PERIOD after this node's last frame. Every node then renders the same
-  // instants, so frame phase can't differ between nodes by up to a full frame.
-  // The result is always 1..FRAME_PERIOD, and a clock correction or an overrun
-  // simply re-aligns to the next boundary
-  uint32_t clock = rvl::getAnimationClock();
-  delay(FRAME_PERIOD - (clock % FRAME_PERIOD));
+#ifdef HAS_UI
+  Screen::loop();
+#endif
+  foregroundStats.record(millis() - startTime);
   foregroundStats.log("Foreground loop");
+  delayUntilNextFrame();
 }
 
 void loop() {
