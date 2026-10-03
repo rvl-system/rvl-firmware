@@ -25,7 +25,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 namespace Lights {
 
 void init();
-void startAnimationLoop();
 void loop();
 
 } // namespace Lights

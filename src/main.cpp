@@ -86,32 +86,6 @@ void setup() {
 #ifdef HAS_UI
   UI::init();
   Screen::init();
-#else
-  // Create a default animation
-  RVLParametricSettings newSettings;
-
-  // Wave layer
-  newSettings.layers[0].h.b = 0;
-  newSettings.layers[0].s.b = 255;
-  newSettings.layers[0].v.b = 255;
-  newSettings.layers[0].a.a = 255;
-  newSettings.layers[0].a.w_t = 8;
-  newSettings.layers[0].a.w_x = 2;
-
-  // Foreground layer
-  newSettings.layers[1].h.b = 170;
-  newSettings.layers[1].s.b = 255;
-  newSettings.layers[1].v.b = 255;
-  newSettings.layers[1].a.w_t = 8;
-  newSettings.layers[1].a.a = 255;
-
-  // Background layer
-  newSettings.layers[2].h.b = 85;
-  newSettings.layers[2].s.b = 255;
-  newSettings.layers[2].v.b = 255;
-  newSettings.layers[2].a.a = 255;
-
-  rvl::setParametricSettings(&newSettings);
 #endif
 #ifdef HAS_CONTROLS
   Controls::init();
