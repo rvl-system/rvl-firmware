@@ -99,7 +99,7 @@ const projectDir = isCoordinator
   ? join(import.meta.dirname, "coordinator")
   : import.meta.dirname;
 const serialPort = isCoordinator
-  ? "/dev/cu.usbserial-2120"
+  ? "/dev/cu.usbserial-212220"
   : "/dev/tty.usbserial-FTAV921H";
 const targetUrl = join(projectDir, ".pio", "build", target, "firmware.bin");
 

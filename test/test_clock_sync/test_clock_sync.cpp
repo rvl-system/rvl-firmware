@@ -228,6 +228,18 @@ void test_a_lone_board_syncs_with_a_zero_correction() {
   TEST_ASSERT_TRUE(rvl::NetworkState::isClockSynchronizationActive());
 }
 
+// Every peer's observation of the middle reference was lost, so that row would
+// otherwise pull the correction toward this node's own clock
+void test_a_row_no_other_node_observed_is_discarded_when_others_were() {
+  uint32_t t = fake.clock + 10000;
+  uint16_t id = freshSetId();
+  row(t, id, true, {20, 20});
+  row(t + 100, id + 1, false, {});
+  row(t + 200, id + 2, false, {20, 20});
+  TEST_ASSERT_EQUAL_INT32(20, processSet(t + 2300, id + 3));
+  TEST_ASSERT_TRUE(fake.logged("across 2 references"));
+}
+
 // Deltas near 2^31 overflowed the old int32_t accumulator into a stuck
 // zero-correction state
 void test_a_cold_start_against_a_long_running_fleet() {
@@ -295,6 +307,7 @@ int main() {
   RUN_TEST(test_a_row_is_discarded_when_this_node_missed_its_reference);
   RUN_TEST(test_a_reused_row_is_cleared_of_an_older_reference);
   RUN_TEST(test_a_lone_board_syncs_with_a_zero_correction);
+  RUN_TEST(test_a_row_no_other_node_observed_is_discarded_when_others_were);
   RUN_TEST(test_a_cold_start_against_a_long_running_fleet);
   RUN_TEST(test_a_straggler_from_the_last_set_keeps_this_sets_row);
   RUN_TEST(test_the_animation_clock_wraps_with_its_offset);
