@@ -49,10 +49,3 @@ Guidance for anyone, human or agent, changing code here. `lib/rvl` and
 - **Editing firmware is cheap.** When weighing designs, judge behavior,
   correctness, simplicity and consistency between boards and rvl-node, not
   which repo has to change.
-
-## Changes
-
-- Fixes and behavior changes first, dead-code deletions after, in separate
-  commits.
-- Keep formatting-only changes, tooling changes and lint fixes each in their
-  own commits, apart from behavior changes.
