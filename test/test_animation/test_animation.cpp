@@ -18,6 +18,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "fake_system.hpp"
+#include "golden_packets.hpp"
 #include "packets.hpp"
 #include <initializer_list>
 #include <optional>
@@ -539,6 +540,32 @@ void test_the_repeats_packets_change_nothing_on_a_receiver_that_has_them() {
   TEST_ASSERT_FALSE(rvl::getPendingScene().has_value());
 }
 
+// The packets rvl-node's wire test asserts its sender writes, on channel 3,
+// read while their starts are still ahead so they pend rather than activate
+void test_rvl_nodes_off_packet_parses() {
+  rvl::setChannel(3);
+  loopAtFrame(0x00FEDCBA - 10);
+  receiveNow(GOLDEN_OFF_PACKET);
+  std::optional<RVLScene> pending = rvl::getPendingScene();
+  TEST_ASSERT_TRUE(pending.has_value());
+  TEST_ASSERT_EQUAL_UINT32(0x00FEDCBA, pending->start);
+  TEST_ASSERT_EQUAL(255, pending->fade);
+  TEST_ASSERT_TRUE(std::holds_alternative<RVLOff>(pending->content));
+}
+
+void test_rvl_nodes_parametric_packet_parses() {
+  rvl::setChannel(3);
+  loopAtFrame(0x00ABCDEF - 10);
+  receiveNow(GOLDEN_PARAMETRIC_PACKET);
+  std::optional<RVLScene> pending = rvl::getPendingScene();
+  TEST_ASSERT_TRUE(pending.has_value());
+  TEST_ASSERT_EQUAL_UINT32(0x00ABCDEF, pending->start);
+  TEST_ASSERT_EQUAL(40, pending->fade);
+  auto* settings = std::get_if<RVLParametricSettings>(&pending->content);
+  TEST_ASSERT_NOT_NULL(settings);
+  TEST_ASSERT_TRUE(*settings == distinctiveParametric());
+}
+
 int main() {
   rvl::init(&fake);
   rvl::on(EVENT_ANIMATION_UPDATED, countUpdate);
@@ -567,5 +594,7 @@ int main() {
   RUN_TEST(test_a_receiver_never_sends);
   RUN_TEST(test_changes_during_a_dissolve_are_held_until_it_ends);
   RUN_TEST(test_the_repeats_packets_change_nothing_on_a_receiver_that_has_them);
+  RUN_TEST(test_rvl_nodes_off_packet_parses);
+  RUN_TEST(test_rvl_nodes_parametric_packet_parses);
   return UNITY_END();
 }
