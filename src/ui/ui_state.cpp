@@ -25,6 +25,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./presets/pulse.hpp"
 #include "./presets/rainbow.hpp"
 #include "./presets/shift.hpp"
+#include "./presets/simple_wave.hpp"
 #include "./presets/solid.hpp"
 #include "./presets/wave.hpp"
 #include "./settings.hpp"
@@ -145,8 +146,9 @@ void init() {
       updateModeValue);
 
   presetControl = new Control::ListControl("Preset",
-      {"Rainbow", "Pulse", "Wave", "Shift", "Color Cycle", "Solid"}, preset,
-      updatePresetValue);
+      {"Rainbow", "Pulse", "Wave", "Simple Wave", "Shift", "Color Cycle",
+          "Solid"},
+      preset, updatePresetValue);
 
   receiverTab1Controls = {brightnessControl, channelControl, modeControl};
 
@@ -161,6 +163,7 @@ void init() {
   presets.push_back(new Rainbow::Rainbow());
   presets.push_back(new Pulse::Pulse());
   presets.push_back(new Wave::Wave());
+  presets.push_back(new SimpleWave::SimpleWave());
   presets.push_back(new Shift::Shift());
   presets.push_back(new ColorCycle::ColorCycle());
   presets.push_back(new Solid::Solid());
