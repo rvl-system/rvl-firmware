@@ -33,10 +33,8 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_CONTROLS
 #include "./controls/controls.hpp"
 #endif
-#ifdef HAS_LIGHTS
-#include "./lights.hpp"
-#endif
 #include "./config.hpp"
+#include "./lights.hpp"
 #include "./settings.hpp"
 #include "./timing_stats.hpp"
 
@@ -90,9 +88,7 @@ void setup() {
 #ifdef HAS_CONTROLS
   Controls::init();
 #endif
-#ifdef HAS_LIGHTS
   Lights::init();
-#endif
   startBackgroundLoop();
   rvl::info("Running");
 }
@@ -145,9 +141,7 @@ void startBackgroundLoop() {
 // boundary, and the screen's draw after it
 void foregroundLoop() {
   uint32_t startTime = millis();
-#ifdef HAS_LIGHTS
   Lights::loop();
-#endif
 #ifdef HAS_UI
   Screen::loop();
 #endif
