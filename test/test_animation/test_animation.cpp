@@ -468,7 +468,8 @@ void test_changes_during_a_dissolve_are_held_until_it_ends() {
       n + SCENE_LEAD_FRAMES, sceneStart(animation.sent[1]));
   animation.sent.clear();
 
-  for (uint32_t f = n + 1; f <= n + 20; f++) {
+  uint32_t fadeEnd = n + SCENE_LEAD_FRAMES + DEFAULT_FADE_FRAMES;
+  for (uint32_t f = n + 1; f < fadeEnd; f++) {
     loopAtFrame(f);
     if (f == n + REPEAT_SEND_FRAMES) {
       TEST_ASSERT_EQUAL(2, animation.sent.size());
@@ -481,25 +482,25 @@ void test_changes_during_a_dissolve_are_held_until_it_ends() {
     TEST_ASSERT_EQUAL_MESSAGE(0, animation.sent.size(), "sent mid-dissolve");
   }
 
-  // The dissolve ends at n + 5 + DEFAULT_FADE_FRAMES
-  loopAtFrame(n + 21);
+  loopAtFrame(fadeEnd);
   TEST_ASSERT_EQUAL(2, animation.sent.size());
   TEST_ASSERT_EQUAL_UINT32(
       n + SCENE_LEAD_FRAMES, sceneStart(animation.sent[0]));
   TEST_ASSERT_PACKET(
       rvlaPacket(LOCAL_ID, PACKET_TYPE_PARAMETRIC_ANIMATION, 0,
-          scenePayload(n + 21 + SCENE_LEAD_FRAMES, DEFAULT_FADE_FRAMES,
+          scenePayload(fadeEnd + SCENE_LEAD_FRAMES, DEFAULT_FADE_FRAMES,
               parametricPayload(parametricVariant(15)))),
       animation.sent[1].bytes);
   animation.sent.clear();
-  loopFramesThrough(n + 21 + REPEAT_SEND_FRAMES - 1);
+  loopFramesThrough(fadeEnd + REPEAT_SEND_FRAMES - 1);
   TEST_ASSERT_EQUAL(0, animation.sent.size());
-  loopAtFrame(n + 21 + REPEAT_SEND_FRAMES);
+  loopAtFrame(fadeEnd + REPEAT_SEND_FRAMES);
   TEST_ASSERT_EQUAL(2, animation.sent.size());
   animation.sent.clear();
 
-  // A quiet spell, then a change sends at once again
-  loopFramesThrough(n + 60);
+  // A quiet spell after the released scene's own dissolve, short of the
+  // periodic send, then a change sends at once again
+  loopFramesThrough(fadeEnd + SCENE_LEAD_FRAMES + DEFAULT_FADE_FRAMES + 10);
   TEST_ASSERT_EQUAL(0, animation.sent.size());
   RVLParametricSettings later = parametricVariant(99);
   rvl::setParametricSettings(&later);
