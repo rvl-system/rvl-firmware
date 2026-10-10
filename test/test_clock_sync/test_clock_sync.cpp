@@ -199,20 +199,23 @@ void test_a_row_is_discarded_when_this_node_missed_its_reference() {
   TEST_ASSERT_TRUE(fake.logged("across 2 references"));
 }
 
-// A set whose start this node missed is never processed, so its rows still
-// hold data when the next set reuses them
-void test_a_reused_row_is_cleared_of_an_older_reference() {
+// Reference id + 3, the start of the next set, was lost, so the set before it
+// is still in the rows when id + 4 arrives, and the observations of id + 3 have
+// no row to go in
+void test_a_set_whose_start_was_missed_is_processed_a_reference_late() {
   uint32_t t = fake.clock + 10000;
   uint16_t id = freshSetId();
-  row(t, id, true, {1000, 1000, 1000, 1000, 1000}, FIRST_PEER_ID + 10);
-  row(t + 100, id + 1, false, {1000, 1000, 1000, 1000, 1000},
-      FIRST_PEER_ID + 10);
-  row(t + 200, id + 2, false, {1000, 1000, 1000, 1000, 1000},
-      FIRST_PEER_ID + 10);
+  row(t, id, true, {1000, 1000});
+  row(t + 100, id + 1, false, {1000, 1000});
+  row(t + 200, id + 2, false, {1000, 1000});
   observationsAt(t + 2305, id + 3, t + 2300 + offset(), {20, 20});
+  uint32_t before = offset();
   row(t + 2400, id + 4, false, {20, 20});
+  TEST_ASSERT_EQUAL_INT32(1000, static_cast<int32_t>(offset() - before));
+  TEST_ASSERT_TRUE(fake.logged("across 3 references"));
   row(t + 2500, id + 5, false, {20, 20});
   TEST_ASSERT_EQUAL_INT32(20, processSet(t + 4600, id + 6));
+  TEST_ASSERT_TRUE(fake.logged("across 2 references"));
 }
 
 void test_a_lone_board_syncs_with_a_zero_correction() {
@@ -255,9 +258,9 @@ void test_a_cold_start_against_a_long_running_fleet() {
 }
 
 // Reference id + 3 reuses id's row, so an observation of id arriving after it
-// clears the row, taking this node's observation of id + 3 with it
+// is dropped rather than taking the row, and this node's observation of id + 3
+// stays
 void test_a_straggler_from_the_last_set_keeps_this_sets_row() {
-  TEST_IGNORE_MESSAGE("Known bug, deferred to Phase 3");
   uint32_t t = fake.clock + 10000;
   uint16_t id = freshSetId();
   row(t, id, true, {0});
@@ -305,7 +308,7 @@ int main() {
   RUN_TEST(test_rows_with_mixed_numbers_of_observations_are_averaged);
   RUN_TEST(test_the_start_of_set_observation_uses_the_corrected_clock);
   RUN_TEST(test_a_row_is_discarded_when_this_node_missed_its_reference);
-  RUN_TEST(test_a_reused_row_is_cleared_of_an_older_reference);
+  RUN_TEST(test_a_set_whose_start_was_missed_is_processed_a_reference_late);
   RUN_TEST(test_a_lone_board_syncs_with_a_zero_correction);
   RUN_TEST(test_a_row_no_other_node_observed_is_discarded_when_others_were);
   RUN_TEST(test_a_cold_start_against_a_long_running_fleet);
