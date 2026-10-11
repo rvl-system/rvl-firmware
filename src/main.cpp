@@ -33,6 +33,9 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAS_CONTROLS
 #include "./controls/controls.hpp"
 #endif
+#ifdef HAS_STATUS_LED
+#include "./status_led.hpp"
+#endif
 #include "./config.hpp"
 #include "./lights.hpp"
 #include "./settings.hpp"
@@ -87,6 +90,9 @@ void setup() {
 #endif
 #ifdef HAS_CONTROLS
   Controls::init();
+#endif
+#ifdef HAS_STATUS_LED
+  StatusLed::init();
 #endif
   Lights::init();
   startBackgroundLoop();
@@ -144,6 +150,9 @@ void foregroundLoop() {
   Lights::loop();
 #ifdef HAS_UI
   Screen::loop();
+#endif
+#ifdef HAS_STATUS_LED
+  StatusLed::loop();
 #endif
   foregroundStats.record(millis() - startTime);
   foregroundStats.log("Foreground loop");
