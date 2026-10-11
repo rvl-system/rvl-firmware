@@ -41,6 +41,21 @@ Bytes reference(uint16_t id) {
       PacketWriter().u8(1).u16(id).u8(0).u8(1).u8(0).bytes);
 }
 
+Bytes observation(uint16_t id, uint32_t clock) {
+  return rvliPacket(PEER_ID, RVLI_PACKET_TYPE_CLOCK_SYNC,
+      PacketWriter().u8(2).u16(id).u8(0).u32(clock).bytes);
+}
+
+Bytes shortened(Bytes packet) {
+  packet.pop_back();
+  return packet;
+}
+
+Bytes lengthened(Bytes packet) {
+  packet.push_back(0);
+  return packet;
+}
+
 void deliver(const Bytes& packet) {
   infrastructure.receive(packet, fake.clock);
   rvl::loop();
@@ -133,6 +148,23 @@ void test_an_unknown_packet_type_is_logged() {
   TEST_ASSERT_TRUE(fake.logged("Received unknown RVLI packet type 9"));
 }
 
+// Only the payload can be the wrong length: its type is read before the length
+// it implies is known. tearDown's check is what shows the drop came before the
+// rest of the payload was read
+void test_a_packet_of_the_wrong_payload_length_is_dropped_and_logged() {
+  const Bytes wellFormed[] = {
+      idReply(COORDINATOR_ID, 42), reference(300), observation(300, 5000)};
+  for (const Bytes& packet : wellFormed) {
+    for (const Bytes& malformed : {shortened(packet), lengthened(packet)}) {
+      fake.output.clear();
+      deliver(malformed);
+      TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
+      TEST_ASSERT_EQUAL(0, broadcastsSent());
+      TEST_ASSERT_TRUE(fake.logged("bytes, expected"));
+    }
+  }
+}
+
 int main() {
   rvl::init(&fake);
   UNITY_BEGIN();
@@ -146,5 +178,6 @@ int main() {
   RUN_TEST(test_clock_sync_is_accepted_while_connected);
   RUN_TEST(test_clock_sync_is_discarded_while_the_node_has_no_id);
   RUN_TEST(test_an_unknown_packet_type_is_logged);
+  RUN_TEST(test_a_packet_of_the_wrong_payload_length_is_dropped_and_logged);
   return UNITY_END();
 }
