@@ -150,19 +150,38 @@ void test_an_unknown_packet_type_is_logged() {
 
 // Only the payload can be the wrong length: its type is read before the length
 // it implies is known. tearDown's check is what shows the drop came before the
-// rest of the payload was read
+// rest of the payload was read. A query and an identify have no payload, so
+// only a long one keeps its header whole
 void test_a_packet_of_the_wrong_payload_length_is_dropped_and_logged() {
-  const Bytes wellFormed[] = {
-      idReply(COORDINATOR_ID, 42), reference(300), observation(300, 5000)};
+  const Bytes wellFormed[] = {idReply(COORDINATOR_ID, 42), reference(300),
+      observation(300, 5000),
+      rvliPacket(PEER_ID, RVLI_PACKET_TYPE_CONFIGURE, {0, 1}, LOCAL_ID)};
+  std::vector<Bytes> packets = {
+      lengthened(rvliPacket(PEER_ID, RVLI_PACKET_TYPE_QUERY, {}, LOCAL_ID)),
+      lengthened(rvliPacket(PEER_ID, RVLI_PACKET_TYPE_IDENTIFY, {}, LOCAL_ID)),
+  };
   for (const Bytes& packet : wellFormed) {
-    for (const Bytes& malformed : {shortened(packet), lengthened(packet)}) {
-      fake.output.clear();
-      deliver(malformed);
-      TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
-      TEST_ASSERT_EQUAL(0, broadcastsSent());
-      TEST_ASSERT_TRUE(fake.logged("bytes, expected"));
-    }
+    packets.push_back(shortened(packet));
+    packets.push_back(lengthened(packet));
   }
+  for (const Bytes& packet : packets) {
+    fake.output.clear();
+    deliver(packet);
+    TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
+    TEST_ASSERT_EQUAL(0, broadcastsSent());
+    TEST_ASSERT_TRUE(fake.logged("bytes, expected"));
+  }
+}
+
+// Before any parser, so the probe is an ID reply, which would change the ID,
+// and a query, which would be answered
+void test_a_packet_for_another_node_is_dropped_before_its_parser() {
+  deliver(rvliPacket(COORDINATOR_ID, RVLI_PACKET_TYPE_ID_ASSIGNMENT,
+      {ID_REPLY_TYPE, 42}, PEER_ID));
+  TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
+  deliver(rvliPacket(PEER_ID, RVLI_PACKET_TYPE_QUERY, {}, PEER_ID));
+  TEST_ASSERT_EQUAL(0, broadcastsSent());
+  TEST_ASSERT_FALSE(fake.logged("unknown"));
 }
 
 int main() {
@@ -179,5 +198,6 @@ int main() {
   RUN_TEST(test_clock_sync_is_discarded_while_the_node_has_no_id);
   RUN_TEST(test_an_unknown_packet_type_is_logged);
   RUN_TEST(test_a_packet_of_the_wrong_payload_length_is_dropped_and_logged);
+  RUN_TEST(test_a_packet_for_another_node_is_dropped_before_its_parser);
   return UNITY_END();
 }
