@@ -10,3 +10,6 @@
 [submodule "rvl-node"]
 	path = rvl-node
 	url = git@github.com:rvl-system/rvl-node.git
+[submodule "board-configurator"]
+	path = rvl-setup
+	url = git@github.com:rvl-system/rvl-setup.git
