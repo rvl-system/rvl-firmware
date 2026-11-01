@@ -33,23 +33,55 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Lights {
 
-CRGB leds[LED_NUM_PIXELS];
+CRGB leds[LED_MAX_PIXELS];
 // The outgoing scene of a dissolve. Here rather than on the loop task's stack
-CRGB fadeFrom[LED_NUM_PIXELS];
+CRGB fadeFrom[LED_MAX_PIXELS];
 bool blanked = false;
+CLEDController* controller;
+// The configured count, read once per frame; only ever touched from the loop
+// task
+uint16_t pixelCount = LED_MAX_PIXELS;
 
 void init() {
   // Segment ends are inclusive and index leds directly, so an end past the last
   // pixel writes into whatever global the linker placed after the array
   for (auto& segment : segments) {
-    if (segment.end >= LED_NUM_PIXELS) {
+    if (segment.end >= LED_MAX_PIXELS) {
       rvl::error("Segment end %d is past the last pixel %d, clamping",
-          segment.end, LED_NUM_PIXELS - 1);
-      segment.end = LED_NUM_PIXELS - 1;
+          segment.end, LED_MAX_PIXELS - 1);
+      segment.end = LED_MAX_PIXELS - 1;
     }
   }
-  FastLED.addLeds<WS2812B, LED_DATA_PIN, LED_COLOR_MODE>(leds, LED_NUM_PIXELS);
+  // Told RGB: the configured order is applied by permuteColorOrder each frame
+  controller =
+      &FastLED.addLeds<WS2812B, LED_DATA_PIN, RGB>(leds, LED_MAX_PIXELS);
   rvl::info("Lights initialized");
+}
+
+// On this task, where show() runs, so a change can't land mid-transfer
+void applyPixelCount() {
+  uint16_t newPixelCount = rvl::getPixelCount();
+  if (newPixelCount != pixelCount) {
+    pixelCount = newPixelCount;
+    controller->setLeds(leds, pixelCount);
+  }
+}
+
+// Which component lands in each wire position, indexed by ColorOrder
+const uint8_t COLOR_ORDER_MAP[][3] = {
+    {0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}};
+
+// FastLED sends the three bytes of each pixel in order, so a strip wired
+// another way gets them swapped into the order it reads
+void permuteColorOrder(CRGB* pixels, uint16_t count, rvl::ColorOrder order) {
+  if (order == rvl::ColorOrder::RGB) {
+    return;
+  }
+  const uint8_t* map = COLOR_ORDER_MAP[static_cast<uint8_t>(order)];
+  for (uint16_t i = 0; i < count; i++) {
+    CRGB p = pixels[i];
+    pixels[i] = CRGB(p.raw[map[0]], p.raw[map[1]], p.raw[map[2]]);
+  }
 }
 
 uint8_t calculatePixelValue(
@@ -64,7 +96,12 @@ void renderParametric(
   uint32_t t =
       animationClock % (settings.timePeriod * 100) * 255 / settings.timePeriod;
   for (const auto& segment : segments) {
-    for (uint16_t i = segment.start; i <= segment.end; i++) {
+    // Only the configured pixels: a short strip renders only its own length
+    if (segment.start >= pixelCount) {
+      continue;
+    }
+    uint16_t end = min<uint16_t>(segment.end, pixelCount - 1);
+    for (uint16_t i = segment.start; i <= end; i++) {
       uint16_t normalizedIndex = 0;
       if (segment.reverse) {
         normalizedIndex = (segment.end - i) + segment.offset;
@@ -94,17 +131,30 @@ void renderParametric(
 }
 
 // At the frame's time rather than a live clock read, so both renders of a
-// dissolve, and every board's render of a frame, see the same instant
+// dissolve, and every board's render of a frame, see the same instant. Cleared
+// first, so a pixel outside every segment shows black rather than whatever
+// last wrote it, such as identify
 void renderScene(const RVLScene& scene, uint32_t frame, CRGB* out) {
+  fill_solid(out, pixelCount, CRGB::Black);
   const auto* settings = std::get_if<RVLParametricSettings>(&scene.content);
   if (settings != nullptr) {
     renderParametric(*settings, frame * FRAME_PERIOD, out);
-  } else {
-    fill_solid(out, LED_NUM_PIXELS, CRGB::Black);
   }
 }
 
 void loop() {
+  applyPixelCount();
+  // Identify overrides everything, blank included, so a board in a dark fleet
+  // can still be found
+  if (rvl::isIdentifying()) {
+    fill_solid(
+        leds, pixelCount, millis() / 500 % 2 == 0 ? CRGB::White : CRGB::Black);
+    FastLED.setBrightness(rvl::getBrightness());
+    FastLED.show();
+    blanked = false;
+    return;
+  }
+
   rvl::RenderPlan plan = rvl::getRenderPlan();
   // Blanks rather than showing the local preset or another channel's animation
   // before this node knows what the fleet is showing, and once an off scene has
@@ -125,10 +175,11 @@ void loop() {
   renderScene(plan.current, plan.frame, leds);
   if (plan.fading) {
     renderScene(plan.previous, plan.frame, fadeFrom);
-    for (uint16_t i = 0; i < LED_NUM_PIXELS; i++) {
+    for (uint16_t i = 0; i < pixelCount; i++) {
       leds[i] = blend(fadeFrom[i], leds[i], plan.amount);
     }
   }
+  permuteColorOrder(leds, pixelCount, rvl::getColorOrder());
   FastLED.setBrightness(rvl::getBrightness());
   FastLED.show();
 }

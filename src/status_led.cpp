@@ -26,10 +26,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace StatusLed {
 
-// Of 255. Full brightness is too bright to look at; a remotely configured
-// level replaces this
-#define STATUS_LED_BRIGHTNESS 60
-
 struct Color {
   uint8_t red;
   uint8_t green;
@@ -41,6 +37,7 @@ const Color RED = {255, 0, 0};
 const Color YELLOW = {255, 255, 0};
 const Color PURPLE = {255, 0, 255};
 const Color BLUE = {0, 0, 255};
+const Color WHITE = {255, 255, 255};
 
 uint8_t scaleComponent(uint8_t component, uint8_t level) {
   return static_cast<uint8_t>(component * level / 255);
@@ -68,23 +65,28 @@ void init() {
   showColor(BLUE, 0);
 }
 
-// Link loss first: it is the failure the LED exists to show on a board with no
-// screen, and the render states still read Current or Stale under it
+// Identify first, then link loss: that is the failure the LED exists to show
+// on a board with no screen, and the render states still read Current or
+// Stale under it
 void loop() {
+  uint8_t brightness = rvl::getStatusLedBrightness();
+  if (rvl::isIdentifying()) {
+    showColor(WHITE, millis() / 500 % 2 == 0 ? brightness : 0);
+    return;
+  }
   if (!rvl::isConnected()) {
-    showColor(RED, pulse(2000, 0, STATUS_LED_BRIGHTNESS));
+    showColor(RED, pulse(2000, 0, brightness));
     return;
   }
   switch (rvl::getRenderState()) {
   case rvl::RenderState::Current:
-    showColor(PURPLE, STATUS_LED_BRIGHTNESS);
+    showColor(PURPLE, brightness);
     break;
   case rvl::RenderState::Stale:
-    showColor(
-        BLUE, pulse(4000, STATUS_LED_BRIGHTNESS / 2, STATUS_LED_BRIGHTNESS));
+    showColor(BLUE, pulse(4000, brightness / 2, brightness));
     break;
   case rvl::RenderState::Unknown:
-    showColor(YELLOW, pulse(4000, 0, STATUS_LED_BRIGHTNESS));
+    showColor(YELLOW, pulse(4000, 0, brightness));
     break;
   }
 }

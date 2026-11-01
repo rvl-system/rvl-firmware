@@ -21,6 +21,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #define TEST_PACKETS_H_
 
 #include "fake_system.hpp"
+#include <rvl/config.hpp>
 #include <stdint.h>
 #include <unity.h>
 
@@ -41,7 +42,8 @@ uint32_t readU32(const Bytes& bytes, size_t offset);
 // a test can't agree with a wrong writer
 Bytes rvlaPacket(uint8_t source, uint8_t packetType, uint8_t channel,
     const Bytes& payload = {});
-Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload = {});
+Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload = {},
+    uint8_t destination = EVERY_DEVICE_ID);
 
 #define TEST_ASSERT_PACKET(expected, actual)                                   \
   do {                                                                         \

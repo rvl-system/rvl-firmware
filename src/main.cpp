@@ -52,7 +52,26 @@ RVLWifi::System* wifiSystem;
 
 void startBackgroundLoop();
 
+// The properties this board takes over the wire, from the flags that gate its
+// modules: a board with controls reads channel and brightness from its pins
+uint8_t buildCapabilities() {
+  uint8_t capabilities = rvl::capabilityBit(rvl::Property::PixelCount) |
+      rvl::capabilityBit(rvl::Property::ColorOrder) |
+      rvl::capabilityBit(rvl::Property::Nickname);
+#ifndef HAS_CONTROLS
+  capabilities |= rvl::capabilityBit(rvl::Property::Channel) |
+      rvl::capabilityBit(rvl::Property::Brightness);
+#endif
+#ifdef HAS_STATUS_LED
+  capabilities |= rvl::capabilityBit(rvl::Property::StatusLedBrightness);
+#endif
+  return capabilities;
+}
+
 void setup() {
+  // Before the settings load, which clamps the stored pixel count
+  rvl::setCapabilities(buildCapabilities());
+  rvl::setMaxPixelCount(LED_MAX_PIXELS);
   Settings::init();
 
   Serial.begin(SERIAL_BAUDRATE);

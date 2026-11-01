@@ -47,8 +47,10 @@ Bytes rvlaPacket(
   return packet;
 }
 
-Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload) {
-  Bytes packet = {'R', 'V', 'L', 'I', RVLI_VERSION, source, packetType, 0};
+Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload,
+    uint8_t destination) {
+  Bytes packet = {
+      'R', 'V', 'L', 'I', RVLI_VERSION, source, packetType, destination};
   packet.insert(packet.end(), payload.begin(), payload.end());
   return packet;
 }

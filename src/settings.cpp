@@ -24,6 +24,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./config.hpp"
 #include "./settings.hpp"
 #include <rvl.hpp>
+#include <rvl/config.hpp>
 
 namespace Settings {
 
@@ -35,14 +36,21 @@ Preferences preferences; // NOLINT
 #define MAX_PASSPHRASE_LENGTH 64
 
 // Flash writes stall both cores, so settings are written once a value has been
-// stable for this long instead of on every change
+// stable for this long instead of on every change, and never in the path that
+// answers a packet: a write there loses the reply about one time in five
 #define SETTING_WRITE_DELAY 1000
 #define MAX_PENDING_SETTINGS 8
+// The nickname is the one string setting
+#define MAX_STRING_SETTING_LENGTH NICKNAME_LENGTH
+
+enum class SettingKind : uint8_t { Byte, Short, String };
 
 struct PendingSetting {
   const char* key;
-  uint8_t value;
   uint32_t lastChanged;
+  uint16_t value;
+  SettingKind kind;
+  char text[MAX_STRING_SETTING_LENGTH + 1];
 };
 
 // Only ever touched from the background task
@@ -55,6 +63,10 @@ char passphrase[MAX_PASSPHRASE_LENGTH];
 uint8_t brightness = 0;
 uint8_t channel = 0;
 rvl::DeviceMode mode = rvl::DeviceMode::Receiver;
+uint16_t pixelCount = 0;
+rvl::ColorOrder colorOrder = DEFAULT_COLOR_ORDER;
+uint8_t statusLedBrightness = 0;
+char nickname[NICKNAME_LENGTH + 1] = "";
 
 void updateDeviceMode() {
   rvl::DeviceMode newMode = rvl::getDeviceMode();
@@ -77,6 +89,38 @@ void updateBrightness() {
   if (newBrightness != brightness) {
     brightness = newBrightness;
     setSetting("brightness", rvl::getBrightness());
+  }
+}
+
+void updatePixelCount() {
+  uint16_t newPixelCount = rvl::getPixelCount();
+  if (newPixelCount != pixelCount) {
+    pixelCount = newPixelCount;
+    setSetting16("pixel-count", pixelCount);
+  }
+}
+
+void updateColorOrder() {
+  rvl::ColorOrder newColorOrder = rvl::getColorOrder();
+  if (newColorOrder != colorOrder) {
+    colorOrder = newColorOrder;
+    setSetting("color-order", static_cast<uint8_t>(colorOrder));
+  }
+}
+
+void updateStatusLedBrightness() {
+  uint8_t newStatusLedBrightness = rvl::getStatusLedBrightness();
+  if (newStatusLedBrightness != statusLedBrightness) {
+    statusLedBrightness = newStatusLedBrightness;
+    setSetting("led-brightness", statusLedBrightness);
+  }
+}
+
+void updateNickname() {
+  const char* newNickname = rvl::getNickname();
+  if (strcmp(newNickname, nickname) != 0) {
+    strlcpy(nickname, newNickname, sizeof(nickname));
+    setStringSetting("nickname", nickname);
   }
 }
 
@@ -132,6 +176,24 @@ void init() {
   rvl::setBrightness(brightness);
   rvl::on(EVENT_BRIGHTNESS_UPDATED, updateBrightness);
 #endif
+
+  pixelCount = getSetting16("pixel-count", LED_MAX_PIXELS);
+  rvl::setPixelCount(pixelCount);
+  rvl::on(EVENT_PIXEL_COUNT_UPDATED, updatePixelCount);
+
+  colorOrder = static_cast<rvl::ColorOrder>(
+      getSetting("color-order", static_cast<uint8_t>(DEFAULT_COLOR_ORDER)));
+  rvl::setColorOrder(colorOrder);
+  rvl::on(EVENT_COLOR_ORDER_UPDATED, updateColorOrder);
+
+  statusLedBrightness =
+      getSetting("led-brightness", DEFAULT_STATUS_LED_BRIGHTNESS);
+  rvl::setStatusLedBrightness(statusLedBrightness);
+  rvl::on(EVENT_STATUS_LED_BRIGHTNESS_UPDATED, updateStatusLedBrightness);
+
+  getStringSetting("nickname", nickname, sizeof(nickname));
+  rvl::setNickname(nickname);
+  rvl::on(EVENT_NICKNAME_UPDATED, updateNickname);
 }
 
 char* getWiFiSSID() {
@@ -158,19 +220,51 @@ void setWiFiPassphrase(const char* newPassphrase) {
 #endif
 }
 
-void writeSetting(const char* key, uint8_t value) {
+void writeSetting(const PendingSetting& setting) {
 #ifdef ESP32
   preferences.begin("rvl", false);
-  preferences.putUChar(key, value);
+  switch (setting.kind) {
+  case SettingKind::Byte:
+    preferences.putUChar(setting.key, setting.value);
+    break;
+  case SettingKind::Short:
+    preferences.putUShort(setting.key, setting.value);
+    break;
+  case SettingKind::String:
+    preferences.putString(setting.key, setting.text);
+    break;
+  }
   preferences.end();
 #endif
 }
 
-uint8_t getSetting(const char* key, uint8_t defaultValue) {
+PendingSetting* findPendingSetting(const char* key) {
   for (uint8_t i = 0; i < numPendingSettings; i++) {
     if (strcmp(pendingSettings[i].key, key) == 0) {
-      return pendingSettings[i].value;
+      return &pendingSettings[i];
     }
+  }
+  return nullptr;
+}
+
+// Replaces a pending write of the same key, and writes at once only when the
+// queue is full
+void queueSetting(const PendingSetting& setting) {
+  PendingSetting* pending = findPendingSetting(setting.key);
+  if (pending == nullptr) {
+    if (numPendingSettings == MAX_PENDING_SETTINGS) {
+      writeSetting(setting);
+      return;
+    }
+    pending = &pendingSettings[numPendingSettings++];
+  }
+  *pending = setting;
+}
+
+uint8_t getSetting(const char* key, uint8_t defaultValue) {
+  PendingSetting* pending = findPendingSetting(key);
+  if (pending != nullptr) {
+    return pending->value;
   }
 #ifdef ESP32
   preferences.begin("rvl", false);
@@ -183,19 +277,47 @@ uint8_t getSetting(const char* key, uint8_t defaultValue) {
 }
 
 void setSetting(const char* key, uint8_t value) {
-  for (uint8_t i = 0; i < numPendingSettings; i++) {
-    if (strcmp(pendingSettings[i].key, key) == 0) {
-      pendingSettings[i].value = value;
-      pendingSettings[i].lastChanged = millis();
-      return;
-    }
+  PendingSetting setting = {key, millis(), value, SettingKind::Byte, ""};
+  queueSetting(setting);
+}
+
+uint16_t getSetting16(const char* key, uint16_t defaultValue) {
+  PendingSetting* pending = findPendingSetting(key);
+  if (pending != nullptr) {
+    return pending->value;
   }
-  if (numPendingSettings == MAX_PENDING_SETTINGS) {
-    writeSetting(key, value);
+#ifdef ESP32
+  preferences.begin("rvl", false);
+  uint16_t value = preferences.getUShort(key, defaultValue);
+  preferences.end();
+  return value;
+#else
+  return defaultValue;
+#endif
+}
+
+void setSetting16(const char* key, uint16_t value) {
+  PendingSetting setting = {key, millis(), value, SettingKind::Short, ""};
+  queueSetting(setting);
+}
+
+void getStringSetting(const char* key, char* buffer, size_t size) {
+  PendingSetting* pending = findPendingSetting(key);
+  if (pending != nullptr) {
+    strlcpy(buffer, pending->text, size);
     return;
   }
-  pendingSettings[numPendingSettings] = {key, value, millis()};
-  numPendingSettings++;
+#ifdef ESP32
+  preferences.begin("rvl", false);
+  preferences.getString(key, buffer, size);
+  preferences.end();
+#endif
+}
+
+void setStringSetting(const char* key, const char* value) {
+  PendingSetting setting = {key, millis(), 0, SettingKind::String, ""};
+  strlcpy(setting.text, value, sizeof(setting.text));
+  queueSetting(setting);
 }
 
 // Writes at most one setting per pass, so a burst of changes never turns into a
@@ -206,7 +328,7 @@ void loop() {
     if (now - pendingSettings[i].lastChanged < SETTING_WRITE_DELAY) {
       continue;
     }
-    writeSetting(pendingSettings[i].key, pendingSettings[i].value);
+    writeSetting(pendingSettings[i]);
     pendingSettings[i] = pendingSettings[numPendingSettings - 1];
     numPendingSettings--;
     return;

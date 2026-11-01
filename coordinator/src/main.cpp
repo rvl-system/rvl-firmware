@@ -107,7 +107,8 @@ void handleRvliPacket() {
     write8(rvliUdp, RVLI_VERSION);
     write8(rvliUdp, deviceId);
     write8(rvliUdp, RVLI_PACKET_TYPE_ID_ASSIGNMENT);
-    write8(rvliUdp, 0); // Reserved
+    // Destination: the requester has no ID yet, and the unicast addresses it
+    write8(rvliUdp, EVERY_DEVICE_ID);
     write8(rvliUdp, ID_REPLY_TYPE);
     write8(rvliUdp, assignedId);
     rvliUdp.endPacket();
@@ -117,6 +118,13 @@ void handleRvliPacket() {
   }
   case RVLI_PACKET_TYPE_CLOCK_SYNC:
     // Boards' observations of our references, which only other boards use
+    rvliUdp.clear();
+    break;
+  case RVLI_PACKET_TYPE_QUERY:
+  case RVLI_PACKET_TYPE_CONFIGURE:
+  case RVLI_PACKET_TYPE_IDENTIFY:
+  case RVLI_PACKET_TYPE_STATUS:
+    // Between a configurer and the boards; every one crosses the AP
     rvliUdp.clear();
     break;
   default:
@@ -134,7 +142,7 @@ void sendReferenceBroadcast(bool isStartOfSet) {
   write8(rvliUdp, RVLI_VERSION);
   write8(rvliUdp, deviceId);
   write8(rvliUdp, RVLI_PACKET_TYPE_CLOCK_SYNC);
-  write8(rvliUdp, 0); // Reserved
+  write8(rvliUdp, EVERY_DEVICE_ID); // Destination
 
   write8(rvliUdp, 1); // Clock sync subpacket type: reference broadcast
   write16(rvliUdp, id);

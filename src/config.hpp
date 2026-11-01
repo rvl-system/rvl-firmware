@@ -32,8 +32,11 @@ struct StripSegment {
 
 /**** You'll probably want to modify these settings ****/
 
-#define LED_COLOR_MODE GRB
-#define LED_NUM_PIXELS 300
+// The strip buffers' size, and the pixel count until one is configured
+#define LED_MAX_PIXELS 300
+#define DEFAULT_COLOR_ORDER rvl::ColorOrder::GRB
+// Of 255. Full was too bright to look at
+#define DEFAULT_STATUS_LED_BRIGHTNESS 60
 
 #define SCREEN_SAVER_ENABLED
 

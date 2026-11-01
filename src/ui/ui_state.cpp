@@ -45,9 +45,15 @@ std::vector<PresetControlSet*> presets;
 
 void update();
 
+// Read once, since constrain is a macro and the other task writes brightness;
+// clamped, since a remotely configured brightness can sit outside the dial's
+// range, and below it the subtraction would wrap; rounded, so every step the
+// dial sets maps back to itself
 uint8_t getBrightnessValue() {
-  return 16 * (rvl::getBrightness() - MIN_BRIGHTNESS) /
-      (MAX_BRIGHTNESS - MIN_BRIGHTNESS);
+  uint8_t brightness = rvl::getBrightness();
+  brightness = constrain(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+  const uint8_t range = MAX_BRIGHTNESS - MIN_BRIGHTNESS;
+  return (16 * (brightness - MIN_BRIGHTNESS) + range / 2) / range;
 }
 void updateBrightnessValue(uint8_t newValue) {
   uint16_t adjustedBrightness =
@@ -57,12 +63,23 @@ void updateBrightnessValue(uint8_t newValue) {
 }
 Control::RangeControl* brightnessControl;
 
+// A brightness configured over the wire moves the dial too, which steps from
+// its own copy
+void followBrightness() {
+  brightnessControl->value = getBrightnessValue();
+}
+
 void updateChannelValue(uint8_t selectedValueIndex) {
   if (rvl::getChannel() != selectedValueIndex) {
     rvl::setChannel(selectedValueIndex);
   }
 }
 Control::ListControl* channelControl;
+
+// A channel configured over the wire shows on the dial too
+void followChannel() {
+  channelControl->selectedValueIndex = rvl::getChannel();
+}
 
 void updateModeValue(uint8_t selectedValueIndex) {
   if (rvl::getDeviceMode() != static_cast<rvl::DeviceMode>(selectedValueIndex))
@@ -136,10 +153,12 @@ void init() {
   preset = Settings::getSetting("ui-preset", DEFAULT_PRESET);
   brightnessControl = new Control::RangeControl("Brightness", 0, 16,
       getBrightnessValue(), updateBrightnessValue, getBrightnessValue);
+  rvl::on(EVENT_BRIGHTNESS_UPDATED, followBrightness);
 
   channelControl = new Control::ListControl("Channel",
       {"0", "1", "2", "3", "4", "5", "6", "7"}, rvl::getChannel(),
       updateChannelValue);
+  rvl::on(EVENT_CHANNEL_UPDATED, followChannel);
 
   modeControl = new Control::ListControl("Mode", {"Controller", "Receiver"},
       rvl::getDeviceMode() == rvl::DeviceMode::Controller ? 0 : 1,
