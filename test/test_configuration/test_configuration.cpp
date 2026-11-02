@@ -86,7 +86,6 @@ Bytes nicknameBytes(const char* nickname) {
 struct Status {
   uint8_t destination;
   uint8_t capabilities;
-  uint8_t mode;
   uint8_t channel;
   uint8_t brightness;
   uint16_t pixelCount;
@@ -96,12 +95,12 @@ struct Status {
 };
 
 Status readStatus(const Bytes& bytes) {
-  TEST_ASSERT_EQUAL(32, bytes.size());
+  TEST_ASSERT_EQUAL(31, bytes.size());
   TEST_ASSERT_EQUAL(RVLI_PACKET_TYPE_STATUS, bytes[6]);
-  std::string nickname(bytes.begin() + 16, bytes.begin() + 32);
+  std::string nickname(bytes.begin() + 15, bytes.begin() + 31);
   nickname = nickname.substr(0, nickname.find('\0'));
-  return {bytes[7], bytes[8], bytes[9], bytes[10], bytes[11],
-      static_cast<uint16_t>(bytes[12] << 8 | bytes[13]), bytes[14], bytes[15],
+  return {bytes[7], bytes[8], bytes[9], bytes[10],
+      static_cast<uint16_t>(bytes[11] << 8 | bytes[12]), bytes[13], bytes[14],
       nickname};
 }
 
@@ -146,7 +145,7 @@ uint32_t eventsFired() {
 
 void test_a_query_is_answered_with_this_nodes_status() {
   const Bytes expected = {'R', 'V', 'L', 'I', RVLI_VERSION, LOCAL_ID,
-      RVLI_PACKET_TYPE_STATUS, CONFIGURER_ID, ALL_CAPABILITIES, 1, 0, 50, 0x01,
+      RVLI_PACKET_TYPE_STATUS, CONFIGURER_ID, ALL_CAPABILITIES, 0, 50, 0x01,
       0x2c, 2, 60, 'M', 'i', 'n', 'i', ' ', '1', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   deliver(query(LOCAL_ID));
   TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
@@ -292,7 +291,7 @@ void test_an_identify_for_another_node_is_not_taken() {
 
 // Another board's reply to whoever asked it
 void test_a_status_from_another_node_changes_nothing() {
-  Bytes payload = {ALL_CAPABILITIES, 0, 7, 255, 0x00, 0x18, 5, 1};
+  Bytes payload = {ALL_CAPABILITIES, 7, 255, 0x00, 0x18, 5, 1};
   Bytes nickname = nicknameBytes("other");
   payload.insert(payload.end(), nickname.begin(), nickname.end());
   deliver(rvliPacket(OTHER_ID, RVLI_PACKET_TYPE_STATUS, payload, LOCAL_ID));
