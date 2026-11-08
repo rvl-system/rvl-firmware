@@ -39,7 +39,9 @@ Preferences preferences; // NOLINT
 // stable for this long instead of on every change, and never in the path that
 // answers a packet: a write there loses the reply about one time in five
 #define SETTING_WRITE_DELAY 1000
-#define MAX_PENDING_SETTINGS 8
+// Every key the wire sets, and a few of the UI's: a key that finds the queue
+// full is written at once, which in the packet path loses the reply
+#define MAX_PENDING_SETTINGS (NUM_PROPERTIES + 3)
 // The nickname is the one string setting
 #define MAX_STRING_SETTING_LENGTH NICKNAME_LENGTH
 
@@ -67,6 +69,7 @@ uint16_t pixelCount = 0;
 rvl::ColorOrder colorOrder = DEFAULT_COLOR_ORDER;
 uint8_t statusLedBrightness = 0;
 char nickname[NICKNAME_LENGTH + 1] = "";
+uint16_t currentLimit = 0;
 
 void updateDeviceMode() {
   rvl::DeviceMode newMode = rvl::getDeviceMode();
@@ -121,6 +124,14 @@ void updateNickname() {
   if (strcmp(newNickname, nickname) != 0) {
     strlcpy(nickname, newNickname, sizeof(nickname));
     setStringSetting("nickname", nickname);
+  }
+}
+
+void updateCurrentLimit() {
+  uint16_t newCurrentLimit = rvl::getCurrentLimit();
+  if (newCurrentLimit != currentLimit) {
+    currentLimit = newCurrentLimit;
+    setSetting16("current-limit", currentLimit);
   }
 }
 
@@ -194,6 +205,10 @@ void init() {
   getStringSetting("nickname", nickname, sizeof(nickname));
   rvl::setNickname(nickname);
   rvl::on(EVENT_NICKNAME_UPDATED, updateNickname);
+
+  currentLimit = getSetting16("current-limit", DEFAULT_CURRENT_LIMIT);
+  rvl::setCurrentLimit(currentLimit);
+  rvl::on(EVENT_CURRENT_LIMIT_UPDATED, updateCurrentLimit);
 }
 
 char* getWiFiSSID() {

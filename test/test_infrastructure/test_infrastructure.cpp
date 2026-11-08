@@ -155,7 +155,9 @@ void test_an_unknown_packet_type_is_logged() {
 void test_a_packet_of_the_wrong_payload_length_is_dropped_and_logged() {
   const Bytes wellFormed[] = {idReply(COORDINATOR_ID, 42), reference(300),
       observation(300, 5000),
-      rvliPacket(PEER_ID, RVLI_PACKET_TYPE_CONFIGURE, {0, 1}, LOCAL_ID)};
+      rvliPacket(PEER_ID, RVLI_PACKET_TYPE_CONFIGURE, {0, 1}, LOCAL_ID),
+      rvliPacket(
+          PEER_ID, RVLI_PACKET_TYPE_CONFIGURE, {6, 0x05, 0xdc}, LOCAL_ID)};
   std::vector<Bytes> packets = {
       lengthened(rvliPacket(PEER_ID, RVLI_PACKET_TYPE_QUERY, {}, LOCAL_ID)),
       lengthened(rvliPacket(PEER_ID, RVLI_PACKET_TYPE_IDENTIFY, {}, LOCAL_ID)),

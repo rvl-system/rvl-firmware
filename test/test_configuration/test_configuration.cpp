@@ -30,7 +30,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #define CONFIGURER_ID 20
 #define OTHER_ID 30
 
-#define ALL_CAPABILITIES 0x3f
+#define ALL_CAPABILITIES 0x7f
 
 FakeInfrastructure& infrastructure = fake.infrastructureEndpoint;
 
@@ -54,6 +54,9 @@ void countStatusLedBrightness() {
 }
 void countNickname() {
   events[5]++;
+}
+void countCurrentLimit() {
+  events[6]++;
 }
 
 void deliver(const Bytes& packet) {
@@ -92,16 +95,17 @@ struct Status {
   uint8_t colorOrder;
   uint8_t statusLedBrightness;
   std::string nickname;
+  uint16_t currentLimit;
 };
 
 Status readStatus(const Bytes& bytes) {
-  TEST_ASSERT_EQUAL(31, bytes.size());
+  TEST_ASSERT_EQUAL(33, bytes.size());
   TEST_ASSERT_EQUAL(RVLI_PACKET_TYPE_STATUS, bytes[6]);
   std::string nickname(bytes.begin() + 15, bytes.begin() + 31);
   nickname = nickname.substr(0, nickname.find('\0'));
   return {bytes[7], bytes[8], bytes[9], bytes[10],
       static_cast<uint16_t>(bytes[11] << 8 | bytes[12]), bytes[13], bytes[14],
-      nickname};
+      nickname, static_cast<uint16_t>(bytes[31] << 8 | bytes[32])};
 }
 
 // The one status sent, read back
@@ -122,6 +126,7 @@ void setUp() {
   rvl::setColorOrder(rvl::ColorOrder::GRB);
   rvl::setStatusLedBrightness(60);
   rvl::setNickname("Mini 1");
+  rvl::setCurrentLimit(1500);
   memset(events, 0, sizeof(events));
   infrastructure.sent.clear();
   fake.animationEndpoint.sent.clear();
@@ -146,7 +151,8 @@ uint32_t eventsFired() {
 void test_a_query_is_answered_with_this_nodes_status() {
   const Bytes expected = {'R', 'V', 'L', 'I', RVLI_VERSION, LOCAL_ID,
       RVLI_PACKET_TYPE_STATUS, CONFIGURER_ID, ALL_CAPABILITIES, 0, 50, 0x01,
-      0x2c, 2, 60, 'M', 'i', 'n', 'i', ' ', '1', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+      0x2c, 2, 60, 'M', 'i', 'n', 'i', ' ', '1', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0x05, 0xdc};
   deliver(query(LOCAL_ID));
   TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
   TEST_ASSERT(infrastructure.sent[0].destination == Destination::Broadcast);
@@ -214,6 +220,12 @@ void test_a_nickname_is_applied_and_answered() {
   TEST_ASSERT_EQUAL_STRING("left bar", sentStatus().nickname.c_str());
 }
 
+void test_a_current_limit_is_applied_and_answered() {
+  applyAndRepeat(6, {0x0b, 0xb8});
+  TEST_ASSERT_EQUAL(3000, rvl::getCurrentLimit());
+  TEST_ASSERT_EQUAL(3000, sentStatus().currentLimit);
+}
+
 void test_a_property_this_node_lacks_is_left_alone_and_answered() {
   rvl::setCapabilities(ALL_CAPABILITIES &
       ~rvl::capabilityBit(rvl::Property::StatusLedBrightness));
@@ -246,8 +258,8 @@ void test_a_bad_channel_color_order_or_property_drops_the_packet() {
   TEST_ASSERT_TRUE(fake.logged("Received channel 8, ignoring"));
   deliver(configure(3, {6}));
   TEST_ASSERT_TRUE(fake.logged("Received color order 6, ignoring"));
-  deliver(configure(6, {1}));
-  TEST_ASSERT_TRUE(fake.logged("Received configure for unknown property 6"));
+  deliver(configure(7, {1}));
+  TEST_ASSERT_TRUE(fake.logged("Received configure for unknown property 7"));
   TEST_ASSERT_EQUAL(0, infrastructure.sent.size());
   TEST_ASSERT_EQUAL(0, eventsFired());
   TEST_ASSERT_EQUAL(0, rvl::getChannel());
@@ -294,6 +306,7 @@ void test_a_status_from_another_node_changes_nothing() {
   Bytes payload = {ALL_CAPABILITIES, 7, 255, 0x00, 0x18, 5, 1};
   Bytes nickname = nicknameBytes("other");
   payload.insert(payload.end(), nickname.begin(), nickname.end());
+  payload.insert(payload.end(), {0x0b, 0xb8});
   deliver(rvliPacket(OTHER_ID, RVLI_PACKET_TYPE_STATUS, payload, LOCAL_ID));
   TEST_ASSERT_EQUAL(0, infrastructure.sent.size());
   TEST_ASSERT_EQUAL(0, eventsFired());
@@ -321,6 +334,7 @@ int main() {
   rvl::on(EVENT_COLOR_ORDER_UPDATED, countColorOrder);
   rvl::on(EVENT_STATUS_LED_BRIGHTNESS_UPDATED, countStatusLedBrightness);
   rvl::on(EVENT_NICKNAME_UPDATED, countNickname);
+  rvl::on(EVENT_CURRENT_LIMIT_UPDATED, countCurrentLimit);
   UNITY_BEGIN();
   RUN_TEST(test_a_query_is_answered_with_this_nodes_status);
   RUN_TEST(test_a_query_for_another_node_is_not_answered);
@@ -330,6 +344,7 @@ int main() {
   RUN_TEST(test_a_color_order_is_applied_and_answered);
   RUN_TEST(test_a_status_led_brightness_is_applied_and_answered);
   RUN_TEST(test_a_nickname_is_applied_and_answered);
+  RUN_TEST(test_a_current_limit_is_applied_and_answered);
   RUN_TEST(test_a_property_this_node_lacks_is_left_alone_and_answered);
   RUN_TEST(test_a_pixel_count_past_the_buffers_lands_as_the_maximum);
   RUN_TEST(test_a_bad_channel_color_order_or_property_drops_the_packet);

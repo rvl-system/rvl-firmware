@@ -57,7 +57,8 @@ void startBackgroundLoop();
 uint8_t buildCapabilities() {
   uint8_t capabilities = rvl::capabilityBit(rvl::Property::PixelCount) |
       rvl::capabilityBit(rvl::Property::ColorOrder) |
-      rvl::capabilityBit(rvl::Property::Nickname);
+      rvl::capabilityBit(rvl::Property::Nickname) |
+      rvl::capabilityBit(rvl::Property::CurrentLimit);
 #ifndef HAS_CONTROLS
   capabilities |= rvl::capabilityBit(rvl::Property::Channel) |
       rvl::capabilityBit(rvl::Property::Brightness);

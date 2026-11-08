@@ -37,6 +37,8 @@ struct StripSegment {
 #define DEFAULT_COLOR_ORDER rvl::ColorOrder::GRB
 // Of 255. Full was too bright to look at
 #define DEFAULT_STATUS_LED_BRIGHTNESS 60
+// In mA: a micro USB feed, rated 1.8 A, with a margin
+#define DEFAULT_CURRENT_LIMIT 1500
 
 #define SCREEN_SAVER_ENABLED
 
@@ -60,6 +62,10 @@ extern std::vector<StripSegment> segments;
 
 #define BUTTON_PRESS_ENGAGE_TIME 50
 #define BUTTON_HOLD_ENGAGE_TIME 2000
+
+// FastLED's power model is in mW at 5 V, so volts times mA gives its mW only at
+// this voltage
+#define LED_VOLTS 5
 
 #ifdef RVL_CONTROLLER
 #include "./config-controller.hpp"

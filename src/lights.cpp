@@ -67,6 +67,11 @@ void applyPixelCount() {
   }
 }
 
+void setBrightnessWithinCurrentLimit() {
+  FastLED.setBrightness(calculate_max_brightness_for_power_vmA(leds, pixelCount,
+      rvl::getBrightness(), LED_VOLTS, rvl::getCurrentLimit()));
+}
+
 // Which component lands in each wire position, indexed by ColorOrder
 const uint8_t COLOR_ORDER_MAP[][3] = {
     {0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}};
@@ -149,7 +154,7 @@ void loop() {
   if (rvl::isIdentifying()) {
     fill_solid(
         leds, pixelCount, millis() / 500 % 2 == 0 ? CRGB::White : CRGB::Black);
-    FastLED.setBrightness(rvl::getBrightness());
+    setBrightnessWithinCurrentLimit();
     FastLED.show();
     blanked = false;
     return;
@@ -179,8 +184,10 @@ void loop() {
       leds[i] = blend(fadeFrom[i], leds[i], plan.amount);
     }
   }
+  // The estimate has to see the frame before permuteColorOrder, while each
+  // component is still in its own field
+  setBrightnessWithinCurrentLimit();
   permuteColorOrder(leds, pixelCount, rvl::getColorOrder());
-  FastLED.setBrightness(rvl::getBrightness());
   FastLED.show();
 }
 
