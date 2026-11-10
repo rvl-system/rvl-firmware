@@ -8,8 +8,5 @@
 	path = lib/rvl-esp32-wifi
 	url = git@github.com:rvl-system/rvl-esp32-wifi.git
 [submodule "rvl-node"]
-	path = rvl-node
-	url = git@github.com:rvl-system/rvl-node.git
-[submodule "board-configurator"]
-	path = rvl-setup
-	url = git@github.com:rvl-system/rvl-setup.git
+	path = rvl-js
+	url = git@github.com:rvl-system/rvl-js.git

@@ -1,8 +1,9 @@
 # Working in rvl-firmware
 
-Guidance for anyone, human or agent, changing code here. `lib/rvl`,
-`rvl-node` and `rvl-setup` are submodules with their own commits; this
-applies to them too.
+Guidance for anyone, human or agent, changing code here. `lib/rvl` is a
+submodule with its own commits; this applies to it too. `rvl-js` is a
+separate repository, linked as a submodule for convenience, and this file
+doesn't set its conventions.
 
 ## Building and testing
 
