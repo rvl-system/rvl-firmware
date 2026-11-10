@@ -25,8 +25,6 @@ doesn't set its conventions.
   on a different architecture. Reason it out, or write a native test.
 - Check commands, such as lint and typecheck, never write files: no build step
   inside them, no emit, no formatting in place.
-- `rvl-node` commits its `dist/`. After changing its source, run
-  `npm run build` and include the regenerated `dist/` in the change.
 
 ## Code
 
