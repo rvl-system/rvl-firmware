@@ -34,3 +34,6 @@ _autosave-*
 compile_commands.json
 .vscode/c_cpp_properties.json
 .vscode/launch.json
+
+# Archived plan phases, kept locally
+.plans/
