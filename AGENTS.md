@@ -11,7 +11,9 @@ doesn't set its conventions.
   runs the native tests, `-f` flashes, `-l` lints and `--format` formats in
   place. Targets are the `[env:...]` sections of `platformio.ini` plus
   `coordinator`, which is a separate PlatformIO project. `esp8266` is
-  build-only. Build several targets with several `-b` calls.
+  build-only. Build several targets with several `-b` calls. `-f` uses the
+  only USB serial port, and with several asks in a list, so a run with no
+  terminal passes `--port <path>`.
 - When `./project.ts` has no command for what you need, first ask whether the
   task can be put in terms of one it has. If it can't, stop and ask. Never run
   `pio` directly: `pio check`, for one, can't parse this code and passes

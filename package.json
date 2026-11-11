@@ -14,7 +14,9 @@
   },
   "homepage": "https://github.com/rvl-system/rvl-firmware#readme",
   "devDependencies": {
+    "@clack/prompts": "^1.8.1",
     "@polycam/clang-tools": "22.1.8",
-    "@types/node": "26.5.1"
+    "@types/node": "26.5.1",
+    "serialport": "^13.0.0"
   }
 }

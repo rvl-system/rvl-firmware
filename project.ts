@@ -41,7 +41,11 @@ OPTIONS:
   -b  --build     build the firmware before flashing the target
   -t  --test      run lib/rvl's unit tests on this computer, whatever the
                   target, stopping before flashing if any fail
-  -f  --flash     flash the firmware after building the target
+  -f  --flash     flash the firmware after building the target, through the
+                  only USB serial port, or with several, one chosen from a
+                  list before anything else runs
+      --port PORT flash through PORT without asking, for a run with no
+                  terminal to show the list in
       --help      display this help and exit
 `,
   );
@@ -59,6 +63,7 @@ let values: {
   build?: boolean;
   test?: boolean;
   flash?: boolean;
+  port?: string;
   help?: boolean;
 };
 let positionals: string[];
@@ -70,6 +75,7 @@ try {
       build: { type: "boolean", short: "b" },
       test: { type: "boolean", short: "t" },
       flash: { type: "boolean", short: "f" },
+      port: { type: "string" },
       help: { type: "boolean" },
     },
     allowPositionals: true,
@@ -90,17 +96,12 @@ if (positionals.length > 1) {
 }
 const target = positionals[0] ?? "controller";
 
-// The coordinator differs from the boards in two ways: it is its own
-// PlatformIO project rather than another env of this one, and it is flashed
-// through a dev kit's onboard serial device rather than the FTDI cable the
-// boards use. Resolving both here keeps every command below target-agnostic.
-const isCoordinator = target === "coordinator";
-const projectDir = isCoordinator
-  ? join(import.meta.dirname, "coordinator")
-  : import.meta.dirname;
-const serialPort = isCoordinator
-  ? "/dev/cu.usbserial-2120"
-  : "/dev/tty.usbserial-FTAV921H";
+// The coordinator is its own PlatformIO project rather than another env of
+// this one. Resolving that here keeps every command below target-agnostic.
+const projectDir =
+  target === "coordinator"
+    ? join(import.meta.dirname, "coordinator")
+    : import.meta.dirname;
 const targetUrl = join(projectDir, ".pio", "build", target, "firmware.bin");
 
 function exec(command: string, env?: NodeJS.ProcessEnv, cwd?: string): void {
@@ -191,7 +192,7 @@ function findSourceFiles(dirs: string[]): string[] {
   );
 }
 
-// Imported here rather than at the top, so building and flashing don't need
+// Imported here rather than at the top, so building and testing don't need
 // npm install. clang-tidy must be 22 or later: earlier versions analyze the
 // library code too, only to drop its findings, which multiplies the run time
 async function loadClangTools() {
@@ -200,6 +201,51 @@ async function loadClangTools() {
   } catch {
     error(`clang-format and clang-tidy are missing, run "npm install".`);
   }
+}
+
+// Imported here, as the clang tools are, so building and testing don't need
+// npm install
+async function loadSerialTools() {
+  try {
+    const [{ SerialPort }, { isCancel, select }] = await Promise.all([
+      import("serialport"),
+      import("@clack/prompts"),
+    ]);
+    return { SerialPort, isCancel, select };
+  } catch {
+    error(`serialport and @clack/prompts are missing, run "npm install".`);
+  }
+}
+
+async function chooseSerialPort(): Promise<string> {
+  if (values.port) {
+    return values.port;
+  }
+  const { SerialPort, isCancel, select } = await loadSerialTools();
+  // Only a USB adapter reports a vendor ID, which leaves out the computer's
+  // own ports
+  const ports = (await SerialPort.list()).filter((port) => port.vendorId);
+  if (ports.length === 0) {
+    error("no USB serial port is connected.");
+  }
+  if (ports.length === 1) {
+    console.log(`Using the only serial port, ${ports[0].path}\n`);
+    return ports[0].path;
+  }
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    error("there is no terminal to choose a serial port in, pass --port.");
+  }
+  const port = await select({
+    message: `Serial port to flash ${target} through`,
+    options: ports.map(({ path, manufacturer }) => ({
+      value: path,
+      label: manufacturer ? `${path}  ${manufacturer}` : path,
+    })),
+  });
+  if (isCancel(port)) {
+    process.exit(-1);
+  }
+  return port;
 }
 
 interface BuildMetadata {
@@ -267,6 +313,14 @@ function buildCompileArgs(metadata: BuildMetadata): string[] {
   ];
 }
 
+// The esp8266 target exists to compile the ESP8266 transport, which is a
+// submodule shared with other projects. No board here runs it
+if (values.flash && target === "esp8266") {
+  error(`target "esp8266" is build-only, there is no board to flash.\n`);
+}
+// Chosen before anything else runs, so a build needs nobody at the keyboard
+const flashPort = values.flash ? await chooseSerialPort() : undefined;
+
 if (values.format) {
   console.log("Formatting\n");
   const { run } = await loadClangTools();
@@ -317,17 +371,12 @@ if (values.test) {
   exec("platformio test -e native");
 }
 
-if (values.flash) {
+if (flashPort !== undefined) {
   console.log(`Flashing ${target}\n`);
-  // The esp8266 target exists to compile the ESP8266 transport, which is a
-  // submodule shared with other projects. No board here runs it
-  if (target === "esp8266") {
-    error(`target "esp8266" is build-only, there is no board to flash.\n`);
-  }
   if (!existsSync(targetUrl)) {
     error(`unknown or unbuilt target "${target}".\n`);
   }
   exec(
-    `esptool --port ${serialPort} --baud 460800 write-flash -z 0x10000 ${targetUrl}`,
+    `esptool --port ${flashPort} --baud 460800 write-flash -z 0x10000 ${targetUrl}`,
   );
 }
