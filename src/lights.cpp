@@ -98,8 +98,9 @@ uint8_t calculatePixelValue(
 
 void renderParametric(
     const RVLParametricSettings& settings, uint32_t animationClock, CRGB* out) {
+  // Scaled to 256, sin8's cycle, so the period's wrap lands on a whole cycle
   uint32_t t =
-      animationClock % (settings.timePeriod * 100) * 255 / settings.timePeriod;
+      animationClock % (settings.timePeriod * 100) * 256 / settings.timePeriod;
   for (const auto& segment : segments) {
     // Only the configured pixels: a short strip renders only its own length
     if (segment.start >= pixelCount) {
@@ -113,7 +114,7 @@ void renderParametric(
       } else {
         normalizedIndex = (i - segment.start) + segment.offset;
       }
-      uint8_t x = 255 * (normalizedIndex % settings.distancePeriod) /
+      uint8_t x = 256 * (normalizedIndex % settings.distancePeriod) /
           settings.distancePeriod;
 
       CHSV layerHSV[NUM_LAYERS];
