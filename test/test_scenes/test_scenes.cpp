@@ -174,10 +174,10 @@ void test_a_late_board_fades_over_the_remainder_and_ends_with_the_fleet() {
 
 void test_a_board_later_than_the_remainder_allows_fades_over_the_floor() {
   uint32_t n = moveToFreshFrame();
-  loopAt(n + 20);
+  loopAt(n + 31);
   rvl::scheduleScene(makeScene(n, 32, makeSettings(1)));
-  TEST_ASSERT_TRUE(readPlanAt(n + 20 + MIN_FADE_FRAMES - 1).fading);
-  TEST_ASSERT_FALSE(readPlanAt(n + 20 + MIN_FADE_FRAMES).fading);
+  TEST_ASSERT_TRUE(readPlanAt(n + 31 + MIN_FADE_FRAMES - 1).fading);
+  TEST_ASSERT_FALSE(readPlanAt(n + 31 + MIN_FADE_FRAMES).fading);
 
   // Past its whole fade
   loopAt(n + 200);
@@ -726,11 +726,11 @@ void test_an_overdriving_sender_shows_every_third_scene_on_time() {
 
 void test_a_sender_at_the_fade_rate_is_never_held() {
   uint32_t n = moveToFreshFrame();
-  auto activations = runOverdrive(n, 16, 16, 20);
+  auto activations = runOverdrive(n, MIN_FADE_FRAMES, MIN_FADE_FRAMES, 20);
   TEST_ASSERT_EQUAL(20, activations.size());
   for (uint32_t k = 0; k < 20; k++) {
     TEST_ASSERT_EQUAL(k + 1, activations[k].id);
-    TEST_ASSERT_EQUAL_UINT32(n + 16 * k + 3, activations[k].frame);
+    TEST_ASSERT_EQUAL_UINT32(n + MIN_FADE_FRAMES * k + 3, activations[k].frame);
     // No remainder to shorten, so each runs the floor and ends that late
     TEST_ASSERT_EQUAL_UINT32(
         activations[k].frame + MIN_FADE_FRAMES, activations[k].fadeEnd);
