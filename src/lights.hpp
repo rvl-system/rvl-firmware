@@ -26,6 +26,7 @@ namespace Lights {
 
 void init();
 void loop();
+void keepShowingOrSleepFor(uint32_t duration);
 
 } // namespace Lights
 

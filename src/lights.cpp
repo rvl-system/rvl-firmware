@@ -192,4 +192,13 @@ void loop() {
   FastLED.show();
 }
 
+// Shows through the wait: FastLED dithers only at 100 shows a second or more
+void keepShowingOrSleepFor(uint32_t duration) {
+  if (blanked) {
+    delay(duration);
+  } else {
+    FastLED.delay(duration);
+  }
+}
+
 } // namespace Lights

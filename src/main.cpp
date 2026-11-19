@@ -121,7 +121,7 @@ void setup() {
 
 // Pacing is the caller's job: the background task paces itself in
 // backgroundLoopRunner, while on single-loop platforms the foreground's
-// frame-aligned sleep paces both loops together
+// frame-aligned wait paces both loops together
 void backgroundLoop() {
   uint32_t startTime = millis();
 #ifdef HAS_UI
@@ -136,18 +136,18 @@ void backgroundLoop() {
   backgroundStats.log("Background loop");
 }
 
-// Sleeps to the next frame boundary in animation-clock time, so every node
+// The wait to the next frame boundary in animation-clock time, so every node
 // renders the same instants, plus a millisecond: delay(n) can return a tick
 // short of n ms, and a wake before the boundary would read the old frame
-void delayUntilNextFrame() {
+uint32_t calculateTimeUntilNextFrame() {
   uint32_t clock = rvl::getAnimationClock();
-  delay(FRAME_PERIOD - (clock % FRAME_PERIOD) + 1);
+  return FRAME_PERIOD - (clock % FRAME_PERIOD) + 1;
 }
 
 void backgroundLoopRunner(void* parameters) {
   while (true) {
     backgroundLoop();
-    delayUntilNextFrame();
+    delay(calculateTimeUntilNextFrame());
   }
 }
 
@@ -176,7 +176,7 @@ void foregroundLoop() {
 #endif
   foregroundStats.record(millis() - startTime);
   foregroundStats.log("Foreground loop");
-  delayUntilNextFrame();
+  Lights::keepShowingOrSleepFor(calculateTimeUntilNextFrame());
 }
 
 void loop() {
