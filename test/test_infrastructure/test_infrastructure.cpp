@@ -61,16 +61,6 @@ void deliver(const Bytes& packet) {
   rvl::loop();
 }
 
-size_t broadcastsSent() {
-  size_t count = 0;
-  for (auto& packet : infrastructure.sent) {
-    if (packet.destination == Destination::Broadcast) {
-      count++;
-    }
-  }
-  return count;
-}
-
 void setUp() {
   rvl::setLinkUpState(true);
   rvl::setDeviceId(LOCAL_ID);
@@ -116,8 +106,9 @@ void test_sources_of_240_and_up_are_dropped() {
   TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
 }
 
-// A peer's ID request carries 255, which the container drops before the type
-// is looked at. A reply is the probe, since a request has no effect either way
+// A peer's first ID request carries 255, which the container drops before
+// the type is looked at. A reply is the probe, since a request has no effect
+// either way
 void test_id_assignment_from_an_unassigned_source_is_dropped() {
   deliver(idReply(UNASSIGNED_DEVICE_ID, 42));
   TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
@@ -133,14 +124,14 @@ void test_a_request_with_a_legal_source_is_ignored() {
 
 void test_clock_sync_is_accepted_while_connected() {
   deliver(reference(300));
-  TEST_ASSERT_EQUAL(1, broadcastsSent());
+  TEST_ASSERT_EQUAL(1, listBroadcastsSent().size());
 }
 
 // Without the gate, the node would broadcast an observation with source 255
 void test_clock_sync_is_discarded_while_the_node_has_no_id() {
   rvl::setDeviceId(UNASSIGNED_DEVICE_ID);
   deliver(reference(330));
-  TEST_ASSERT_EQUAL(0, broadcastsSent());
+  TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
 }
 
 void test_an_unknown_packet_type_is_logged() {
@@ -170,7 +161,7 @@ void test_a_packet_of_the_wrong_payload_length_is_dropped_and_logged() {
     fake.output.clear();
     deliver(packet);
     TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
-    TEST_ASSERT_EQUAL(0, broadcastsSent());
+    TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
     TEST_ASSERT_TRUE(fake.logged("bytes, expected"));
   }
 }
@@ -182,7 +173,7 @@ void test_a_packet_for_another_node_is_dropped_before_its_parser() {
       {ID_REPLY_TYPE, 42}, PEER_ID));
   TEST_ASSERT_EQUAL(LOCAL_ID, rvl::getDeviceId());
   deliver(rvliPacket(PEER_ID, RVLI_PACKET_TYPE_QUERY, {}, PEER_ID));
-  TEST_ASSERT_EQUAL(0, broadcastsSent());
+  TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
   TEST_ASSERT_FALSE(fake.logged("unknown"));
 }
 

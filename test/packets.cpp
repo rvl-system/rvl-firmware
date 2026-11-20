@@ -54,3 +54,13 @@ Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload,
   packet.insert(packet.end(), payload.begin(), payload.end());
   return packet;
 }
+
+std::vector<SentPacket> listBroadcastsSent() {
+  std::vector<SentPacket> broadcasts;
+  for (auto& packet : fake.infrastructureEndpoint.sent) {
+    if (packet.destination == Destination::Broadcast) {
+      broadcasts.push_back(packet);
+    }
+  }
+  return broadcasts;
+}

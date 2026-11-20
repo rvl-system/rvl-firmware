@@ -151,9 +151,8 @@ void test_a_reference_is_answered_with_its_arrival_time() {
   fake.infrastructureEndpoint.receive(reference(id, true), t);
   fake.clock = t + 30;
   rvl::loop();
-  auto& sent = fake.infrastructureEndpoint.sent;
+  auto sent = listBroadcastsSent();
   TEST_ASSERT_EQUAL(1, sent.size());
-  TEST_ASSERT(sent[0].destination == Destination::Broadcast);
   TEST_ASSERT_PACKET(observation(LOCAL_ID, id, t + offset()), sent[0].bytes);
 }
 
@@ -186,7 +185,7 @@ void test_the_start_of_set_observation_uses_the_corrected_clock() {
   fake.infrastructureEndpoint.sent.clear();
   referenceAt(t + 2300, id + 3, true);
   TEST_ASSERT_PACKET(observation(LOCAL_ID, id + 3, t + 2300 + before + 20),
-      fake.infrastructureEndpoint.sent.back().bytes);
+      listBroadcastsSent().back().bytes);
 }
 
 void test_a_row_is_discarded_when_this_node_missed_its_reference() {

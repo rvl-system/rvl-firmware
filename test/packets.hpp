@@ -45,6 +45,10 @@ Bytes rvlaPacket(uint8_t source, uint8_t packetType, uint8_t channel,
 Bytes rvliPacket(uint8_t source, uint8_t packetType, const Bytes& payload = {},
     uint8_t destination = EVERY_DEVICE_ID);
 
+// The RVLI packets the node broadcast. Its ID requests go to the coordinator
+// and repeat every second in a suite with nothing to answer them
+std::vector<SentPacket> listBroadcastsSent();
+
 #define TEST_ASSERT_PACKET(expected, actual)                                   \
   do {                                                                         \
     Bytes expectedBytes = (expected);                                          \

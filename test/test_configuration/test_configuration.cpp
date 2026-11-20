@@ -110,9 +110,8 @@ Status readStatus(const Bytes& bytes) {
 
 // The one status sent, read back
 Status sentStatus() {
-  TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
-  TEST_ASSERT(infrastructure.sent[0].destination == Destination::Broadcast);
-  return readStatus(infrastructure.sent[0].bytes);
+  TEST_ASSERT_EQUAL(1, listBroadcastsSent().size());
+  return readStatus(listBroadcastsSent()[0].bytes);
 }
 
 void setUp() {
@@ -154,18 +153,17 @@ void test_a_query_is_answered_with_this_nodes_status() {
       0x2c, 2, 60, 'M', 'i', 'n', 'i', ' ', '1', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0x05, 0xdc};
   deliver(query(LOCAL_ID));
-  TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
-  TEST_ASSERT(infrastructure.sent[0].destination == Destination::Broadcast);
-  TEST_ASSERT_PACKET(expected, infrastructure.sent[0].bytes);
+  TEST_ASSERT_EQUAL(1, listBroadcastsSent().size());
+  TEST_ASSERT_PACKET(expected, listBroadcastsSent()[0].bytes);
   deliver(query(EVERY_DEVICE_ID));
-  TEST_ASSERT_EQUAL(2, infrastructure.sent.size());
-  TEST_ASSERT_PACKET(expected, infrastructure.sent[1].bytes);
+  TEST_ASSERT_EQUAL(2, listBroadcastsSent().size());
+  TEST_ASSERT_PACKET(expected, listBroadcastsSent()[1].bytes);
   TEST_ASSERT_EQUAL(0, eventsFired());
 }
 
 void test_a_query_for_another_node_is_not_answered() {
   deliver(query(OTHER_ID));
-  TEST_ASSERT_EQUAL(0, infrastructure.sent.size());
+  TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
 }
 
 // A configure applies its property, fires that property's event once, and is
@@ -175,13 +173,13 @@ void applyAndRepeat(uint8_t property, const Bytes& value) {
   deliver(configure(property, value));
   TEST_ASSERT_EQUAL(1, events[property]);
   TEST_ASSERT_EQUAL(1, eventsFired());
-  TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
-  Bytes first = infrastructure.sent[0].bytes;
+  TEST_ASSERT_EQUAL(1, listBroadcastsSent().size());
+  Bytes first = listBroadcastsSent()[0].bytes;
   infrastructure.sent.clear();
   deliver(configure(property, value));
   TEST_ASSERT_EQUAL(1, eventsFired());
-  TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
-  TEST_ASSERT_PACKET(first, infrastructure.sent[0].bytes);
+  TEST_ASSERT_EQUAL(1, listBroadcastsSent().size());
+  TEST_ASSERT_PACKET(first, listBroadcastsSent()[0].bytes);
 }
 
 void test_a_channel_is_applied_and_answered() {
@@ -260,7 +258,7 @@ void test_a_bad_channel_color_order_or_property_drops_the_packet() {
   TEST_ASSERT_TRUE(fake.logged("Received color order 6, ignoring"));
   deliver(configure(7, {1}));
   TEST_ASSERT_TRUE(fake.logged("Received configure for unknown property 7"));
-  TEST_ASSERT_EQUAL(0, infrastructure.sent.size());
+  TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
   TEST_ASSERT_EQUAL(0, eventsFired());
   TEST_ASSERT_EQUAL(0, rvl::getChannel());
   TEST_ASSERT(rvl::getColorOrder() == rvl::ColorOrder::GRB);
@@ -277,7 +275,7 @@ void test_identify_answers_and_lasts_five_seconds() {
   TEST_ASSERT_FALSE(rvl::isIdentifying());
   uint32_t t = fake.clock;
   deliver(identify(LOCAL_ID));
-  TEST_ASSERT_EQUAL(1, infrastructure.sent.size());
+  TEST_ASSERT_EQUAL(1, listBroadcastsSent().size());
   TEST_ASSERT_EQUAL(0, eventsFired());
   TEST_ASSERT_TRUE(rvl::isIdentifying());
   fake.clock = t + IDENTIFY_DURATION - 1;
@@ -297,7 +295,7 @@ void test_identify_answers_and_lasts_five_seconds() {
 
 void test_an_identify_for_another_node_is_not_taken() {
   deliver(identify(OTHER_ID));
-  TEST_ASSERT_EQUAL(0, infrastructure.sent.size());
+  TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
   TEST_ASSERT_FALSE(rvl::isIdentifying());
 }
 
@@ -308,7 +306,7 @@ void test_a_status_from_another_node_changes_nothing() {
   payload.insert(payload.end(), nickname.begin(), nickname.end());
   payload.insert(payload.end(), {0x0b, 0xb8});
   deliver(rvliPacket(OTHER_ID, RVLI_PACKET_TYPE_STATUS, payload, LOCAL_ID));
-  TEST_ASSERT_EQUAL(0, infrastructure.sent.size());
+  TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
   TEST_ASSERT_EQUAL(0, eventsFired());
   TEST_ASSERT_EQUAL(0, rvl::getChannel());
   TEST_ASSERT_EQUAL_STRING("Mini 1", rvl::getNickname());

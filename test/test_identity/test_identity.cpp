@@ -27,9 +27,8 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 std::vector<SentPacket>& requests = fake.infrastructureEndpoint.sent;
 
-Bytes idRequest() {
-  return rvliPacket(
-      UNASSIGNED_DEVICE_ID, RVLI_PACKET_TYPE_ID_ASSIGNMENT, {ID_REQUEST_TYPE});
+Bytes idRequest(uint8_t source = UNASSIGNED_DEVICE_ID) {
+  return rvliPacket(source, RVLI_PACKET_TYPE_ID_ASSIGNMENT, {ID_REQUEST_TYPE});
 }
 
 Bytes idReply(uint8_t id) {
@@ -47,6 +46,14 @@ void loopAt(uint32_t time) {
 void dropLinkAt(uint32_t time) {
   rvl::setLinkUpState(false);
   loopAt(time);
+}
+
+// Leaves one request sent and the next due 10 s after fake.clock
+void joinWithId(uint8_t id) {
+  rvl::setLinkUpState(true);
+  loopAt(fake.clock);
+  fake.infrastructureEndpoint.receive(idReply(id));
+  loopAt(fake.clock + 1);
 }
 
 void setUp() {
@@ -112,16 +119,61 @@ void test_requested_is_logged_once_per_link_up() {
       std::string::npos, fake.output.find("Requesting device ID", first + 1));
 }
 
-void test_a_reply_stores_the_id_and_stops_requests() {
-  rvl::setLinkUpState(true);
-  loopAt(fake.clock);
-  fake.infrastructureEndpoint.receive(idReply(42));
-  loopAt(fake.clock + 1);
+void test_a_reply_stores_the_id_and_the_next_request_waits_10_s() {
+  joinWithId(42);
   TEST_ASSERT_EQUAL(42, rvl::getDeviceId());
   TEST_ASSERT_TRUE(rvl::isConnected());
   TEST_ASSERT_TRUE(fake.logged("Assigned device ID 42"));
-  loopAt(fake.clock + 10000);
+  loopAt(fake.clock + 9999);
   TEST_ASSERT_EQUAL(1, requests.size());
+  loopAt(fake.clock + 1);
+  TEST_ASSERT_EQUAL(2, requests.size());
+  TEST_ASSERT_PACKET(idRequest(42), requests[1].bytes);
+}
+
+// A reply that left the timer alone would have each refresh retried a second
+// later
+void test_a_refresh_answered_with_its_own_id_waits_10_s_and_logs_nothing() {
+  joinWithId(42);
+  loopAt(fake.clock + 10000);
+  fake.output.clear();
+  fake.infrastructureEndpoint.receive(idReply(42));
+  loopAt(fake.clock + 1);
+  TEST_ASSERT_EQUAL(42, rvl::getDeviceId());
+  loopAt(fake.clock + 9999);
+  TEST_ASSERT_EQUAL(2, requests.size());
+  loopAt(fake.clock + 1);
+  TEST_ASSERT_EQUAL(3, requests.size());
+  TEST_ASSERT_FALSE(fake.logged("device ID"));
+}
+
+void test_a_refresh_answered_with_another_id_takes_it() {
+  joinWithId(42);
+  loopAt(fake.clock + 10000);
+  fake.infrastructureEndpoint.receive(idReply(43));
+  loopAt(fake.clock + 1);
+  TEST_ASSERT_EQUAL(43, rvl::getDeviceId());
+  TEST_ASSERT_TRUE(rvl::isConnected());
+  TEST_ASSERT_TRUE(fake.logged("Assigned device ID 43"));
+  loopAt(fake.clock + 10000);
+  TEST_ASSERT_EQUAL(3, requests.size());
+  TEST_ASSERT_PACKET(idRequest(43), requests[2].bytes);
+}
+
+void test_an_unanswered_refresh_keeps_the_id_and_is_retried_each_second() {
+  joinWithId(42);
+  uint32_t refresh = fake.clock + 10000;
+  loopAt(refresh);
+  TEST_ASSERT_EQUAL(2, requests.size());
+  loopAt(refresh + 999);
+  TEST_ASSERT_EQUAL(2, requests.size());
+  loopAt(refresh + 1000);
+  TEST_ASSERT_EQUAL(3, requests.size());
+  loopAt(refresh + 2000);
+  TEST_ASSERT_EQUAL(4, requests.size());
+  TEST_ASSERT_PACKET(idRequest(42), requests[3].bytes);
+  TEST_ASSERT_EQUAL(42, rvl::getDeviceId());
+  TEST_ASSERT_TRUE(rvl::isConnected());
 }
 
 void test_a_lost_reply_is_recovered_by_the_next_retry() {
@@ -141,13 +193,12 @@ void test_a_reply_with_an_id_of_240_or_more_is_ignored() {
   fake.infrastructureEndpoint.receive(idReply(NUM_DEVICE_IDS));
   loopAt(fake.clock + 1);
   TEST_ASSERT_EQUAL(UNASSIGNED_DEVICE_ID, rvl::getDeviceId());
+  loopAt(fake.clock + 999);
+  TEST_ASSERT_EQUAL(2, requests.size());
 }
 
 void test_the_id_is_forgotten_on_link_down_and_requested_again() {
-  rvl::setLinkUpState(true);
-  loopAt(fake.clock);
-  fake.infrastructureEndpoint.receive(idReply(42));
-  loopAt(fake.clock + 1);
+  joinWithId(42);
   dropLinkAt(fake.clock + 1);
   TEST_ASSERT_EQUAL(UNASSIGNED_DEVICE_ID, rvl::getDeviceId());
   TEST_ASSERT_FALSE(rvl::isConnected());
@@ -164,7 +215,10 @@ int main() {
   RUN_TEST(test_retries_wait_1000_ms_plus_up_to_250_ms_of_jitter);
   RUN_TEST(test_retries_after_2_to_the_31_ms_of_uptime);
   RUN_TEST(test_requested_is_logged_once_per_link_up);
-  RUN_TEST(test_a_reply_stores_the_id_and_stops_requests);
+  RUN_TEST(test_a_reply_stores_the_id_and_the_next_request_waits_10_s);
+  RUN_TEST(test_a_refresh_answered_with_its_own_id_waits_10_s_and_logs_nothing);
+  RUN_TEST(test_a_refresh_answered_with_another_id_takes_it);
+  RUN_TEST(test_an_unanswered_refresh_keeps_the_id_and_is_retried_each_second);
   RUN_TEST(test_a_lost_reply_is_recovered_by_the_next_retry);
   RUN_TEST(test_a_reply_with_an_id_of_240_or_more_is_ignored);
   RUN_TEST(test_the_id_is_forgotten_on_link_down_and_requested_again);

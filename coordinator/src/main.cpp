@@ -82,7 +82,7 @@ void handleRvliPacket() {
     return;
   }
 
-  // header[5] is the source, which the coordinator has no use for
+  // header[5] is the source, which only the log of an ID assignment reads
   switch (header[6]) {
   case RVLI_PACKET_TYPE_ID_ASSIGNMENT: {
     uint8_t subType = rvliUdp.read();
@@ -107,13 +107,17 @@ void handleRvliPacket() {
     write8(rvliUdp, RVLI_VERSION);
     write8(rvliUdp, deviceId);
     write8(rvliUdp, RVLI_PACKET_TYPE_ID_ASSIGNMENT);
-    // Destination: the requester has no ID yet, and the unicast addresses it
+    // Destination: never the assigned ID, which a requester may not hold yet
+    // and would drop as another node's. The unicast addresses it
     write8(rvliUdp, EVERY_DEVICE_ID);
     write8(rvliUdp, ID_REPLY_TYPE);
     write8(rvliUdp, assignedId);
     rvliUdp.endPacket();
-    Serial.printf(
-        "Assigned ID %d to %s\n", assignedId, requester.toString().c_str());
+    // A refresh asks under the ID it is given again, and isn't worth a line
+    if (header[5] != assignedId) {
+      Serial.printf(
+          "Assigned ID %d to %s\n", assignedId, requester.toString().c_str());
+    }
     break;
   }
   case RVLI_PACKET_TYPE_CLOCK_SYNC:
