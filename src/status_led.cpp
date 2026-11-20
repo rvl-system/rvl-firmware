@@ -21,6 +21,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "./status_led.hpp"
 #include "./config.hpp"
+#include "./identify_flash.hpp"
 #include <Arduino.h>
 #include <rvl.hpp>
 
@@ -33,11 +34,16 @@ struct Color {
 };
 
 // Full scale, scaled to a level when shown
+const Color BLACK = {0, 0, 0};
 const Color RED = {255, 0, 0};
+const Color GREEN = {0, 255, 0};
 const Color YELLOW = {255, 255, 0};
 const Color PURPLE = {255, 0, 255};
 const Color BLUE = {0, 0, 255};
 const Color WHITE = {255, 255, 255};
+
+// Indexed by IdentifyFlash
+const Color IDENTIFY_COLORS[] = {BLACK, WHITE, RED, GREEN, BLUE};
 
 uint8_t scaleComponent(uint8_t component, uint8_t level) {
   return static_cast<uint8_t>(component * level / 255);
@@ -71,7 +77,8 @@ void init() {
 void loop() {
   uint8_t brightness = rvl::getStatusLedBrightness();
   if (rvl::isIdentifying()) {
-    showColor(WHITE, millis() / 500 % 2 == 0 ? brightness : 0);
+    showColor(
+        IDENTIFY_COLORS[static_cast<uint8_t>(getIdentifyFlash())], brightness);
     return;
   }
   if (!rvl::isConnected()) {

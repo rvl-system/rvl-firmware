@@ -271,7 +271,7 @@ void test_a_full_length_nickname_comes_back_terminated() {
   TEST_ASSERT_EQUAL_STRING("sixteen chars ok", sentStatus().nickname.c_str());
 }
 
-void test_identify_answers_and_lasts_five_seconds() {
+void test_identify_answers_and_lasts_its_duration() {
   TEST_ASSERT_FALSE(rvl::isIdentifying());
   uint32_t t = fake.clock;
   deliver(identify(LOCAL_ID));
@@ -347,7 +347,7 @@ int main() {
   RUN_TEST(test_a_pixel_count_past_the_buffers_lands_as_the_maximum);
   RUN_TEST(test_a_bad_channel_color_order_or_property_drops_the_packet);
   RUN_TEST(test_a_full_length_nickname_comes_back_terminated);
-  RUN_TEST(test_identify_answers_and_lasts_five_seconds);
+  RUN_TEST(test_identify_answers_and_lasts_its_duration);
   RUN_TEST(test_an_identify_for_another_node_is_not_taken);
   RUN_TEST(test_a_status_from_another_node_changes_nothing);
   RUN_TEST(test_rvl_nodes_configure_packet_parses);

@@ -25,6 +25,7 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "./lights.hpp"
 #include "./config.hpp"
+#include "./identify_flash.hpp"
 #include <Arduino.h>
 #include <FastLED.h>
 #include <rvl.hpp>
@@ -41,6 +42,10 @@ CLEDController* controller;
 // The configured count, read once per frame; only ever touched from the loop
 // task
 uint16_t pixelCount = LED_MAX_PIXELS;
+
+// Indexed by IdentifyFlash. Written out, since CRGB::Green is half scale
+const CRGB IDENTIFY_COLORS[] = {CRGB(0, 0, 0), CRGB(255, 255, 255),
+    CRGB(255, 0, 0), CRGB(0, 255, 0), CRGB(0, 0, 255)};
 
 void init() {
   // Segment ends are inclusive and index leds directly, so an end past the last
@@ -67,11 +72,6 @@ void applyPixelCount() {
   }
 }
 
-void setBrightnessWithinCurrentLimit() {
-  FastLED.setBrightness(calculate_max_brightness_for_power_vmA(leds, pixelCount,
-      rvl::getBrightness(), LED_VOLTS, rvl::getCurrentLimit()));
-}
-
 // Which component lands in each wire position, indexed by ColorOrder
 const uint8_t COLOR_ORDER_MAP[][3] = {
     {0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}};
@@ -87,6 +87,15 @@ void permuteColorOrder(CRGB* pixels, uint16_t count, rvl::ColorOrder order) {
     CRGB p = pixels[i];
     pixels[i] = CRGB(p.raw[map[0]], p.raw[map[1]], p.raw[map[2]]);
   }
+}
+
+// The estimate has to see the frame before permuteColorOrder, while each
+// component is still in its own field
+void showFrameWithinCurrentLimit() {
+  FastLED.setBrightness(calculate_max_brightness_for_power_vmA(leds, pixelCount,
+      rvl::getBrightness(), LED_VOLTS, rvl::getCurrentLimit()));
+  permuteColorOrder(leds, pixelCount, rvl::getColorOrder());
+  FastLED.show();
 }
 
 uint8_t calculatePixelValue(
@@ -153,10 +162,9 @@ void loop() {
   // Identify overrides everything, blank included, so a board in a dark fleet
   // can still be found
   if (rvl::isIdentifying()) {
-    fill_solid(
-        leds, pixelCount, millis() / 500 % 2 == 0 ? CRGB::White : CRGB::Black);
-    setBrightnessWithinCurrentLimit();
-    FastLED.show();
+    fill_solid(leds, pixelCount,
+        IDENTIFY_COLORS[static_cast<uint8_t>(getIdentifyFlash())]);
+    showFrameWithinCurrentLimit();
     blanked = false;
     return;
   }
@@ -185,11 +193,7 @@ void loop() {
       leds[i] = blend(fadeFrom[i], leds[i], plan.amount);
     }
   }
-  // The estimate has to see the frame before permuteColorOrder, while each
-  // component is still in its own field
-  setBrightnessWithinCurrentLimit();
-  permuteColorOrder(leds, pixelCount, rvl::getColorOrder());
-  FastLED.show();
+  showFrameWithinCurrentLimit();
 }
 
 // Shows through the wait: FastLED dithers only at 100 shows a second or more
