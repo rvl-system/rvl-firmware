@@ -28,11 +28,11 @@ function showHelp(): void {
   console.log(
     `Usage: ./project.ts [OPTIONS].. [TARGET]
 
-Builds and flashes the firmware supplied by TARGET. TARGET is the name of an
-[env:TARGET] section of platformio.ini, or "coordinator" for the transport
-coordinator, which is a separate PlatformIO project under coordinator/. The
-"esp8266" target is build-only: it compiles the ESP8266 transport, which no
-board here runs.
+Builds and flashes the firmware supplied by TARGET, or "mini" with none given.
+TARGET is the name of an [env:TARGET] section of platformio.ini, or
+"coordinator" for the transport coordinator, which is a separate PlatformIO
+project under coordinator/. The "esp8266" target is build-only: it compiles the
+ESP8266 transport, which no board here runs.
 
 OPTIONS:
   -l  --lint      check header guards, formatting and clang-tidy's checks on
@@ -94,7 +94,7 @@ if (values.help) {
 if (positionals.length > 1) {
   error(`expected at most one TARGET, got ${positionals.length}.`);
 }
-const target = positionals[0] ?? "controller";
+const target = positionals[0] ?? "mini";
 
 // The coordinator is its own PlatformIO project rather than another env of
 // this one. Resolving that here keeps every command below target-agnostic.

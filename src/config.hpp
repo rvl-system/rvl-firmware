@@ -56,8 +56,6 @@ extern std::vector<StripSegment> segments;
 
 #define SCREEN_OFF_TIME 10000
 
-#define CONNECTING_PIXEL_PERIOD 2000
-
 /**** You most likely should *not* modify these settings ****/
 
 #define BUTTON_PRESS_ENGAGE_TIME 50
@@ -69,9 +67,6 @@ extern std::vector<StripSegment> segments;
 
 #ifdef RVL_CONTROLLER
 #include "./config-controller.hpp"
-#endif
-#ifdef RVL_RECEIVER
-#include "./config-receiver.hpp"
 #endif
 #ifdef RVL_MINI
 #include "./config-mini.hpp"

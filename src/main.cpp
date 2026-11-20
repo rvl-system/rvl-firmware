@@ -30,9 +30,6 @@ along with RVL Firmware.  If not, see <http://www.gnu.org/licenses/>.
 #include "./ui/screen.hpp"
 #include "./ui/ui.hpp"
 #endif
-#ifdef HAS_CONTROLS
-#include "./controls/controls.hpp"
-#endif
 #ifdef HAS_STATUS_LED
 #include "./status_led.hpp"
 #endif
@@ -52,17 +49,14 @@ RVLWifi::System* wifiSystem;
 
 void startBackgroundLoop();
 
-// The properties this board takes over the wire, from the flags that gate its
-// modules: a board with controls reads channel and brightness from its pins
+// The properties this board takes over the wire
 uint8_t buildCapabilities() {
-  uint8_t capabilities = rvl::capabilityBit(rvl::Property::PixelCount) |
+  uint8_t capabilities = rvl::capabilityBit(rvl::Property::Channel) |
+      rvl::capabilityBit(rvl::Property::Brightness) |
+      rvl::capabilityBit(rvl::Property::PixelCount) |
       rvl::capabilityBit(rvl::Property::ColorOrder) |
       rvl::capabilityBit(rvl::Property::Nickname) |
       rvl::capabilityBit(rvl::Property::CurrentLimit);
-#ifndef HAS_CONTROLS
-  capabilities |= rvl::capabilityBit(rvl::Property::Channel) |
-      rvl::capabilityBit(rvl::Property::Brightness);
-#endif
 #ifdef HAS_STATUS_LED
   capabilities |= rvl::capabilityBit(rvl::Property::StatusLedBrightness);
 #endif
@@ -108,9 +102,6 @@ void setup() {
   UI::init();
   Screen::init();
 #endif
-#ifdef HAS_CONTROLS
-  Controls::init();
-#endif
 #ifdef HAS_STATUS_LED
   StatusLed::init();
 #endif
@@ -126,9 +117,6 @@ void backgroundLoop() {
   uint32_t startTime = millis();
 #ifdef HAS_UI
   UI::loop();
-#endif
-#ifdef HAS_CONTROLS
-  Controls::loop();
 #endif
   Settings::loop();
   rvl::loop();
