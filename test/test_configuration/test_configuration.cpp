@@ -293,6 +293,28 @@ void test_identify_answers_and_lasts_its_duration() {
   TEST_ASSERT_FALSE(rvl::isIdentifying());
 }
 
+void test_the_identify_elapsed_time_counts_from_the_latest_identify() {
+  TEST_ASSERT_GREATER_OR_EQUAL_UINT32(
+      IDENTIFY_DURATION, rvl::getIdentifyElapsedTime());
+  deliver(identify(LOCAL_ID));
+  TEST_ASSERT_EQUAL_UINT32(0, rvl::getIdentifyElapsedTime());
+  fake.clock += 1500;
+  TEST_ASSERT_EQUAL_UINT32(1500, rvl::getIdentifyElapsedTime());
+  deliver(identify(LOCAL_ID));
+  TEST_ASSERT_EQUAL_UINT32(0, rvl::getIdentifyElapsedTime());
+  fake.clock += IDENTIFY_DURATION;
+  TEST_ASSERT_EQUAL_UINT32(IDENTIFY_DURATION, rvl::getIdentifyElapsedTime());
+  // The pin again: without it the second step here would read as 7998 ms
+  rvl::loop();
+  fake.clock += 0x7fffffff;
+  TEST_ASSERT_GREATER_OR_EQUAL_UINT32(
+      IDENTIFY_DURATION, rvl::getIdentifyElapsedTime());
+  rvl::loop();
+  fake.clock += 0x7fffffff;
+  TEST_ASSERT_GREATER_OR_EQUAL_UINT32(
+      IDENTIFY_DURATION, rvl::getIdentifyElapsedTime());
+}
+
 void test_an_identify_for_another_node_is_not_taken() {
   deliver(identify(OTHER_ID));
   TEST_ASSERT_EQUAL(0, listBroadcastsSent().size());
@@ -348,6 +370,7 @@ int main() {
   RUN_TEST(test_a_bad_channel_color_order_or_property_drops_the_packet);
   RUN_TEST(test_a_full_length_nickname_comes_back_terminated);
   RUN_TEST(test_identify_answers_and_lasts_its_duration);
+  RUN_TEST(test_the_identify_elapsed_time_counts_from_the_latest_identify);
   RUN_TEST(test_an_identify_for_another_node_is_not_taken);
   RUN_TEST(test_a_status_from_another_node_changes_nothing);
   RUN_TEST(test_rvl_nodes_configure_packet_parses);
